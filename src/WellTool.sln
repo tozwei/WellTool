@@ -3,7 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.37027.9
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Http", "WellTool.Http\WellTool.Http.csproj", "{1D84DDDD-B0FB-406C-82D6-CE65E2505D7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Captcha", "WellTool.Captcha\WellTool.Captcha.csproj", "{AA151533-1ABB-4BF8-84A9-CE5CF146F7F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Setting", "WellTool.Setting\WellTool.Setting.csproj", "{C2557FF1-CA04-4AE4-A5AD-132369494CAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Setting.Tests", "WellTool.Setting.Tests\WellTool.Setting.Tests.csproj", "{B3D8A9E2-4F1C-4E89-9A7B-1234567890AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Captcha.Tests", "WellTool.Captcha.Tests\WellTool.Captcha.Tests.csproj", "{FDB55AAA-22C3-9613-2793-08ECC9CC119E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Http", "WellTool.Http\WellTool.Http.csproj", "{22BC4EE8-13C2-3912-2532-B42329E8BD71}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Http.Tests", "WellTool.Http.Tests\WellTool.Http.Tests.csproj", "{F789E9AA-8CC8-61BE-1F68-2DE03BDA4E4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +21,30 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1D84DDDD-B0FB-406C-82D6-CE65E2505D7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D84DDDD-B0FB-406C-82D6-CE65E2505D7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D84DDDD-B0FB-406C-82D6-CE65E2505D7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D84DDDD-B0FB-406C-82D6-CE65E2505D7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA151533-1ABB-4BF8-84A9-CE5CF146F7F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA151533-1ABB-4BF8-84A9-CE5CF146F7F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA151533-1ABB-4BF8-84A9-CE5CF146F7F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA151533-1ABB-4BF8-84A9-CE5CF146F7F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2557FF1-CA04-4AE4-A5AD-132369494CAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2557FF1-CA04-4AE4-A5AD-132369494CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2557FF1-CA04-4AE4-A5AD-132369494CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2557FF1-CA04-4AE4-A5AD-132369494CAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3D8A9E2-4F1C-4E89-9A7B-1234567890AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3D8A9E2-4F1C-4E89-9A7B-1234567890AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3D8A9E2-4F1C-4E89-9A7B-1234567890AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3D8A9E2-4F1C-4E89-9A7B-1234567890AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDB55AAA-22C3-9613-2793-08ECC9CC119E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDB55AAA-22C3-9613-2793-08ECC9CC119E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDB55AAA-22C3-9613-2793-08ECC9CC119E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDB55AAA-22C3-9613-2793-08ECC9CC119E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22BC4EE8-13C2-3912-2532-B42329E8BD71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22BC4EE8-13C2-3912-2532-B42329E8BD71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22BC4EE8-13C2-3912-2532-B42329E8BD71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22BC4EE8-13C2-3912-2532-B42329E8BD71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F789E9AA-8CC8-61BE-1F68-2DE03BDA4E4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F789E9AA-8CC8-61BE-1F68-2DE03BDA4E4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F789E9AA-8CC8-61BE-1F68-2DE03BDA4E4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F789E9AA-8CC8-61BE-1F68-2DE03BDA4E4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
