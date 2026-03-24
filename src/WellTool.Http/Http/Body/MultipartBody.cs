@@ -60,11 +60,11 @@ public class MultipartBody : IRequestBody
     /// <param name="outStream">输出流</param>
     public void Write(Stream outStream)
     {
-        #if NETSTANDARD2_1
+#if NETSTANDARD2_1
                 using var writer = new StreamWriter(outStream, _charset);
-        #else
-                using var writer = new StreamWriter(outStream, _charset, leaveOpen: true);
-        #endif
+#else
+        using var writer = new StreamWriter(outStream, _charset, leaveOpen: true);
+#endif
 
         foreach (var kvp in _form)
         {

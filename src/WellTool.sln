@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Http", "WellTool.H
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Http.Tests", "WellTool.Http.Tests\WellTool.Http.Tests.csproj", "{F789E9AA-8CC8-61BE-1F68-2DE03BDA4E4D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.AI", "WellTool.AI\WellTool.AI.csproj", "{242E2F16-920C-472E-92F6-9326AE690784}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{F789E9AA-8CC8-61BE-1F68-2DE03BDA4E4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F789E9AA-8CC8-61BE-1F68-2DE03BDA4E4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F789E9AA-8CC8-61BE-1F68-2DE03BDA4E4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{242E2F16-920C-472E-92F6-9326AE690784}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{242E2F16-920C-472E-92F6-9326AE690784}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{242E2F16-920C-472E-92F6-9326AE690784}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{242E2F16-920C-472E-92F6-9326AE690784}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
