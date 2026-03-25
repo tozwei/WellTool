@@ -27,3 +27,6 @@
 /src/WellTool.Http.Tests/obj/Debug/net8.0
 /src/WellTool.Http.Tests/obj
 /src/WellTool.AI/obj
+/src/WellTool.AI/bin/Debug/net8.0
+/src/WellTool.AI.Tests/bin/Debug/net8.0
+/src/WellTool.AI.Tests/obj

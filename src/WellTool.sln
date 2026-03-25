@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Http.Tests", "Well
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.AI", "WellTool.AI\WellTool.AI.csproj", "{242E2F16-920C-472E-92F6-9326AE690784}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{9FA3D6BD-1EC1-3BA5-80CB-CE02773A58D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.AI.Tests", "WellTool.AI.Tests\WellTool.AI.Tests.csproj", "{BC4BAEBF-B8F1-F954-CC2C-B9E53029ABF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,10 @@ Global
 		{242E2F16-920C-472E-92F6-9326AE690784}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{242E2F16-920C-472E-92F6-9326AE690784}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{242E2F16-920C-472E-92F6-9326AE690784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC4BAEBF-B8F1-F954-CC2C-B9E53029ABF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC4BAEBF-B8F1-F954-CC2C-B9E53029ABF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC4BAEBF-B8F1-F954-CC2C-B9E53029ABF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC4BAEBF-B8F1-F954-CC2C-B9E53029ABF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
