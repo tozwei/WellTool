@@ -30,3 +30,7 @@
 /src/WellTool.AI/bin/Debug/net8.0
 /src/WellTool.AI.Tests/bin/Debug/net8.0
 /src/WellTool.AI.Tests/obj
+/src/WellTool.Aop/bin/Debug/net8.0
+/src/WellTool.Aop/obj
+/src/WellTool.Aop.Tests/bin/Debug/net10.0
+/src/WellTool.Aop.Tests/obj
