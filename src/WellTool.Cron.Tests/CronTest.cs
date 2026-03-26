@@ -46,13 +46,13 @@ namespace WellTool.Cron.Tests
         public void TestCronPatternMatching()
         {
             // 测试每天12:00:00匹配
-            var pattern = new CronPattern("0 0 12 * *");
+            var pattern = new CronPattern("0 12 * * *");
             var now = DateTime.Now;
             var testTime = new DateTime(now.Year, now.Month, now.Day, 12, 0, 0);
             Assert.True(pattern.Match(testTime));
 
             // 测试非匹配时间
-            var nonMatchTime = new DateTime(now.Year, now.Month, now.Day, 12, 0, 1);
+            var nonMatchTime = new DateTime(now.Year, now.Month, now.Day, 12, 1, 0);
             Assert.False(pattern.Match(nonMatchTime));
         }
 
@@ -68,6 +68,9 @@ namespace WellTool.Cron.Tests
             // 标记任务是否执行
             bool taskExecuted = false;
 
+            // 设置支持秒匹配
+            CronUtil.SetMatchSecond(true);
+
             // 添加一个1秒后执行的任务
             string taskId = CronUtil.Schedule("* * * * * *", () =>
             {
@@ -75,7 +78,6 @@ namespace WellTool.Cron.Tests
             });
 
             // 启动调度器
-            CronUtil.SetMatchSecond(true);
             CronUtil.Start();
 
             // 等待2秒
