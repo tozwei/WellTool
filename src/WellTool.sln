@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Cache", "WellTool.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Bom", "WellTool.Bom\WellTool.Bom.csproj", "{44DF8F57-EDD6-40FF-940F-A88031DC767D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Core", "WellTool.Core\WellTool.Core.csproj", "{74D454F5-BCBE-4DB2-8E98-12336F67A20D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{44DF8F57-EDD6-40FF-940F-A88031DC767D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44DF8F57-EDD6-40FF-940F-A88031DC767D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44DF8F57-EDD6-40FF-940F-A88031DC767D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74D454F5-BCBE-4DB2-8E98-12336F67A20D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74D454F5-BCBE-4DB2-8E98-12336F67A20D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74D454F5-BCBE-4DB2-8E98-12336F67A20D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74D454F5-BCBE-4DB2-8E98-12336F67A20D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

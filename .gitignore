@@ -47,3 +47,5 @@
 /src/WellTool.Bom/obj
 /src/WellTool.Cache/bin/Debug
 /src/WellTool.Cache/obj
+/src/WellTool.Core/obj
+/src/WellTool.Core/bin/Debug
