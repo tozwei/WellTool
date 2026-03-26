@@ -1,4 +1,8 @@
+using System;
+using System.IO;
+using System.Reflection;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace WellTool.System;
 
@@ -20,8 +24,14 @@ public class JavaRuntimeInfo
     {
         _runtimeName = RuntimeInformation.FrameworkDescription;
         _runtimeVersion = Environment.Version.ToString();
-        _homeDir = RuntimeEnvironment.GetRuntimeDirectory();
+#if NET6_0_OR_GREATER
+        _homeDir = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
         _classPath = AppContext.GetData("APP_CONTEXT_BASE_DIRECTORY") as string ?? AppDomain.CurrentDomain.BaseDirectory;
+#else
+        // 在.NET Standard 2.1中，我们使用替代方案
+        _homeDir = AppDomain.CurrentDomain.BaseDirectory;
+        _classPath = AppDomain.CurrentDomain.BaseDirectory;
+#endif
         _libraryPath = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
     }
 

@@ -10,8 +10,8 @@ namespace WellTool.Socket.Nio;
 public class NioClient : IDisposable
 {
 	private readonly ILogger<NioClient>? _logger;
-	private Socket? _channel;
-	private ChannelHandler? _handler;
+	private System.Net.Sockets.Socket? _channel;
+	private ChannelHandlerDelegate? _handler;
 	private readonly CancellationTokenSource _cts = new();
 
 	/// <summary>
@@ -51,12 +51,10 @@ public class NioClient : IDisposable
 	{
 		try
 		{
-			// 创建SocketChannel，配置为非阻塞模式
-			_channel = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+			_channel = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 			_channel.Blocking = false;
 			_channel.Connect(address);
 
-			// 等待连接建立
 			while (!_channel.IsBound)
 			{
 				Thread.Sleep(10);
@@ -73,9 +71,9 @@ public class NioClient : IDisposable
 	/// <summary>
 	/// 设置NIO数据处理器
 	/// </summary>
-	/// <param name="handler">ChannelHandler</param>
+	/// <param name="handler">ChannelHandlerDelegate</param>
 	/// <returns>this</returns>
-	public NioClient SetChannelHandler(ChannelHandler handler)
+	public NioClient SetChannelHandler(ChannelHandlerDelegate handler)
 	{
 		_handler = handler;
 		return this;
@@ -100,7 +98,7 @@ public class NioClient : IDisposable
 							var length = _channel.Receive(buffer);
 							if (length > 0)
 							{
-								_handler?.Handle(_channel);
+								_handler?.Invoke(_channel);
 							}
 						}
 						else
@@ -145,7 +143,7 @@ public class NioClient : IDisposable
 	/// <summary>
 	/// 获取SocketChannel
 	/// </summary>
-	public Socket? GetChannel() => _channel;
+	public System.Net.Sockets.Socket? GetChannel() => _channel;
 
 	/// <summary>
 	/// 关闭客户端

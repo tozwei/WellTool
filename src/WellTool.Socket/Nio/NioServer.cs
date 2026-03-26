@@ -1,8 +1,9 @@
 using System.Net;
 using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
+using Hutool.Socket.Nio;
 
-namespace WellTool.Socket.Nio;
+namespace WellTool.Socket.Aio;
 
 /// <summary>
 /// 基于NIO的Socket服务端实现
@@ -10,7 +11,7 @@ namespace WellTool.Socket.Nio;
 public class NioServer : IDisposable
 {
 	private readonly ILogger<NioServer>? _logger;
-	private Socket? _serverSocket;
+	private System.Net.Sockets.Socket? _serverSocket;
 	private ChannelHandlerDelegate? _handler;
 	private readonly CancellationTokenSource _cts = new();
 	private bool _isRunning;
@@ -41,8 +42,7 @@ public class NioServer : IDisposable
 	/// <returns>this</returns>
 	public NioServer Init(IPEndPoint address)
 	{
-		// 创建ServerSocketChannel
-		_serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+		_serverSocket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 		_serverSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 		_serverSocket.Bind(address);
 		_serverSocket.Listen(128);
@@ -90,7 +90,6 @@ public class NioServer : IDisposable
 				}
 				catch (SocketException)
 				{
-					// Server closed
 					break;
 				}
 				catch (Exception e)
@@ -106,26 +105,24 @@ public class NioServer : IDisposable
 	/// </summary>
 	private void DoListen()
 	{
-		var readList = new List<Socket> { _serverSocket! };
+		var readList = new List<System.Net.Sockets.Socket> { _serverSocket! };
 
 		while (!_cts.Token.IsCancellationRequested)
 		{
 			try
 			{
-				Socket.Select(readList, null, null, 1000);
+				System.Net.Sockets.Socket.Select(readList, null, null, 1000);
 
 				foreach (var socket in readList.ToArray())
 				{
 					if (socket == _serverSocket)
 					{
-						// 有客户端接入
 						var clientSocket = _serverSocket!.Accept();
 						_logger?.LogDebug("Client [{0}] accepted.", clientSocket.RemoteEndPoint);
 						_handler?.Invoke(clientSocket);
 					}
 					else
 					{
-						// 读事件就绪
 						try
 						{
 							_handler?.Invoke(socket);
@@ -167,8 +164,3 @@ public class NioServer : IDisposable
 		_cts.Dispose();
 	}
 }
-
-/// <summary>
-/// ChannelHandler 委托
-/// </summary>
-public delegate void ChannelHandlerDelegate(Socket socket);

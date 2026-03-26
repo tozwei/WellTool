@@ -28,7 +28,7 @@ public class AioClient : IDisposable
 	/// <param name="config">配置项</param>
 	public AioClient(IPEndPoint address, IIoAction<byte[]> ioAction, SocketConfig config)
 	{
-		var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+		var socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 		socket.Connect(address);
 		_session = new AioSession(socket, ioAction, config);
 		ioAction.Accept(_session);

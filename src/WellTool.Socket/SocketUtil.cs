@@ -76,7 +76,13 @@ public static class SocketUtil
 			}
 			else
 			{
-				socket.ConnectAsync(address, connectionTimeout).Wait(connectionTimeout);
+				var result = socket.BeginConnect(address, null, null);
+				if (!result.AsyncWaitHandle.WaitOne(connectionTimeout))
+				{
+					socket.Close();
+					throw new SocketRuntimeException("Connection timeout");
+				}
+				socket.EndConnect(result);
 			}
 		}
 		catch (SocketException e)

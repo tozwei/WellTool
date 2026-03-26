@@ -9,17 +9,11 @@ namespace WellTool.Socket.Aio;
 /// </summary>
 public class AioSession : IDisposable
 {
-	private readonly Socket _channel;
+	private readonly System.Net.Sockets.Socket _channel;
 	private readonly IIoAction<byte[]> _ioAction;
 	private readonly byte[] _readBuffer;
 	private readonly byte[] _writeBuffer;
-	/// <summary>
-	/// 读取超时时长
-	/// </summary>
 	private readonly long _readTimeout;
-	/// <summary>
-	/// 写出超时时长
-	/// </summary>
 	private readonly long _writeTimeout;
 
 	/// <summary>
@@ -28,7 +22,7 @@ public class AioSession : IDisposable
 	/// <param name="channel">Socket</param>
 	/// <param name="ioAction">IO消息处理类</param>
 	/// <param name="config">配置项</param>
-	public AioSession(Socket channel, IIoAction<byte[]> ioAction, SocketConfig config)
+	public AioSession(System.Net.Sockets.Socket channel, IIoAction<byte[]> ioAction, SocketConfig config)
 	{
 		_channel = channel;
 		_ioAction = ioAction;
@@ -41,7 +35,7 @@ public class AioSession : IDisposable
 	/// <summary>
 	/// 获取Socket
 	/// </summary>
-	public Socket GetChannel() => _channel;
+	public System.Net.Sockets.Socket GetChannel() => _channel;
 
 	/// <summary>
 	/// 获取读取Buffer

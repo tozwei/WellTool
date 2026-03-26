@@ -10,7 +10,7 @@ namespace WellTool.Socket.Aio;
 public class AioServer : IDisposable
 {
 	private readonly ILogger<AioServer>? _logger;
-	private Socket? _serverSocket;
+	private System.Net.Sockets.Socket? _serverSocket;
 	protected IIoAction<byte[]>? IoAction;
 	protected readonly SocketConfig Config;
 	private readonly CancellationTokenSource _cts = new();
@@ -52,7 +52,7 @@ public class AioServer : IDisposable
 	/// <returns>this</returns>
 	public AioServer Init(IPEndPoint address)
 	{
-		_serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+		_serverSocket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 		_serverSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 		_serverSocket.Bind(address);
 		_serverSocket.Listen(128);
@@ -90,7 +90,7 @@ public class AioServer : IDisposable
 	/// <summary>
 	/// 获取ServerSocket
 	/// </summary>
-	public Socket? GetChannel() => _serverSocket;
+	public System.Net.Sockets.Socket? GetChannel() => _serverSocket;
 
 	/// <summary>
 	/// 处理接入的客户端

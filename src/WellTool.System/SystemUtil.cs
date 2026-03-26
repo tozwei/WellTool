@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using System;
 
 namespace WellTool.System;
 
@@ -160,7 +161,7 @@ public static class SystemUtil
     /// <returns>当前进程 ID</returns>
     public static long GetCurrentPID()
     {
-        return Environment.CurrentProcess.Id;
+        return Process.GetCurrentProcess().Id;
     }
 
     /// <summary>
@@ -250,7 +251,11 @@ public static class SystemUtil
     /// <returns>内存总大小</returns>
     public static long GetTotalMemory()
     {
+#if NET6_0_OR_GREATER
         return GC.GetGCMemoryInfo().TotalAvailableMemoryBytes;
+#else
+        return GC.GetTotalMemory(false);
+#endif
     }
 
     /// <summary>
@@ -259,8 +264,13 @@ public static class SystemUtil
     /// <returns>内存剩余大小</returns>
     public static long GetFreeMemory()
     {
+#if NET6_0_OR_GREATER
         var gcInfo = GC.GetGCMemoryInfo();
         return gcInfo.TotalAvailableMemoryBytes - GC.GetTotalMemory(false);
+#else
+        // 在.NET Standard 2.1中，我们只能返回已分配的内存，无法获取总可用内存
+        return GC.GetTotalMemory(false);
+#endif
     }
 
     /// <summary>
@@ -269,7 +279,12 @@ public static class SystemUtil
     /// <returns>JVM可用的内存总大小</returns>
     public static long GetMaxMemory()
     {
+#if NET6_0_OR_GREATER
         return GC.GetGCMemoryInfo().TotalAvailableMemoryBytes;
+#else
+        // 在.NET Standard 2.1中，我们只能返回已分配的内存，无法获取总可用内存
+        return GC.GetTotalMemory(false);
+#endif
     }
 
     /// <summary>
@@ -315,7 +330,7 @@ public static class SystemUtil
     /// <param name="builder"><see cref="StringBuilder"/>对象</param>
     /// <param name="caption">标题</param>
     /// <param name="value">值</param>
-    protected static void Append(StringBuilder builder, string caption, object? value)
+    public static void Append(StringBuilder builder, string caption, object? value)
     {
         builder.Append(caption).Append(value ?? "[n/a]").AppendLine();
     }
