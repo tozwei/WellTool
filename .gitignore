@@ -55,3 +55,4 @@
 /src/WellTool.Core.Tests/obj
 /src/WellTool.Socket/obj
 /src/WellTool.System/obj
+/src/WellTool.Socket/bin/Debug/net8.0

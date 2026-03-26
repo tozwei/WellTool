@@ -1,4 +1,5 @@
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace WellTool.System;
 

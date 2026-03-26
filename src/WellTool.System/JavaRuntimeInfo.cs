@@ -25,7 +25,7 @@ public class JavaRuntimeInfo
         _runtimeName = RuntimeInformation.FrameworkDescription;
         _runtimeVersion = Environment.Version.ToString();
 #if NET6_0_OR_GREATER
-        _homeDir = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
+        _homeDir = RuntimeEnvironment.GetRuntimeDirectory();
         _classPath = AppContext.GetData("APP_CONTEXT_BASE_DIRECTORY") as string ?? AppDomain.CurrentDomain.BaseDirectory;
 #else
         // 在.NET Standard 2.1中，我们使用替代方案
