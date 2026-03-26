@@ -20,14 +20,21 @@ public class RuntimeInfo
     /// </summary>
     /// <returns>最大内存</returns>
     public long MaxMemory
-    {
+    { 
         get
         {
 #if NET6_0_OR_GREATER
+            
             return GC.GetGCMemoryInfo().TotalAvailableMemoryBytes;
 #else
             // For older frameworks, return a reasonable estimate
-            return Environment.WorkingSet * 2;
+            var max = GC.GetTotalMemory(false);
+            if (max == 0) 
+            {   
+                max = Environment.WorkingSet * 2;
+            }
+            return max;
+            //return Environment.WorkingSet * 2;
 #endif
         }
     }
@@ -51,7 +58,12 @@ public class RuntimeInfo
             var max = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes;
 #else
             // For older frameworks, return a reasonable estimate
-            var max = Environment.WorkingSet * 2;
+            var max = GC.GetTotalMemory(false);
+            if (max == 0) 
+            {   
+                max = Environment.WorkingSet * 2;
+            }
+            //var max = Environment.WorkingSet * 2;
 #endif
             return max - total;
         }

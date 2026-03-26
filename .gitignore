@@ -57,3 +57,9 @@
 /src/WellTool.System/obj
 /src/WellTool.Socket/bin/Debug/net8.0
 /src/WellTool.System/bin/Debug
+/src/WellTool.Log.Tests/bin/Debug/net8.0
+/src/WellTool.Log.Tests/obj
+/src/WellTool.Socket.Tests/bin/Debug/net8.0
+/src/WellTool.Socket.Tests/obj
+/src/WellTool.System.Tests/bin/Debug/net8.0
+/src/WellTool.System.Tests/obj
