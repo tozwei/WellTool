@@ -103,6 +103,38 @@ namespace WellTool.Cache.Tests
         }
 
         [Fact]
+        public void TestLFUCacheListener()
+        {
+            // 创建容量为3的LFU缓存
+            var cache = new LFUCache<string, string>(3);
+            
+            // 验证监听器是否被正确调用
+            int removeCount = 0;
+            
+            cache.SetListener(new SimpleCacheListener<string, string>(
+                (key, value) => { removeCount++; }
+            ));
+            
+            // 添加元素
+            cache.Put("key1", "value1");
+            // 访问key1，增加其使用频率
+            cache.Get("key1");
+            cache.Put("key2", "value2");
+            cache.Put("key3", "value3");
+            
+            // 添加第四个元素，应该移除使用频率较低的key2和key3
+            cache.Put("key4", "value4");
+            
+            // 验证key1存在，key2和key3被移除
+            Assert.Equal("value1", cache.Get("key1"));
+            Assert.Null(cache.Get("key2"));
+            Assert.Null(cache.Get("key3"));
+            Assert.Equal("value4", cache.Get("key4"));
+            // 验证监听器被调用了2次
+            Assert.Equal(2, removeCount);
+        }
+
+        [Fact]
         public void TestTimedCache()
         {
             // 创建过期时间为 500 毫秒的定时缓存
@@ -281,6 +313,235 @@ namespace WellTool.Cache.Tests
             // 移除元素，触发 OnRemove
             cache.Remove("key1");
             Assert.True(onRemoveCalled);
+        }
+
+        [Fact]
+        public void TestFIFOCacheListener()
+        {
+            // 创建容量为3的FIFO缓存
+            var cache = new FIFOCache<string, string>(3);
+            
+            // 验证监听器是否被正确调用
+            string removedKey = null;
+            string removedValue = null;
+            
+            cache.SetListener(new SimpleCacheListener<string, string>(
+                (key, value) => {
+                    removedKey = key;
+                    removedValue = value;
+                }
+            ));
+            
+            // 添加元素
+            cache.Put("key1", "value1");
+            cache.Put("key2", "value2");
+            cache.Put("key3", "value3");
+            
+            // 添加第四个元素，应该移除第一个元素
+            cache.Put("key4", "value4");
+            
+            // 验证第一个元素被移除，且监听器被调用
+            Assert.Null(cache.Get("key1"));
+            Assert.Equal("key1", removedKey);
+            Assert.Equal("value1", removedValue);
+        }
+
+        [Fact]
+        public void TestLRUCacheReadWrite()
+        {
+            // 创建容量为 10 的 LRU 缓存
+            var cache = new LRUCache<int, int>(10);
+            
+            // 添加元素
+            for (int i = 0; i < 10; i++)
+            {
+                cache.Put(i, i);
+            }
+            
+            // 创建 10 个线程，每个线程读取对应索引的元素 10000 次
+            var countDownLatch = new System.Threading.CountdownEvent(10);
+            
+            for (int i = 0; i < 10; i++)
+            {
+                var finalI = i;
+                new System.Threading.Thread(() => {
+                    for (int j = 0; j < 10000; j++)
+                    {
+                        cache.Get(finalI);
+                    }
+                    countDownLatch.Signal();
+                }).Start();
+            }
+            
+            // 等待所有线程完成
+            countDownLatch.Wait();
+            
+            // 按顺序读取 0-9
+            var sb1 = new System.Text.StringBuilder();
+            for (int i = 0; i < 10; i++)
+            {
+                if (cache.ContainsKey(i))
+                {
+                    var value = cache.Get(i);
+                    sb1.Append(value.ToString());
+                }
+                else
+                {
+                    sb1.Append("null");
+                }
+            }
+            Assert.Equal("0123456789", sb1.ToString());
+            
+            // 添加第 11 个元素，应该淘汰最久未使用的 0
+            cache.Put(11, 11);
+            
+            // 再次按顺序读取 0-9
+            var sb2 = new System.Text.StringBuilder();
+            for (int i = 0; i < 10; i++)
+            {
+                if (cache.ContainsKey(i))
+                {
+                    var value = cache.Get(i);
+                    sb2.Append(value.ToString());
+                }
+                else
+                {
+                    sb2.Append("null");
+                }
+            }
+            Assert.Equal("null123456789", sb2.ToString());
+        }
+
+        [Fact]
+        public void TestLRUCacheIssue2647()
+        {
+            // 计数器
+            int removeCount = 0;
+            
+            // 创建容量为 3 的 LRU 缓存
+            var cache = new LRUCache<string, int>(3);
+            cache.SetListener(new SimpleCacheListener<string, int>(
+                (key, value) => { removeCount++; }
+            ));
+            
+            // 添加 10 个元素
+            for (int i = 0; i < 10; i++)
+            {
+                cache.Put($"key-{i}", i);
+            }
+            
+            // 验证移除次数和缓存大小
+            Assert.Equal(7, removeCount);
+            Assert.Equal(3, cache.Size());
+        }
+
+        [Fact]
+        public void TestWeakCacheRemove()
+        {
+            // 创建弱引用缓存，设置过期时间为 -1（永不过期）
+            var cache = new WeakCache<string, string>(-1);
+            cache.Put("abc", "123");
+            cache.Put("def", "456");
+            
+            // 验证初始大小
+            Assert.Equal(2, cache.Size());
+            
+            // 移除一个元素
+            cache.Remove("abc");
+            
+            // 验证移除后的大小
+            Assert.Equal(1, cache.Size());
+        }
+
+        [Fact]
+        public void TestCacheWithZeroCapacity()
+        {
+            // 创建容量为0的缓存
+            var cache = new FIFOCache<string, string>(0);
+            
+            // 添加元素
+            cache.Put("key1", "value1");
+            
+            // 验证元素不能被添加
+            Assert.Null(cache.Get("key1"));
+        }
+
+        [Fact]
+        public void TestCacheWithNegativeCapacity()
+        {
+            // 创建容量为负数的缓存
+            var cache = new FIFOCache<string, string>(-1);
+            
+            // 添加元素
+            cache.Put("key1", "value1");
+            
+            // 验证元素不能被添加
+            Assert.Null(cache.Get("key1"));
+        }
+
+        [Fact]
+        public void TestTimedCacheWithZeroTimeout()
+        {
+            // 创建过期时间为0的定时缓存
+            var cache = new TimedCache<string, string>(0);
+            
+            // 添加元素
+            cache.Put("key1", "value1");
+            
+            // 验证元素立即过期
+            Assert.Null(cache.Get("key1"));
+        }
+
+        [Fact]
+        public void TestTimedCacheWithNegativeTimeout()
+        {
+            // 创建过期时间为负数的定时缓存（永不过期）
+            var cache = new TimedCache<string, string>(-1);
+            
+            // 添加元素
+            cache.Put("key1", "value1");
+            
+            // 验证元素不会过期
+            Assert.Equal("value1", cache.Get("key1"));
+        }
+
+        [Fact]
+        public void TestCacheClear()
+        {
+            // 创建缓存
+            var cache = new FIFOCache<string, string>(3);
+            
+            // 添加元素
+            cache.Put("key1", "value1");
+            cache.Put("key2", "value2");
+            cache.Put("key3", "value3");
+            
+            // 验证缓存大小
+            Assert.Equal(3, cache.Size());
+            
+            // 清空缓存
+            cache.Clear();
+            
+            // 验证缓存为空
+            Assert.Equal(0, cache.Size());
+            Assert.Null(cache.Get("key1"));
+            Assert.Null(cache.Get("key2"));
+            Assert.Null(cache.Get("key3"));
+        }
+
+        [Fact]
+        public void TestCacheUpdate()
+        {
+            // 创建缓存
+            var cache = new FIFOCache<string, string>(3);
+            
+            // 添加元素
+            cache.Put("key1", "value1");
+            Assert.Equal("value1", cache.Get("key1"));
+            
+            // 更新元素
+            cache.Put("key1", "value2");
+            Assert.Equal("value2", cache.Get("key1"));
         }
 
         // 简单的 CacheListener 实现

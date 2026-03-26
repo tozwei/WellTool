@@ -71,3 +71,5 @@
 /src/WellTool.Cache.Tests/bin/Debug/net8.0
 /src/WellTool.Cron/obj
 /src/WellTool.Cron/bin/Debug
+/src/WellTool.Crypto/bin/Debug/net8.0
+/src/WellTool.Crypto/obj

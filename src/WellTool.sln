@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Cache.Tests", "Wel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Cron", "WellTool.Cron\WellTool.Cron.csproj", "{C25045FF-50B1-4E01-9C96-91552683776F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Crypto", "WellTool.Crypto\WellTool.Crypto.csproj", "{5E8FCF68-43EC-4A8E-ADEC-44E486FC2A81}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -365,6 +367,18 @@ Global
 		{C25045FF-50B1-4E01-9C96-91552683776F}.Release|x64.Build.0 = Release|Any CPU
 		{C25045FF-50B1-4E01-9C96-91552683776F}.Release|x86.ActiveCfg = Release|Any CPU
 		{C25045FF-50B1-4E01-9C96-91552683776F}.Release|x86.Build.0 = Release|Any CPU
+		{5E8FCF68-43EC-4A8E-ADEC-44E486FC2A81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E8FCF68-43EC-4A8E-ADEC-44E486FC2A81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E8FCF68-43EC-4A8E-ADEC-44E486FC2A81}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5E8FCF68-43EC-4A8E-ADEC-44E486FC2A81}.Debug|x64.Build.0 = Debug|Any CPU
+		{5E8FCF68-43EC-4A8E-ADEC-44E486FC2A81}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5E8FCF68-43EC-4A8E-ADEC-44E486FC2A81}.Debug|x86.Build.0 = Debug|Any CPU
+		{5E8FCF68-43EC-4A8E-ADEC-44E486FC2A81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E8FCF68-43EC-4A8E-ADEC-44E486FC2A81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E8FCF68-43EC-4A8E-ADEC-44E486FC2A81}.Release|x64.ActiveCfg = Release|Any CPU
+		{5E8FCF68-43EC-4A8E-ADEC-44E486FC2A81}.Release|x64.Build.0 = Release|Any CPU
+		{5E8FCF68-43EC-4A8E-ADEC-44E486FC2A81}.Release|x86.ActiveCfg = Release|Any CPU
+		{5E8FCF68-43EC-4A8E-ADEC-44E486FC2A81}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
