@@ -63,3 +63,5 @@
 /src/WellTool.Socket.Tests/obj
 /src/WellTool.System.Tests/bin/Debug/net8.0
 /src/WellTool.System.Tests/obj
+/src/WellTool.Json/obj
+/src/WellTool.Json/bin/Debug

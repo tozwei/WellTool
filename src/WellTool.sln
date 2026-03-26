@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Socket.Tests", "We
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Log.Tests", "WellTool.Log.Tests\WellTool.Log.Tests.csproj", "{9646B583-4427-4488-BAC1-F41713D11611}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Json", "WellTool.Json\WellTool.Json.csproj", "{8F208FCC-1290-4C22-9505-743BC4BAA33F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -323,6 +325,18 @@ Global
 		{9646B583-4427-4488-BAC1-F41713D11611}.Release|x64.Build.0 = Release|Any CPU
 		{9646B583-4427-4488-BAC1-F41713D11611}.Release|x86.ActiveCfg = Release|Any CPU
 		{9646B583-4427-4488-BAC1-F41713D11611}.Release|x86.Build.0 = Release|Any CPU
+		{8F208FCC-1290-4C22-9505-743BC4BAA33F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F208FCC-1290-4C22-9505-743BC4BAA33F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F208FCC-1290-4C22-9505-743BC4BAA33F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8F208FCC-1290-4C22-9505-743BC4BAA33F}.Debug|x64.Build.0 = Debug|Any CPU
+		{8F208FCC-1290-4C22-9505-743BC4BAA33F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8F208FCC-1290-4C22-9505-743BC4BAA33F}.Debug|x86.Build.0 = Debug|Any CPU
+		{8F208FCC-1290-4C22-9505-743BC4BAA33F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F208FCC-1290-4C22-9505-743BC4BAA33F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F208FCC-1290-4C22-9505-743BC4BAA33F}.Release|x64.ActiveCfg = Release|Any CPU
+		{8F208FCC-1290-4C22-9505-743BC4BAA33F}.Release|x64.Build.0 = Release|Any CPU
+		{8F208FCC-1290-4C22-9505-743BC4BAA33F}.Release|x86.ActiveCfg = Release|Any CPU
+		{8F208FCC-1290-4C22-9505-743BC4BAA33F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

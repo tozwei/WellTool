@@ -58,7 +58,7 @@ public class SettingTest
     [Fact]
     public void VariableReplacementTest()
     {
-        var setting = new Setting();
+        var setting = new Setting().SetUseVariable(true);
 
         // 设置基础变量
         setting.Put("base_path", "/opt/app");

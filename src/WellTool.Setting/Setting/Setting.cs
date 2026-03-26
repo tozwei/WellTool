@@ -59,6 +59,17 @@ public class Setting : AbsSetting, IDisposable
     }
 
     /// <summary>
+    /// 设置是否使用变量替换
+    /// </summary>
+    /// <param name="isUseVariable">是否使用变量替换</param>
+    /// <returns>当前Setting实例</returns>
+    public Setting SetUseVariable(bool isUseVariable)
+    {
+        _isUseVariable = isUseVariable;
+        return this;
+    }
+
+    /// <summary>
     /// 构造
     /// </summary>
     /// <param name="path">相对路径或绝对路径</param>
@@ -95,7 +106,7 @@ public class Setting : AbsSetting, IDisposable
 
         if (_isUseVariable && !string.IsNullOrEmpty(value))
         {
-            value = ReplaceVar(value);
+            value = ReplaceVar(value, group);
         }
 
         return value;
@@ -105,8 +116,9 @@ public class Setting : AbsSetting, IDisposable
     /// 替换字符串中的变量
     /// </summary>
     /// <param name="value">包含变量的字符串</param>
+    /// <param name="currentGroup">当前分组</param>
     /// <returns>替换后的字符串</returns>
-    private string? ReplaceVar(string value)
+    private string? ReplaceVar(string value, string currentGroup)
     {
         if (string.IsNullOrEmpty(value))
         {
@@ -125,7 +137,8 @@ public class Setting : AbsSetting, IDisposable
             }
 
             var varName = result.Substring(startPos + 2, endPos - startPos - 2);
-            var varValue = _groupedMap.Get(AbsSetting.DEFAULT_GROUP, varName);
+            // 先从当前分组获取变量值，如果不存在则从默认分组获取
+            var varValue = _groupedMap.Get(currentGroup, varName) ?? _groupedMap.Get(AbsSetting.DEFAULT_GROUP, varName);
 
             if (varValue != null)
             {
