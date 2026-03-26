@@ -69,10 +69,10 @@ namespace WellTool.BloomFilter.Filter
 
             switch (machineNum)
             {
-                case BitMap.MACHINE32:
+                case WellTool.BloomFilter.BitMap.BitMap.MACHINE32:
                     bitMap = new IntMap(capacity);
                     break;
-                case BitMap.MACHINE64:
+                case WellTool.BloomFilter.BitMap.BitMap.MACHINE64:
                     bitMap = new LongMap(capacity);
                     break;
                 default:

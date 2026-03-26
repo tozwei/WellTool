@@ -39,3 +39,7 @@
 /src/WellTool.BloomFilter/obj
 /src/WellTool.AI/bin/Debug/netstandard2.1
 /src/WellTool.BloomFilter/bin/Debug
+/src/WellTool.BloomFilter.Tests/bin/Debug/net10.0
+/src/WellTool.BloomFilter.Tests/obj/Debug/net10.0
+/src/WellTool.BloomFilter.Tests/bin/Debug/net8.0
+/src/WellTool.BloomFilter.Tests/obj
