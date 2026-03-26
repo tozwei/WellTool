@@ -8,7 +8,7 @@ public class LogTests
     public void TestLogFactory()
     {
         // Test that LogFactory can be accessed
-        var log = LogFactory.GetLog(typeof(LogTests));
+        var log = LogFactory.Get(typeof(LogTests));
         Assert.NotNull(log);
     }
 
@@ -16,13 +16,16 @@ public class LogTests
     public void TestStaticLog()
     {
         // Test that StaticLog can be accessed
-        Assert.NotNull(StaticLog.Log);
+        var log = StaticLog.Get(typeof(LogTests));
+        Assert.NotNull(log);
     }
 
     [Fact]
     public void TestGlobalLogFactory()
     {
         // Test that GlobalLogFactory can be accessed
-        Assert.NotNull(GlobalLogFactory.GetLog(typeof(LogTests)));
+        var logFactory = GlobalLogFactory.Get();
+        var log = logFactory.GetLog(typeof(LogTests));
+        Assert.NotNull(log);
     }
 }

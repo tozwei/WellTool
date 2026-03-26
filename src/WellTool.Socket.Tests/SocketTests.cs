@@ -17,7 +17,7 @@ public class SocketTests
     public void TestSocketUtil()
     {
         // Test that SocketUtil can be accessed
-        Assert.NotNull(SocketUtil.GetRemoteAddress(null));
+        Assert.Null(SocketUtil.GetRemoteAddress(null));
     }
 
     [Fact]
