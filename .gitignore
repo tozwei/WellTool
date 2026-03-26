@@ -37,3 +37,5 @@
 /src/WellTool.AI/bin/Debug/net6.0
 /src/WellTool.Aop/bin/Debug
 /src/WellTool.BloomFilter/obj
+/src/WellTool.AI/bin/Debug/netstandard2.1
+/src/WellTool.BloomFilter/bin/Debug
