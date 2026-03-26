@@ -64,6 +64,11 @@ namespace WellTool.BloomFilter.Filter
                 throw new ArgumentOutOfRangeException(nameof(maxValue), "maxValue must be between 1 and int.MaxValue");
             }
 
+            if (maxValue < machineNum)
+            {
+                throw new ArgumentException("maxValue must be greater than or equal to machineNum");
+            }
+
             size = maxValue;
             int capacity = (int)((size + machineNum - 1) / machineNum);
 

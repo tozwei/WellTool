@@ -137,8 +137,22 @@ public class Setting : AbsSetting, IDisposable
             }
 
             var varName = result.Substring(startPos + 2, endPos - startPos - 2);
-            // 先从当前分组获取变量值，如果不存在则从默认分组获取
-            var varValue = _groupedMap.Get(currentGroup, varName) ?? _groupedMap.Get(AbsSetting.DEFAULT_GROUP, varName);
+            string? varValue = null;
+
+            // 检查变量名是否包含分组前缀
+            var dotIndex = varName.IndexOf('.');
+            if (dotIndex > 0)
+            {
+                // 带分组前缀的变量，如 ${demo.driver}
+                var group = varName.Substring(0, dotIndex);
+                var key = varName.Substring(dotIndex + 1);
+                varValue = _groupedMap.Get(group, key);
+            }
+            else
+            {
+                // 简单变量，先从当前分组获取，然后从默认分组获取
+                varValue = _groupedMap.Get(currentGroup, varName) ?? _groupedMap.Get(AbsSetting.DEFAULT_GROUP, varName);
+            }
 
             if (varValue != null)
             {
@@ -166,7 +180,18 @@ public class Setting : AbsSetting, IDisposable
             throw new FileNotFoundException($"配置文件不存在：{path}");
         }
 
-        var lines = File.ReadAllLines(path, _charset);
+        // 尝试使用 UTF8 编码读取文件
+        string[] lines;
+        try
+        {
+            lines = File.ReadAllLines(path, Encoding.UTF8);
+        }
+        catch
+        {
+            // 如果 UTF8 失败，使用默认编码
+            lines = File.ReadAllLines(path);
+        }
+        
         Parse(lines);
     }
 

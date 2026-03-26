@@ -66,3 +66,4 @@
 /src/WellTool.Json/obj
 /src/WellTool.Json/bin/Debug
 /src/WellTool.Json.Tests/obj
+/src/WellTool.Json.Tests/bin/Debug/net8.0
