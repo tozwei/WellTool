@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <OutputType>Library</OutputType>
-    <RootNamespace>WellTool.Aop</RootNamespace>
-  </PropertyGroup>
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net6.0;netstandard2.1</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
 </Project>

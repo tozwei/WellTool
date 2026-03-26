@@ -34,3 +34,6 @@
 /src/WellTool.Aop/obj
 /src/WellTool.Aop.Tests/bin/Debug/net10.0
 /src/WellTool.Aop.Tests/obj
+/src/WellTool.AI/bin/Debug/net6.0
+/src/WellTool.Aop/bin/Debug
+/src/WellTool.BloomFilter/obj
