@@ -1,0 +1,148 @@
+// Copyright (c) 2025 WellTool Team
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using WellTool.Cron.Pattern.Matcher;
+
+namespace WellTool.Cron.Pattern.Parser
+{
+    /// <summary>
+    /// Cron表达式各部分的解析器
+    /// </summary>
+    public class PartParser
+    {
+        /// <summary>
+        /// 解析cron表达式的一个部分
+        /// </summary>
+        /// <param name="partStr">部分字符串</param>
+        /// <param name="min">最小值</param>
+        /// <param name="max">最大值</param>
+        /// <returns>匹配器</returns>
+        public static PartMatcher Parse(string partStr, int min, int max)
+        {
+            if (string.IsNullOrWhiteSpace(partStr))
+            {
+                throw new CronException("Empty cron part");
+            }
+
+            // 处理通配符 *
+            if (partStr == "*")
+            {
+                return AlwaysTrueMatcher.Instance;
+            }
+
+            // 创建布尔数组匹配器
+            var matcher = new BoolArrayMatcher(max - min + 1);
+
+            // 处理逗号分隔的多个值
+            string[] parts = partStr.Split(',');
+            foreach (string part in parts)
+            {
+                ParsePart(part, min, max, matcher);
+            }
+
+            return matcher;
+        }
+
+        /// <summary>
+        /// 解析单个部分
+        /// </summary>
+        /// <param name="part">部分字符串</param>
+        /// <param name="min">最小值</param>
+        /// <param name="max">最大值</param>
+        /// <param name="matcher">匹配器</param>
+        private static void ParsePart(string part, int min, int max, BoolArrayMatcher matcher)
+        {
+            // 处理范围表达式，如 1-5
+            if (part.Contains('-'))
+            {
+                string[] rangeParts = part.Split('-');
+                if (rangeParts.Length != 2)
+                {
+                    throw new CronException("Invalid range format: {0}", part);
+                }
+
+                int start = ParseInt(rangeParts[0], min, max);
+                int end = ParseInt(rangeParts[1], min, max);
+
+                if (start > end)
+                {
+                    throw new CronException("Invalid range: {0} > {1}", start, end);
+                }
+
+                // 处理步长，如 1-5/2
+                if (rangeParts[1].Contains('/'))
+                {
+                    string[] stepParts = rangeParts[1].Split('/');
+                    end = ParseInt(stepParts[0], min, max);
+                    int step = ParseInt(stepParts[1], 1, int.MaxValue);
+
+                    for (int i = start; i <= end; i += step)
+                    {
+                        matcher.SetMatch(i - min);
+                    }
+                }
+                else
+                {
+                    for (int i = start; i <= end; i++)
+                    {
+                        matcher.SetMatch(i - min);
+                    }
+                }
+            }
+            // 处理步长表达式，如 */5
+            else if (part.Contains('/'))
+            {
+                string[] stepParts = part.Split('/');
+                if (stepParts.Length != 2)
+                {
+                    throw new CronException("Invalid step format: {0}", part);
+                }
+
+                int step = ParseInt(stepParts[1], 1, int.MaxValue);
+
+                for (int i = min; i <= max; i += step)
+                {
+                    matcher.SetMatch(i - min);
+                }
+            }
+            // 处理单个值
+            else
+            {
+                int value = ParseInt(part, min, max);
+                matcher.SetMatch(value - min);
+            }
+        }
+
+        /// <summary>
+        /// 解析整数
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <param name="min">最小值</param>
+        /// <param name="max">最大值</param>
+        /// <returns>解析的整数</returns>
+        private static int ParseInt(string str, int min, int max)
+        {
+            if (!int.TryParse(str, out int value))
+            {
+                throw new CronException("Invalid number: {0}", str);
+            }
+
+            if (value < min || value > max)
+            {
+                throw new CronException("Value {0} out of range [{1}, {2}]", value, min, max);
+            }
+
+            return value;
+        }
+    }
+}
