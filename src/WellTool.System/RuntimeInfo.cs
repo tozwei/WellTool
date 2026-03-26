@@ -19,7 +19,18 @@ public class RuntimeInfo
     /// 获得JVM最大内存
     /// </summary>
     /// <returns>最大内存</returns>
-    public long MaxMemory => GC.GetGCMemoryInfo().TotalAvailableMemoryBytes;
+    public long MaxMemory
+    {
+        get
+        {
+#if NET6_0_OR_GREATER
+            return GC.GetGCMemoryInfo().TotalAvailableMemoryBytes;
+#else
+            // For older frameworks, return a reasonable estimate
+            return Environment.WorkingSet * 2;
+#endif
+        }
+    }
 
     /// <summary>
     /// 获得JVM已分配内存
@@ -36,7 +47,12 @@ public class RuntimeInfo
         get
         {
             var total = GC.GetTotalMemory(false);
+#if NET6_0_OR_GREATER
             var max = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes;
+#else
+            // For older frameworks, return a reasonable estimate
+            var max = Environment.WorkingSet * 2;
+#endif
             return max - total;
         }
     }

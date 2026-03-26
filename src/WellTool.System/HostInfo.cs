@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text;
 
 namespace WellTool.System;
@@ -24,7 +25,7 @@ public class HostInfo
             _hostName = hostName;
 
             var addresses = Dns.GetHostAddresses(hostName);
-            var ipv4 = addresses.FirstOrDefault(a => a.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+            var ipv4 = addresses.FirstOrDefault(a => a.AddressFamily == AddressFamily.InterNetwork);
             _hostAddress = ipv4?.ToString() ?? "127.0.0.1";
         }
         catch
