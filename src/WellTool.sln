@@ -23,6 +23,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Aop", "WellTool.Ao
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Aop.Tests", "WellTool.Aop.Tests\WellTool.Aop.Tests.csproj", "{0F10D18C-AE48-2A98-856B-7657911BEFDE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.BloomFilter", "WellTool.BloomFilter\WellTool.BloomFilter.csproj", "{E835F1E5-DD55-4DF2-812A-CFC0914B81E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,9 +73,20 @@ Global
 		{0F10D18C-AE48-2A98-856B-7657911BEFDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F10D18C-AE48-2A98-856B-7657911BEFDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F10D18C-AE48-2A98-856B-7657911BEFDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E835F1E5-DD55-4DF2-812A-CFC0914B81E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E835F1E5-DD55-4DF2-812A-CFC0914B81E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E835F1E5-DD55-4DF2-812A-CFC0914B81E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E835F1E5-DD55-4DF2-812A-CFC0914B81E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B3D8A9E2-4F1C-4E89-9A7B-1234567890AB} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{FDB55AAA-22C3-9613-2793-08ECC9CC119E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{F789E9AA-8CC8-61BE-1F68-2DE03BDA4E4D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{BC4BAEBF-B8F1-F954-CC2C-B9E53029ABF6} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{0F10D18C-AE48-2A98-856B-7657911BEFDE} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D3DC11E5-00EA-4419-A30F-F9A9F0843104}
