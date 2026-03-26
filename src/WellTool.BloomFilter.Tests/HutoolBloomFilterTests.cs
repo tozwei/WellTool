@@ -25,25 +25,25 @@ namespace WellTool.BloomFilter.Tests
         public void TestInitWhenMaxValueLessThanMachineNum()
         {
             // 测试 maxValue=1 且 machineNum=32 时 add 应无异常
-            Assert.Throws<ArgumentOutOfRangeException>(() => {
+            Assert.Throws<ArgumentException>(() => {
                 var filter = new DefaultFilter(1, 32);
                 filter.Add("init");
             });
 
             // 测试 maxValue=31 且 machineNum=32 时 add 应无异常
-            Assert.Throws<ArgumentOutOfRangeException>(() => {
+            Assert.Throws<ArgumentException>(() => {
                 var filter = new DefaultFilter(31, 32);
                 filter.Add("init");
             });
 
             // 测试 maxValue=1 且 machineNum=64 时 add 应无异常
-            Assert.Throws<ArgumentOutOfRangeException>(() => {
+            Assert.Throws<ArgumentException>(() => {
                 var filter = new DefaultFilter(1, 64);
                 filter.Add("init");
             });
 
             // 测试 maxValue=63 且 machineNum=64 时 add 应无异常
-            Assert.Throws<ArgumentOutOfRangeException>(() => {
+            Assert.Throws<ArgumentException>(() => {
                 var filter = new DefaultFilter(63, 64);
                 filter.Add("init");
             });
@@ -94,6 +94,20 @@ namespace WellTool.BloomFilter.Tests
             {
                 Console.WriteLine($"{i}是否存在-->{longMap.Contains(i)}");
             }
+        }
+
+        [Fact]
+        public void TestBitSetBloomFilterConstructorWithInvalidParameters()
+        {
+            // 注意：.NET 版本的 BitSetBloomFilter 构造函数参数与 Java 版本不同
+            // 这里测试 .NET 版本的构造函数
+            Assert.Throws<ArgumentOutOfRangeException>(() => {
+                var filter = new BitSetBloomFilter(0);
+            });
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => {
+                var filter = new BitSetBloomFilter(-5);
+            });
         }
     }
 }

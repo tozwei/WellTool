@@ -43,3 +43,7 @@
 /src/WellTool.BloomFilter.Tests/obj/Debug/net10.0
 /src/WellTool.BloomFilter.Tests/bin/Debug/net8.0
 /src/WellTool.BloomFilter.Tests/obj
+/src/WellTool.Bom/bin/Debug
+/src/WellTool.Bom/obj
+/src/WellTool.Cache/bin/Debug
+/src/WellTool.Cache/obj

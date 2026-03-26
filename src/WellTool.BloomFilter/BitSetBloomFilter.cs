@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections;
 
 namespace WellTool.BloomFilter
@@ -29,6 +30,10 @@ namespace WellTool.BloomFilter
         /// <param name="size">大小</param>
         public BitSetBloomFilter(int size)
         {
+            if (size <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(size), "size must be greater than 0");
+            }
             this.size = size;
             bitArray = new BitArray(size);
         }
