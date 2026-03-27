@@ -59,7 +59,7 @@ namespace WellTool.Core.Annotation.Scanner
             foreach (var annotation in field.GetCustomAttributes(true))
             {
                 var attr = annotation as Attribute;
-                if (attr != null && !AnnotationUtil.IsJdkMateAnnotation(attr.GetType()) && filter(attr))
+                if (attr != null && filter(attr))
                 {
                     consumer(0, attr);
                 }

@@ -124,7 +124,6 @@ namespace WellTool.Core.Annotation.Scanner
         {
             var sourceMethod = (MethodInfo)source;
             return targetClass.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(superMethod => !superMethod.IsBridge)
                 .Where(superMethod => HasSameSignature(sourceMethod, superMethod))
                 .SelectMany(superMethod => superMethod.GetCustomAttributes(true))
                 .Cast<Attribute>()

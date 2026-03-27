@@ -88,12 +88,12 @@ namespace WellTool.Core.Annotation.Scanner
             int distance = 0;
             do
             {
-                var annotationTypes = deque.RemoveFirst();
+                var annotationTypes = deque.First.Value;
+                deque.RemoveFirst();
                 foreach (var type in annotationTypes)
                 {
                     var metaAnnotations = type.GetCustomAttributes(true)
                         .Cast<Attribute>()
-                        .Where(a => !AnnotationUtil.IsJdkMateAnnotation(a.GetType()))
                         .Where(filter)
                         .ToList();
                     foreach (var metaAnnotation in metaAnnotations)
@@ -104,7 +104,7 @@ namespace WellTool.Core.Annotation.Scanner
                     var next = metaAnnotations.Select(a => a.GetType())
                         .Where(t => !accessed.Contains(t))
                         .ToList();
-                    if (CollUtil.IsNotEmpty(next))
+                    if (next.Count > 0)
                     {
                         deque.AddLast(next);
                     }
