@@ -1,6 +1,6 @@
 using System;
 
-namespace WellTool.Core.Convert
+namespace WellTool.Core.Converter
 {
     public interface TypeConverter
     {

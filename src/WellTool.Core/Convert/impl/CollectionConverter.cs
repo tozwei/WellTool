@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WellTool.Core.Convert.impl
+namespace WellTool.Core.Converter.impl
 {
     /// <summary>
     /// 集合转换器

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WellTool.Core.Convert
+namespace WellTool.Core.Converter
 {
     public enum BasicType
     {

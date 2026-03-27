@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WellTool.Core.Convert.impl
+namespace WellTool.Core.Converter.impl
 {
     /// <summary>
     /// 字符串转换器

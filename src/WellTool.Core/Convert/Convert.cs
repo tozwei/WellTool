@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WellTool.Core.Convert
+namespace WellTool.Core.Converter
 {
     /// <summary>
     /// 类型转换工具类

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace WellTool.Core.Convert.impl
+namespace WellTool.Core.Converter.impl
 {
     /// <summary>
     /// 映射转换器
