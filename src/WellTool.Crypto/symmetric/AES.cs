@@ -27,7 +27,7 @@ namespace WellTool.Crypto.Symmetric
         /// </summary>
         /// <param name="key">密钥</param>
         /// <param name="iv">初始化向量</param>
-        public AES(byte[] key, byte[]? iv = null) : base(SymmetricAlgorithm.AES, key, iv) { }
+        public AES(byte[] key, byte[]? iv = null) : base(SymmetricAlgorithmType.AES, key, iv) { }
 
         /// <summary>
         /// 加密

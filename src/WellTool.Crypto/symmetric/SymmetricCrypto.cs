@@ -25,7 +25,7 @@ namespace WellTool.Crypto.Symmetric
         /// <summary>
         /// 加密算法
         /// </summary>
-        protected readonly SymmetricAlgorithm Algorithm;
+        protected readonly SymmetricAlgorithmType Algorithm;
 
         /// <summary>
         /// 密钥
@@ -43,7 +43,7 @@ namespace WellTool.Crypto.Symmetric
         /// <param name="algorithm">加密算法</param>
         /// <param name="key">密钥</param>
         /// <param name="iv">初始化向量</param>
-        protected SymmetricCrypto(SymmetricAlgorithm algorithm, byte[] key, byte[]? iv = null)
+        protected SymmetricCrypto(SymmetricAlgorithmType algorithm, byte[] key, byte[]? iv = null)
         {
             Algorithm = algorithm;
             Key = key ?? throw new CryptoException("Key cannot be null");
@@ -91,17 +91,16 @@ namespace WellTool.Crypto.Symmetric
         /// <summary>
         /// 获取对称加密算法实例
         /// </summary>
-        /// <param name="algorithm">加密算法</param>
         /// <returns>对称加密算法实例</returns>
         protected System.Security.Cryptography.SymmetricAlgorithm GetSymmetricAlgorithm()
         {
             switch (Algorithm)
             {
-                case SymmetricAlgorithm.AES:
+                case SymmetricAlgorithmType.AES:
                     return new System.Security.Cryptography.AesManaged();
-                case SymmetricAlgorithm.DES:
+                case SymmetricAlgorithmType.DES:
                     return new System.Security.Cryptography.DESCryptoServiceProvider();
-                case SymmetricAlgorithm.DESede:
+                case SymmetricAlgorithmType.DESede:
                     return new System.Security.Cryptography.TripleDESCryptoServiceProvider();
                 default:
                     throw new CryptoException("Unsupported symmetric algorithm: {0}", Algorithm);

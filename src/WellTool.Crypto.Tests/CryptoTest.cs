@@ -37,8 +37,8 @@ namespace WellTool.Crypto.Tests
         public void TestAES()
         {
             // 生成密钥和初始化向量
-            byte[] key = KeyUtil.GenerateSymmetricKey(SymmetricAlgorithm.AES);
-            byte[] iv = KeyUtil.GenerateIV(SymmetricAlgorithm.AES);
+            byte[] key = KeyUtil.GenerateSymmetricKey(SymmetricAlgorithmType.AES);
+            byte[] iv = KeyUtil.GenerateIV(SymmetricAlgorithmType.AES);
 
             // 创建AES加密实例
             var aes = new AES(key, iv);
@@ -59,8 +59,8 @@ namespace WellTool.Crypto.Tests
         public void TestDES()
         {
             // 生成密钥和初始化向量
-            byte[] key = KeyUtil.GenerateSymmetricKey(SymmetricAlgorithm.DES);
-            byte[] iv = KeyUtil.GenerateIV(SymmetricAlgorithm.DES);
+            byte[] key = KeyUtil.GenerateSymmetricKey(SymmetricAlgorithmType.DES);
+            byte[] iv = KeyUtil.GenerateIV(SymmetricAlgorithmType.DES);
 
             // 创建DES加密实例
             var des = new DES(key, iv);
@@ -81,8 +81,8 @@ namespace WellTool.Crypto.Tests
         public void TestDESede()
         {
             // 生成密钥和初始化向量
-            byte[] key = KeyUtil.GenerateSymmetricKey(SymmetricAlgorithm.DESede);
-            byte[] iv = KeyUtil.GenerateIV(SymmetricAlgorithm.DESede);
+            byte[] key = KeyUtil.GenerateSymmetricKey(SymmetricAlgorithmType.DESede);
+            byte[] iv = KeyUtil.GenerateIV(SymmetricAlgorithmType.DESede);
 
             // 创建3DES加密实例
             var desEde = new DESede(key, iv);
@@ -199,8 +199,8 @@ namespace WellTool.Crypto.Tests
             Assert.Equal(64, sha256.Length);
 
             // 测试密钥生成
-            byte[] aesKey = CryptoUtil.GenerateSymmetricKey(SymmetricAlgorithm.AES);
-            byte[] desKey = CryptoUtil.GenerateSymmetricKey(SymmetricAlgorithm.DES);
+            byte[] aesKey = CryptoUtil.GenerateSymmetricKey(SymmetricAlgorithmType.AES);
+            byte[] desKey = CryptoUtil.GenerateSymmetricKey(SymmetricAlgorithmType.DES);
             var (rsaPublicKey, rsaPrivateKey) = CryptoUtil.GenerateRsaKeyPair();
 
             // 验证密钥长度

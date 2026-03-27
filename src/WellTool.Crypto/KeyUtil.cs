@@ -38,13 +38,13 @@ namespace WellTool.Crypto
         /// </summary>
         /// <param name="algorithm">对称加密算法</param>
         /// <returns>对称密钥</returns>
-        public static byte[] GenerateSymmetricKey(WellTool.Crypto.Symmetric.SymmetricAlgorithm algorithm)
+        public static byte[] GenerateSymmetricKey(WellTool.Crypto.Symmetric.SymmetricAlgorithmType algorithm)
         {
             int keySize = algorithm switch
             {
-                WellTool.Crypto.Symmetric.SymmetricAlgorithm.AES => 256,
-                WellTool.Crypto.Symmetric.SymmetricAlgorithm.DES => 64,
-                WellTool.Crypto.Symmetric.SymmetricAlgorithm.DESede => 192,
+                WellTool.Crypto.Symmetric.SymmetricAlgorithmType.AES => 256,
+                WellTool.Crypto.Symmetric.SymmetricAlgorithmType.DES => 64,
+                WellTool.Crypto.Symmetric.SymmetricAlgorithmType.DESede => 192,
                 _ => throw new CryptoException("Unsupported symmetric algorithm: {0}", algorithm)
             };
             return GenerateSymmetricKey(keySize);
@@ -68,13 +68,13 @@ namespace WellTool.Crypto
         /// </summary>
         /// <param name="algorithm">对称加密算法</param>
         /// <returns>初始化向量</returns>
-        public static byte[] GenerateIV(WellTool.Crypto.Symmetric.SymmetricAlgorithm algorithm)
+        public static byte[] GenerateIV(WellTool.Crypto.Symmetric.SymmetricAlgorithmType algorithm)
         {
             int blockSize = algorithm switch
             {
-                WellTool.Crypto.Symmetric.SymmetricAlgorithm.AES => 128,
-                WellTool.Crypto.Symmetric.SymmetricAlgorithm.DES => 64,
-                WellTool.Crypto.Symmetric.SymmetricAlgorithm.DESede => 64,
+                WellTool.Crypto.Symmetric.SymmetricAlgorithmType.AES => 128,
+                WellTool.Crypto.Symmetric.SymmetricAlgorithmType.DES => 64,
+                WellTool.Crypto.Symmetric.SymmetricAlgorithmType.DESede => 64,
                 _ => throw new CryptoException("Unsupported symmetric algorithm: {0}", algorithm)
             };
             return GenerateIV(blockSize);

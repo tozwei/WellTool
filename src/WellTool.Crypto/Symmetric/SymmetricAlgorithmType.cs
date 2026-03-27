@@ -14,9 +14,9 @@
 namespace WellTool.Crypto.Symmetric
 {
     /// <summary>
-    /// 对称加密算法
+    /// 对称加密算法类型
     /// </summary>
-    public enum SymmetricAlgorithm
+    public enum SymmetricAlgorithmType
     {
         /// <summary>
         /// AES算法

@@ -27,7 +27,7 @@ namespace WellTool.Crypto.Symmetric
         /// </summary>
         /// <param name="key">密钥</param>
         /// <param name="iv">初始化向量</param>
-        public DESede(byte[] key, byte[]? iv = null) : base(SymmetricAlgorithm.DESede, key, iv) { }
+        public DESede(byte[] key, byte[]? iv = null) : base(SymmetricAlgorithmType.DESede, key, iv) { }
 
         /// <summary>
         /// 加密

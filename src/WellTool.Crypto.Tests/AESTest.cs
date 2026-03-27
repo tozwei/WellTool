@@ -30,8 +30,8 @@ namespace WellTool.Crypto.Tests
         public void TestAESEncryptAndDecrypt()
         {
             // 生成密钥和初始化向量
-            byte[] key = KeyUtil.GenerateSymmetricKey(SymmetricAlgorithm.AES);
-            byte[] iv = KeyUtil.GenerateIV(SymmetricAlgorithm.AES);
+            byte[] key = KeyUtil.GenerateSymmetricKey(SymmetricAlgorithmType.AES);
+            byte[] iv = KeyUtil.GenerateIV(SymmetricAlgorithmType.AES);
 
             // 创建AES加密实例
             var aes = new AES(key, iv);
