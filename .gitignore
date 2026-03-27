@@ -80,3 +80,5 @@
 /src/WellTool.Crypto.Tests/obj
 /src/WellTool.Jwt/obj
 /src/WellTool.Jwt/bin/Debug
+/src/WellTool.Extra/bin/Debug
+/src/WellTool.Extra/obj
