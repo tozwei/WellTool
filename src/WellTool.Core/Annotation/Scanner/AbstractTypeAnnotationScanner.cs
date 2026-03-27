@@ -123,7 +123,7 @@ namespace WellTool.Core.Annotation.Scanner
             this.converters.Add(converter);
             if (!this.hasConverters)
             {
-                this.hasConverters = CollUtil.IsNotEmpty(this.converters);
+                this.hasConverters = CollUtil.IsNotEmpty<System.Func<Type, Type>>(this.converters);
             }
             return typedThis;
         }
@@ -186,14 +186,14 @@ namespace WellTool.Core.Annotation.Scanner
                     var targetAnnotations = GetAnnotationsFromTargetClass(memberInfo, index, convertedClass);
                     foreach (var annotation in targetAnnotations)
                     {
-                        if (!AnnotationUtil.IsJdkMateAnnotation(annotation.GetType()) && filter(annotation))
+                        if (!AnnotationUtil.IsJdkMetaAnnotation(annotation.GetType()) && filter(annotation))
                         {
                             consumer(index, annotation);
                         }
                     }
                     index++;
                 }
-                if (CollUtil.IsNotEmpty(nextClassQueue))
+                if (CollUtil.IsNotEmpty<Type>(nextClassQueue))
                 {
                     classDeque.AddLast(nextClassQueue);
                 }
