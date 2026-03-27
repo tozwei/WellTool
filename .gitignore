@@ -82,3 +82,7 @@
 /src/WellTool.Jwt/bin/Debug
 /src/WellTool.Extra/bin/Debug
 /src/WellTool.Extra/obj
+/src/WellTool.DB/obj
+/src/WellTool.Dfa/obj
+/src/WellTool.DB/bin/Debug
+/src/WellTool.Dfa/bin/Debug
