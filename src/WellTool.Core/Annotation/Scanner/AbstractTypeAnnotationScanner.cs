@@ -90,7 +90,7 @@ namespace WellTool.Core.Annotation.Scanner
         /// </summary>
         /// <param name="filter">过滤器</param>
         /// <returns>当前实例</returns>
-        public T SetFilter(Func<Type, bool> filter)
+        public T SetFilter(System.Func<Type, bool> filter)
         {
             Assert.NotNull(filter, "filter must not null");
             this.filter = filter;
@@ -104,7 +104,10 @@ namespace WellTool.Core.Annotation.Scanner
         /// <returns>当前实例</returns>
         public T AddExcludeTypes(params Type[] excludeTypes)
         {
-            CollUtil.AddAll(this.excludeTypes, excludeTypes);
+            foreach (var type in excludeTypes)
+            {
+                this.excludeTypes.Add(type);
+            }
             return typedThis;
         }
 
@@ -113,13 +116,13 @@ namespace WellTool.Core.Annotation.Scanner
         /// </summary>
         /// <param name="converter">转换器</param>
         /// <returns>当前实例</returns>
-        public T AddConverters(Func<Type, Type> converter)
+        public T AddConverters(System.Func<Type, Type> converter)
         {
             Assert.NotNull(converter, "converter must not null");
             this.converters.Add(converter);
             if (!this.hasConverters)
             {
-                this.hasConverters = CollUtil.IsNotEmpty(this.converters);
+                this.hasConverters = this.converters.Count > 0;
             }
             return typedThis;
         }
@@ -158,11 +161,12 @@ namespace WellTool.Core.Annotation.Scanner
             var memberInfo = annotatedEle as MemberInfo;
             var sourceClass = GetClassFormAnnotatedElement(memberInfo);
             var classDeque = CollUtil.NewLinkedList(new List<Type> { sourceClass });
-            var accessedTypes = new LinkedHashSet<Type>();
+            var accessedTypes = new HashSet<Type>();
             int index = 0;
             while (classDeque.Count > 0)
             {
-                var currClassQueue = classDeque.RemoveFirst();
+                var currClassQueue = classDeque.First.Value;
+                classDeque.RemoveFirst();
                 var nextClassQueue = new List<Type>();
                 foreach (var targetClass in currClassQueue)
                 {
@@ -181,14 +185,14 @@ namespace WellTool.Core.Annotation.Scanner
                     var targetAnnotations = GetAnnotationsFromTargetClass(memberInfo, index, convertedClass);
                     foreach (var annotation in targetAnnotations)
                     {
-                        if (!AnnotationUtil.IsJdkMateAnnotation(annotation.GetType()) && filter(annotation))
+                        if (filter(annotation))
                         {
                             consumer(index, annotation);
                         }
                     }
                     index++;
                 }
-                if (CollUtil.IsNotEmpty(nextClassQueue))
+                if (nextClassQueue.Count > 0)
                 {
                     classDeque.AddLast(nextClassQueue);
                 }
@@ -237,7 +241,10 @@ namespace WellTool.Core.Annotation.Scanner
                 var interfaces = targetClass.GetInterfaces();
                 if (interfaces.Length > 0)
                 {
-                    CollUtil.AddAll(nextClasses, interfaces);
+                    foreach (var iface in interfaces)
+                    {
+                        nextClasses.Add(iface);
+                    }
                 }
             }
         }
@@ -279,11 +286,66 @@ namespace WellTool.Core.Annotation.Scanner
         /// <summary>
         /// 若类型为代理类，则尝试转换为原始被代理类
         /// </summary>
-        public class JdkProxyClassConverter : Func<Type, Type>
+        public static System.Func<Type, Type> JdkProxyClassConverter
         {
-            public Type Invoke(Type sourceClass)
+            get
             {
-                return sourceClass.IsInterface ? sourceClass : Invoke(sourceClass.BaseType);
+                return ConvertType;
+            }
+        }
+
+        private static Type ConvertType(Type sourceClass)
+        {
+            return sourceClass.IsInterface ? sourceClass : ConvertType(sourceClass.BaseType);
+        }
+
+        /// <summary>
+        /// 判断是否支持扫描该注解元素
+        /// </summary>
+        /// <param name="annotatedEle">可注解元素，可以是Type、Method、Field、Constructor等</param>
+        /// <returns>是否支持扫描该注解元素</returns>
+        public bool Support(object annotatedEle)
+        {
+            return annotatedEle is MemberInfo;
+        }
+
+        /// <summary>
+        /// 获取注解元素上的全部注解。调用该方法前，需要确保调用Support返回为true
+        /// </summary>
+        /// <param name="annotatedEle">可注解元素，可以是Type、Method、Field、Constructor等</param>
+        /// <returns>注解列表</returns>
+        public List<Attribute> GetAnnotations(object annotatedEle)
+        {
+            var result = new List<Attribute>();
+            Scan((index, annotation) => result.Add(annotation), annotatedEle, null);
+            return result;
+        }
+
+        /// <summary>
+        /// 若Support返回true，则调用并返回GetAnnotations结果，否则返回空列表
+        /// </summary>
+        /// <param name="annotatedEle">可注解元素，可以是Type、Method、Field、Constructor等</param>
+        /// <returns>注解列表</returns>
+        public List<Attribute> GetAnnotationsIfSupport(object annotatedEle)
+        {
+            if (Support(annotatedEle))
+            {
+                return GetAnnotations(annotatedEle);
+            }
+            return new List<Attribute>();
+        }
+
+        /// <summary>
+        /// 若Support返回true，则调用Scan
+        /// </summary>
+        /// <param name="consumer">对获取到的注解和注解对应的层级索引的处理</param>
+        /// <param name="annotatedEle">可注解元素，可以是Type、Method、Field、Constructor等</param>
+        /// <param name="filter">注解过滤器，无法通过过滤器的注解不会被处理。该参数允许为空。</param>
+        public void ScanIfSupport(Action<int, Attribute> consumer, object annotatedEle, Func<Attribute, bool> filter)
+        {
+            if (Support(annotatedEle))
+            {
+                Scan(consumer, annotatedEle, filter);
             }
         }
     }

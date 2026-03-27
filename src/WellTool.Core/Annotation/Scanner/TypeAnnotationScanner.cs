@@ -17,7 +17,7 @@ namespace WellTool.Core.Annotation.Scanner
         /// <param name="includeInterfaces">是否允许扫描父接口</param>
         /// <param name="filter">过滤器</param>
         /// <param name="excludeTypes">不包含的类型</param>
-        public TypeAnnotationScanner(bool includeSupperClass, bool includeInterfaces, Func<Type, bool> filter, HashSet<Type> excludeTypes)
+        public TypeAnnotationScanner(bool includeSupperClass, bool includeInterfaces, System.Func<Type, bool> filter, HashSet<Type> excludeTypes)
             : base(includeSupperClass, includeInterfaces, filter, excludeTypes)
         {
         }
@@ -125,12 +125,17 @@ namespace WellTool.Core.Annotation.Scanner
         /// <summary>
         /// 若类型为代理类，则尝试转换为原始被代理类
         /// </summary>
-        public class JdkProxyClassConverter : Func<Type, Type>
+        public static System.Func<Type, Type> JdkProxyClassConverter
         {
-            public Type Invoke(Type sourceClass)
+            get
             {
-                return sourceClass.IsInterface ? sourceClass : Invoke(sourceClass.BaseType);
+                return ConvertType;
             }
+        }
+
+        private static Type ConvertType(Type sourceClass)
+        {
+            return sourceClass.IsInterface ? sourceClass : ConvertType(sourceClass.BaseType);
         }
     }
 }
