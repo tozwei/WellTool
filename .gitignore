@@ -96,3 +96,5 @@
 /src/WellTool.Poi.Tests/obj
 /src/WellTool.Script.Tests/obj
 /src/WellTool.Socket/bin/Debug
+/src/WellTool.Poi.Tests/bin/Debug/net8.0
+/src/WellTool.Script.Tests/bin/Debug/net8.0
