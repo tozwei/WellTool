@@ -190,4 +190,122 @@ namespace WellTool.Core.Tests
                 SubName = "sub名字"
             };
 
-            var map = Bean
+            var map = BeanUtil.BeanToMap(person, null);
+
+            Assert.Equal("测试A11", map["name"]);
+            Assert.Equal(14, map["age"]);
+            Assert.Equal("11213232", map["openid"]);
+            // static属性应被忽略
+            Assert.False(map.ContainsKey("SUBNAME"));
+        }
+
+        [Fact]
+        public void BeanToMapTest2()
+        {
+            var person = new SubPerson
+            {
+                Age = 14,
+                Openid = "11213232",
+                Name = "测试A11",
+                SubName = "sub名字"
+            };
+
+            var map = BeanUtil.BeanToMap(person, true, true);
+            Assert.Equal("sub名字", map["sub_name"]);
+        }
+
+        [Fact]
+        public void BeanToMapWithValueEditTest()
+        {
+            var person = new SubPerson
+            {
+                Age = 14,
+                Openid = "11213232",
+                Name = "测试A11",
+                SubName = "sub名字"
+            };
+
+            var map = BeanUtil.BeanToMap(person, new LinkedDictionary<string, object>(),
+                CopyOptions.Create().SetFieldValueEditor((key, value) => $"{key}_{value}"));
+            Assert.Equal("subName_sub名字", map["subName"]);
+        }
+
+        [Fact]
+        public void BeanToMapWithAliasTest()
+        {
+            var person = new SubPersonWithAlias
+            {
+                Age = 14,
+                Openid = "11213232",
+                Name = "测试A11",
+                SubName = "sub名字",
+                Slow = true,
+                Booleana = true,
+                Booleanb = true
+            };
+
+            var map = BeanUtil.BeanToMap(person);
+            Assert.Equal("sub名字", map["aliasSubName"]);
+        }
+
+        [Fact]
+        public void MapToBeanWithAliasTest()
+        {
+            var map = new Dictionary<string, object>
+            {
+                { "aliasSubName", "sub名字" },
+                { "slow", true },
+                { "is_booleana", "1" },
+                { "is_booleanb", true }
+            };
+
+            var subPersonWithAlias = BeanUtil.ToBean(map, typeof(SubPersonWithAlias)) as SubPersonWithAlias;
+            Assert.NotNull(subPersonWithAlias);
+            Assert.Equal("sub名字", subPersonWithAlias.SubName);
+
+            //https://gitee.com/chinabugotech/hutool/issues/I6H0XF
+            Assert.False(subPersonWithAlias.Booleana);
+            Assert.Null(subPersonWithAlias.Booleanb);
+        }
+
+        [Fact]
+        public void BeanToMapWithLocalDateTimeTest()
+        {
+            var now = DateTime.Now;
+
+            var person = new SubPerson
+            {
+                Age = 14,
+                Openid = "11213232",
+                Name = "测试A11",
+                SubName = "sub名字",
+                Date = now,
+                Date2 = DateOnly.FromDateTime(now)
+            };
+
+            var map = BeanUtil.BeanToMap(person, false, true);
+            Assert.Equal(now, map["date"]);
+            Assert.Equal(DateOnly.FromDateTime(now), map["date2"]);
+        }
+
+        [Fact]
+        public void GetPropertyTest()
+        {
+            var person = new SubPerson
+            {
+                Age = 14,
+                Openid = "11213232",
+                Name = "测试A11",
+                SubName = "sub名字"
+            };
+
+            var name = BeanUtil.GetProperty(person, "name");
+            Assert.Equal("测试A11", name);
+            var subName = BeanUtil.GetProperty(person, "subName");
+            Assert.Equal("sub名字", subName);
+        }
+
+        [Fact]
+        public void GetNullPropertyTest()
+        {
+            var property = BeanUtil.GetProperty(null, "name");
