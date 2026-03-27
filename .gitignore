@@ -92,3 +92,7 @@
 /src/WellTool.Script/bin/Debug
 /src/WellTool.All/bin/Debug
 /src/WellTool.All/obj
+/src/WellTool.Poi.Tests/obj
+/src/WellTool.Poi.Tests/obj
+/src/WellTool.Script.Tests/obj
+/src/WellTool.Socket/bin/Debug
