@@ -1270,6 +1270,40 @@ namespace WellTool.Core.Collection
         }
 
         /// <summary>
+        /// 向集合中添加所有元素
+        /// </summary>
+        /// <typeparam name="T">元素类型</typeparam>
+        /// <param name="target">目标集合</param>
+        /// <param name="items">要添加的元素</param>
+        public static void AddAll<T>(ICollection<T> target, params T[] items)
+        {
+            if (target != null && items != null)
+            {
+                foreach (var item in items)
+                {
+                    target.Add(item);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 向集合中添加所有元素
+        /// </summary>
+        /// <typeparam name="T">元素类型</typeparam>
+        /// <param name="target">目标集合</param>
+        /// <param name="items">要添加的元素</param>
+        public static void AddAll<T>(ICollection<T> target, ICollection<T> items)
+        {
+            if (target != null && items != null)
+            {
+                foreach (var item in items)
+                {
+                    target.Add(item);
+                }
+            }
+        }
+
+        /// <summary>
         /// 创建新的集合对象
         /// </summary>
         /// <typeparam name="T">集合元素类型</typeparam>

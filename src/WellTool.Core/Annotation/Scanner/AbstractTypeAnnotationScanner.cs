@@ -104,10 +104,11 @@ namespace WellTool.Core.Annotation.Scanner
         /// <returns>当前实例</returns>
         public T AddExcludeTypes(params Type[] excludeTypes)
         {
-            foreach (var type in excludeTypes)
-            {
-                this.excludeTypes.Add(type);
-            }
+            CollUtil.AddAll(this.excludeTypes, excludeTypes);
+            //foreach (var type in excludeTypes)
+            //{
+            //    this.excludeTypes.Add(type);
+            //}
             return typedThis;
         }
 
@@ -122,7 +123,7 @@ namespace WellTool.Core.Annotation.Scanner
             this.converters.Add(converter);
             if (!this.hasConverters)
             {
-                this.hasConverters = this.converters.Count > 0;
+                this.hasConverters = CollUtil.IsNotEmpty(this.converters);
             }
             return typedThis;
         }
@@ -165,10 +166,10 @@ namespace WellTool.Core.Annotation.Scanner
             int index = 0;
             while (classDeque.Count > 0)
             {
-                var currClassQueue = classDeque.First.Value;
+                var currClassList = classDeque.First.Value;
                 classDeque.RemoveFirst();
                 var nextClassQueue = new List<Type>();
-                foreach (var targetClass in currClassQueue)
+                foreach (var targetClass in currClassList)
                 {
                     var convertedClass = Convert(targetClass);
                     // 过滤不需要处理的类
@@ -185,14 +186,14 @@ namespace WellTool.Core.Annotation.Scanner
                     var targetAnnotations = GetAnnotationsFromTargetClass(memberInfo, index, convertedClass);
                     foreach (var annotation in targetAnnotations)
                     {
-                        if (filter(annotation))
+                        if (!AnnotationUtil.IsJdkMateAnnotation(annotation.GetType()) && filter(annotation))
                         {
                             consumer(index, annotation);
                         }
                     }
                     index++;
                 }
-                if (nextClassQueue.Count > 0)
+                if (CollUtil.IsNotEmpty(nextClassQueue))
                 {
                     classDeque.AddLast(nextClassQueue);
                 }
@@ -241,10 +242,7 @@ namespace WellTool.Core.Annotation.Scanner
                 var interfaces = targetClass.GetInterfaces();
                 if (interfaces.Length > 0)
                 {
-                    foreach (var iface in interfaces)
-                    {
-                        nextClasses.Add(iface);
-                    }
+                    CollUtil.AddAll(nextClasses, interfaces);
                 }
             }
         }

@@ -360,5 +360,90 @@ namespace WellTool.Core.Lang
         {
             return str != null ? Regex.Replace(str, pattern, replacement) : EMPTY;
         }
+
+        /// <summary>
+        /// 清理空白字符
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns>清理后的字符串</returns>
+        public static string CleanBlank(string str)
+        {
+            if (IsEmpty(str))
+            {
+                return str;
+            }
+            return Regex.Replace(str, @"\s+", "");
+        }
+
+        /// <summary>
+        /// 截取字符串（简写）
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <param name="startIndex">开始索引</param>
+        /// <param name="length">长度</param>
+        /// <returns>截取后的字符串</returns>
+        public static string Sub(string str, int startIndex, int length)
+        {
+            return Substring(str, startIndex, length);
+        }
+
+        /// <summary>
+        /// 忽略大小写比较字符串
+        /// </summary>
+        /// <param name="str1">字符串1</param>
+        /// <param name="str2">字符串2</param>
+        /// <returns>是否相等</returns>
+        public static bool EqualsIgnoreCase(string str1, string str2)
+        {
+            return string.Equals(str1, str2, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// 获取字符串长度
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns>长度</returns>
+        public static int Length(string str)
+        {
+            return str?.Length ?? 0;
+        }
+
+        /// <summary>
+        /// 移除前缀
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <param name="prefix">前缀</param>
+        /// <returns>移除前缀后的字符串</returns>
+        public static string RemovePrefix(string str, string prefix)
+        {
+            if (IsEmpty(str) || IsEmpty(prefix))
+            {
+                return str;
+            }
+            if (StartsWith(str, prefix))
+            {
+                return Substring(str, prefix.Length);
+            }
+            return str;
+        }
+
+        /// <summary>
+        /// 移除后缀
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <param name="suffix">后缀</param>
+        /// <returns>移除后缀后的字符串</returns>
+        public static string RemoveSuffix(string str, string suffix)
+        {
+            if (IsEmpty(str) || IsEmpty(suffix))
+            {
+                return str;
+            }
+            if (EndsWith(str, suffix))
+            {
+                return Substring(str, 0, str.Length - suffix.Length);
+            }
+            return str;
+        }
     }
 }

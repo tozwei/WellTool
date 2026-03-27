@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using Xunit;
 
 namespace WellTool.Core.Tests
@@ -27,7 +29,7 @@ namespace WellTool.Core.Tests
             Assert.True(now != default(DateTime));
             
             var today = WellTool.Core.Date.DateUtil.Today();
-            Assert.True(today.Date == DateTime.Today);
+            Assert.Equal(DateTime.Today.ToString("yyyy-MM-dd"), today);
         }
 
         [Fact]
@@ -52,7 +54,7 @@ namespace WellTool.Core.Tests
             
             var intersection = WellTool.Core.Collection.CollUtil.Intersection(list1, list2);
             Assert.Single(intersection);
-            Assert.Equal(3, intersection[0]);
+            Assert.Equal(3, intersection.First());
         }
 
         [Fact]
@@ -108,17 +110,17 @@ namespace WellTool.Core.Tests
         [Fact]
         public void TestConvert()
         {
-            var intValue = WellTool.Core.Convert.Convert.To<int>("123");
+            var intValue = WellTool.Core.Convert.Converter.To<int>("123");
             Assert.Equal(123, intValue);
             
-            var stringValue = WellTool.Core.Convert.Convert.To<string>(123);
+            var stringValue = WellTool.Core.Convert.Converter.To<string>(123);
             Assert.Equal("123", stringValue);
         }
 
         [Fact]
         public void TestMapUtil()
         {
-            var map = WellTool.Core.Map.MapUtil.NewHashMap<string, int>();
+            var map = new Dictionary<string, int>();
             map["test"] = 123;
             Assert.Equal(123, map["test"]);
         }
@@ -127,27 +129,27 @@ namespace WellTool.Core.Tests
         public void TestBiMap()
         {
             var biMap = new WellTool.Core.Map.BiMap<string, int>();
-            biMap.Put("one", 1);
-            biMap.Put("two", 2);
+            biMap.Add("one", 1);
+            biMap.Add("two", 2);
             
-            Assert.Equal(1, biMap.Get("one"));
+            Assert.Equal(1, biMap["one"]);
             Assert.Equal("two", biMap.GetKey(2));
         }
 
         [Fact]
         public void TestGanZhi()
         {
-            var ganZhi = WellTool.Core.Date.Chinese.GanZhi.GetGanZhiOfYear(2024);
+            var ganZhi = WellTool.Core.Date.Chinese.GanZhi.GetGanzhiOfYear(2024);
             Assert.NotNull(ganZhi);
         }
 
         [Fact]
         public void TestCalendar()
         {
-            var calendar = new WellTool.Core.Date.Calendar();
+            var calendar = new WellTool.Core.Date.Calendar(TimeZoneInfo.Local, CultureInfo.CurrentCulture);
             var now = DateTime.Now;
-            calendar.SetTime(now);
-            Assert.Equal(now.Year, calendar.Get(WellTool.Core.Date.DateField.Year));
+            calendar.Time = now;
+            Assert.Equal(now.Year, calendar.Get((int)WellTool.Core.Date.Calendar.CalendarField.Year));
         }
 
         [Fact]
@@ -156,7 +158,7 @@ namespace WellTool.Core.Tests
             var start = DateTime.Now;
             var end = start.AddHours(1);
             var between = new WellTool.Core.Date.DateBetween(start, end);
-            Assert.True(between.TotalHours >= 1);
+            Assert.True(between.Between(WellTool.Core.Date.DateUnit.Hour) >= 1);
         }
 
         [Fact]
@@ -171,7 +173,7 @@ namespace WellTool.Core.Tests
         [Fact]
         public void TestHashids()
         {
-            var hashids = new WellTool.Core.Codec.Hashids("test");
+            var hashids = WellTool.Core.Codec.Hashids.Create("test".ToCharArray());
             var id = hashids.Encode(123);
             var decoded = hashids.Decode(id);
             Assert.Contains(123, decoded);
@@ -181,8 +183,9 @@ namespace WellTool.Core.Tests
         public void TestMorse()
         {
             var text = "HELLO";
-            var morse = WellTool.Core.Codec.Morse.Encode(text);
-            var decoded = WellTool.Core.Codec.Morse.Decode(morse);
+            var morse = new WellTool.Core.Codec.Morse();
+            var encoded = morse.Encode(text);
+            var decoded = morse.Decode(encoded);
             Assert.Equal(text, decoded);
         }
 
@@ -191,7 +194,7 @@ namespace WellTool.Core.Tests
         {
             var list = new List<int> { 1, 2, 3, 4, 5 };
             var result = new List<int>();
-            WellTool.Core.Collection.IterUtil.ForEach(list, item => result.Add(item * 2));
+            WellTool.Core.Collection.IterUtil.ForEach(list.GetEnumerator(), item => result.Add(item * 2));
             Assert.Equal(5, result.Count);
             Assert.Equal(2, result[0]);
             Assert.Equal(10, result[4]);
@@ -209,8 +212,8 @@ namespace WellTool.Core.Tests
         [Fact]
         public void TestSingleton()
         {
-            var instance1 = WellTool.Core.Lang.Singleton<TestObject>.Instance;
-            var instance2 = WellTool.Core.Lang.Singleton<TestObject>.Instance;
+            var instance1 = WellTool.Core.Lang.Singleton.Get<TestObject>();
+            var instance2 = WellTool.Core.Lang.Singleton.Get<TestObject>();
             Assert.Same(instance1, instance2);
         }
 
@@ -226,6 +229,8 @@ namespace WellTool.Core.Tests
         {
             public string Name { get; set; } = string.Empty;
             public int Age { get; set; }
+            
+            private TestObject() { }
         }
     }
 }
