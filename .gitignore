@@ -86,3 +86,7 @@
 /src/WellTool.Dfa/obj
 /src/WellTool.DB/bin/Debug
 /src/WellTool.Dfa/bin/Debug
+/src/WellTool.Poi/obj
+/src/WellTool.Script/obj
+/src/WellTool.Poi/bin/Debug
+/src/WellTool.Script/bin/Debug
