@@ -309,3 +309,79 @@ namespace WellTool.Core.Tests
         public void GetNullPropertyTest()
         {
             var property = BeanUtil.GetProperty(null, "name");
+            Assert.Null(property);
+        }
+
+        [Fact]
+        public void GetPropertyDescriptorsTest()
+        {
+            var set = new HashSet<string>();
+            var propertyDescriptors = BeanUtil.GetPropertyDescriptors(typeof(SubPerson));
+            foreach (var propertyDescriptor in propertyDescriptors)
+            {
+                set.Add(propertyDescriptor.Name);
+            }
+            Assert.Contains("age", set);
+            Assert.Contains("id", set);
+            Assert.Contains("name", set);
+            Assert.Contains("openid", set);
+            Assert.Contains("slow", set);
+            Assert.Contains("subName", set);
+        }
+
+        [Fact]
+        public void CopyPropertiesTest()
+        {
+            var person = new SubPerson
+            {
+                Age = 14,
+                Openid = "11213232",
+                Name = "测试A11",
+                SubName = "sub名字"
+            };
+
+            var person1 = BeanUtil.CopyProperties(person, typeof(SubPerson)) as SubPerson;
+            Assert.NotNull(person1);
+            Assert.Equal(14, person1.Age);
+            Assert.Equal("11213232", person1.Openid);
+            Assert.Equal("测试A11", person1.Name);
+            Assert.Equal("sub名字", person1.SubName);
+        }
+
+        [Fact]
+        public void CopyPropertiesHasBooleanTest()
+        {
+            var p1 = new SubPerson
+            {
+                Slow = true
+            };
+
+            // 测试boolean参数值isXXX形式
+            var p2 = new SubPerson();
+            BeanUtil.CopyProperties(p1, p2);
+            Assert.True(p2.Slow);
+
+            // 测试boolean参数值非isXXX形式
+            var p3 = new SubPerson2();
+            BeanUtil.CopyProperties(p1, p3);
+            Assert.True(p3.Slow);
+        }
+
+        [Fact]
+        public void CopyPropertiesIgnoreNullTest()
+        {
+            var p1 = new SubPerson
+            {
+                Slow = true,
+                Name = null
+            };
+
+            var p2 = new SubPerson2
+            {
+                Name = "oldName"
+            };
+
+            // null值不覆盖目标属性
+            BeanUtil.CopyProperties(p1, p2, CopyOptions.Create().IgnoreNullValue());
+            Assert.Equal("oldName", p2.Name);
+
