@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Xunit;
+using WellToolConvert = WellTool.Core.Convert;
 
 namespace WellTool.Core.Tests
 {
@@ -110,10 +111,10 @@ namespace WellTool.Core.Tests
         [Fact]
         public void TestConvert()
         {
-            var intValue = WellTool.Core.Convert.Converter.To<int>("123");
+            var intValue = WellToolConvert.Converter.To<int>("123");
             Assert.Equal(123, intValue);
             
-            var stringValue = WellTool.Core.Convert.Converter.To<string>(123);
+            var stringValue = WellToolConvert.Converter.To<string>(123);
             Assert.Equal("123", stringValue);
         }
 
@@ -230,7 +231,9 @@ namespace WellTool.Core.Tests
             public string Name { get; set; } = string.Empty;
             public int Age { get; set; }
             
-            private TestObject() { }
+            public TestObject() { }
+            
+            // 用于单例模式的私有构造函数
         }
     }
 }
