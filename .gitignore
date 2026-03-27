@@ -102,3 +102,5 @@
 /src/WellTool.Cron.Tests/obj/project.assets.json
 /src/WellTool.Cron.Tests/obj/WellTool.Cron.Tests.csproj.nuget.dgspec.json
 /src/WellTool.Cron.Tests/obj/WellTool.Cron.Tests.csproj.nuget.g.props
+/src/WellTool.Jwt.Tests/obj
+/src/WellTool.Jwt.Tests/bin/Debug/net8.0
