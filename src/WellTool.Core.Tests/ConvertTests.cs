@@ -344,4 +344,27 @@ namespace WellTool.Core.Tests
             string s = Convert.DigitToChinese(0);
             Assert.Equal("零元整", s);
 
-            s = Convert.DigitToChinese(null
+            s = Convert.DigitToChinese(null);
+            Assert.Equal("零元整", s);
+        }
+
+        public enum BuildingType
+        {
+            PING(1, "平层"),
+            CUO(2, "错层"),
+            YUE(3, "跃层"),
+            FUSHI(4, "复式"),
+            KAIJIAN(5, "开间"),
+            OTHER(6, "其他");
+
+            public int Id { get; }
+            public string Name { get; }
+
+            BuildingType(int id, string name)
+            {
+                Id = id;
+                Name = name;
+            }
+        }
+    }
+}
