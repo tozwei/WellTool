@@ -27,13 +27,9 @@ public class JavaScriptEngine
     {
         try
         {
-            // 这里使用 Jint 库来执行 JavaScript 代码
-            // 实际使用时需要添加 Jint 包引用
-            // var engine = new Jint.Engine();
-            // return engine.Execute(script).GetCompletionValue().ToObject();
-            
-            // 暂时返回 null，实际使用时需要实现
-            throw new NotImplementedException("JavaScriptEngine 需要添加 Jint 包引用并实现");
+            // 使用 Jint 库来执行 JavaScript 代码
+            var engine = new Jint.Engine();
+            return engine.Execute(script).GetCompletionValue().ToObject();
         }
         catch (Exception ex)
         {

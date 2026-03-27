@@ -98,3 +98,7 @@
 /src/WellTool.Socket/bin/Debug
 /src/WellTool.Poi.Tests/bin/Debug/net8.0
 /src/WellTool.Script.Tests/bin/Debug/net8.0
+/src/WellTool.Cron.Tests/obj
+/src/WellTool.Cron.Tests/obj/project.assets.json
+/src/WellTool.Cron.Tests/obj/WellTool.Cron.Tests.csproj.nuget.dgspec.json
+/src/WellTool.Cron.Tests/obj/WellTool.Cron.Tests.csproj.nuget.g.props
