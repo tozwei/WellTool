@@ -19,9 +19,11 @@ public class JWTUtilTests
     public void TestCreateToken()
     {
         // 测试创建 JWT token
-        var payload = new { userId = 1, username = "testuser" };
         var secret = "secretkey";
-        var token = WellTool.Jwt.JWTUtil.CreateToken(payload, secret);
+        var issuer = "WellTool";
+        var subject = "test";
+        var audience = "users";
+        var token = WellTool.Jwt.JWTUtil.CreateToken(secret, issuer, subject, audience);
         Assert.NotNull(token);
         Assert.NotEmpty(token);
     }
@@ -30,21 +32,29 @@ public class JWTUtilTests
     public void TestParseToken()
     {
         // 测试解析 JWT token
-        var payload = new { userId = 1, username = "testuser" };
         var secret = "secretkey";
-        var token = WellTool.Jwt.JWTUtil.CreateToken(payload, secret);
-        var parsedPayload = WellTool.Jwt.JWTUtil.ParseToken(token, secret);
-        Assert.NotNull(parsedPayload);
+        var token = WellTool.Jwt.JWTUtil.CreateToken(secret);
+        var parsedToken = WellTool.Jwt.JWTUtil.ParseToken(token);
+        Assert.NotNull(parsedToken);
     }
 
     [Fact]
-    public void TestValidateToken()
+    public void TestVerifyToken()
     {
         // 测试验证 JWT token
-        var payload = new { userId = 1, username = "testuser" };
         var secret = "secretkey";
-        var token = WellTool.Jwt.JWTUtil.CreateToken(payload, secret);
-        var isValid = WellTool.Jwt.JWTUtil.ValidateToken(token, secret);
+        var token = WellTool.Jwt.JWTUtil.CreateToken(secret);
+        var isValid = WellTool.Jwt.JWTUtil.VerifyToken(token, secret);
         Assert.True(isValid);
+    }
+
+    [Fact]
+    public void TestIsExpired()
+    {
+        // 测试检查 JWT token 是否过期
+        var secret = "secretkey";
+        var token = WellTool.Jwt.JWTUtil.CreateToken(secret);
+        var isExpired = WellTool.Jwt.JWTUtil.IsExpired(token);
+        Assert.False(isExpired);
     }
 }
