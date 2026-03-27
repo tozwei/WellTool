@@ -73,6 +73,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Poi", "WellTool.Po
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Script", "WellTool.Script\WellTool.Script.csproj", "{33A5027D-215C-4C4B-8208-71ECE51426C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.All", "WellTool.All\WellTool.All.csproj", "{E10E175A-D582-4172-AD03-255F2B319160}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -491,6 +493,18 @@ Global
 		{33A5027D-215C-4C4B-8208-71ECE51426C5}.Release|x64.Build.0 = Release|Any CPU
 		{33A5027D-215C-4C4B-8208-71ECE51426C5}.Release|x86.ActiveCfg = Release|Any CPU
 		{33A5027D-215C-4C4B-8208-71ECE51426C5}.Release|x86.Build.0 = Release|Any CPU
+		{E10E175A-D582-4172-AD03-255F2B319160}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E10E175A-D582-4172-AD03-255F2B319160}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E10E175A-D582-4172-AD03-255F2B319160}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E10E175A-D582-4172-AD03-255F2B319160}.Debug|x64.Build.0 = Debug|Any CPU
+		{E10E175A-D582-4172-AD03-255F2B319160}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E10E175A-D582-4172-AD03-255F2B319160}.Debug|x86.Build.0 = Debug|Any CPU
+		{E10E175A-D582-4172-AD03-255F2B319160}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E10E175A-D582-4172-AD03-255F2B319160}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E10E175A-D582-4172-AD03-255F2B319160}.Release|x64.ActiveCfg = Release|Any CPU
+		{E10E175A-D582-4172-AD03-255F2B319160}.Release|x64.Build.0 = Release|Any CPU
+		{E10E175A-D582-4172-AD03-255F2B319160}.Release|x86.ActiveCfg = Release|Any CPU
+		{E10E175A-D582-4172-AD03-255F2B319160}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
