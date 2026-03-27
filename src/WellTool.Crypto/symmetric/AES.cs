@@ -43,7 +43,7 @@ namespace WellTool.Crypto.Symmetric
                 {
                     aes.IV = IV;
                 }
-                aes.Mode = CipherMode.CBC;
+                aes.Mode = System.Security.Cryptography.CipherMode.CBC;
                 aes.Padding = PaddingMode.PKCS7;
 
                 using (var encryptor = aes.CreateEncryptor())
@@ -67,7 +67,7 @@ namespace WellTool.Crypto.Symmetric
                 {
                     aes.IV = IV;
                 }
-                aes.Mode = CipherMode.CBC;
+                aes.Mode = System.Security.Cryptography.CipherMode.CBC;
                 aes.Padding = PaddingMode.PKCS7;
 
                 using (var decryptor = aes.CreateDecryptor())

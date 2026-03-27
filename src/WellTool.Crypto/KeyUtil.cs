@@ -1,21 +1,7 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using System;
-using System.IO;
 using System.Security.Cryptography;
-using WellTool.Crypto.Asymmetric;
-using SymmetricAlgorithm = WellTool.Crypto.Symmetric.SymmetricAlgorithm;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Security;
 
 namespace WellTool.Crypto
 {
@@ -25,81 +11,105 @@ namespace WellTool.Crypto
     public static class KeyUtil
     {
         /// <summary>
-        /// 生成对称加密密钥
+        /// 生成随机密钥
         /// </summary>
-        /// <param name="algorithm">对称加密算法</param>
-        /// <returns>密钥</returns>
-        public static byte[] GenerateSymmetricKey(SymmetricAlgorithm algorithm)
+        /// <param name="keySize">密钥大小（位）</param>
+        /// <returns>随机密钥</returns>
+        public static byte[] GenerateKey(int keySize)
         {
-            using (var symmetricAlgorithm = GetSymmetricAlgorithm(algorithm))
-            {
-                symmetricAlgorithm.GenerateKey();
-                return symmetricAlgorithm.Key;
-            }
+            var key = new byte[keySize / 8];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(key);
+            return key;
         }
 
         /// <summary>
-        /// 生成对称加密初始化向量
+        /// 生成对称密钥
+        /// </summary>
+        /// <param name="keySize">密钥大小（位）</param>
+        /// <returns>对称密钥</returns>
+        public static byte[] GenerateSymmetricKey(int keySize)
+        {
+            return GenerateKey(keySize);
+        }
+
+        /// <summary>
+        /// 生成对称密钥
+        /// </summary>
+        /// <param name="algorithm">对称加密算法</param>
+        /// <returns>对称密钥</returns>
+        public static byte[] GenerateSymmetricKey(WellTool.Crypto.Symmetric.SymmetricAlgorithm algorithm)
+        {
+            int keySize = algorithm switch
+            {
+                WellTool.Crypto.Symmetric.SymmetricAlgorithm.AES => 256,
+                WellTool.Crypto.Symmetric.SymmetricAlgorithm.DES => 64,
+                WellTool.Crypto.Symmetric.SymmetricAlgorithm.DESede => 192,
+                _ => throw new CryptoException("Unsupported symmetric algorithm: {0}", algorithm)
+            };
+            return GenerateSymmetricKey(keySize);
+        }
+
+        /// <summary>
+        /// 生成初始化向量
+        /// </summary>
+        /// <param name="blockSize">块大小（位）</param>
+        /// <returns>初始化向量</returns>
+        public static byte[] GenerateIV(int blockSize)
+        {
+            var iv = new byte[blockSize / 8];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(iv);
+            return iv;
+        }
+
+        /// <summary>
+        /// 生成初始化向量
         /// </summary>
         /// <param name="algorithm">对称加密算法</param>
         /// <returns>初始化向量</returns>
-        public static byte[] GenerateIV(SymmetricAlgorithm algorithm)
+        public static byte[] GenerateIV(WellTool.Crypto.Symmetric.SymmetricAlgorithm algorithm)
         {
-            using (var symmetricAlgorithm = GetSymmetricAlgorithm(algorithm))
+            int blockSize = algorithm switch
             {
-                symmetricAlgorithm.GenerateIV();
-                return symmetricAlgorithm.IV;
-            }
+                WellTool.Crypto.Symmetric.SymmetricAlgorithm.AES => 128,
+                WellTool.Crypto.Symmetric.SymmetricAlgorithm.DES => 64,
+                WellTool.Crypto.Symmetric.SymmetricAlgorithm.DESede => 64,
+                _ => throw new CryptoException("Unsupported symmetric algorithm: {0}", algorithm)
+            };
+            return GenerateIV(blockSize);
         }
 
         /// <summary>
         /// 生成RSA密钥对
         /// </summary>
-        /// <param name="keySize">密钥大小</param>
-        /// <returns>包含公钥和私钥的元组</returns>
+        /// <param name="keySize">密钥大小（位）</param>
+        /// <returns>RSA密钥对</returns>
         public static (byte[] publicKey, byte[] privateKey) GenerateRsaKeyPair(int keySize = 2048)
         {
-            return Asymmetric.RSA.GenerateKeyPair(keySize);
+            using var rsa = RSA.Create(keySize);
+            var publicKeyBytes = rsa.ExportSubjectPublicKeyInfo();
+            var privateKeyBytes = rsa.ExportPkcs8PrivateKey();
+            return (publicKeyBytes, privateKeyBytes);
         }
 
         /// <summary>
-        /// 从文件加载密钥
+        /// 生成AES密钥
         /// </summary>
-        /// <param name="filePath">文件路径</param>
-        /// <returns>密钥</returns>
-        public static byte[] LoadKeyFromFile(string filePath)
+        /// <param name="keySize">密钥大小（位）</param>
+        /// <returns>AES密钥</returns>
+        public static byte[] GenerateAesKey(int keySize = 256)
         {
-            return File.ReadAllBytes(filePath);
+            return GenerateKey(keySize);
         }
 
         /// <summary>
-        /// 保存密钥到文件
+        /// 生成DES密钥
         /// </summary>
-        /// <param name="key">密钥</param>
-        /// <param name="filePath">文件路径</param>
-        public static void SaveKeyToFile(byte[] key, string filePath)
+        /// <returns>DES密钥</returns>
+        public static byte[] GenerateDesKey()
         {
-            File.WriteAllBytes(filePath, key);
-        }
-
-        /// <summary>
-        /// 获取对称加密算法实例
-        /// </summary>
-        /// <param name="algorithm">对称加密算法</param>
-        /// <returns>对称加密算法实例</returns>
-        private static System.Security.Cryptography.SymmetricAlgorithm GetSymmetricAlgorithm(SymmetricAlgorithm algorithm)
-        {
-            switch (algorithm)
-            {
-                case SymmetricAlgorithm.AES:
-                    return System.Security.Cryptography.Aes.Create();
-                case SymmetricAlgorithm.DES:
-                    return System.Security.Cryptography.DES.Create();
-                case SymmetricAlgorithm.DESede:
-                    return System.Security.Cryptography.TripleDES.Create();
-                default:
-                    throw new CryptoException("Unsupported symmetric algorithm: {0}", algorithm);
-            }
+            return GenerateKey(64);
         }
     }
 }

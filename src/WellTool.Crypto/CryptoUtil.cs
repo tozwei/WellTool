@@ -157,7 +157,14 @@ namespace WellTool.Crypto
         /// <returns>密钥</returns>
         public static byte[] GenerateSymmetricKey(SymmetricAlgorithm algorithm)
         {
-            return KeyUtil.GenerateSymmetricKey(algorithm);
+            int keySize = algorithm switch
+            {
+                SymmetricAlgorithm.AES => 256,
+                SymmetricAlgorithm.DES => 64,
+                SymmetricAlgorithm.DESede => 192,
+                _ => throw new CryptoException("Unsupported symmetric algorithm: {0}", algorithm)
+            };
+            return KeyUtil.GenerateSymmetricKey(keySize);
         }
 
         /// <summary>
@@ -167,7 +174,14 @@ namespace WellTool.Crypto
         /// <returns>初始化向量</returns>
         public static byte[] GenerateIV(SymmetricAlgorithm algorithm)
         {
-            return KeyUtil.GenerateIV(algorithm);
+            int blockSize = algorithm switch
+            {
+                SymmetricAlgorithm.AES => 128,
+                SymmetricAlgorithm.DES => 64,
+                SymmetricAlgorithm.DESede => 64,
+                _ => throw new CryptoException("Unsupported symmetric algorithm: {0}", algorithm)
+            };
+            return KeyUtil.GenerateIV(blockSize);
         }
 
         /// <summary>
