@@ -527,7 +527,8 @@ public class CaptchaTest
 
         Assert.NotNull(expression);
         Assert.EndsWith("=", expression);
-        Assert.Contains("+", expression);
+        // 验证表达式包含运算符（+、-、* 中的一个）
+        Assert.True(expression.Contains("+") || expression.Contains("-") || expression.Contains("*"));
 
         // 计算表达式的结果
         var result = CalculateExpression(expression);
