@@ -36,7 +36,7 @@ namespace WellTool.Core.Tests
         [Fact]
         public void TestBeanUtil()
         {
-            var testObj = new TestObject { Name = "Test", Age = 10 };
+            var testObj = new { Name = "Test", Age = 10 };
             var dict = WellTool.Core.Bean.BeanUtil.BeanToMap(testObj);
             Assert.NotNull(dict);
             Assert.Contains("Name", dict);
@@ -231,9 +231,8 @@ namespace WellTool.Core.Tests
             public string Name { get; set; } = string.Empty;
             public int Age { get; set; }
             
-            public TestObject() { }
-            
             // 用于单例模式的私有构造函数
+            private TestObject() { }
         }
     }
 }
