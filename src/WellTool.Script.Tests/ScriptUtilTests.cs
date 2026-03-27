@@ -19,16 +19,18 @@ public class ScriptUtilTests
     public void TestExecuteJavaScript()
     {
         // 测试执行简单的 JavaScript 代码
+        // JavaScript 中的数字都是 double 类型
         var result = WellTool.Script.ScriptUtil.Instance.ExecuteJavaScript("1 + 1");
-        Assert.Equal(2, result);
+        Assert.Equal(2.0, result);
     }
 
     [Fact]
     public void TestExecuteJavaScriptWithType()
     {
         // 测试执行 JavaScript 代码并返回指定类型的结果
-        var result = WellTool.Script.ScriptUtil.Instance.ExecuteJavaScript<int>("1 + 1");
-        Assert.Equal(2, result);
+        // JavaScript 中的数字都是 double 类型
+        var result = WellTool.Script.ScriptUtil.Instance.ExecuteJavaScript<double>("1 + 1");
+        Assert.Equal(2.0, result);
     }
 
     [Fact]

@@ -29,7 +29,8 @@ public class JavaScriptEngine
         {
             // 使用 Jint 库来执行 JavaScript 代码
             var engine = new Jint.Engine();
-            return engine.Execute(script).GetCompletionValue().ToObject();
+            var result = engine.Evaluate(script);
+            return result.ToObject();
         }
         catch (Exception ex)
         {
