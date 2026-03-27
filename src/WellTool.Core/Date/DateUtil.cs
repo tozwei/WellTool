@@ -22,9 +22,9 @@ namespace WellTool.Core.Date
         /// 获取当前日期（不含时间）
         /// </summary>
         /// <returns>当前日期</returns>
-        public static DateTime Today()
+        public static DateTimeExt Today()
         {
-            return DateTime.Today;
+            return new DateTimeExt(System.DateTime.Today);
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace WellTool.Core.Date
         /// <returns>当前时间戳</returns>
         public static long CurrentTimeMillis()
         {
-            return (long)(DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+            return (long)(System.DateTime.Now - new System.DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
         }
 
         /// <summary>
@@ -41,9 +41,9 @@ namespace WellTool.Core.Date
         /// </summary>
         /// <param name="dateStr">日期字符串</param>
         /// <returns>日期时间</returns>
-        public static DateTime Parse(string dateStr)
+        public static DateTimeExt Parse(string dateStr)
         {
-            return DateTime.Parse(dateStr);
+            return new DateTimeExt(System.DateTime.Parse(dateStr));
         }
 
         /// <summary>
@@ -52,9 +52,9 @@ namespace WellTool.Core.Date
         /// <param name="dateStr">日期字符串</param>
         /// <param name="format">格式</param>
         /// <returns>日期时间</returns>
-        public static DateTime Parse(string dateStr, string format)
+        public static DateTimeExt Parse(string dateStr, string format)
         {
-            return DateTime.ParseExact(dateStr, format, null);
+            return new DateTimeExt(System.DateTime.ParseExact(dateStr, format, null));
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace WellTool.Core.Date
         /// <param name="date">日期时间</param>
         /// <param name="format">格式</param>
         /// <returns>格式化后的字符串</returns>
-        public static string Format(DateTime date, string format)
+        public static string Format(DateTimeExt date, string format)
         {
             return date.ToString(format);
         }
@@ -74,9 +74,9 @@ namespace WellTool.Core.Date
         /// <param name="start">开始日期</param>
         /// <param name="end">结束日期</param>
         /// <returns>天数差</returns>
-        public static int DaysBetween(DateTime start, DateTime end)
+        public static int DaysBetween(DateTimeExt start, DateTimeExt end)
         {
-            return (int)(end.Date - start.Date).TotalDays;
+            return (int)((System.DateTime)end - (System.DateTime)start).TotalDays;
         }
 
         /// <summary>
@@ -85,9 +85,9 @@ namespace WellTool.Core.Date
         /// <param name="start">开始日期</param>
         /// <param name="end">结束日期</param>
         /// <returns>小时差</returns>
-        public static double HoursBetween(DateTime start, DateTime end)
+        public static double HoursBetween(DateTimeExt start, DateTimeExt end)
         {
-            return (end - start).TotalHours;
+            return ((System.DateTime)end - (System.DateTime)start).TotalHours;
         }
 
         /// <summary>
@@ -96,9 +96,9 @@ namespace WellTool.Core.Date
         /// <param name="start">开始日期</param>
         /// <param name="end">结束日期</param>
         /// <returns>分钟差</returns>
-        public static double MinutesBetween(DateTime start, DateTime end)
+        public static double MinutesBetween(DateTimeExt start, DateTimeExt end)
         {
-            return (end - start).TotalMinutes;
+            return ((System.DateTime)end - (System.DateTime)start).TotalMinutes;
         }
 
         /// <summary>
@@ -107,9 +107,9 @@ namespace WellTool.Core.Date
         /// <param name="start">开始日期</param>
         /// <param name="end">结束日期</param>
         /// <returns>秒差</returns>
-        public static double SecondsBetween(DateTime start, DateTime end)
+        public static double SecondsBetween(DateTimeExt start, DateTimeExt end)
         {
-            return (end - start).TotalSeconds;
+            return ((System.DateTime)end - (System.DateTime)start).TotalSeconds;
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace WellTool.Core.Date
         /// <returns>毫秒差</returns>
         public static double MillisecondsBetween(DateTime start, DateTime end)
         {
-            return (end - start).TotalMilliseconds;
+            return ((System.DateTime)end - (System.DateTime)start).TotalMilliseconds;
         }
 
         /// <summary>
@@ -297,7 +297,7 @@ namespace WellTool.Core.Date
         /// <returns>是否是闰年</returns>
         public static bool IsLeapYear(int year)
         {
-            return DateTime.IsLeapYear(year);
+            return System.DateTime.IsLeapYear(year);
         }
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace WellTool.Core.Date
         /// <returns>月份的天数</returns>
         public static int DaysInMonth(int year, int month)
         {
-            return DateTime.DaysInMonth(year, month);
+            return System.DateTime.DaysInMonth(year, month);
         }
 
         /// <summary>
@@ -316,9 +316,9 @@ namespace WellTool.Core.Date
         /// </summary>
         /// <param name="date">日期</param>
         /// <returns>当天的开始时间</returns>
-        public static DateTime BeginOfDay(DateTime date)
+        public static DateTimeExt BeginOfDay(DateTimeExt date)
         {
-            return date.Date;
+            return new DateTimeExt(((System.DateTime)date).Date);
         }
 
         /// <summary>
@@ -326,9 +326,9 @@ namespace WellTool.Core.Date
         /// </summary>
         /// <param name="date">日期</param>
         /// <returns>当天的结束时间</returns>
-        public static DateTime EndOfDay(DateTime date)
+        public static DateTimeExt EndOfDay(DateTimeExt date)
         {
-            return date.Date.AddDays(1).AddMilliseconds(-1);
+            return new DateTimeExt(((System.DateTime)date).Date.AddDays(1).AddMilliseconds(-1));
         }
 
         /// <summary>
@@ -336,9 +336,10 @@ namespace WellTool.Core.Date
         /// </summary>
         /// <param name="date">日期</param>
         /// <returns>当月的开始时间</returns>
-        public static DateTime BeginOfMonth(DateTime date)
+        public static DateTimeExt BeginOfMonth(DateTimeExt date)
         {
-            return new DateTime(date.Year, date.Month, 1);
+            var sysDate = (System.DateTime)date;
+            return new DateTimeExt(new System.DateTime(sysDate.Year, sysDate.Month, 1));
         }
 
         /// <summary>
@@ -346,9 +347,10 @@ namespace WellTool.Core.Date
         /// </summary>
         /// <param name="date">日期</param>
         /// <returns>当月的结束时间</returns>
-        public static DateTime EndOfMonth(DateTime date)
+        public static DateTimeExt EndOfMonth(DateTimeExt date)
         {
-            return new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month)).AddDays(1).AddMilliseconds(-1);
+            var sysDate = (System.DateTime)date;
+            return new DateTimeExt(new System.DateTime(sysDate.Year, sysDate.Month, System.DateTime.DaysInMonth(sysDate.Year, sysDate.Month)).AddDays(1).AddMilliseconds(-1));
         }
 
         /// <summary>
@@ -356,9 +358,10 @@ namespace WellTool.Core.Date
         /// </summary>
         /// <param name="date">日期</param>
         /// <returns>当年的开始时间</returns>
-        public static DateTime BeginOfYear(DateTime date)
+        public static DateTimeExt BeginOfYear(DateTimeExt date)
         {
-            return new DateTime(date.Year, 1, 1);
+            var sysDate = (System.DateTime)date;
+            return new DateTimeExt(new System.DateTime(sysDate.Year, 1, 1));
         }
 
         /// <summary>
@@ -366,9 +369,10 @@ namespace WellTool.Core.Date
         /// </summary>
         /// <param name="date">日期</param>
         /// <returns>当年的结束时间</returns>
-        public static DateTime EndOfYear(DateTime date)
+        public static DateTimeExt EndOfYear(DateTimeExt date)
         {
-            return new DateTime(date.Year, 12, 31).AddDays(1).AddMilliseconds(-1);
+            var sysDate = (System.DateTime)date;
+            return new DateTimeExt(new System.DateTime(sysDate.Year, 12, 31).AddDays(1).AddMilliseconds(-1));
         }
     }
 }
