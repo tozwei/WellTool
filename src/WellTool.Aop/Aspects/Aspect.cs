@@ -50,5 +50,13 @@ namespace WellTool.Aop.Aspects
         /// <param name="e">异常</param>
         /// <returns>是否允许抛出异常</returns>
         bool AfterException(object target, MethodInfo method, object[] args, Exception e);
+
+        /// <summary>
+        /// 目标方法执行完成后的操作，无论是否抛出异常
+        /// </summary>
+        /// <param name="target">目标对象</param>
+        /// <param name="method">目标方法</param>
+        /// <param name="args">参数</param>
+        void AfterFinally(object target, MethodInfo method, object[] args);
     }
 }

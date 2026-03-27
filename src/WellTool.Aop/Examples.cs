@@ -1,4 +1,4 @@
-// Copyright (c) 2025 WellTool Team
+﻿// Copyright (c) 2025 WellTool Team
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -96,6 +96,11 @@ namespace WellTool.Aop
         {
             Console.WriteLine($"TestAspect.AfterException: {method.Name} 方法执行异常: {e.Message}");
             return true;
+        }
+
+        public void AfterFinally(object target, MethodInfo method, object[] args)
+        {
+            Console.WriteLine($"TestAspect.AfterFinally: {method.Name} 方法执行完成（无论是否异常）");
         }
     }
 }

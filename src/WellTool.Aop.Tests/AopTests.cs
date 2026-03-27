@@ -121,5 +121,10 @@ namespace WellTool.Aop.Tests
             AfterExceptionCalled = true;
             return true;
         }
+
+        public void AfterFinally(object target, MethodInfo method, object[] args)
+        {
+            // 实现AfterFinally方法
+        }
     }
 }

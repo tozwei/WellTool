@@ -100,9 +100,18 @@ namespace WellTool.Aop.Proxy
         /// <returns>代理工厂</returns>
         public static ProxyFactory Create()
         {
-            // 这里可以实现类似 Java ServiceLoader 的机制
-            // 暂时只返回 JdkProxyFactory
-            return JdkProxyFactory.Instance;
+            // 尝试加载 CglibProxyFactory
+            try
+            {
+                // 检查是否有 Cglib 相关的实现
+                var cglibFactory = typeof(CglibProxyFactory);
+                return (ProxyFactory)Activator.CreateInstance(cglibFactory);
+            }
+            catch
+            {
+                // 如果没有 Cglib 实现，返回 JdkProxyFactory
+                return JdkProxyFactory.Instance;
+            }
         }
     }
 }

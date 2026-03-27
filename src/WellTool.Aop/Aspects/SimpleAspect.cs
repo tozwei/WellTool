@@ -61,5 +61,16 @@ namespace WellTool.Aop.Aspects
             //继承此类后实现此方法
             return true;
         }
+
+        /// <summary>
+        /// 目标方法执行完成后的操作，无论是否抛出异常
+        /// </summary>
+        /// <param name="target">目标对象</param>
+        /// <param name="method">目标方法</param>
+        /// <param name="args">参数</param>
+        public virtual void AfterFinally(object target, MethodInfo method, object[] args)
+        {
+            //继承此类后实现此方法
+        }
     }
 }
