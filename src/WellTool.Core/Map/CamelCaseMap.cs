@@ -51,7 +51,14 @@ namespace WellTool.Core.Map
 
         public void CopyTo(KeyValuePair<string, V>[] array, int arrayIndex)
         {
-            innerMap.CopyTo(array, arrayIndex);
+            int i = 0;
+            foreach (var item in innerMap)
+            {
+                if (i >= array.Length - arrayIndex)
+                    break;
+                array[arrayIndex + i] = item;
+                i++;
+            }
         }
 
         public IEnumerator<KeyValuePair<string, V>> GetEnumerator()
@@ -66,7 +73,11 @@ namespace WellTool.Core.Map
 
         public bool Remove(KeyValuePair<string, V> item)
         {
-            return innerMap.Remove(new KeyValuePair<string, V>(ToCamelCase(item.Key), item.Value));
+            if (TryGetValue(item.Key, out V value) && EqualityComparer<V>.Default.Equals(value, item.Value))
+            {
+                return innerMap.Remove(ToCamelCase(item.Key));
+            }
+            return false;
         }
 
         public bool TryGetValue(string key, out V value)

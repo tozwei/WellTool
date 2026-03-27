@@ -110,7 +110,9 @@ namespace WellTool.Core.Compress
             string subPath = GetSubPath(srcRootDir, fileInfo.FullName);
             if (fileInfo.Attributes.HasFlag(FileAttributes.Directory))
             {
-                var files = fileInfo.GetFiles("*", SearchOption.AllDirectories);
+                var directoryInfo = new DirectoryInfo(fileInfo.FullName);
+                var files = directoryInfo.GetFiles("*", SearchOption.AllDirectories);
+
                 if (files.Length == 0)
                 {
                     Add(subPath, null);

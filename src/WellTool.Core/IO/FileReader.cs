@@ -143,12 +143,20 @@ namespace WellTool.Core.IO
 
         public long WriteToStream(Stream outStream, bool isCloseOut)
         {
+            long copied = 0;
             try
             {
                 using (var inStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
                 {
-                    return inStream.CopyTo(outStream);
+                    byte[] buffer = new byte[8192];
+                    int read;
+                    while ((read = inStream.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        outStream.Write(buffer, 0, read);
+                        copied += read;
+                    }
                 }
+                return copied;
             }
             finally
             {
