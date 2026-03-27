@@ -64,17 +64,14 @@ namespace WellTool.Core.Tests
             
             // 偏移天
             var newDate2 = WellTool.Core.Date.DateUtil.OffsetDay(date, 3);
-            Assert.NotNull(newDate2);
             Assert.Equal("2017-03-04 22:33:23", newDate2.ToString("yyyy-MM-dd HH:mm:ss"));
             
             // 偏移小时
             var newDate3 = WellTool.Core.Date.DateUtil.OffsetHour(date, -3);
-            Assert.NotNull(newDate3);
             Assert.Equal("2017-03-01 19:33:23", newDate3.ToString("yyyy-MM-dd HH:mm:ss"));
             
             // 偏移月
             var offsetMonth = WellTool.Core.Date.DateUtil.OffsetMonth(date, -1);
-            Assert.NotNull(offsetMonth);
             Assert.Equal("2017-02-01 22:33:23", offsetMonth.ToString("yyyy-MM-dd HH:mm:ss"));
         }
 
@@ -200,7 +197,6 @@ namespace WellTool.Core.Tests
         public void TestIsLastDayOfMonth()
         {
             var dateTime = WellTool.Core.Date.DateUtil.Parse("2022-09-30");
-            Assert.NotNull(dateTime);
             
             var dayOfMonth = WellTool.Core.Date.DateUtil.GetLastDayOfMonth(dateTime);
             Assert.Equal(30, dayOfMonth);
