@@ -23,49 +23,39 @@ namespace WellTool.BloomFilter.Filter
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="size">过滤器大小</param>
-        public RSFilter(int size) : base(size)
+        /// <param name="maxValue">最大值</param>
+        public RSFilter(long maxValue) : base(maxValue)
         {
         }
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="size">过滤器大小</param>
-        /// <param name="hashFunction">哈希函数</param>
-        public RSFilter(int size, HashFunction hashFunction) : base(size, hashFunction)
+        /// <param name="maxValue">最大值</param>
+        /// <param name="machineNum">机器位数</param>
+        public RSFilter(long maxValue, int machineNum) : base(maxValue, machineNum)
         {
         }
 
         /// <summary>
         /// 计算哈希值
         /// </summary>
-        /// <param name="data">数据</param>
+        /// <param name="str">字符串</param>
         /// <returns>哈希值</returns>
-        public override int Hash(string data)
+        public override long Hash(string str)
         {
-            var bytes = Encoding.UTF8.GetBytes(data);
-            return Hash(bytes);
-        }
+            var bytes = Encoding.UTF8.GetBytes(str);
+            var hash = 0L;
+            var a = 63689L;
+            var b = 378551L;
 
-        /// <summary>
-        /// 计算哈希值
-        /// </summary>
-        /// <param name="data">数据</param>
-        /// <returns>哈希值</returns>
-        public override int Hash(byte[] data)
-        {
-            var hash = 0;
-            var a = 63689;
-            var b = 378551;
-
-            foreach (var b1 in data)
+            foreach (var b1 in bytes)
             {
                 hash = hash * a + b1;
                 a *= b;
             }
 
-            return Math.Abs(hash % Size);
+            return hash;
         }
     }
 }

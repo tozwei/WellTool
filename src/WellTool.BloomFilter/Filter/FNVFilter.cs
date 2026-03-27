@@ -23,42 +23,32 @@ namespace WellTool.BloomFilter.Filter
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="size">过滤器大小</param>
-        public FNVFilter(int size) : base(size)
+        /// <param name="maxValue">最大值</param>
+        public FNVFilter(long maxValue) : base(maxValue)
         {
         }
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="size">过滤器大小</param>
-        /// <param name="hashFunction">哈希函数</param>
-        public FNVFilter(int size, HashFunction hashFunction) : base(size, hashFunction)
+        /// <param name="maxValue">最大值</param>
+        /// <param name="machineNum">机器位数</param>
+        public FNVFilter(long maxValue, int machineNum) : base(maxValue, machineNum)
         {
         }
 
         /// <summary>
         /// 计算哈希值
         /// </summary>
-        /// <param name="data">数据</param>
+        /// <param name="str">字符串</param>
         /// <returns>哈希值</returns>
-        public override int Hash(string data)
+        public override long Hash(string str)
         {
-            var bytes = Encoding.UTF8.GetBytes(data);
-            return Hash(bytes);
-        }
+            var bytes = Encoding.UTF8.GetBytes(str);
+            const long p = 16777619;
+            var hash = 2166136261L;
 
-        /// <summary>
-        /// 计算哈希值
-        /// </summary>
-        /// <param name="data">数据</param>
-        /// <returns>哈希值</returns>
-        public override int Hash(byte[] data)
-        {
-            const int p = 16777619;
-            var hash = (int)2166136261;
-
-            foreach (var b in data)
+            foreach (var b in bytes)
             {
                 hash = (hash ^ b) * p;
             }
@@ -69,7 +59,7 @@ namespace WellTool.BloomFilter.Filter
             hash ^= hash >> 17;
             hash += hash << 5;
 
-            return Math.Abs(hash % Size);
+            return hash;
         }
     }
 }

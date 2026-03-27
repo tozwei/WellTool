@@ -23,54 +23,44 @@ namespace WellTool.BloomFilter.Filter
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="size">过滤器大小</param>
-        public HfIpFilter(int size) : base(size)
+        /// <param name="maxValue">最大值</param>
+        public HfIpFilter(long maxValue) : base(maxValue)
         {
         }
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="size">过滤器大小</param>
-        /// <param name="hashFunction">哈希函数</param>
-        public HfIpFilter(int size, HashFunction hashFunction) : base(size, hashFunction)
+        /// <param name="maxValue">最大值</param>
+        /// <param name="machineNum">机器位数</param>
+        public HfIpFilter(long maxValue, int machineNum) : base(maxValue, machineNum)
         {
         }
 
         /// <summary>
         /// 计算哈希值
         /// </summary>
-        /// <param name="data">数据</param>
+        /// <param name="str">字符串</param>
         /// <returns>哈希值</returns>
-        public override int Hash(string data)
+        public override long Hash(string str)
         {
             // 对于IP地址，直接使用其数值形式计算哈希
-            if (data.Contains("."))
+            if (str.Contains("."))
             {
-                var parts = data.Split('.');
+                var parts = str.Split('.');
                 if (parts.Length == 4)
                 {
-                    var ip = 0;
+                    var ip = 0L;
                     for (var i = 0; i < 4; i++)
                     {
                         ip = (ip << 8) | int.Parse(parts[i]);
                     }
-                    return Math.Abs(ip % Size);
+                    return ip;
                 }
             }
-            var bytes = Encoding.UTF8.GetBytes(data);
-            return Hash(bytes);
-        }
-
-        /// <summary>
-        /// 计算哈希值
-        /// </summary>
-        /// <param name="data">数据</param>
-        /// <returns>哈希值</returns>
-        public override int Hash(byte[] data)
-        {
-            var hash = 0;
-            foreach (var b in data)
+            var bytes = Encoding.UTF8.GetBytes(str);
+            var hash = 0L;
+            foreach (var b in bytes)
             {
                 hash += b;
                 hash += hash << 10;
@@ -79,7 +69,7 @@ namespace WellTool.BloomFilter.Filter
             hash += hash << 3;
             hash ^= hash >> 11;
             hash += hash << 15;
-            return Math.Abs(hash % Size);
+            return hash;
         }
     }
 }
