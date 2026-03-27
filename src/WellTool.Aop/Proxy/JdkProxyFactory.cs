@@ -152,7 +152,12 @@ namespace WellTool.Aop.Proxy
                     methodIL.Emit(OpCodes.Call, typeof(MethodBase).GetMethod("GetMethodFromHandle", new[] { typeof(RuntimeMethodHandle) })!);
                     methodIL.Emit(OpCodes.Castclass, typeof(MethodInfo));
                     methodIL.Emit(OpCodes.Ldloc, paramsArray);
-                    methodIL.Emit(OpCodes.Callvirt, typeof(JdkInterceptor).GetMethod("Invoke", new[] { typeof(object), typeof(MethodInfo), typeof(object[]) })!);
+                    // 使用 GetMethods 并找到正确的 Invoke 方法
+                    var invokeMethod = typeof(JdkInterceptor).GetMethods().First(m => 
+                        m.Name == "Invoke" && 
+                        m.GetParameters().Length == 3
+                    );
+                    methodIL.Emit(OpCodes.Callvirt, invokeMethod);
 
                     // 处理返回值
                     if (method.ReturnType != typeof(void))
