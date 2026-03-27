@@ -4,6 +4,7 @@ namespace WellTool.Core.Date
     {
         Year,
         Month,
+        Week,
         Day,
         Hour,
         Minute,
