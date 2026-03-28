@@ -29,10 +29,10 @@ namespace WellTool.Core.Tests
             
             // 测试IsEmpty和IsNotEmpty方法
             var emptyList = new List<int>();
-            Assert.True(WellTool.Core.Collection.CollUtil.IsEmpty(emptyList));
-            Assert.False(WellTool.Core.Collection.CollUtil.IsNotEmpty(emptyList));
-            Assert.False(WellTool.Core.Collection.CollUtil.IsEmpty(list1));
-            Assert.True(WellTool.Core.Collection.CollUtil.IsNotEmpty(list1));
+            Assert.True(WellTool.Core.Collection.CollUtil.IsEmpty<int>(emptyList));
+            Assert.False(WellTool.Core.Collection.CollUtil.IsNotEmpty<int>(emptyList));
+            Assert.False(WellTool.Core.Collection.CollUtil.IsEmpty<int>(list1));
+            Assert.True(WellTool.Core.Collection.CollUtil.IsNotEmpty<int>(list1));
         }
 
         [Fact]
@@ -76,6 +76,45 @@ namespace WellTool.Core.Tests
             Assert.Contains(4, target);
             Assert.Contains(5, target);
             Assert.Contains(6, target);
+        }
+
+        // [Fact]
+        // public void TestBoundedPriorityQueue()
+        // {
+        //     // 测试有界优先队列
+        //     var queue = new WellTool.Core.Collection.BoundedPriorityQueue<int>(3, (a, b) => a.CompareTo(b));
+        //     
+        //     // 添加元素
+        //     queue.Add(3);
+        //     queue.Add(1);
+        //     queue.Add(2);
+        //     
+        //     // 队列已满，添加新元素会移除最小的元素
+        //     queue.Add(4);
+        //     
+        //     Assert.Equal(3, queue.Count);
+        //     Assert.Equal(2, queue.Peek());
+        // }
+
+        [Fact]
+        public void TestConcurrentHashSet()
+        {
+            // 测试并发哈希集
+            var set = new WellTool.Core.Collection.ConcurrentHashSet<int>();
+            
+            // 添加元素
+            set.Add(1);
+            set.Add(2);
+            set.Add(3);
+            
+            Assert.True(set.Contains(1));
+            Assert.True(set.Contains(2));
+            Assert.True(set.Contains(3));
+            Assert.False(set.Contains(4));
+            
+            // 移除元素
+            set.Remove(2);
+            Assert.False(set.Contains(2));
         }
     }
 }

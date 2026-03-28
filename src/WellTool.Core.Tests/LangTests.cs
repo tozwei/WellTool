@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Xunit;
+using XAssert = Xunit.Assert;
 
 namespace WellTool.Core.Tests
 {
@@ -11,7 +12,7 @@ namespace WellTool.Core.Tests
         {
             var instance1 = WellTool.Core.Lang.Singleton.Get<TestObject>();
             var instance2 = WellTool.Core.Lang.Singleton.Get<TestObject>();
-            Assert.Same(instance1, instance2);
+            XAssert.Same(instance1, instance2);
         }
 
         [Fact]
@@ -20,7 +21,7 @@ namespace WellTool.Core.Tests
             var snowflake = new WellTool.Core.Lang.Snowflake(1, 1);
             var id1 = snowflake.NextId();
             var id2 = snowflake.NextId();
-            Assert.NotEqual(id1, id2);
+            XAssert.NotEqual(id1, id2);
         }
 
         [Fact]
@@ -30,18 +31,18 @@ namespace WellTool.Core.Tests
             var obj2 = obj1;
             var obj3 = new object();
             
-            Assert.True(WellTool.Core.Lang.ObjectUtil.Equals(obj1, obj2));
-            Assert.False(WellTool.Core.Lang.ObjectUtil.Equals(obj1, obj3));
-            Assert.True(WellTool.Core.Lang.ObjectUtil.Equals(null, null));
-            Assert.False(WellTool.Core.Lang.ObjectUtil.Equals(obj1, null));
+            XAssert.True(WellTool.Core.Lang.ObjectUtil.Equals(obj1, obj2));
+            XAssert.False(WellTool.Core.Lang.ObjectUtil.Equals(obj1, obj3));
+            XAssert.True(WellTool.Core.Lang.ObjectUtil.Equals(null, null));
+            XAssert.False(WellTool.Core.Lang.ObjectUtil.Equals(obj1, null));
         }
 
         [Fact]
         public void TestPair()
         {
             var pair = new WellTool.Core.Lang.Pair<string, int>("test", 123);
-            Assert.Equal("test", pair.Key);
-            Assert.Equal(123, pair.Value);
+            XAssert.Equal("test", pair.Key);
+            XAssert.Equal(123, pair.Value);
         }
 
         [Fact]
@@ -49,10 +50,10 @@ namespace WellTool.Core.Tests
         {
             // 测试Assert.NotNull
             var obj = new object();
-            Assert.Throws<ArgumentNullException>(() => WellTool.Core.Lang.Assert.NotNull(null, "Object cannot be null"));
+            XAssert.Throws<ArgumentNullException>(() => WellTool.Core.Lang.Assert.NotNull(null, "Object cannot be null"));
             
-            // 测试Assert.True
-            Assert.Throws<ArgumentException>(() => WellTool.Core.Lang.Assert.True(false, "Condition must be true"));
+            // 测试Assert.IsTrue
+            XAssert.Throws<ArgumentException>(() => WellTool.Core.Lang.Assert.IsTrue(false, "Condition must be true"));
         }
 
         private class TestObject
@@ -62,5 +63,80 @@ namespace WellTool.Core.Tests
             
             private TestObject() { }
         }
+
+        // [Fact]
+        // public void TestConsole()
+        // {
+        //     // 测试Console类的基本功能
+        //     // 这里我们只测试方法是否能正常调用，不测试实际输出
+        //     WellTool.Core.Lang.Console.WriteLine("Test Console");
+        //     WellTool.Core.Lang.Console.Write("Test Console");
+        // }
+
+        [Fact]
+        public void TestStringUtil()
+        {
+            // 测试StringUtil的基本功能
+            string str = "  test  ";
+            string trimmed = WellTool.Core.Lang.StringUtil.Trim(str);
+            XAssert.Equal("test", trimmed);
+
+            string emptyStr = string.Empty;
+            bool isEmpty = WellTool.Core.Lang.StringUtil.IsEmpty(emptyStr);
+            XAssert.True(isEmpty);
+
+            bool isNotEmpty = WellTool.Core.Lang.StringUtil.IsNotEmpty(str);
+            XAssert.True(isNotEmpty);
+        }
+
+        // [Fact]
+        // public void HashTest()
+        // {
+        //     string str = "test";
+        //     byte[] data = System.Text.Encoding.UTF8.GetBytes(str);
+
+        //     // 测试MD5
+        //     string md5 = WellTool.Core.Lang.Hash.MD5(data);
+        //     Assert.NotNull(md5);
+        //     Assert.Equal(32, md5.Length);
+
+        //     // 测试SHA1
+        //     string sha1 = WellTool.Core.Lang.Hash.SHA1(data);
+        //     Assert.NotNull(sha1);
+        //     Assert.Equal(40, sha1.Length);
+
+        //     // 测试SHA256
+        //     string sha256 = WellTool.Core.Lang.Hash.SHA256(data);
+        //     Assert.NotNull(sha256);
+        //     Assert.Equal(64, sha256.Length);
+        // }
+
+        [Fact]
+        public void TestFunc()
+        {
+            // 测试Func接口
+            WellTool.Core.Lang.Func.Func<string, int> func = (s) => s.Length;
+            int length = func("test");
+            XAssert.Equal(4, length);
+
+            // 测试Func0接口
+            WellTool.Core.Lang.Func.Func0<string> func0 = () => "test";
+            string result = func0();
+            XAssert.Equal("test", result);
+
+            // 测试Func1接口
+            WellTool.Core.Lang.Func.Func1<string, int> func1 = (s) => s.Length;
+            int length1 = func1("test");
+            XAssert.Equal(4, length1);
+        }
+
+        // [Fact]
+        // public void TestSupplier()
+        // {
+        //     // 测试Supplier1接口
+        //     WellTool.Core.Lang.Func.Supplier1<string> supplier1 = () => "test";
+        //     string result1 = supplier1();
+        //     Assert.Equal("test", result1);
+        // }
     }
 }
