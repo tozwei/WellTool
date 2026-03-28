@@ -329,40 +329,36 @@ namespace WellTool.Core.IO
                 return file;
             }
             
+            // 构建完整的路径
+            var fullPath = file.FullName;
+            
             // 对于层级为0的情况，返回文件所在的目录
             if (level == 0)
             {
-                var directory = file.Directory;
-                if (directory == null)
+                var directory = Path.GetDirectoryName(fullPath);
+                if (string.IsNullOrEmpty(directory))
                 {
                     // 如果文件没有目录（例如根目录下的文件），返回文件本身
                     return file;
                 }
-                return directory;
+                return new FileInfo(directory);
             }
             
             // 对于层级大于0的情况，逐级向上查找
-            var currentDirectory = file.Directory;
-            if (currentDirectory == null)
+            var currentPath = fullPath;
+            for (int i = 0; i < level; i++)
             {
-                // 如果文件没有目录，且层级大于0，返回null
-                return null;
-            }
-            
-            // 逐级向上查找父目录
-            for (int i = 1; i < level; i++)
-            {
-                var parentDirectory = currentDirectory.Parent;
-                if (parentDirectory == null)
+                var parentPath = Path.GetDirectoryName(currentPath);
+                if (string.IsNullOrEmpty(parentPath) || parentPath.Equals(currentPath, StringComparison.OrdinalIgnoreCase))
                 {
                     // 如果已经到达根目录，且还需要继续向上，返回null
                     return null;
                 }
-                currentDirectory = parentDirectory;
+                currentPath = parentPath;
             }
             
             // 返回找到的父目录
-            return currentDirectory;
+            return new FileInfo(currentPath);
         }
 
         /// <summary>
