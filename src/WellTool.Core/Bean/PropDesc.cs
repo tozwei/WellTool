@@ -61,6 +61,41 @@ namespace WellTool.Core.Bean
 		public PropertyInfo Property => _property;
 
 		/// <summary>
+		/// 是否有getter方法
+		/// </summary>
+		public bool HasGetter
+		{
+			get
+			{
+				if (_field != null)
+				{
+					return true;
+				}
+				return _property != null && _property.CanRead;
+			}
+		}
+
+		/// <summary>
+		/// 是否有setter方法
+		/// </summary>
+		public bool HasSetter
+		{
+			get
+			{
+				if (_field != null)
+				{
+					return true;
+				}
+				return _property != null && _property.CanWrite;
+			}
+		}
+
+		/// <summary>
+		/// 获取属性类型
+		/// </summary>
+		public Type PropertyType => _fieldType;
+
+		/// <summary>
 		/// 判断字段是否可读
 		/// </summary>
 		/// <param name="transientSupport">是否支持transient关键字</param>
@@ -170,6 +205,16 @@ namespace WellTool.Core.Bean
 					throw;
 				}
 			}
+		}
+
+		/// <summary>
+		/// 设置字段值（简化版）
+		/// </summary>
+		/// <param name="obj">对象</param>
+		/// <param name="value">值</param>
+		public void SetValue(object obj, object value)
+		{
+			SetValue(obj, value, false, false, true);
 		}
 	}
 }

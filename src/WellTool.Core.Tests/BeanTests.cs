@@ -42,37 +42,37 @@ namespace WellTool.Core.Tests
     /// </summary>
     public class BeanTests
     {
-        // [Fact]
-        // public void IsBeanTest()
-        // {
-        //     // HashMap不包含setXXX方法，不是bean
-        //     bool isBean = BeanUtil.IsBean(typeof(Dictionary<string, object>));
-        //     XAssert.False(isBean);
-        // }
+        [Fact]
+        public void IsBeanTest()
+        {
+            // HashMap不包含setXXX方法，不是bean
+            bool isBean = BeanUtil.IsBean(typeof(Dictionary<string, object>));
+            XAssert.False(isBean);
+        }
 
-        // [Fact]
-        // public void FillBeanTest()
-        // {
-        //     var person = BeanUtil.FillBean(new Person(), new TestValueProvider(), new CopyOptions());
+        [Fact]
+        public void FillBeanTest()
+        {
+            var person = BeanUtil.FillBean(new Person(), new Person { Name = "张三", Age = 18 });
 
-        //     XAssert.Equal("张三", person.Name);
-        //     XAssert.Equal(18, person.Age);
-        // }
+            XAssert.Equal("张三", person.Name);
+            XAssert.Equal(18, person.Age);
+        }
 
-        // [Fact]
-        // public void FillBeanWithMapIgnoreCaseTest()
-        // {
-        //     var map = new Dictionary<string, object>
-        //     {
-        //         { "Name", "Joe" },
-        //         { "aGe", 12 },
-        //         { "openId", "DFDFSDFWERWER" }
-        //     };
-        //     var person = BeanUtil.FillBeanWithMapIgnoreCase(map, new SubPerson(), false);
-        //     XAssert.Equal("Joe", person.Name);
-        //     XAssert.Equal(12, person.Age);
-        //     XAssert.Equal("DFDFSDFWERWER", person.Openid);
-        // }
+        [Fact]
+        public void FillBeanWithMapIgnoreCaseTest()
+        {
+            var map = new Dictionary<string, object>
+            {
+                { "Name", "Joe" },
+                { "aGe", 12 },
+                { "openId", "DFDFSDFWERWER" }
+            };
+            var person = BeanUtil.FillBeanWithMapIgnoreCase(map, new SubPerson());
+            XAssert.Equal("Joe", person.Name);
+            XAssert.Equal(12, person.Age);
+            XAssert.Equal("DFDFSDFWERWER", person.Openid);
+        }
 
         // [Fact]
         // public void ToBeanTest()
@@ -97,37 +97,37 @@ namespace WellTool.Core.Tests
         /// <summary>
         /// 忽略转换错误测试
         /// </summary>
-        // [Fact]
-        // public void ToBeanIgnoreErrorTest()
-        // {
-        //     var map = new Dictionary<string, object>
-        //     {
-        //         { "name", "Joe" },
-        //         // 错误的类型，此处忽略
-        //         { "age", "aaaaaa" }
-        //     };
+        [Fact]
+        public void ToBeanIgnoreErrorTest()
+        {
+            var map = new Dictionary<string, object>
+            {
+                { "name", "Joe" },
+                // 错误的类型，此处忽略
+                { "age", "aaaaaa" }
+            };
 
-        //     var person = BeanUtil.ToBeanIgnoreError(map, typeof(Person)) as Person;
-        //     XAssert.NotNull(person);
-        //     XAssert.Equal("Joe", person.Name);
-        //     // 错误的类型，不copy这个字段，使用对象创建的默认值
-        //     XAssert.Equal(0, person.Age);
-        // }
+            var person = BeanUtil.ToBeanIgnoreError(map, typeof(Person)) as Person;
+            XAssert.NotNull(person);
+            XAssert.Equal("Joe", person.Name);
+            // 错误的类型，不copy这个字段，使用对象创建的默认值
+            XAssert.Equal(0, person.Age);
+        }
 
-        // [Fact]
-        // public void MapToBeanIgnoreCaseTest()
-        // {
-        //     var map = new Dictionary<string, object>
-        //     {
-        //         { "Name", "Joe" },
-        //         { "aGe", 12 }
-        //     };
+        [Fact]
+        public void MapToBeanIgnoreCaseTest()
+        {
+            var map = new Dictionary<string, object>
+            {
+                { "Name", "Joe" },
+                { "aGe", 12 }
+            };
 
-        //     var person = BeanUtil.ToBeanIgnoreCase(map, typeof(Person), false) as Person;
-        //     XAssert.NotNull(person);
-        //     XAssert.Equal("Joe", person.Name);
-        //     XAssert.Equal(12, person.Age);
-        // }
+            var person = BeanUtil.ToBeanIgnoreCase(map, typeof(Person), false) as Person;
+            XAssert.NotNull(person);
+            XAssert.Equal("Joe", person.Name);
+            XAssert.Equal(12, person.Age);
+        }
 
         // [Fact]
         // public void MapToBeanTest()

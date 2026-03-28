@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -10,6 +11,42 @@ namespace WellTool.Core.Date
         public static DateTime Now()
         {
             return DateTime.Now;
+        }
+
+        // 获取当前时间
+        public static DateTime Date()
+        {
+            return DateTime.Now;
+        }
+
+        // 根据DateTime获取时间
+        public static DateTime Date(DateTime date)
+        {
+            return date;
+        }
+
+        // 根据时间戳获取时间
+        public static DateTime Date(long timestamp)
+        {
+            return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(timestamp).ToLocalTime();
+        }
+
+        // 根据年、月、日获取时间
+        public static DateTime Date(int year, int month, int day)
+        {
+            return new DateTime(year, month, day);
+        }
+
+        // 根据年、月、日、时、分获取时间
+        public static DateTime Date(int year, int month, int day, int hour, int minute)
+        {
+            return new DateTime(year, month, day, hour, minute, 0);
+        }
+
+        // 根据年、月、日、时、分、秒获取时间
+        public static DateTime Date(int year, int month, int day, int hour, int minute, int second)
+        {
+            return new DateTime(year, month, day, hour, minute, second);
         }
 
         // 当前时间字符串，格式：yyyy-MM-dd HH:mm:ss
@@ -190,7 +227,7 @@ namespace WellTool.Core.Date
         // 判断是否为周末
         public static bool IsWeekend(DateTime date)
         {
-            return date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
+            return date.DayOfWeek == System.DayOfWeek.Saturday || date.DayOfWeek == System.DayOfWeek.Sunday;
         }
 
         // 获取一年中的第几天
@@ -260,6 +297,164 @@ namespace WellTool.Core.Date
         public static DateTime ParseTime(string timeStr)
         {
             return Parse(timeStr, "HH:mm:ss");
+        }
+
+        // 获取当前时间
+        public static DateTime Current()
+        {
+            return DateTime.Now;
+        }
+
+        // 获取年份
+        public static int Year(DateTime date)
+        {
+            return date.Year;
+        }
+
+        // 获取年末
+        public static DateTime EndOfYear(DateTime date)
+        {
+            return new DateTime(date.Year, 12, 31, 23, 59, 59);
+        }
+
+        // 获取季度末
+        public static DateTime EndOfQuarter(DateTime date)
+        {
+            var quarter = (date.Month - 1) / 3 + 1;
+            var month = quarter * 3;
+            return new DateTime(date.Year, month, DateTime.DaysInMonth(date.Year, month), 23, 59, 59);
+        }
+
+        // 获取周开始
+        public static DateTime BeginOfWeek(DateTime date)
+        {
+            var daysToSubtract = (int)date.DayOfWeek;
+            if (daysToSubtract == 0) daysToSubtract = 7;
+            return BeginOfDay(date.AddDays(-daysToSubtract + 1));
+        }
+
+        // 获取周结束
+        public static DateTime EndOfWeek(DateTime date)
+        {
+            return EndOfDay(BeginOfWeek(date).AddDays(6));
+        }
+
+        // 获取星期几（1-7，1表示周日）
+        public static int DayOfWeek(DateTime date)
+        {
+            return (int)date.DayOfWeek == 0 ? 7 : (int)date.DayOfWeek;
+        }
+
+        // 格式化HTTP日期
+        public static string FormatHttpDate(DateTime date)
+        {
+            return date.ToString("r", CultureInfo.InvariantCulture);
+        }
+
+        // 解析本地日期时间
+        public static DateTime ParseLocalDateTime(string dateStr)
+        {
+            return DateTime.Parse(dateStr).ToLocalTime();
+        }
+
+        // 格式化本地日期时间
+        public static string FormatLocalDateTime(DateTime date)
+        {
+            return date.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+        }
+
+        // 计算周数差
+        public static long BetweenWeek(DateTime beginDate, DateTime endDate)
+        {
+            return Between(beginDate, endDate, DateUnit.Week);
+        }
+
+        // 判断是否同一周
+        public static bool IsSameWeek(DateTime date1, DateTime date2)
+        {
+            return BeginOfWeek(date1).Date == BeginOfWeek(date2).Date;
+        }
+
+        // 判断时间是否重叠
+        public static bool IsOverlap(DateTime start1, DateTime end1, DateTime start2, DateTime end2)
+        {
+            return start1 < end2 && start2 < end1;
+        }
+
+        // 判断时间是否在范围内
+        public static bool IsIn(DateTime date, DateTime start, DateTime end)
+        {
+            return date >= start && date <= end;
+        }
+
+        // 通用偏移方法
+        public static DateTime Offset(DateTime date, int offset, DateUnit unit)
+        {
+            switch (unit)
+            {
+                case DateUnit.Millisecond:
+                    return date.AddMilliseconds(offset);
+                case DateUnit.Second:
+                    return date.AddSeconds(offset);
+                case DateUnit.Minute:
+                    return date.AddMinutes(offset);
+                case DateUnit.Hour:
+                    return date.AddHours(offset);
+                case DateUnit.Day:
+                    return date.AddDays(offset);
+                case DateUnit.Week:
+                    return date.AddDays(offset * 7);
+                case DateUnit.Month:
+                    return date.AddMonths(offset);
+                case DateUnit.Year:
+                    return date.AddYears(offset);
+                default:
+                    return date;
+            }
+        }
+
+        // 格式化中文日期
+        public static string FormatChineseDate(DateTime date)
+        {
+            return $"{date.Year}年{date.Month}月{date.Day}日";
+        }
+
+        // 格式化时间差
+        public static string FormatBetween(DateTime beginDate, DateTime endDate)
+        {
+            var span = endDate - beginDate;
+            var days = (int)span.TotalDays;
+            var hours = span.Hours;
+            var minutes = span.Minutes;
+            var seconds = span.Seconds;
+
+            var parts = new List<string>();
+            if (days > 0) parts.Add($"{days}天");
+            if (hours > 0) parts.Add($"{hours}小时");
+            if (minutes > 0) parts.Add($"{minutes}分钟");
+            if (seconds > 0 || parts.Count == 0) parts.Add($"{seconds}秒");
+
+            return string.Join("", parts);
+        }
+
+        // 获取计时器
+        public static StopWatch Timer()
+        {
+            return new StopWatch();
+        }
+
+        // 获取日历
+        public static Calendar Calendar()
+        {
+            return new Calendar(TimeZoneInfo.Local, CultureInfo.CurrentCulture);
+        }
+
+        // 获取日历（指定日期）
+        public static Calendar Calendar(DateTime date)
+        {
+            var calendar = new Calendar(TimeZoneInfo.Local, CultureInfo.CurrentCulture);
+            calendar.Time = date;
+            return calendar;
         }
     }
 }

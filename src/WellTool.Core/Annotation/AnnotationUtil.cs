@@ -245,5 +245,137 @@ namespace WellTool.Core.Annotation
 		{
 			return method.GetParameters().Length == 0 && method.ReturnType != typeof(void);
 		}
+
+		/// <summary>
+		/// 获取所有注解
+		/// </summary>
+		/// <param name="member">成员信息，可以是Type、MethodInfo、FieldInfo、ConstructorInfo等</param>
+		/// <param name="inherit">是否继承</param>
+		/// <returns>注解数组</returns>
+		public static Attribute[] GetAnnotations(MemberInfo member, bool inherit)
+		{
+			if (member == null)
+			{
+				return new Attribute[0];
+			}
+			return member.GetCustomAttributes(inherit).Cast<Attribute>().ToArray();
+		}
+
+		/// <summary>
+		/// 获取组合注解
+		/// </summary>
+		/// <param name="member">成员信息，可以是Type、MethodInfo、FieldInfo、ConstructorInfo等</param>
+		/// <param name="inherit">是否继承</param>
+		/// <returns>注解数组</returns>
+		public static Attribute[] GetCombinationAnnotations(MemberInfo member, bool inherit)
+		{
+			if (member == null)
+			{
+				return new Attribute[0];
+			}
+
+			var annotations = new List<Attribute>();
+			var processed = new HashSet<Type>();
+
+			void CollectAnnotations(MemberInfo m, bool inheritFlag)
+			{
+				var attrs = m.GetCustomAttributes(inheritFlag).Cast<Attribute>();
+				foreach (var attr in attrs)
+				{
+					var attrType = attr.GetType();
+					if (!processed.Contains(attrType))
+					{
+						processed.Add(attrType);
+						annotations.Add(attr);
+						// 递归收集元注解
+						CollectAnnotations(attrType, true);
+					}
+				}
+			}
+
+			CollectAnnotations(member, inherit);
+			return annotations.ToArray();
+		}
+
+		/// <summary>
+		/// 获取注解值
+		/// </summary>
+		/// <typeparam name="T">注解值类型</typeparam>
+		/// <param name="attribute">注解对象</param>
+		/// <param name="propertyName">属性名</param>
+		/// <returns>注解值</returns>
+		public static T GetAnnotationValue<T>(Attribute attribute, string propertyName)
+		{
+			if (attribute == null)
+			{
+				return default;
+			}
+
+			var property = attribute.GetType().GetProperty(propertyName);
+			if (property == null)
+			{
+				return default;
+			}
+
+			return (T)property.GetValue(attribute);
+		}
+
+		/// <summary>
+		/// 获取注解别名
+		/// </summary>
+		/// <param name="attributeType">注解类型</param>
+		/// <param name="propertyName">属性名</param>
+		/// <returns>别名</returns>
+		public static string GetAnnotationAlias(Type attributeType, string propertyName)
+		{
+			// 这里简化实现，实际应该检查AliasFor等注解
+			return propertyName;
+		}
+
+		/// <summary>
+		/// 判断是否为合成注解
+		/// </summary>
+		/// <param name="attribute">注解对象</param>
+		/// <returns>是否为合成注解</returns>
+		public static bool IsSynthesizedAnnotation(Attribute attribute)
+		{
+			// C#中没有合成注解的概念，这里返回false
+			return false;
+		}
+
+		/// <summary>
+		/// 扫描元注解
+		/// </summary>
+		/// <param name="attributeType">注解类型</param>
+		/// <returns>元注解数组</returns>
+		public static Attribute[] ScanMetaAnnotation(Type attributeType)
+		{
+			if (attributeType == null || !typeof(Attribute).IsAssignableFrom(attributeType))
+			{
+				return new Attribute[0];
+			}
+
+			return attributeType.GetCustomAttributes(true).Cast<Attribute>().ToArray();
+		}
+
+		/// <summary>
+		/// 扫描类
+		/// </summary>
+		/// <param name="type">类类型</param>
+		/// <returns>注解数组</returns>
+		public static Attribute[] ScanClass(Type type)
+		{
+			return GetAnnotations(type, true);
+		}
+
+		/// <summary>
+		/// 扫描方法
+		/// </summary>
+		/// <param name="method">方法信息</param>
+		/// <returns>注解数组</returns>
+		public static Attribute[] ScanMethod(MethodInfo method)
+		{
+			return GetAnnotations(method, true);
+		}
 	}
 }

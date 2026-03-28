@@ -95,9 +95,26 @@ namespace WellTool.Core.Bean
 		}
 
 		/// <summary>
+		/// 获取属性描述
+		/// </summary>
+		/// <param name="fieldName">字段名</param>
+		/// <param name="ignoreCase">是否忽略大小写</param>
+		/// <returns>属性描述</returns>
+		public PropDesc GetPropDesc(string fieldName, bool ignoreCase)
+		{
+			return ignoreCase ? GetPropDescIgnoreCase(fieldName) : GetPropDesc(fieldName);
+		}
+
+		/// <summary>
 		/// 获取Bean类型
 		/// </summary>
 		/// <returns>Bean类型</returns>
 		public Type Type => _type;
+
+		/// <summary>
+		/// 获取所有属性描述
+		/// </summary>
+		/// <returns>属性描述映射</returns>
+		public Dictionary<string, PropDesc> PropDescs => _propMap;
 	}
 }
