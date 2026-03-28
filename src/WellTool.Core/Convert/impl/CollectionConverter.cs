@@ -118,11 +118,13 @@ namespace WellTool.Core.Converter.impl
         private object ConvertToHashSet(IEnumerable enumerable, Type elementType)
         {
             var hashSetType = typeof(HashSet<>).MakeGenericType(elementType);
-            var hashSet = Activator.CreateInstance(hashSetType) as ICollection;
+            var hashSet = Activator.CreateInstance(hashSetType);
 
+            // 使用反射调用Add方法
+            var addMethod = hashSetType.GetMethod("Add");
             foreach (var item in enumerable)
             {
-                hashSet.Add(item);
+                addMethod.Invoke(hashSet, new[] { item });
             }
 
             return hashSet;

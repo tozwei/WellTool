@@ -859,13 +859,13 @@ namespace WellTool.Core.Util
 
             if (length <= 0)
             {
-                return str;
+                return string.Empty;
             }
 
-            // 如果字符串长度超过指定长度，截断它
+            // 如果字符串长度超过指定长度，截断它（返回后length位）
             if (str.Length > length)
             {
-                return str.Substring(0, length);
+                return str.Substring(str.Length - length, length);
             }
 
             int padding = length - str.Length;
@@ -888,13 +888,13 @@ namespace WellTool.Core.Util
 
             if (length <= 0 || IsEmpty(padStr))
             {
-                return str;
+                return string.Empty;
             }
 
-            // 如果字符串长度超过指定长度，截断它
+            // 如果字符串长度超过指定长度，截断它（返回后length位）
             if (str.Length > length)
             {
-                return str.Substring(0, length);
+                return str.Substring(str.Length - length, length);
             }
 
             int padding = length - str.Length;

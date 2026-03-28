@@ -55,12 +55,8 @@ namespace WellTool.Aop.Proxy
             // 检查 T 是否为接口类型
             if (typeof(T).IsInterface)
             {
-                // 检查代理对象是否实现了接口 T
-                if (proxy is T tProxy)
-                {
-                    return tProxy;
-                }
-                throw new InvalidCastException($"代理对象未实现接口 {typeof(T).FullName}");
+                // 直接返回代理对象，因为我们已经确保它实现了接口 T
+                return (T)proxy;
             }
             else
             {
@@ -147,17 +143,13 @@ namespace WellTool.Aop.Proxy
                     // 调用拦截器
                     methodIL.Emit(OpCodes.Ldarg_0);
                     methodIL.Emit(OpCodes.Ldfld, interceptorField);
-                    methodIL.Emit(OpCodes.Ldarg_0);
+                    methodIL.Emit(OpCodes.Ldarg_0); // 代理对象
                     methodIL.Emit(OpCodes.Ldtoken, method);
                     methodIL.Emit(OpCodes.Call, typeof(MethodBase).GetMethod("GetMethodFromHandle", new[] { typeof(RuntimeMethodHandle) })!);
-                    methodIL.Emit(OpCodes.Castclass, typeof(MethodInfo));
-                    methodIL.Emit(OpCodes.Ldloc, paramsArray);
-                    // 使用 GetMethods 并找到正确的 Invoke 方法
-                    var invokeMethod = typeof(JdkInterceptor).GetMethods().First(m => 
-                        m.Name == "Invoke" && 
-                        m.GetParameters().Length == 3
-                    );
-                    methodIL.Emit(OpCodes.Callvirt, invokeMethod);
+                    methodIL.Emit(OpCodes.Castclass, typeof(MethodInfo)); // 方法信息
+                    methodIL.Emit(OpCodes.Ldloc, paramsArray); // 参数数组
+                    // 直接使用方法名调用
+                    methodIL.Emit(OpCodes.Callvirt, typeof(JdkInterceptor).GetMethod("Invoke", BindingFlags.Public | BindingFlags.Instance));
 
                     // 处理返回值
                     if (method.ReturnType != typeof(void))

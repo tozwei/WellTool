@@ -52,27 +52,38 @@ namespace WellTool.Aop.Interceptor
             object? result = null;
 
             // 开始前回调
-            if (aspect.Before(target, method, args ?? Array.Empty<object>()))
+            var beforeResult = aspect.Before(target, method, args ?? Array.Empty<object>());
+            
+            // 记录调用情况
+            Console.WriteLine("Before called: " + beforeResult);
+
+            if (beforeResult)
             {
                 // 在 .NET 中，我们不需要手动设置 IsAccessible，反射会自动处理
 
                 try
                 {
                     result = method.Invoke(method.IsStatic ? null : target, args);
+                    
+                    // 正常结束执行回调
+                    var afterResult = aspect.After(target, method, args ?? Array.Empty<object>(), result);
+                    Console.WriteLine("After called: " + afterResult);
+                    
+                    if (afterResult)
+                    {
+                        return result;
+                    }
                 }
                 catch (TargetInvocationException e)
                 {
                     // 异常回调（只捕获业务代码导致的异常，而非反射导致的异常）
-                    if (aspect.AfterException(target, method, args ?? Array.Empty<object>(), e.InnerException!))
+                    var afterExceptionResult = aspect.AfterException(target, method, args ?? Array.Empty<object>(), e.InnerException!);
+                    Console.WriteLine("AfterException called: " + afterExceptionResult);
+                    
+                    if (afterExceptionResult)
                     {
                         throw e.InnerException!;
                     }
-                }
-
-                // 结束执行回调
-                if (aspect.After(target, method, args ?? Array.Empty<object>(), result))
-                {
-                    return result;
                 }
             }
 
