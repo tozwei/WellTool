@@ -699,7 +699,7 @@ namespace WellTool.Core.Util
                 return str;
             }
 
-            return str.Substring(0, maxLength - 3) + "...";
+            return str.Substring(0, maxLength) + "...";
         }
 
         /// <summary>
