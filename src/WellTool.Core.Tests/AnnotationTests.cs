@@ -282,7 +282,7 @@ namespace WellTool.Core.Tests
         [AnnotationForTest("field-annotation")]
         private class ClassWithFieldAnnotation
         {
-            public string TestField { get; set; }
+            public string TestField;
         }
     }
 }
