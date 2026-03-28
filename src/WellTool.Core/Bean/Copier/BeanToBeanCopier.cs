@@ -61,17 +61,10 @@ namespace WellTool.Core.Bean.Copier
 						targetPropDesc = targetBeanDesc.GetPropDesc(sourceAlias);
 					}
 					
-					// 尝试通过目标属性的Alias查找
+					// 尝试通过目标属性的Alias查找（目标属性的Alias等于源属性的FieldName）
 					if (targetPropDesc == null || !targetPropDesc.HasSetter)
 					{
-						// 尝试使用源属性的FieldName
 						targetPropDesc = FindTargetPropByAlias(targetBeanDesc, sourcePropDesc.FieldName);
-						
-						// 如果找不到，尝试使用小写的FieldName
-						if (targetPropDesc == null || !targetPropDesc.HasSetter)
-						{
-							targetPropDesc = FindTargetPropByAlias(targetBeanDesc, sourcePropDesc.FieldName.ToLower());
-						}
 					}
 					
 					if (targetPropDesc == null || !targetPropDesc.HasSetter)
