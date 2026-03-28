@@ -8,16 +8,29 @@ namespace WellTool.Core.Tests
 {
     public class ImgTests
     {
-        #if WINDOWS
         [Fact]
         public void ColorUtilTest()
         {
             // 测试颜色转换功能
-            var color = System.Drawing.Color.Red;
-            var hexColor = ColorUtil.ToHex(color);
+            var hexColor = ColorUtil.ToHex(255, 0, 0);
             XAssert.Equal("#FF0000", hexColor);
+
+            var rgb = ColorUtil.FromHex("#FF0000");
+            XAssert.Equal(255, rgb.r);
+            XAssert.Equal(0, rgb.g);
+            XAssert.Equal(0, rgb.b);
+
+            var hexArgb = ColorUtil.ToHexArgb(255, 255, 0, 0);
+            XAssert.Equal("#FFFF0000", hexArgb);
+
+            var argb = ColorUtil.FromHexArgb("#FFFF0000");
+            XAssert.Equal(255, argb.a);
+            XAssert.Equal(255, argb.r);
+            XAssert.Equal(0, argb.g);
+            XAssert.Equal(0, argb.b);
         }
 
+#if WINDOWS
         [Fact]
         public void FontUtilTest()
         {
@@ -27,9 +40,8 @@ namespace WellTool.Core.Tests
             XAssert.Equal("Arial", font.FontFamily.Name);
             XAssert.Equal(12, font.Size);
         }
-        #endif
 
-        #if WINDOWS
+        
         [Fact]
         public void ImgUtilScaleTest()
         {
@@ -70,6 +82,6 @@ namespace WellTool.Core.Tests
                 flippedImage.Dispose();
             }
         }
-        #endif
+#endif
     }
 }

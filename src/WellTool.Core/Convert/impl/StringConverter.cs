@@ -21,6 +21,63 @@ namespace WellTool.Core.Converter.impl
                 return null;
             }
 
+            // 处理数组类型
+            if (value.GetType().IsArray)
+            {
+                var array = (Array)value;
+                var elements = new System.Text.StringBuilder("[");
+                for (int i = 0; i < array.Length; i++)
+                {
+                    if (i > 0)
+                    {
+                        elements.Append(", ");
+                    }
+                    elements.Append(ConvertToString(array.GetValue(i)));
+                }
+                elements.Append("]");
+                return elements.ToString();
+            }
+
+            // 处理集合类型
+            if (value is System.Collections.IEnumerable enumerable && !(value is string))
+            {
+                var elements = new System.Text.StringBuilder("[");
+                bool first = true;
+                foreach (var item in enumerable)
+                {
+                    if (!first)
+                    {
+                        elements.Append(", ");
+                    }
+                    elements.Append(ConvertToString(item));
+                    first = false;
+                }
+                elements.Append("]");
+                return elements.ToString();
+            }
+
+            return value.ToString();
+        }
+
+        /// <summary>
+        /// 将对象转换为字符串
+        /// </summary>
+        /// <param name="value">要转换的值</param>
+        /// <returns>转换后的字符串</returns>
+        private string ConvertToString(object value)
+        {
+            if (value == null)
+            {
+                return "null";
+            }
+            if (value is string str)
+            {
+                return str;
+            }
+            if (value.GetType().IsArray || value is System.Collections.IEnumerable && !(value is string))
+            {
+                return Convert(value, typeof(string)).ToString();
+            }
             return value.ToString();
         }
 

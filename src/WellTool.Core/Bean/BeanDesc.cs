@@ -54,7 +54,8 @@ namespace WellTool.Core.Bean
 					var attributes = field.GetCustomAttributes(false);
 					foreach (var attribute in attributes)
 					{
-						if (attribute.GetType().Name == "AliasAttribute")
+						var attributeTypeName = attribute.GetType().Name;
+						if (attributeTypeName == "AliasAttribute" || attributeTypeName == "Alias")
 						{
 							var valueProperty = attribute.GetType().GetProperty("Value");
 							if (valueProperty != null)
@@ -97,7 +98,8 @@ namespace WellTool.Core.Bean
 					var attributes = property.GetCustomAttributes(false);
 					foreach (var attribute in attributes)
 					{
-						if (attribute.GetType().Name == "AliasAttribute")
+						var attributeTypeName = attribute.GetType().Name;
+						if (attributeTypeName == "AliasAttribute" || attributeTypeName == "Alias")
 						{
 							var valueProperty = attribute.GetType().GetProperty("Value");
 							if (valueProperty != null)

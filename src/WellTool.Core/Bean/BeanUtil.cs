@@ -74,6 +74,12 @@ namespace WellTool.Core.Bean
 				return null;
 			}
 
+			// 如果没有指定拷贝选项，创建默认的
+			if (copyOptions == null)
+			{
+				copyOptions = Copier.CopyOptions.Create();
+			}
+
 			var target = new Dictionary<object, object>();
 			var copier = new Copier.BeanToMapCopier(source, target, target.GetType(), copyOptions);
 			copier.Copy();

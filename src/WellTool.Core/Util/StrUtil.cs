@@ -127,7 +127,7 @@ namespace WellTool.Core.Util
                 return new string[0];
             }
 
-            return str.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            return str.Split(separator, StringSplitOptions.None);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace WellTool.Core.Util
                 return new string[0];
             }
 
-            return str.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
+            return str.Split(new[] { separator }, StringSplitOptions.None);
         }
 
         /// <summary>

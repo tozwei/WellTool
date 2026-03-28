@@ -184,11 +184,14 @@ namespace WellTool.Core.Annotation.Scanner
                     ScanInterfaceIfNecessary(nextClassQueue, convertedClass);
                     // 处理层级索引和注解
                     var targetAnnotations = GetAnnotationsFromTargetClass(memberInfo, index, convertedClass);
-                    foreach (var annotation in targetAnnotations)
+                    if (targetAnnotations != null)
                     {
-                        if (!AnnotationUtil.IsJdkMetaAnnotation(annotation.GetType()) && filter(annotation))
+                        foreach (var annotation in targetAnnotations)
                         {
-                            consumer(index, annotation);
+                            if (!AnnotationUtil.IsJdkMetaAnnotation(annotation.GetType()) && filter(annotation))
+                            {
+                                consumer(index, annotation);
+                            }
                         }
                     }
                     index++;

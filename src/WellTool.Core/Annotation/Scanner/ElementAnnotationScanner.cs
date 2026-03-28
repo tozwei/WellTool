@@ -28,7 +28,8 @@ namespace WellTool.Core.Annotation.Scanner
         {
             var memberInfo = (MemberInfo)annotatedEle;
             var annotations = memberInfo.GetCustomAttributes(true);
-            return new List<Attribute>(annotations as Attribute[]);
+            var attributeArray = annotations as Attribute[];
+            return attributeArray != null ? new List<Attribute>(attributeArray) : new List<Attribute>();
         }
 
         /// <summary>

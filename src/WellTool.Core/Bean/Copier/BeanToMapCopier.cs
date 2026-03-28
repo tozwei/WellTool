@@ -42,12 +42,22 @@ namespace WellTool.Core.Bean.Copier
 				actualEditable = CopyOptions.Editable;
 			}
 
-			// 获取源对象的属性描述映射
-			var sourcePropDescMap = BeanUtil.GetBeanDesc(actualEditable).GetPropMap(CopyOptions.IgnoreCase);
+			// 获取源对象的属性描述映射（大小写不敏感，确保能获取到所有别名）
+			var sourcePropDescMap = BeanUtil.GetBeanDesc(actualEditable).GetPropMap(true);
+			// 使用一个字典来跟踪已经处理过的原始字段，避免重复处理值
+			var processedOriginalFields = new HashSet<string>();
+			
+			// 首先处理原始字段
 			foreach (var entry in sourcePropDescMap)
 			{
 				string sFieldName = entry.Key;
 				var sDesc = entry.Value;
+
+				// 只处理原始字段（字段名与PropDesc的FieldName相同）
+				if (sFieldName != sDesc.FieldName)
+				{
+					continue;
+				}
 
 				if (string.IsNullOrEmpty(sFieldName) || !sDesc.IsReadable(CopyOptions.TransientSupport))
 				{
@@ -55,41 +65,111 @@ namespace WellTool.Core.Bean.Copier
 					continue;
 				}
 
-				sFieldName = CopyOptions.EditFieldName(sFieldName);
-				// 对key做转换，转换后为null的跳过
-				if (string.IsNullOrEmpty(sFieldName))
+				// 跳过已经处理过的原始字段
+				if (processedOriginalFields.Contains(sDesc.FieldName))
 				{
 					continue;
 				}
+				processedOriginalFields.Add(sDesc.FieldName);
 
-				// 忽略不需要拷贝的 key
-				if (!CopyOptions.TestKeyFilter(sFieldName))
-				{
-					continue;
-				}
-
-				// 检查源对象属性是否过滤属性
+				// 获取属性值
 				object sValue = sDesc.GetValue(Source);
-				if (!CopyOptions.TestPropertyFilter(sDesc.Field, sValue))
+
+				// 转换字段名（如果需要）
+				string targetFieldName = sFieldName;
+				if (CopyOptions.FieldNameEditor == null)
 				{
-					continue;
+					targetFieldName = sDesc.FieldName.ToLower();
+				}
+				else
+				{
+					targetFieldName = CopyOptions.EditFieldName(sFieldName);
 				}
 
-				// 尝试转换源值
-				if (_targetTypeArguments != null && _targetTypeArguments.Length > 1)
+				// 对key做转换，转换后为null的跳过
+				if (!string.IsNullOrEmpty(targetFieldName))
 				{
-					sValue = CopyOptions.ConvertField(_targetTypeArguments[1], sValue);
-				}
+					// 忽略不需要拷贝的 key
+					if (CopyOptions.TestKeyFilter(targetFieldName))
+					{
+						// 检查源对象属性是否过滤属性
+						if (CopyOptions.TestPropertyFilter(sDesc.Field, sValue))
+						{
+							// 尝试转换源值
+							if (_targetTypeArguments != null && _targetTypeArguments.Length > 1)
+							{
+								sValue = CopyOptions.ConvertField(_targetTypeArguments[1], sValue);
+							}
 
-				// 自定义值
-				sValue = CopyOptions.EditFieldValue(sFieldName, sValue);
+							// 自定义值
+							sValue = CopyOptions.EditFieldValue(targetFieldName, sValue);
 
-				// 目标赋值
-				if (sValue != null || !CopyOptions.IgnoreNullValue)
-				{
-					Target[sFieldName] = sValue;
+							// 目标赋值
+							if (sValue != null || !CopyOptions.IgnoreNullValue)
+							{
+								Target[targetFieldName] = sValue;
+							}
+						}
+					}
 				}
 			}
+
+			// 然后处理别名
+			foreach (var entry in sourcePropDescMap)
+			{
+				string sFieldName = entry.Key;
+				var sDesc = entry.Value;
+
+				// 只处理别名（字段名与PropDesc的FieldName不同）
+				if (sFieldName == sDesc.FieldName)
+				{
+					continue;
+				}
+
+				if (string.IsNullOrEmpty(sFieldName) || !sDesc.IsReadable(CopyOptions.TransientSupport))
+				{
+					// 字段空或不可读，跳过
+					continue;
+				}
+
+				// 获取属性值
+				object sValue = sDesc.GetValue(Source);
+
+				// 别名保持原样，不转换大小写
+				string targetFieldName = sFieldName;
+				if (CopyOptions.FieldNameEditor != null)
+				{
+					targetFieldName = CopyOptions.EditFieldName(sFieldName);
+				}
+
+				// 对key做转换，转换后为null的跳过
+				if (!string.IsNullOrEmpty(targetFieldName))
+				{
+					// 忽略不需要拷贝的 key
+					if (CopyOptions.TestKeyFilter(targetFieldName))
+					{
+						// 检查源对象属性是否过滤属性
+						if (CopyOptions.TestPropertyFilter(sDesc.Field, sValue))
+						{
+							// 尝试转换源值
+							if (_targetTypeArguments != null && _targetTypeArguments.Length > 1)
+							{
+								sValue = CopyOptions.ConvertField(_targetTypeArguments[1], sValue);
+							}
+
+							// 自定义值
+							sValue = CopyOptions.EditFieldValue(targetFieldName, sValue);
+
+							// 目标赋值
+							if (sValue != null || !CopyOptions.IgnoreNullValue)
+							{
+								Target[targetFieldName] = sValue;
+							}
+						}
+					}
+				}
+			}
+
 			return Target;
 		}
 

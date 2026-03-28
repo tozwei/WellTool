@@ -74,7 +74,7 @@ namespace WellTool.Core.Bean.Copier
 				}
 
 				// 检查目标字段可写性
-				var tDesc = CopyOptions.FindPropDesc(targetPropDescMap, sFieldName);
+				var tDesc = targetPropDescMap.TryGetValue(sFieldName, out var propDesc) ? propDesc : CopyOptions.FindPropDesc(targetPropDescMap, sFieldName);
 				if (tDesc == null || !tDesc.IsWritable(CopyOptions.TransientSupport))
 				{
 					// 字段不可写，跳过之

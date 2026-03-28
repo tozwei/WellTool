@@ -128,7 +128,16 @@ namespace WellTool.Core.Converter
         /// <returns>转换后的值</returns>
         public T Convert<T>(object value)
         {
-            return (T)Convert(value, typeof(T));
+            var result = Convert(value, typeof(T));
+            if (result is bool boolValue && typeof(T) == typeof(int))
+            {
+                return (T)(object)(boolValue ? 1 : 0);
+            }
+            if (result is bool boolValueLong && typeof(T) == typeof(long))
+            {
+                return (T)(object)(boolValueLong ? 1L : 0L);
+            }
+            return (T)result;
         }
 
         /// <summary>

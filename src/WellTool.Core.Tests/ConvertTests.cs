@@ -59,9 +59,10 @@ namespace WellTool.Core.Tests
         [Fact]
         public void ToStrTest4()
         {
-            // 被当作八进制
-            string result = WellConvert.ToStr(001200);
-            XAssert.Equal("640", result);
+            // 测试八进制数字转换
+            int octalValue = 01200; // 在 C# 中，这仍然是十进制的 1200
+            string result = WellConvert.ToStr(octalValue);
+            XAssert.Equal("1200", result);
         }
 
         [Fact]

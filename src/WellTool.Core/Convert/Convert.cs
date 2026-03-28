@@ -23,7 +23,28 @@ namespace WellTool.Core.Converter
         /// <returns>转换后的值</returns>
         public static T To<T>(object value)
         {
-            return (T)To(value, typeof(T));
+            if (value is int && typeof(T) == typeof(string))
+            {
+                return (T)(object)value.ToString();
+            }
+            if (value is long && typeof(T) == typeof(string))
+            {
+                return (T)(object)value.ToString();
+            }
+            var result = To(value, typeof(T));
+            if (result is bool boolValue && typeof(T) == typeof(int))
+            {
+                return (T)(object)(boolValue ? 1 : 0);
+            }
+            if (result is bool boolValueLong && typeof(T) == typeof(long))
+            {
+                return (T)(object)(boolValueLong ? 1L : 0L);
+            }
+            if (result is bool boolValueStr && typeof(T) == typeof(string))
+            {
+                return (T)(object)boolValueStr.ToString();
+            }
+            return (T)result;
         }
 
         /// <summary>
@@ -90,7 +111,25 @@ namespace WellTool.Core.Converter
                 return str;
             }
 
-            if (value is IEnumerable<object> enumerable)
+            // 处理数组类型
+            if (value.GetType().IsArray)
+            {
+                var array = (Array)value;
+                var sb = new StringBuilder("[");
+                for (int i = 0; i < array.Length; i++)
+                {
+                    if (i > 0)
+                    {
+                        sb.Append(", ");
+                    }
+                    sb.Append(ToStr(array.GetValue(i)));
+                }
+                sb.Append("]");
+                return sb.ToString();
+            }
+
+            // 处理集合类型
+            if (value is System.Collections.IEnumerable enumerable && !(value is string))
             {
                 var sb = new StringBuilder("[");
                 bool first = true;

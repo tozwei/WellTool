@@ -64,14 +64,14 @@ namespace WellTool.Core.Tests
             private TestObject() { }
         }
 
-        // [Fact]
-        // public void TestConsole()
-        // {
-        //     // 测试Console类的基本功能
-        //     // 这里我们只测试方法是否能正常调用，不测试实际输出
-        //     WellTool.Core.Lang.Console.WriteLine("Test Console");
-        //     WellTool.Core.Lang.Console.Write("Test Console");
-        // }
+        [Fact]
+        public void TestConsole()
+        {
+            // 测试Console类的基本功能
+            // 这里我们只测试方法是否能正常调用，不测试实际输出
+            WellTool.Core.Lang.Console.Println("Test Console");
+            WellTool.Core.Lang.Console.Print("Test Console");
+        }
 
         [Fact]
         public void TestStringUtil()
@@ -97,18 +97,18 @@ namespace WellTool.Core.Tests
 
         //     // 测试MD5
         //     string md5 = WellTool.Core.Lang.Hash.MD5(data);
-        //     Assert.NotNull(md5);
-        //     Assert.Equal(32, md5.Length);
+        //     XAssert.NotNull(md5);
+        //     XAssert.Equal(32, md5.Length);
 
         //     // 测试SHA1
         //     string sha1 = WellTool.Core.Lang.Hash.SHA1(data);
-        //     Assert.NotNull(sha1);
-        //     Assert.Equal(40, sha1.Length);
+        //     XAssert.NotNull(sha1);
+        //     XAssert.Equal(40, sha1.Length);
 
         //     // 测试SHA256
         //     string sha256 = WellTool.Core.Lang.Hash.SHA256(data);
-        //     Assert.NotNull(sha256);
-        //     Assert.Equal(64, sha256.Length);
+        //     XAssert.NotNull(sha256);
+        //     XAssert.Equal(64, sha256.Length);
         // }
 
         [Fact]
@@ -130,13 +130,13 @@ namespace WellTool.Core.Tests
             XAssert.Equal(4, length1);
         }
 
-        // [Fact]
-        // public void TestSupplier()
-        // {
-        //     // 测试Supplier1接口
-        //     WellTool.Core.Lang.Func.Supplier1<string> supplier1 = () => "test";
-        //     string result1 = supplier1();
-        //     Assert.Equal("test", result1);
-        // }
+        [Fact]
+        public void TestSupplier()
+        {
+            // 测试Func0接口作为无参数供应者
+            WellTool.Core.Lang.Func.Func0<string> supplier = () => "test";
+            string result = supplier();
+            XAssert.Equal("test", result);
+        }
     }
 }

@@ -62,11 +62,11 @@ namespace WellTool.Core.Date
         }
 
         // 解析日期字符串
-        public static DateTime? Parse(string dateStr)
+        public static DateTime Parse(string dateStr)
         {
             if (string.IsNullOrWhiteSpace(dateStr))
             {
-                return null;
+                throw new ArgumentException("Date string cannot be empty");
             }
 
             // 尝试解析时间戳
@@ -107,6 +107,42 @@ namespace WellTool.Core.Date
                 "yyyy/MM/dd H:mm:ss"
             };
 
+            // 处理带时区的日期字符串，忽略时区信息
+            var cleanDateStr = dateStr;
+            if (cleanDateStr.Contains('Z'))
+            {
+                // 移除Z标记
+                cleanDateStr = cleanDateStr.Replace("Z", "");
+                // 替换T为空格
+                cleanDateStr = cleanDateStr.Replace('T', ' ');
+                // 尝试解析清理后的日期字符串
+                if (DateTime.TryParse(cleanDateStr, out var parsedDate))
+                {
+                    return parsedDate;
+                }
+            }
+            else if (cleanDateStr.Contains('+') || (cleanDateStr.Contains('-') && cleanDateStr.LastIndexOf('-') > 10))
+            {
+                // 移除时区信息
+                if (cleanDateStr.Contains('+'))
+                {
+                    cleanDateStr = cleanDateStr.Substring(0, cleanDateStr.IndexOf('+'));
+                }
+                else if (cleanDateStr.Contains('-') && cleanDateStr.LastIndexOf('-') > 10)
+                {
+                    cleanDateStr = cleanDateStr.Substring(0, cleanDateStr.LastIndexOf('-'));
+                }
+                
+                // 替换T为空格
+                cleanDateStr = cleanDateStr.Replace('T', ' ');
+                
+                // 尝试解析清理后的日期字符串
+                if (DateTime.TryParse(cleanDateStr, out var parsedDate))
+                {
+                    return parsedDate;
+                }
+            }
+
             if (DateTime.TryParseExact(dateStr, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
             {
                 return date;
@@ -119,16 +155,34 @@ namespace WellTool.Core.Date
             }
             catch
             {
+                throw new ArgumentException("Invalid date format");
+            }
+        }
+
+        // 解析日期字符串（可空版本）
+        public static DateTime? ParseOrNull(string dateStr)
+        {
+            if (string.IsNullOrWhiteSpace(dateStr))
+            {
+                return null;
+            }
+
+            try
+            {
+                return Parse(dateStr);
+            }
+            catch
+            {
                 return null;
             }
         }
 
         // 解析指定格式的日期字符串
-        public static DateTime? Parse(string dateStr, string format)
+        public static DateTime Parse(string dateStr, string format)
         {
             if (string.IsNullOrWhiteSpace(dateStr))
             {
-                return null;
+                throw new ArgumentException("Date string cannot be empty");
             }
 
             // 尝试解析带不同分隔符的日期
@@ -215,6 +269,24 @@ namespace WellTool.Core.Date
             try
             {
                 return DateTime.Parse(dateStr);
+            }
+            catch
+            {
+                throw new ArgumentException("Invalid date format");
+            }
+        }
+
+        // 解析指定格式的日期字符串（可空版本）
+        public static DateTime? ParseOrNull(string dateStr, string format)
+        {
+            if (string.IsNullOrWhiteSpace(dateStr))
+            {
+                return null;
+            }
+
+            try
+            {
+                return Parse(dateStr, format);
             }
             catch
             {
@@ -359,7 +431,7 @@ namespace WellTool.Core.Date
         // 计算当前年龄（从字符串解析生日）
         public static int AgeOfNow(string birthDay)
         {
-            var birthday = Parse(birthDay);
+            var birthday = ParseOrNull(birthDay);
             if (birthday == null)
             {
                 throw new ArgumentException("Invalid birthday format");
@@ -472,15 +544,27 @@ namespace WellTool.Core.Date
         }
 
         // 解析日期字符串（只解析日期部分）
-        public static DateTime? ParseDate(string dateStr)
+        public static DateTime ParseDate(string dateStr)
         {
             return Parse(dateStr, "yyyy-MM-dd");
         }
 
+        // 解析日期字符串（只解析日期部分，可空版本）
+        public static DateTime? ParseDateOrNull(string dateStr)
+        {
+            return ParseOrNull(dateStr, "yyyy-MM-dd");
+        }
+
         // 解析时间字符串（只解析时间部分）
-        public static DateTime? ParseTime(string timeStr)
+        public static DateTime ParseTime(string timeStr)
         {
             return Parse(timeStr, "HH:mm:ss");
+        }
+
+        // 解析时间字符串（只解析时间部分，可空版本）
+        public static DateTime? ParseTimeOrNull(string timeStr)
+        {
+            return ParseOrNull(timeStr, "HH:mm:ss");
         }
 
         // 获取当前时间

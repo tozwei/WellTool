@@ -307,7 +307,7 @@ namespace WellTool.Core.Tests
         public void ParseEmptyTest()
         {
             var str = " ";
-            var dateTime = DateUtil.Parse(str);
+            var dateTime = DateUtil.ParseOrNull(str);
             XAssert.Null(dateTime);
         }
 

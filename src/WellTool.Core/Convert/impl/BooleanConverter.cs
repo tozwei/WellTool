@@ -18,12 +18,19 @@ namespace WellTool.Core.Converter.impl
         {
             if (value == null)
             {
-                return false;
+                return GetDefaultValue(targetType);
             }
 
             if (value is bool boolValue)
             {
-                return boolValue;
+                if (targetType == typeof(bool))
+                {
+                    return boolValue;
+                }
+                else if (targetType == typeof(string))
+                {
+                    return boolValue.ToString();
+                }
             }
 
             if (value is string stringValue)
@@ -42,7 +49,7 @@ namespace WellTool.Core.Converter.impl
                 return longValue != 0;
             }
 
-            throw new ConvertException($"Cannot convert {value.GetType().Name} to bool");
+            throw new ConvertException($"Cannot convert {value.GetType().Name} to {targetType.Name}");
         }
 
         /// <summary>
@@ -60,7 +67,33 @@ namespace WellTool.Core.Converter.impl
         /// <returns>支持的目标类型数组</returns>
         public Type[] GetSupportedTargetTypes()
         {
-            return new[] { typeof(bool) };
+            return new[] { typeof(bool), typeof(string) };
+        }
+
+        /// <summary>
+        /// 获取类型的默认值
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>默认值</returns>
+        private static object GetDefaultValue(Type type)
+        {
+            if (type == typeof(bool))
+            {
+                return false;
+            }
+            else if (type == typeof(int))
+            {
+                return 0;
+            }
+            else if (type == typeof(long))
+            {
+                return 0L;
+            }
+            else if (type == typeof(string))
+            {
+                return null;
+            }
+            return null;
         }
     }
 }

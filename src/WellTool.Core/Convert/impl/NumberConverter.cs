@@ -21,83 +21,140 @@ namespace WellTool.Core.Converter.impl
                 return GetDefaultValue(targetType);
             }
 
+            // 处理布尔值
+            if (value is bool boolValue)
+            {
+                int boolIntValue = boolValue ? 1 : 0;
+                if (targetType == typeof(int))
+                {
+                    return boolIntValue;
+                }
+                else if (targetType == typeof(long))
+                {
+                    return (long)boolIntValue;
+                }
+                else if (targetType == typeof(float))
+                {
+                    return (float)boolIntValue;
+                }
+                else if (targetType == typeof(double))
+                {
+                    return (double)boolIntValue;
+                }
+                else if (targetType == typeof(decimal))
+                {
+                    return (decimal)boolIntValue;
+                }
+                else if (targetType == typeof(byte))
+                {
+                    return (byte)boolIntValue;
+                }
+                else if (targetType == typeof(sbyte))
+                {
+                    return (sbyte)boolIntValue;
+                }
+                else if (targetType == typeof(short))
+                {
+                    return (short)boolIntValue;
+                }
+                else if (targetType == typeof(ushort))
+                {
+                    return (ushort)boolIntValue;
+                }
+                else if (targetType == typeof(uint))
+                {
+                    return (uint)boolIntValue;
+                }
+                else if (targetType == typeof(ulong))
+                {
+                    return (ulong)boolIntValue;
+                }
+            }
+
             string strValue = value.ToString().Trim();
 
-            if (targetType == typeof(int))
+            try
             {
-                if (strValue.Contains("."))
+                if (targetType == typeof(int))
                 {
-                    return (int)double.Parse(strValue);
+                    if (strValue.Contains("."))
+                    {
+                        return (int)decimal.Parse(strValue);
+                    }
+                    return int.Parse(strValue);
                 }
-                return int.Parse(strValue);
-            }
-            else if (targetType == typeof(long))
-            {
-                if (strValue.Contains("."))
+                else if (targetType == typeof(long))
                 {
-                    return (long)double.Parse(strValue);
+                    if (strValue.Contains("."))
+                    {
+                        return (long)decimal.Parse(strValue);
+                    }
+                    return long.Parse(strValue);
                 }
-                return long.Parse(strValue);
-            }
-            else if (targetType == typeof(float))
-            {
-                return float.Parse(strValue);
-            }
-            else if (targetType == typeof(double))
-            {
-                return double.Parse(strValue);
-            }
-            else if (targetType == typeof(decimal))
-            {
-                return decimal.Parse(strValue);
-            }
-            else if (targetType == typeof(byte))
-            {
-                if (strValue.Contains("."))
+                else if (targetType == typeof(float))
                 {
-                    return (byte)double.Parse(strValue);
+                    return float.Parse(strValue);
                 }
-                return byte.Parse(strValue);
-            }
-            else if (targetType == typeof(sbyte))
-            {
-                if (strValue.Contains("."))
+                else if (targetType == typeof(double))
                 {
-                    return (sbyte)double.Parse(strValue);
+                    return double.Parse(strValue);
                 }
-                return sbyte.Parse(strValue);
-            }
-            else if (targetType == typeof(short))
-            {
-                if (strValue.Contains("."))
+                else if (targetType == typeof(decimal))
                 {
-                    return (short)double.Parse(strValue);
+                    return decimal.Parse(strValue);
                 }
-                return short.Parse(strValue);
-            }
-            else if (targetType == typeof(ushort))
-            {
-                if (strValue.Contains("."))
+                else if (targetType == typeof(byte))
                 {
-                    return (ushort)double.Parse(strValue);
+                    if (strValue.Contains("."))
+                    {
+                        return (byte)decimal.Parse(strValue);
+                    }
+                    return byte.Parse(strValue);
                 }
-                return ushort.Parse(strValue);
-            }
-            else if (targetType == typeof(uint))
-            {
-                if (strValue.Contains("."))
+                else if (targetType == typeof(sbyte))
                 {
-                    return (uint)double.Parse(strValue);
+                    if (strValue.Contains("."))
+                    {
+                        return (sbyte)decimal.Parse(strValue);
+                    }
+                    return sbyte.Parse(strValue);
                 }
-                return uint.Parse(strValue);
-            }
-            else if (targetType == typeof(ulong))
-            {
-                if (strValue.Contains("."))
+                else if (targetType == typeof(short))
                 {
-                    return (ulong)double.Parse(strValue);
+                    if (strValue.Contains("."))
+                    {
+                        return (short)decimal.Parse(strValue);
+                    }
+                    return short.Parse(strValue);
                 }
-                return ulong.Parse(strValue);
+                else if (targetType == typeof(ushort))
+                {
+                    if (strValue.Contains("."))
+                    {
+                        return (ushort)decimal.Parse(strValue);
+                    }
+                    return ushort.Parse(strValue);
+                }
+                else if (targetType == typeof(uint))
+                {
+                    if (strValue.Contains("."))
+                    {
+                        return (uint)decimal.Parse(strValue);
+                    }
+                    return uint.Parse(strValue);
+                }
+                else if (targetType == typeof(ulong))
+                {
+                    if (strValue.Contains("."))
+                    {
+                        return (ulong)decimal.Parse(strValue);
+                    }
+                    return ulong.Parse(strValue);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ConvertException($"Cannot convert {value.GetType().Name} to {targetType.Name}: {ex.Message}", ex);
             }
 
             throw new ConvertException($"Cannot convert {value.GetType().Name} to {targetType.Name}");
@@ -119,7 +176,7 @@ namespace WellTool.Core.Converter.impl
         /// <returns>支持的源类型数组</returns>
         public Type[] GetSupportedSourceTypes()
         {
-            return new[] { typeof(string), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(byte), typeof(sbyte), typeof(short), typeof(ushort), typeof(uint), typeof(ulong) };
+            return new[] { typeof(string), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(byte), typeof(sbyte), typeof(short), typeof(ushort), typeof(uint), typeof(ulong), typeof(object) };
         }
 
         /// <summary>
