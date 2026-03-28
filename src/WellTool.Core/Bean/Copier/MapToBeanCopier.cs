@@ -91,13 +91,25 @@ namespace WellTool.Core.Bean.Copier
 
 				// 获取目标字段真实类型并转换源值
 				Type fieldType = GetActualType(_targetType, tDesc.FieldType);
-				object newValue = CopyOptions.ConvertField(fieldType, sValue);
+				object newValue = null;
+				try
+				{
+					newValue = CopyOptions.ConvertField(fieldType, sValue);
 
-				// 自定义值
-				newValue = CopyOptions.EditFieldValue(sKeyStr, newValue);
+					// 自定义值
+					newValue = CopyOptions.EditFieldValue(sKeyStr, newValue);
 
-				// 目标赋值
-				tDesc.SetValue(Target, newValue, CopyOptions.IgnoreNullValue, CopyOptions.IgnoreError, CopyOptions.Override);
+					// 目标赋值
+					tDesc.SetValue(Target, newValue, CopyOptions.IgnoreNullValue, CopyOptions.IgnoreError, CopyOptions.Override);
+				}
+				catch (Exception ex)
+				{
+					if (!CopyOptions.IgnoreError)
+					{
+						throw;
+					}
+					// 忽略错误，继续处理下一个字段
+				}
 			}
 
 			return Target;
@@ -199,13 +211,25 @@ namespace WellTool.Core.Bean.Copier
 
 				// 获取目标字段真实类型并转换源值
 				Type fieldType = GetActualType(_targetType, tDesc.FieldType);
-				object newValue = CopyOptions.ConvertField(fieldType, sValue);
+				object newValue = null;
+				try
+				{
+					newValue = CopyOptions.ConvertField(fieldType, sValue);
 
-				// 自定义值
-				newValue = CopyOptions.EditFieldValue(sKeyStr, newValue);
+					// 自定义值
+					newValue = CopyOptions.EditFieldValue(sKeyStr, newValue);
 
-				// 目标赋值
-				tDesc.SetValue(Target, newValue, CopyOptions.IgnoreNullValue, CopyOptions.IgnoreError, CopyOptions.Override);
+					// 目标赋值
+					tDesc.SetValue(Target, newValue, CopyOptions.IgnoreNullValue, CopyOptions.IgnoreError, CopyOptions.Override);
+				}
+				catch (Exception ex)
+				{
+					if (!CopyOptions.IgnoreError)
+					{
+						throw;
+					}
+					// 忽略错误，继续处理下一个字段
+				}
 			}
 
 			return Target;

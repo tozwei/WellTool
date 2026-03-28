@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -44,7 +45,7 @@ namespace WellTool.Core.Bean
 		{
 			if (source == null || target == null)
 			{
-				return target;
+				return default;
 			}
 
 			// 清除缓存，确保使用最新的BeanDesc
@@ -133,6 +134,12 @@ namespace WellTool.Core.Bean
 				return false;
 			}
 
+			// 排除Dictionary类型
+			if (typeof(IDictionary).IsAssignableFrom(type))
+			{
+				return false;
+			}
+
 			// 检查是否有公共的无参构造函数
 			var constructor = type.GetConstructor(Type.EmptyTypes);
 			if (constructor == null)
@@ -151,10 +158,10 @@ namespace WellTool.Core.Bean
 		/// 填充Bean属性
 		/// </summary>
 		/// <typeparam name="T">Bean类型</typeparam>
-		/// <param name="source">源对象</param>
 		/// <param name="target">目标Bean</param>
+		/// <param name="source">源对象</param>
 		/// <returns>目标Bean</returns>
-		public static T FillBean<T>(object source, T target)
+		public static T FillBean<T>(T target, object source)
 		{
 			return CopyProperties(source, target);
 		}

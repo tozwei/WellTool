@@ -435,7 +435,7 @@ namespace WellTool.Core.Bean.Copier
 
 		/// <summary>
 		/// 查找Map对应Bean的名称<br>
-		/// 尝试原名称、转驼峰名称、isXxx去掉is的名称
+		/// 尝试原名称、转驼峰名称、首字母大写名称
 		/// </summary>
 		/// <param name="targetPropDescMap">目标bean的属性描述Map</param>
 		/// <param name="sKeyStr">键或字段名</param>
@@ -447,18 +447,28 @@ namespace WellTool.Core.Bean.Copier
 				return propDesc;
 			}
 
+			// 尝试首字母大写
+			if (!string.IsNullOrEmpty(sKeyStr))
+			{
+				string upperFirstKey = char.ToUpper(sKeyStr[0]) + sKeyStr.Substring(1);
+				if (upperFirstKey != sKeyStr && targetPropDescMap.TryGetValue(upperFirstKey, out propDesc))
+				{
+					return propDesc;
+				}
+			}
+
 			// 转驼峰尝试查找
 			if (AutoTransCamelCase)
 			{
 				string camelCaseKey = ToCamelCase(sKeyStr);
-				if (camelCaseKey != sKeyStr)
+				if (camelCaseKey != sKeyStr && targetPropDescMap.TryGetValue(camelCaseKey, out propDesc))
 				{
 					// 只有转换为驼峰后与原key不同才重复查询，相同说明本身就是驼峰，不需要二次查询
-					targetPropDescMap.TryGetValue(camelCaseKey, out propDesc);
+					return propDesc;
 				}
 			}
 
-			return propDesc;
+			return null;
 		}
 
 		/// <summary>

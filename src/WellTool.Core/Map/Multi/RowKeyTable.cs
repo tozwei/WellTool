@@ -197,8 +197,6 @@ namespace WellTool.Core.Map.Multi
 		//endregion
 
 		//region columnKeySet
-		private ICollection<C> columnKeySet;
-
 		public IEnumerable<C> GetAllColumnKeys()
 		{
 			var seen = new HashSet<C>();

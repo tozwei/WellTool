@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -76,6 +77,23 @@ namespace WellTool.Core.Bean.Copier
 				else
 				{
 					copier = new MapToBeanCopier<T>(mapSource, target, targetType, copyOptions);
+				}
+			}
+			else if (source is IDictionary dictionary)
+			{
+				// 处理其他类型的 Dictionary
+				var dictSource = new Dictionary<object, object>();
+				foreach (var key in dictionary.Keys)
+				{
+					dictSource[key] = dictionary[key];
+				}
+				if (target is IDictionary<object, object> mapTarget)
+				{
+					copier = (ICopier<T>)new MapToMapCopier(dictSource, mapTarget, targetType, copyOptions);
+				}
+				else
+				{
+					copier = new MapToBeanCopier<T>(dictSource, target, targetType, copyOptions);
 				}
 			}
 			else if (source is IValueProvider<string> valueProvider)

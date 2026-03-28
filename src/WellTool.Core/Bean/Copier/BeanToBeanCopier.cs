@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using WellTool.Core.Bean;
 
 namespace WellTool.Core.Bean.Copier
 {
@@ -33,74 +34,65 @@ namespace WellTool.Core.Bean.Copier
 		/// <returns>目标对象</returns>
 		public override T Copy()
 		{
-			Type actualEditable = Target.GetType();
-			if (CopyOptions.Editable != null)
+			// 获取源对象和目标对象的Bean描述
+			var sourceBeanDesc = BeanUtil.GetBeanDesc(Source.GetType());
+			var targetBeanDesc = BeanUtil.GetBeanDesc(Target.GetType());
+
+			// 遍历源对象的所有属性
+			foreach (var sourcePropDesc in sourceBeanDesc.PropDescs.Values)
 			{
-				// 检查限制类是否为target的父类或接口
-				if (!CopyOptions.Editable.IsAssignableFrom(actualEditable))
-				{
-					throw new ArgumentException($"Target class [{actualEditable.Name}] not assignable to Editable class [{CopyOptions.Editable.Name}]");
-				}
-				actualEditable = CopyOptions.Editable;
-			}
-
-			// 获取源对象的属性描述映射（使用大小写不敏感的映射，确保能找到所有属性）
-			var sourcePropDescMap = BeanUtil.GetBeanDesc(Source.GetType()).GetPropMap(true);
-			// 获取目标对象的属性描述映射（使用大小写不敏感的映射，确保能找到所有属性）
-			var targetPropDescMap = BeanUtil.GetBeanDesc(actualEditable).GetPropMap(true);
-
-			foreach (var entry in sourcePropDescMap)
-			{
-				string sFieldName = entry.Key;
-				var sDesc = entry.Value;
-
-				if (string.IsNullOrEmpty(sFieldName) || !sDesc.IsReadable(CopyOptions.TransientSupport))
-				{
-					// 字段空或不可读，跳过
-					continue;
-				}
-
-				sFieldName = CopyOptions.EditFieldName(sFieldName);
-				// 对key做转换，转换后为null的跳过
-				if (string.IsNullOrEmpty(sFieldName))
+				// 检查属性是否可读
+				if (!sourcePropDesc.HasGetter)
 				{
 					continue;
 				}
 
-				// 忽略不需要拷贝的 key
-				if (!CopyOptions.TestKeyFilter(sFieldName))
+				// 获取源属性的值
+				object value = sourcePropDesc.GetValue(Source);
+
+				// 查找目标对象中对应的属性
+				var targetPropDesc = targetBeanDesc.GetPropDesc(sourcePropDesc.FieldName);
+				if (targetPropDesc == null || !targetPropDesc.HasSetter)
 				{
-					continue;
+					// 尝试通过Alias查找
+					targetPropDesc = FindTargetPropByAlias(targetBeanDesc, sourcePropDesc.FieldName);
+					if (targetPropDesc == null || !targetPropDesc.HasSetter)
+					{
+						// 目标属性不存在或不可写，跳过
+						continue;
+					}
 				}
 
-				// 检查目标字段可写性
-				var tDesc = targetPropDescMap.TryGetValue(sFieldName, out var propDesc) ? propDesc : CopyOptions.FindPropDesc(targetPropDescMap, sFieldName);
-				if (tDesc == null || !tDesc.IsWritable(CopyOptions.TransientSupport))
-				{
-					// 字段不可写，跳过之
-					continue;
-				}
-				sFieldName = tDesc.FieldName;
-
-				// 检查源对象属性是否过滤属性
-				object sValue = sDesc.GetValue(Source);
-				if (!CopyOptions.TestPropertyFilter(sDesc.Field, sValue))
-				{
-					continue;
-				}
-
-				// 获取目标字段真实类型并转换源值
-				Type fieldType = GetActualType(_targetType, tDesc.FieldType);
-				object newValue = CopyOptions.ConvertField(fieldType, sValue);
-
-				// 自定义值
-				newValue = CopyOptions.EditFieldValue(sFieldName, newValue);
-
-				// 目标赋值
-				tDesc.SetValue(Target, newValue, CopyOptions.IgnoreNullValue, CopyOptions.IgnoreError, CopyOptions.Override);
+				// 设置目标属性的值
+				targetPropDesc.SetValue(Target, value);
 			}
 
 			return Target;
+		}
+
+		/// <summary>
+		/// 通过Alias查找目标属性
+		/// </summary>
+		/// <param name="targetBeanDesc">目标对象的Bean描述</param>
+		/// <param name="sourceFieldName">源字段名</param>
+		/// <returns>目标属性描述</returns>
+		private PropDesc FindTargetPropByAlias(BeanDesc targetBeanDesc, string sourceFieldName)
+		{
+			// 遍历目标对象的所有属性，查找带有Alias注解的属性
+			foreach (var targetPropDesc in targetBeanDesc.PropDescs.Values)
+			{
+				var property = targetPropDesc.Property;
+				if (property != null)
+				{
+					// 查找Alias注解
+					var aliasAttr = property.GetCustomAttribute<AliasAttribute>();
+					if (aliasAttr != null && aliasAttr.Value == sourceFieldName)
+					{
+						return targetPropDesc;
+					}
+				}
+			}
+			return null;
 		}
 
 		/// <summary>
