@@ -92,12 +92,21 @@ namespace WellTool.Core.Bean.Copier
 			var property = sourcePropDesc.Property;
 			if (property != null)
 			{
-				// 查找AliasAttribute类型的注解（包括子类）
-				var attributes = property.GetCustomAttributes(typeof(AliasAttribute), true);
-				if (attributes.Length > 0)
+				// 查找具有Value属性的Alias注解
+				var attributes = property.GetCustomAttributes(true);
+				foreach (var attribute in attributes)
 				{
-					var aliasAttr = (AliasAttribute)attributes[0];
-					return aliasAttr.Value;
+					var attributeType = attribute.GetType();
+					if ((attributeType.Name == "AliasAttribute" || attributeType.Name == "Alias") && 
+						attributeType.GetProperty("Value") != null)
+					{
+						var valueProperty = attributeType.GetProperty("Value");
+						var aliasValue = valueProperty.GetValue(attribute) as string;
+						if (!string.IsNullOrEmpty(aliasValue))
+						{
+							return aliasValue;
+						}
+					}
 				}
 			}
 			
@@ -105,12 +114,21 @@ namespace WellTool.Core.Bean.Copier
 			var field = sourcePropDesc.Field;
 			if (field != null)
 			{
-				// 查找AliasAttribute类型的注解（包括子类）
-				var attributes = field.GetCustomAttributes(typeof(AliasAttribute), true);
-				if (attributes.Length > 0)
+				// 查找具有Value属性的Alias注解
+				var attributes = field.GetCustomAttributes(true);
+				foreach (var attribute in attributes)
 				{
-					var aliasAttr = (AliasAttribute)attributes[0];
-					return aliasAttr.Value;
+					var attributeType = attribute.GetType();
+					if ((attributeType.Name == "AliasAttribute" || attributeType.Name == "Alias") && 
+						attributeType.GetProperty("Value") != null)
+					{
+						var valueProperty = attributeType.GetProperty("Value");
+						var aliasValue = valueProperty.GetValue(attribute) as string;
+						if (!string.IsNullOrEmpty(aliasValue))
+						{
+							return aliasValue;
+						}
+					}
 				}
 			}
 			return null;
@@ -131,14 +149,20 @@ namespace WellTool.Core.Bean.Copier
 				var property = targetPropDesc.Property;
 				if (property != null)
 				{
-					// 查找AliasAttribute类型的注解（包括子类）
-					var attributes = property.GetCustomAttributes(typeof(AliasAttribute), true);
-					if (attributes.Length > 0)
+					// 查找具有Value属性的Alias注解
+					var attributes = property.GetCustomAttributes(true);
+					foreach (var attribute in attributes)
 					{
-						var aliasAttr = (AliasAttribute)attributes[0];
-						if (aliasAttr.Value == sourceFieldName)
+						var attributeType = attribute.GetType();
+						if ((attributeType.Name == "AliasAttribute" || attributeType.Name == "Alias") && 
+							attributeType.GetProperty("Value") != null)
 						{
-							return targetPropDesc;
+							var valueProperty = attributeType.GetProperty("Value");
+							var aliasValue = valueProperty.GetValue(attribute) as string;
+							if (string.Equals(aliasValue, sourceFieldName, StringComparison.OrdinalIgnoreCase))
+							{
+								return targetPropDesc;
+							}
 						}
 					}
 				}
@@ -147,14 +171,20 @@ namespace WellTool.Core.Bean.Copier
 				var field = targetPropDesc.Field;
 				if (field != null)
 				{
-					// 查找AliasAttribute类型的注解（包括子类）
-					var attributes = field.GetCustomAttributes(typeof(AliasAttribute), true);
-					if (attributes.Length > 0)
+					// 查找具有Value属性的Alias注解
+					var attributes = field.GetCustomAttributes(true);
+					foreach (var attribute in attributes)
 					{
-						var aliasAttr = (AliasAttribute)attributes[0];
-						if (aliasAttr.Value == sourceFieldName)
+						var attributeType = attribute.GetType();
+						if ((attributeType.Name == "AliasAttribute" || attributeType.Name == "Alias") && 
+							attributeType.GetProperty("Value") != null)
 						{
-							return targetPropDesc;
+							var valueProperty = attributeType.GetProperty("Value");
+							var aliasValue = valueProperty.GetValue(attribute) as string;
+							if (string.Equals(aliasValue, sourceFieldName, StringComparison.OrdinalIgnoreCase))
+							{
+								return targetPropDesc;
+							}
 						}
 					}
 				}
