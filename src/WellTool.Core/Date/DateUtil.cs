@@ -62,11 +62,11 @@ namespace WellTool.Core.Date
         }
 
         // 解析日期字符串
-        public static DateTime Parse(string dateStr)
+        public static DateTime? Parse(string dateStr)
         {
             if (string.IsNullOrWhiteSpace(dateStr))
             {
-                throw new ArgumentNullException(nameof(dateStr));
+                return null;
             }
 
             // 尝试解析时间戳
@@ -113,15 +113,22 @@ namespace WellTool.Core.Date
             }
 
             // 如果所有格式都失败，尝试默认解析
-            return DateTime.Parse(dateStr);
+            try
+            {
+                return DateTime.Parse(dateStr);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         // 解析指定格式的日期字符串
-        public static DateTime Parse(string dateStr, string format)
+        public static DateTime? Parse(string dateStr, string format)
         {
             if (string.IsNullOrWhiteSpace(dateStr))
             {
-                throw new ArgumentNullException(nameof(dateStr));
+                return null;
             }
 
             // 尝试解析带不同分隔符的日期
@@ -205,7 +212,14 @@ namespace WellTool.Core.Date
             }
 
             // 如果所有格式都失败，尝试默认解析
-            return DateTime.Parse(dateStr);
+            try
+            {
+                return DateTime.Parse(dateStr);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         // 格式化日期为指定格式
@@ -346,7 +360,11 @@ namespace WellTool.Core.Date
         public static int AgeOfNow(string birthDay)
         {
             var birthday = Parse(birthDay);
-            return AgeOfNow(birthday);
+            if (birthday == null)
+            {
+                throw new ArgumentException("Invalid birthday format");
+            }
+            return AgeOfNow(birthday.Value);
         }
 
         // 判断是否为闰年
@@ -454,13 +472,13 @@ namespace WellTool.Core.Date
         }
 
         // 解析日期字符串（只解析日期部分）
-        public static DateTime ParseDate(string dateStr)
+        public static DateTime? ParseDate(string dateStr)
         {
             return Parse(dateStr, "yyyy-MM-dd");
         }
 
         // 解析时间字符串（只解析时间部分）
-        public static DateTime ParseTime(string timeStr)
+        public static DateTime? ParseTime(string timeStr)
         {
             return Parse(timeStr, "HH:mm:ss");
         }

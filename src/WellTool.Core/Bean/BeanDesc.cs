@@ -48,19 +48,31 @@ namespace WellTool.Core.Bean
 				_propMapIgnoreCase[propDesc.FieldName] = propDesc;
 
 				// 处理Alias注解
-				var aliasAttribute = field.GetCustomAttribute<Attribute>();
-				if (aliasAttribute != null && aliasAttribute.GetType().Name == "AliasAttribute")
+				try
 				{
-					var valueProperty = aliasAttribute.GetType().GetProperty("Value");
-					if (valueProperty != null)
+					// 尝试获取所有自定义属性
+					var attributes = field.GetCustomAttributes(false);
+					foreach (var attribute in attributes)
 					{
-						var aliasValue = valueProperty.GetValue(aliasAttribute) as string;
-						if (!string.IsNullOrEmpty(aliasValue))
+						if (attribute.GetType().Name == "AliasAttribute")
 						{
-							_propMap[aliasValue] = propDesc;
-							_propMapIgnoreCase[aliasValue] = propDesc;
+							var valueProperty = attribute.GetType().GetProperty("Value");
+							if (valueProperty != null)
+							{
+								var aliasValue = valueProperty.GetValue(attribute) as string;
+								if (!string.IsNullOrEmpty(aliasValue))
+								{
+									_propMap[aliasValue] = propDesc;
+									_propMapIgnoreCase[aliasValue] = propDesc;
+								}
+							}
+							break;
 						}
 					}
+				}
+				catch (AmbiguousMatchException)
+				{
+					// 忽略AmbiguousMatchException，继续处理下一个字段
 				}
 			}
 
@@ -79,19 +91,31 @@ namespace WellTool.Core.Bean
 				_propMapIgnoreCase[propDesc.FieldName] = propDesc;
 
 				// 处理Alias注解
-				var aliasAttribute = property.GetCustomAttribute<Attribute>();
-				if (aliasAttribute != null && aliasAttribute.GetType().Name == "AliasAttribute")
+				try
 				{
-					var valueProperty = aliasAttribute.GetType().GetProperty("Value");
-					if (valueProperty != null)
+					// 尝试获取所有自定义属性
+					var attributes = property.GetCustomAttributes(false);
+					foreach (var attribute in attributes)
 					{
-						var aliasValue = valueProperty.GetValue(aliasAttribute) as string;
-						if (!string.IsNullOrEmpty(aliasValue))
+						if (attribute.GetType().Name == "AliasAttribute")
 						{
-							_propMap[aliasValue] = propDesc;
-							_propMapIgnoreCase[aliasValue] = propDesc;
+							var valueProperty = attribute.GetType().GetProperty("Value");
+							if (valueProperty != null)
+							{
+								var aliasValue = valueProperty.GetValue(attribute) as string;
+								if (!string.IsNullOrEmpty(aliasValue))
+								{
+									_propMap[aliasValue] = propDesc;
+									_propMapIgnoreCase[aliasValue] = propDesc;
+								}
+							}
+							break;
 						}
 					}
+				}
+				catch (AmbiguousMatchException)
+				{
+					// 忽略AmbiguousMatchException，继续处理下一个属性
 				}
 			}
 		}

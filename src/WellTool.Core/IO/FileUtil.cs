@@ -306,7 +306,12 @@ namespace WellTool.Core.IO
             var childFullPath = Path.GetFullPath(childPath).TrimEnd(Path.DirectorySeparatorChar);
             if (childFullPath.StartsWith(parentFullPath, StringComparison.OrdinalIgnoreCase))
             {
-                return childFullPath.Substring(parentFullPath.Length + 1).Replace('\\', '/');
+                // 检查长度是否足够
+                if (childFullPath.Length > parentFullPath.Length + 1)
+                {
+                    return childFullPath.Substring(parentFullPath.Length + 1).Replace('\\', '/');
+                }
+                return string.Empty;
             }
             return string.Empty;
         }
