@@ -77,13 +77,22 @@ namespace WellTool.Core.Bean.Copier
 
 				// 转换字段名（如果需要）
 				string targetFieldName = sFieldName;
-				if (CopyOptions.FieldNameEditor == null)
+				if (CopyOptions.FieldNameEditor != null)
 				{
-					targetFieldName = sDesc.FieldName.ToLower();
+					targetFieldName = CopyOptions.EditFieldName(sFieldName);
 				}
 				else
 				{
-					targetFieldName = CopyOptions.EditFieldName(sFieldName);
+					// 对于匿名类型，保持原始字段名大小写
+					// 对于普通类，默认将字段名转换为小写
+					if (Source.GetType().Name.Contains("AnonymousType"))
+					{
+						targetFieldName = sDesc.FieldName;
+					}
+					else
+					{
+						targetFieldName = sDesc.FieldName.ToLower();
+					}
 				}
 
 				// 对key做转换，转换后为null的跳过

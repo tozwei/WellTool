@@ -288,7 +288,8 @@ namespace WellTool.Core.Tests
         {
             float a = 0.45f;
             double? b = WellConvert.ToDouble(a);
-            XAssert.Equal(0.45D, b);
+            // 使用精度范围比较浮点数，因为float和double的精度不同
+            XAssert.True(Math.Abs(b.Value - 0.45D) < 0.000001D);
         }
 
         [Fact]

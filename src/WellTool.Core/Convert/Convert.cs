@@ -85,6 +85,28 @@ namespace WellTool.Core.Converter
                 return value;
             }
 
+            // 处理集合类型转换
+            if (targetType.IsGenericType)
+            {
+                var genericTypeDefinition = targetType.GetGenericTypeDefinition();
+                if (genericTypeDefinition == typeof(HashSet<>) || 
+                    genericTypeDefinition == typeof(List<>) || 
+                    genericTypeDefinition == typeof(ICollection<>) ||
+                    genericTypeDefinition == typeof(IList<>))
+                {
+                    var elementType = targetType.GetGenericArguments()[0];
+                    var list = ToList<object>(value);
+                    var result = Activator.CreateInstance(targetType);
+                    var addMethod = targetType.GetMethod("Add");
+                    foreach (var item in list)
+                    {
+                        var convertedItem = To(item, elementType);
+                        addMethod.Invoke(result, new object[] { convertedItem });
+                    }
+                    return result;
+                }
+            }
+
             var converter = Registry.GetConverter(sourceType, targetType);
             if (converter != null)
             {
@@ -573,6 +595,11 @@ namespace WellTool.Core.Converter
                 {
                     str = str.Trim();
                     if (string.IsNullOrEmpty(str))
+                    {
+                        return null;
+                    }
+                    // 检查日期字符串格式是否完整（至少包含年月日）
+                    if (str.Contains("-") && str.Split('-').Length < 3)
                     {
                         return null;
                     }
