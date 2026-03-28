@@ -21,7 +21,7 @@ namespace WellTool.Core.Exceptions
             {
                 return null;
             }
-            return e.StackTrace;
+            return e.StackTrace ?? string.Empty;
         }
 
         public static Exception GetRootCause(Exception e)

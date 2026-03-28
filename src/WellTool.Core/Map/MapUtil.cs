@@ -133,7 +133,11 @@ namespace WellTool.Core.Map
             {
                 return defaultValue;
             }
-            return map.TryGetValue(key, out var value) ? value : defaultValue;
+            if (map.TryGetValue(key, out var value) && value != null)
+            {
+                return value;
+            }
+            return defaultValue;
         }
 
         /// <summary>
