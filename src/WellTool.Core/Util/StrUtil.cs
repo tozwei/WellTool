@@ -794,9 +794,15 @@ namespace WellTool.Core.Util
                 return null;
             }
 
-            if (length <= 0 || str.Length >= length)
+            if (length <= 0)
             {
                 return str;
+            }
+
+            // 如果字符串长度超过指定长度，截断它
+            if (str.Length > length)
+            {
+                return str.Substring(0, length);
             }
 
             int padding = length - str.Length;
@@ -817,9 +823,15 @@ namespace WellTool.Core.Util
                 return null;
             }
 
-            if (length <= 0 || str.Length >= length || IsEmpty(padStr))
+            if (length <= 0 || IsEmpty(padStr))
             {
                 return str;
+            }
+
+            // 如果字符串长度超过指定长度，截断它
+            if (str.Length > length)
+            {
+                return str.Substring(0, length);
             }
 
             int padding = length - str.Length;
@@ -845,9 +857,15 @@ namespace WellTool.Core.Util
                 return null;
             }
 
-            if (length <= 0 || str.Length >= length)
+            if (length <= 0)
             {
                 return str;
+            }
+
+            // 如果字符串长度超过指定长度，截断它
+            if (str.Length > length)
+            {
+                return str.Substring(0, length);
             }
 
             int padding = length - str.Length;
@@ -868,9 +886,15 @@ namespace WellTool.Core.Util
                 return null;
             }
 
-            if (length <= 0 || str.Length >= length || IsEmpty(padStr))
+            if (length <= 0 || IsEmpty(padStr))
             {
                 return str;
+            }
+
+            // 如果字符串长度超过指定长度，截断它
+            if (str.Length > length)
+            {
+                return str.Substring(0, length);
             }
 
             int padding = length - str.Length;

@@ -458,7 +458,11 @@ namespace WellTool.Core.IO
             }
             var parentFullPath = Path.GetFullPath(parent.FullName).TrimEnd(Path.DirectorySeparatorChar);
             var subFullPath = Path.GetFullPath(sub.FullName).TrimEnd(Path.DirectorySeparatorChar);
-            return subFullPath.StartsWith(parentFullPath, StringComparison.OrdinalIgnoreCase);
+            
+            // 确保父路径是子路径的真正前缀，需要考虑路径分隔符
+            var parentWithSeparator = parentFullPath + Path.DirectorySeparatorChar;
+            return subFullPath.Equals(parentFullPath, StringComparison.OrdinalIgnoreCase) || 
+                   subFullPath.StartsWith(parentWithSeparator, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>

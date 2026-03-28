@@ -46,6 +46,22 @@ namespace WellTool.Core.Bean
 				var propDesc = new PropDesc(field);
 				_propMap[propDesc.FieldName] = propDesc;
 				_propMapIgnoreCase[propDesc.FieldName] = propDesc;
+
+				// 处理Alias注解
+				var aliasAttribute = field.GetCustomAttribute<Attribute>();
+				if (aliasAttribute != null && aliasAttribute.GetType().Name == "AliasAttribute")
+				{
+					var valueProperty = aliasAttribute.GetType().GetProperty("Value");
+					if (valueProperty != null)
+					{
+						var aliasValue = valueProperty.GetValue(aliasAttribute) as string;
+						if (!string.IsNullOrEmpty(aliasValue))
+						{
+							_propMap[aliasValue] = propDesc;
+							_propMapIgnoreCase[aliasValue] = propDesc;
+						}
+					}
+				}
 			}
 
 			// 获取所有属性
@@ -61,6 +77,22 @@ namespace WellTool.Core.Bean
 				var propDesc = new PropDesc(property);
 				_propMap[propDesc.FieldName] = propDesc;
 				_propMapIgnoreCase[propDesc.FieldName] = propDesc;
+
+				// 处理Alias注解
+				var aliasAttribute = property.GetCustomAttribute<Attribute>();
+				if (aliasAttribute != null && aliasAttribute.GetType().Name == "AliasAttribute")
+				{
+					var valueProperty = aliasAttribute.GetType().GetProperty("Value");
+					if (valueProperty != null)
+					{
+						var aliasValue = valueProperty.GetValue(aliasAttribute) as string;
+						if (!string.IsNullOrEmpty(aliasValue))
+						{
+							_propMap[aliasValue] = propDesc;
+							_propMapIgnoreCase[aliasValue] = propDesc;
+						}
+					}
+				}
 			}
 		}
 

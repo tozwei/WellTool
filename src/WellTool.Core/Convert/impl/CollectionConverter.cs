@@ -23,28 +23,45 @@ namespace WellTool.Core.Converter.impl
                 return null;
             }
 
-            if (value is IEnumerable enumerable)
+            IEnumerable enumerable;
+            if (value is string strValue)
             {
-                if (targetType.IsArray)
-                {
-                    return ConvertToArray(enumerable, targetType.GetElementType());
-                }
-                else if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(List<>))
-                {
-                    return ConvertToList(enumerable, targetType.GetGenericArguments()[0]);
-                }
-                else if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(IList<>))
-                {
-                    return ConvertToList(enumerable, targetType.GetGenericArguments()[0]);
-                }
-                else if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(ICollection<>))
-                {
-                    return ConvertToList(enumerable, targetType.GetGenericArguments()[0]);
-                }
-                else if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                {
-                    return ConvertToList(enumerable, targetType.GetGenericArguments()[0]);
-                }
+                // 处理字符串，按逗号分割
+                enumerable = strValue.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(s => s.Trim());
+            }
+            else if (value is IEnumerable enumValue)
+            {
+                enumerable = enumValue;
+            }
+            else
+            {
+                throw new ConvertException($"Cannot convert {value.GetType().Name} to {targetType.Name}");
+            }
+
+            if (targetType.IsArray)
+            {
+                return ConvertToArray(enumerable, targetType.GetElementType());
+            }
+            else if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                return ConvertToList(enumerable, targetType.GetGenericArguments()[0]);
+            }
+            else if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(IList<>))
+            {
+                return ConvertToList(enumerable, targetType.GetGenericArguments()[0]);
+            }
+            else if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(ICollection<>))
+            {
+                return ConvertToList(enumerable, targetType.GetGenericArguments()[0]);
+            }
+            else if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            {
+                return ConvertToList(enumerable, targetType.GetGenericArguments()[0]);
+            }
+            else if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(HashSet<>))
+            {
+                return ConvertToHashSet(enumerable, targetType.GetGenericArguments()[0]);
             }
 
             throw new ConvertException($"Cannot convert {value.GetType().Name} to {targetType.Name}");
@@ -93,12 +110,31 @@ namespace WellTool.Core.Converter.impl
         }
 
         /// <summary>
+        /// 转换为HashSet
+        /// </summary>
+        /// <param name="enumerable">可枚举对象</param>
+        /// <param name="elementType">元素类型</param>
+        /// <returns>HashSet</returns>
+        private object ConvertToHashSet(IEnumerable enumerable, Type elementType)
+        {
+            var hashSetType = typeof(HashSet<>).MakeGenericType(elementType);
+            var hashSet = Activator.CreateInstance(hashSetType) as ICollection;
+
+            foreach (var item in enumerable)
+            {
+                hashSet.Add(item);
+            }
+
+            return hashSet;
+        }
+
+        /// <summary>
         /// 获取支持的源类型
         /// </summary>
         /// <returns>支持的源类型数组</returns>
         public Type[] GetSupportedSourceTypes()
         {
-            return new[] { typeof(IEnumerable), typeof(Array) };
+            return new[] { typeof(IEnumerable), typeof(Array), typeof(string) };
         }
 
         /// <summary>
@@ -107,7 +143,7 @@ namespace WellTool.Core.Converter.impl
         /// <returns>支持的目标类型数组</returns>
         public Type[] GetSupportedTargetTypes()
         {
-            return new[] { typeof(IEnumerable<>), typeof(ICollection<>), typeof(IList<>), typeof(List<>), typeof(Array) };
+            return new[] { typeof(IEnumerable<>), typeof(ICollection<>), typeof(IList<>), typeof(List<>), typeof(Array), typeof(HashSet<>) };
         }
     }
 }

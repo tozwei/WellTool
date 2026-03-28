@@ -21,49 +21,83 @@ namespace WellTool.Core.Converter.impl
                 return GetDefaultValue(targetType);
             }
 
+            string strValue = value.ToString().Trim();
+
             if (targetType == typeof(int))
             {
-                return int.Parse(value.ToString());
+                if (strValue.Contains("."))
+                {
+                    return (int)double.Parse(strValue);
+                }
+                return int.Parse(strValue);
             }
             else if (targetType == typeof(long))
             {
-                return long.Parse(value.ToString());
+                if (strValue.Contains("."))
+                {
+                    return (long)double.Parse(strValue);
+                }
+                return long.Parse(strValue);
             }
             else if (targetType == typeof(float))
             {
-                return float.Parse(value.ToString());
+                return float.Parse(strValue);
             }
             else if (targetType == typeof(double))
             {
-                return double.Parse(value.ToString());
+                return double.Parse(strValue);
             }
             else if (targetType == typeof(decimal))
             {
-                return decimal.Parse(value.ToString());
+                return decimal.Parse(strValue);
             }
             else if (targetType == typeof(byte))
             {
-                return byte.Parse(value.ToString());
+                if (strValue.Contains("."))
+                {
+                    return (byte)double.Parse(strValue);
+                }
+                return byte.Parse(strValue);
             }
             else if (targetType == typeof(sbyte))
             {
-                return sbyte.Parse(value.ToString());
+                if (strValue.Contains("."))
+                {
+                    return (sbyte)double.Parse(strValue);
+                }
+                return sbyte.Parse(strValue);
             }
             else if (targetType == typeof(short))
             {
-                return short.Parse(value.ToString());
+                if (strValue.Contains("."))
+                {
+                    return (short)double.Parse(strValue);
+                }
+                return short.Parse(strValue);
             }
             else if (targetType == typeof(ushort))
             {
-                return ushort.Parse(value.ToString());
+                if (strValue.Contains("."))
+                {
+                    return (ushort)double.Parse(strValue);
+                }
+                return ushort.Parse(strValue);
             }
             else if (targetType == typeof(uint))
             {
-                return uint.Parse(value.ToString());
+                if (strValue.Contains("."))
+                {
+                    return (uint)double.Parse(strValue);
+                }
+                return uint.Parse(strValue);
             }
             else if (targetType == typeof(ulong))
             {
-                return ulong.Parse(value.ToString());
+                if (strValue.Contains("."))
+                {
+                    return (ulong)double.Parse(strValue);
+                }
+                return ulong.Parse(strValue);
             }
 
             throw new ConvertException($"Cannot convert {value.GetType().Name} to {targetType.Name}");

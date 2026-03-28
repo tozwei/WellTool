@@ -64,13 +64,148 @@ namespace WellTool.Core.Date
         // 解析日期字符串
         public static DateTime Parse(string dateStr)
         {
+            if (string.IsNullOrWhiteSpace(dateStr))
+            {
+                throw new ArgumentNullException(nameof(dateStr));
+            }
+
+            // 尝试解析时间戳
+            if (long.TryParse(dateStr, out var timestamp))
+            {
+                // 处理不同长度的时间戳
+                if (timestamp.ToString().Length == 13)
+                {
+                    // 毫秒时间戳
+                    return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(timestamp).ToLocalTime();
+                }
+                else if (timestamp.ToString().Length == 10)
+                {
+                    // 秒时间戳
+                    return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(timestamp).ToLocalTime();
+                }
+            }
+
+            // 尝试解析不同格式的日期字符串
+            var formats = new string[]
+            {
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy/MM/dd HH:mm:ss",
+                "yyyy-MM-dd",
+                "yyyy/MM/dd",
+                "HH:mm:ss",
+                "yyyyMMddHHmmss",
+                "yyyyMMdd",
+                "MM-dd",
+                "M-d",
+                "yyyy-M-d",
+                "yyyy/MM/dd HH:mm:ss.fff",
+                "yyyy-MM-dd HH:mm:ss.fff",
+                "yyyy-MM-ddTHH:mm:ss.fffZ",
+                "yyyy-MM-ddTHH:mm:ss.fff+08:00",
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-M-d H:m:s",
+                "yyyy/MM/dd H:mm:ss"
+            };
+
+            if (DateTime.TryParseExact(dateStr, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+            {
+                return date;
+            }
+
+            // 如果所有格式都失败，尝试默认解析
             return DateTime.Parse(dateStr);
         }
 
         // 解析指定格式的日期字符串
         public static DateTime Parse(string dateStr, string format)
         {
-            return DateTime.ParseExact(dateStr, format, CultureInfo.InvariantCulture);
+            if (string.IsNullOrWhiteSpace(dateStr))
+            {
+                throw new ArgumentNullException(nameof(dateStr));
+            }
+
+            // 尝试解析带不同分隔符的日期
+            if (format.Contains("-") && dateStr.Contains("/"))
+            {
+                format = format.Replace("-", "/");
+            }
+            else if (format.Contains("/") && dateStr.Contains("-"))
+            {
+                format = format.Replace("/", "-");
+            }
+
+            // 尝试解析单数字的月份和日期
+            if (format.Contains("yyyy-MM-dd") || format.Contains("yyyy/MM/dd"))
+            {
+                var separator = format.Contains("-") ? "-" : "/";
+                var parts = dateStr.Split(separator[0]);
+                if (parts.Length >= 3)
+                {
+                    if (parts[1].Length == 1)
+                    {
+                        parts[1] = "0" + parts[1];
+                    }
+                    if (parts[2].Length == 1)
+                    {
+                        parts[2] = "0" + parts[2];
+                    }
+                    dateStr = string.Join(separator, parts);
+                }
+            }
+
+            // 尝试解析带时分秒的格式
+            if (format.Contains("HH:mm:ss") && dateStr.Contains(":"))
+            {
+                var timeParts = dateStr.Split(' ');
+                if (timeParts.Length == 2)
+                {
+                    var time = timeParts[1].Split(':');
+                    if (time.Length == 3)
+                    {
+                        if (time[0].Length == 1)
+                        {
+                            time[0] = "0" + time[0];
+                        }
+                        if (time[1].Length == 1)
+                        {
+                            time[1] = "0" + time[1];
+                        }
+                        if (time[2].Length == 1)
+                        {
+                            time[2] = "0" + time[2];
+                        }
+                        timeParts[1] = string.Join(":", time);
+                        dateStr = string.Join(" ", timeParts);
+                    }
+                }
+            }
+
+            // 尝试使用不同的格式进行解析
+            var possibleFormats = new List<string> { format };
+            
+            // 添加可能的变体格式
+            if (format == "yyyy-MM-dd HH:mm:ss")
+            {
+                possibleFormats.Add("yyyy/MM/dd HH:mm:ss");
+                possibleFormats.Add("yyyy-M-d H:m:s");
+                possibleFormats.Add("yyyy/MM/dd H:mm:ss");
+            }
+            else if (format == "yyyy-MM-dd")
+            {
+                possibleFormats.Add("yyyy/MM/dd");
+                possibleFormats.Add("yyyy-M-d");
+            }
+
+            foreach (var fmt in possibleFormats)
+            {
+                if (DateTime.TryParseExact(dateStr, fmt, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+                {
+                    return date;
+                }
+            }
+
+            // 如果所有格式都失败，尝试默认解析
+            return DateTime.Parse(dateStr);
         }
 
         // 格式化日期为指定格式
@@ -136,6 +271,14 @@ namespace WellTool.Core.Date
         // 计算两个日期之间的时间差
         public static long Between(DateTime beginDate, DateTime endDate, DateUnit unit)
         {
+            // 确保beginDate小于endDate
+            if (beginDate > endDate)
+            {
+                var temp = beginDate;
+                beginDate = endDate;
+                endDate = temp;
+            }
+
             var span = endDate - beginDate;
             switch (unit)
             {
@@ -260,9 +403,24 @@ namespace WellTool.Core.Date
         // 比较两个日期（根据指定格式）
         public static int Compare(DateTime date1, DateTime date2, string format)
         {
-            var str1 = Format(date1, format);
-            var str2 = Format(date2, format);
-            return string.Compare(str1, str2, StringComparison.Ordinal);
+            // 对于日期格式的比较，应该先解析为日期对象再比较
+            if (format == "yyyy-MM-dd")
+            {
+                date1 = BeginOfDay(date1);
+                date2 = BeginOfDay(date2);
+            }
+            else if (format == "yyyy-MM-dd HH:mm")
+            {
+                date1 = new DateTime(date1.Year, date1.Month, date1.Day, date1.Hour, date1.Minute, 0);
+                date2 = new DateTime(date2.Year, date2.Month, date2.Day, date2.Hour, date2.Minute, 0);
+            }
+            else if (format == "yyyy-MM")
+            {
+                date1 = new DateTime(date1.Year, date1.Month, 1);
+                date2 = new DateTime(date2.Year, date2.Month, 1);
+            }
+
+            return date1.CompareTo(date2);
         }
 
         // 获取年份和季度
