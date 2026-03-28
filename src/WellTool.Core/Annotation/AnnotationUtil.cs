@@ -377,5 +377,76 @@ namespace WellTool.Core.Annotation
 		{
 			return GetAnnotations(method, true);
 		}
+
+		/// <summary>
+		/// 获取组合注解（泛型版本）
+		/// </summary>
+		/// <typeparam name="T">注解类型</typeparam>
+		/// <param name="member">成员信息</param>
+		/// <returns>注解数组</returns>
+		public static T[] GetCombinationAnnotations<T>(MemberInfo member) where T : Attribute
+		{
+			if (member == null)
+			{
+				return new T[0];
+			}
+
+			var annotations = GetCombinationAnnotations(member, true);
+			return annotations.OfType<T>().ToArray();
+		}
+
+		/// <summary>
+		/// 获取注解值
+		/// </summary>
+		/// <param name="member">成员信息</param>
+		/// <param name="attributeType">注解类型</param>
+		/// <returns>注解值</returns>
+		public static object GetAnnotationValue(MemberInfo member, Type attributeType)
+		{
+			var attribute = member.GetCustomAttribute(attributeType);
+			if (attribute == null)
+			{
+				return null;
+			}
+
+			// 默认获取Value属性
+			var property = attributeType.GetProperty("Value");
+			if (property == null)
+			{
+				return null;
+			}
+
+			return property.GetValue(attribute);
+		}
+
+		/// <summary>
+		/// 获取注解值
+		/// </summary>
+		/// <typeparam name="T">注解类型</typeparam>
+		/// <typeparam name="R">返回类型</typeparam>
+		/// <param name="member">成员信息</param>
+		/// <param name="func">获取值的函数</param>
+		/// <returns>注解值</returns>
+		public static R GetAnnotationValue<T, R>(MemberInfo member, Func<T, R> func) where T : Attribute
+		{
+			var attribute = GetAttribute<T>(member);
+			if (attribute == null)
+			{
+				return default;
+			}
+
+			return func(attribute);
+		}
+
+		/// <summary>
+		/// 获取注解别名（泛型版本）
+		/// </summary>
+		/// <typeparam name="T">注解类型</typeparam>
+		/// <param name="member">成员信息</param>
+		/// <returns>注解对象</returns>
+		public static T GetAnnotationAlias<T>(MemberInfo member) where T : Attribute
+		{
+			return GetAttribute<T>(member);
+		}
 	}
 }

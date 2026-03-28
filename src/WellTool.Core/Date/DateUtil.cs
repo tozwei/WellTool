@@ -257,6 +257,14 @@ namespace WellTool.Core.Date
             return date1.CompareTo(date2);
         }
 
+        // 比较两个日期（根据指定格式）
+        public static int Compare(DateTime date1, DateTime date2, string format)
+        {
+            var str1 = Format(date1, format);
+            var str2 = Format(date2, format);
+            return string.Compare(str1, str2, StringComparison.Ordinal);
+        }
+
         // 获取年份和季度
         public static string YearAndQuarter(DateTime date)
         {

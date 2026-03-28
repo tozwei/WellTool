@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Xunit;
 using WellToolConvert = WellTool.Core.Converter;
+using WellConvert = WellTool.Core.Converter.Convert;
 
 namespace WellTool.Core.Tests
 {
@@ -111,10 +112,10 @@ namespace WellTool.Core.Tests
         [Fact]
         public void TestConvert()
         {
-            var intValue = WellToolConvert.Converter.To<int>("123");
+            var intValue = WellConvert.To<int>("123");
             Assert.Equal(123, intValue);
             
-            var stringValue = WellToolConvert.Converter.To<string>(123);
+            var stringValue = WellConvert.To<string>(123);
             Assert.Equal("123", stringValue);
         }
 

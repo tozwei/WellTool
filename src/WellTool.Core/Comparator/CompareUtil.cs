@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace WellTool.Core.Comparator
 {
@@ -17,17 +18,30 @@ namespace WellTool.Core.Comparator
         /// <returns>比较结果：a &lt; b 返回负数，a == b 返回0，a &gt; b 返回正数</returns>
         public static int Compare<T>(T a, T b)
         {
+            return Compare(a, b, false);
+        }
+
+        /// <summary>
+        /// 比较两个对象
+        /// </summary>
+        /// <typeparam name="T">对象类型</typeparam>
+        /// <param name="a">第一个对象</param>
+        /// <param name="b">第二个对象</param>
+        /// <param name="nullGreater">null是否大于非null</param>
+        /// <returns>比较结果：a &lt; b 返回负数，a == b 返回0，a &gt; b 返回正数</returns>
+        public static int Compare<T>(T a, T b, bool nullGreater)
+        {
             if (a == null && b == null)
             {
                 return 0;
             }
             if (a == null)
             {
-                return -1;
+                return nullGreater ? 1 : -1;
             }
             if (b == null)
             {
-                return 1;
+                return nullGreater ? -1 : 1;
             }
             if (a is IComparable<T> comparable)
             {
@@ -38,6 +52,24 @@ namespace WellTool.Core.Comparator
                 return oldComparable.CompareTo(b);
             }
             return string.Compare(a.ToString(), b.ToString(), StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// 根据拼音比较字符串
+        /// </summary>
+        /// <typeparam name="T">对象类型</typeparam>
+        /// <param name="keyExtractor">键提取器</param>
+        /// <param name="desc">是否降序</param>
+        /// <returns>比较器</returns>
+        public static Comparison<T> ComparingPinyin<T>(Func<T, string> keyExtractor, bool desc = false)
+        {
+            var comparer = StringComparer.Create(CultureInfo.CurrentCulture, true);
+            return (a, b) => {
+                var keyA = keyExtractor(a);
+                var keyB = keyExtractor(b);
+                var result = comparer.Compare(keyA, keyB);
+                return desc ? -result : result;
+            };
         }
 
         /// <summary>

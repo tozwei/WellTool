@@ -8,24 +8,26 @@ namespace WellTool.Core.Tests
 {
     public class ImgTests
     {
-        // [Fact]
-        // public void ColorUtilTest()
-        // {
-        //     // 测试颜色转换功能
-        //     var color = System.Drawing.Color.Red;
-        //     var hexColor = ColorUtil.ToHex(color);
-        //     XAssert.Equal("#FF0000", hexColor);
-        // }
+        #if WINDOWS
+        [Fact]
+        public void ColorUtilTest()
+        {
+            // 测试颜色转换功能
+            var color = System.Drawing.Color.Red;
+            var hexColor = ColorUtil.ToHex(color);
+            XAssert.Equal("#FF0000", hexColor);
+        }
 
-        // [Fact]
-        // public void FontUtilTest()
-        // {
-        //     // 测试字体工具功能
-        //     var font = FontUtil.CreateFont("Arial", 12);
-        //     XAssert.NotNull(font);
-        //     XAssert.Equal("Arial", font.FontFamily.Name);
-        //     XAssert.Equal(12, font.Size);
-        // }
+        [Fact]
+        public void FontUtilTest()
+        {
+            // 测试字体工具功能
+            var font = FontUtil.CreateFont("Arial", 12);
+            XAssert.NotNull(font);
+            XAssert.Equal("Arial", font.FontFamily.Name);
+            XAssert.Equal(12, font.Size);
+        }
+        #endif
 
         #if WINDOWS
         [Fact]

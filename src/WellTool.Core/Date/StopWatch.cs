@@ -110,5 +110,25 @@ namespace WellTool.Core.Date
         {
             get { return _running; }
         }
+
+        /// <summary>
+        /// 获取经过的毫秒数
+        /// </summary>
+        /// <returns>经过的毫秒数</returns>
+        public long Interval()
+        {
+            return ElapsedMilliseconds;
+        }
+
+        /// <summary>
+        /// 返回花费时间，并重置开始时间
+        /// </summary>
+        /// <returns>经过的毫秒数</returns>
+        public long IntervalRestart()
+        {
+            var interval = ElapsedMilliseconds;
+            Restart();
+            return interval;
+        }
     }
 }

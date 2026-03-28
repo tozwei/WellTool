@@ -9,12 +9,18 @@ namespace WellTool.Core.Converter
     /// </summary>
     public class ConverterRegistry
     {
+        private static readonly ConverterRegistry _instance = new ConverterRegistry();
         private readonly Dictionary<Type, Dictionary<Type, IConverter>> _converters;
+
+        /// <summary>
+        /// 单例实例
+        /// </summary>
+        public static ConverterRegistry Instance => _instance;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        public ConverterRegistry()
+        private ConverterRegistry()
         {
             _converters = new Dictionary<Type, Dictionary<Type, IConverter>>();
             RegisterDefaultConverters();
@@ -112,6 +118,55 @@ namespace WellTool.Core.Converter
         public void Clear()
         {
             _converters.Clear();
+        }
+
+        /// <summary>
+        /// 转换对象为指定类型
+        /// </summary>
+        /// <typeparam name="T">目标类型</typeparam>
+        /// <param name="value">要转换的值</param>
+        /// <returns>转换后的值</returns>
+        public T Convert<T>(object value)
+        {
+            return (T)Convert(value, typeof(T));
+        }
+
+        /// <summary>
+        /// 转换对象为指定类型
+        /// </summary>
+        /// <param name="value">要转换的值</param>
+        /// <param name="targetType">目标类型</param>
+        /// <returns>转换后的值</returns>
+        public object Convert(object value, Type targetType)
+        {
+            if (value == null)
+            {
+                return GetDefaultValue(targetType);
+            }
+
+            var sourceType = value.GetType();
+            if (targetType.IsAssignableFrom(sourceType))
+            {
+                return value;
+            }
+
+            var converter = GetConverter(sourceType, targetType);
+            if (converter != null)
+            {
+                return converter.Convert(value, targetType);
+            }
+
+            throw new ConvertException($"No converter found for converting from {sourceType.Name} to {targetType.Name}");
+        }
+
+        /// <summary>
+        /// 获取类型的默认值
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>默认值</returns>
+        private static object GetDefaultValue(Type type)
+        {
+            return type.IsValueType ? Activator.CreateInstance(type) : null;
         }
     }
 }
