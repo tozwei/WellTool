@@ -118,10 +118,23 @@ namespace WellTool.Core.Bean.Copier
 					return null;
 				}
 
-				// 快速处理简单值类型的转换
-				if (type is Type targetType)
+				// 处理空字符串到可空类型的转换
+				if (value is string strValue && string.IsNullOrEmpty(strValue))
 				{
-					if (IsSimpleValueType(targetType) && targetType.IsAssignableFrom(value.GetType()))
+					if (type is Type targetType11)
+					{
+						// 如果目标类型是可空类型，返回null
+						if (targetType1.IsGenericType && targetType1.GetGenericTypeDefinition() == typeof(Nullable<>))
+						{
+							return null;
+						}
+					}
+				}
+
+				// 快速处理简单值类型的转换
+				if (type is Type targetType11)
+				{
+					if (IsSimpleValueType(targetType1) && targetType1.IsAssignableFrom(value.GetType()))
 					{
 						return value;
 					}
@@ -152,10 +165,23 @@ namespace WellTool.Core.Bean.Copier
 					return null;
 				}
 
-				// 快速处理简单值类型的转换
-				if (type is Type targetType)
+				// 处理空字符串到可空类型的转换
+				if (value is string strValue && string.IsNullOrEmpty(strValue))
 				{
-					if (IsSimpleValueType(targetType) && targetType.IsAssignableFrom(value.GetType()))
+					if (type is Type targetType11)
+					{
+						// 如果目标类型是可空类型，返回null
+						if (targetType1.IsGenericType && targetType1.GetGenericTypeDefinition() == typeof(Nullable<>))
+						{
+							return null;
+						}
+					}
+				}
+
+				// 快速处理简单值类型的转换
+				if (type is Type targetType11)
+				{
+					if (IsSimpleValueType(targetType1) && targetType1.IsAssignableFrom(value.GetType()))
 					{
 						return value;
 					}
@@ -374,14 +400,14 @@ namespace WellTool.Core.Bean.Copier
 		/// 使用自定义转换器转换字段值<br>
 		/// 如果自定义转换器为{@code null}，则返回原值。
 		/// </summary>
-		/// <param name="targetType">目标类型</param>
+		/// <param name="targetType1">目标类型</param>
 		/// <param name="fieldValue">字段值</param>
 		/// <returns>编辑后的字段值</returns>
-		public object ConvertField(Type targetType, object fieldValue)
+		public object ConvertField(Type targetType1, object fieldValue)
 		{
 			// 这里可以添加日期转换逻辑
 
-			return Converter != null ? Converter(targetType, fieldValue) : fieldValue;
+			return Converter != null ? Converter(targetType1, fieldValue) : fieldValue;
 		}
 
 		/// <summary>

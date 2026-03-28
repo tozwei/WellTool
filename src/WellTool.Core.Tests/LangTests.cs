@@ -115,7 +115,7 @@ namespace WellTool.Core.Tests
         public void TestFunc()
         {
             // 测试Func接口
-            WellTool.Core.Lang.Func.Func<string, int> func = (s) => s.Length;
+            WellTool.Core.Lang.Func.Func<string, int> func = (s) => s[0].Length;
             int length = func("test");
             XAssert.Equal(4, length);
 
