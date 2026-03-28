@@ -328,12 +328,41 @@ namespace WellTool.Core.IO
             {
                 return file;
             }
-            var directory = file.Directory;
-            for (int i = 0; i < level && directory != null; i++)
+            
+            // 对于层级为0的情况，返回文件所在的目录
+            if (level == 0)
             {
-                directory = directory.Parent;
+                var directory = file.Directory;
+                if (directory == null)
+                {
+                    // 如果文件没有目录（例如根目录下的文件），返回文件本身
+                    return file;
+                }
+                return directory;
             }
-            return directory == null ? null : new FileInfo(directory.FullName);
+            
+            // 对于层级大于0的情况，逐级向上查找
+            var currentDirectory = file.Directory;
+            if (currentDirectory == null)
+            {
+                // 如果文件没有目录，且层级大于0，返回null
+                return null;
+            }
+            
+            // 逐级向上查找父目录
+            for (int i = 1; i < level; i++)
+            {
+                var parentDirectory = currentDirectory.Parent;
+                if (parentDirectory == null)
+                {
+                    // 如果已经到达根目录，且还需要继续向上，返回null
+                    return null;
+                }
+                currentDirectory = parentDirectory;
+            }
+            
+            // 返回找到的父目录
+            return currentDirectory;
         }
 
         /// <summary>
@@ -484,9 +513,20 @@ namespace WellTool.Core.IO
             using (var reader = new StreamReader(file.FullName))
             {
                 int lines = 0;
-                while (reader.ReadLine() != null)
+                string line;
+                while ((line = reader.ReadLine()) != null)
                 {
                     lines++;
+                }
+                // 检查文件是否以换行符结束，如果是则额外加一行
+                reader.BaseStream.Seek(-1, SeekOrigin.End);
+                if (reader.BaseStream.Position >= 0)
+                {
+                    var lastChar = (char)reader.BaseStream.ReadByte();
+                    if (lastChar == '\n')
+                    {
+                        lines++;
+                    }
                 }
                 return lines;
             }
