@@ -78,7 +78,7 @@ namespace WellTool.Core.Bean
 			}
 
 			// 获取所有属性
-			var properties = _type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+			var properties = _type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 			foreach (var property in properties)
 			{
 				// 跳过静态属性

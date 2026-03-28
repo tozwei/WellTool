@@ -47,6 +47,9 @@ namespace WellTool.Core.Bean
 				return target;
 			}
 
+			// 清除缓存，确保使用最新的BeanDesc
+			BeanDescCache.Clear();
+
 			var copier = Copier.BeanCopier<T>.Create(source, target, copyOptions);
 			return copier.Copy();
 		}

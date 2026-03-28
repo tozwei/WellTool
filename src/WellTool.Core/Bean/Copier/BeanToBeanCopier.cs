@@ -44,10 +44,10 @@ namespace WellTool.Core.Bean.Copier
 				actualEditable = CopyOptions.Editable;
 			}
 
-			// 获取源对象的属性描述映射
-			var sourcePropDescMap = BeanUtil.GetBeanDesc(Source.GetType()).GetPropMap(CopyOptions.IgnoreCase);
-			// 获取目标对象的属性描述映射
-			var targetPropDescMap = BeanUtil.GetBeanDesc(actualEditable).GetPropMap(CopyOptions.IgnoreCase);
+			// 获取源对象的属性描述映射（使用大小写不敏感的映射，确保能找到所有属性）
+			var sourcePropDescMap = BeanUtil.GetBeanDesc(Source.GetType()).GetPropMap(true);
+			// 获取目标对象的属性描述映射（使用大小写不敏感的映射，确保能找到所有属性）
+			var targetPropDescMap = BeanUtil.GetBeanDesc(actualEditable).GetPropMap(true);
 
 			foreach (var entry in sourcePropDescMap)
 			{
