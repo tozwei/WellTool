@@ -54,11 +54,11 @@ namespace WellTool.Core.Bean.Copier
 				var targetPropDesc = targetBeanDesc.GetPropDesc(sourcePropDesc.FieldName);
 				if (targetPropDesc == null || !targetPropDesc.HasSetter)
 				{
-					// 尝试通过源属性的Alias查找
+					// 尝试通过源属性的Alias查找（不区分大小写）
 					string sourceAlias = GetSourcePropAlias(sourcePropDesc);
 					if (!string.IsNullOrEmpty(sourceAlias))
 					{
-						targetPropDesc = targetBeanDesc.GetPropDesc(sourceAlias);
+						targetPropDesc = targetBeanDesc.GetPropDesc(sourceAlias, true);
 					}
 					
 					// 尝试通过目标属性的Alias查找（目标属性的Alias等于源属性的FieldName）
@@ -88,11 +88,25 @@ namespace WellTool.Core.Bean.Copier
 		/// <returns>Alias值</returns>
 		private string GetSourcePropAlias(PropDesc sourcePropDesc)
 		{
+			// 先从Property获取Alias注解
 			var property = sourcePropDesc.Property;
 			if (property != null)
 			{
 				// 查找AliasAttribute类型的注解（包括子类）
 				var attributes = property.GetCustomAttributes(typeof(AliasAttribute), true);
+				if (attributes.Length > 0)
+				{
+					var aliasAttr = (AliasAttribute)attributes[0];
+					return aliasAttr.Value;
+				}
+			}
+			
+			// 再从Field获取Alias注解
+			var field = sourcePropDesc.Field;
+			if (field != null)
+			{
+				// 查找AliasAttribute类型的注解（包括子类）
+				var attributes = field.GetCustomAttributes(typeof(AliasAttribute), true);
 				if (attributes.Length > 0)
 				{
 					var aliasAttr = (AliasAttribute)attributes[0];
@@ -113,11 +127,28 @@ namespace WellTool.Core.Bean.Copier
 			// 遍历目标对象的所有属性，查找带有Alias注解的属性
 			foreach (var targetPropDesc in targetBeanDesc.PropDescs.Values)
 			{
+				// 先检查Property的Alias注解
 				var property = targetPropDesc.Property;
 				if (property != null)
 				{
 					// 查找AliasAttribute类型的注解（包括子类）
 					var attributes = property.GetCustomAttributes(typeof(AliasAttribute), true);
+					if (attributes.Length > 0)
+					{
+						var aliasAttr = (AliasAttribute)attributes[0];
+						if (aliasAttr.Value == sourceFieldName)
+						{
+							return targetPropDesc;
+						}
+					}
+				}
+				
+				// 再检查Field的Alias注解
+				var field = targetPropDesc.Field;
+				if (field != null)
+				{
+					// 查找AliasAttribute类型的注解（包括子类）
+					var attributes = field.GetCustomAttributes(typeof(AliasAttribute), true);
 					if (attributes.Length > 0)
 					{
 						var aliasAttr = (AliasAttribute)attributes[0];
