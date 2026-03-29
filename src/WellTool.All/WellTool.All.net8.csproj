@@ -19,7 +19,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\WellTool.AI\WellTool.AI.csproj" />
 		<ProjectReference Include="..\WellTool.Aop\WellTool.Aop.csproj" />
-		<ProjectReference Include="..\WellTool.BloomFilter\WellTool.BloomFilter.csproj" />
+		<ProjectReference Include="..\WellTool.BloomFilter\Wel lTool.BloomFilter.csproj" />
 		<ProjectReference Include="..\WellTool.Cache\WellTool.Cache.csproj" />
 		<ProjectReference Include="..\WellTool.Captcha\WellTool.Captcha.csproj" />
 		<ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
