@@ -39,4 +39,7 @@
 		<ProjectReference Include="..\WellTool.System\WellTool.System.csproj" />
 	</ItemGroup>
 
+  <PropertyGroup>
+    <RestoreSources>$(RestoreSources);$(MSBuildProjectDirectory)\..\nupkg</RestoreSources>
+  </PropertyGroup>
 </Project>
