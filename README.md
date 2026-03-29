@@ -69,16 +69,16 @@ Install-Package WellTool.All
 或在项目文件中添加依赖：
 
 ```xml
-<PackageReference Include="WellTool.All" Version="8.0.1" />
+<PackageReference Include="WellTool.All" Version="8.0.0.1" />
 ```
 
 ## 🔔️注意
 
-WellTool 支持 .NET Framework 4.6+ 和 .NET Core 3.1+，对其他平台没有测试，不能保证所有工具类或工具方法可用。
+WellTool 支持 netstandard2.1 and net6.0+，对其他平台没有测试，不能保证所有工具类或工具方法可用。
 
 ## 🚽编译安装
 
-访问 WellTool 的 GitHub 主页：<https://github.com/tozwei/WellTool> 下载整个项目源码，然后进入 WellTool 项目目录执行：
+访问 WellTool 的 GitHub 主页：<https://github.com/tozwei/WellTool> 或者 <https://gitee.com/zwell/WellTool> 下载整个项目源码，然后进入 WellTool 项目目录执行：
 
 ```powershell
 dotnet build

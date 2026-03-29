@@ -68,16 +68,16 @@ Install-Package WellTool.All
 Or add dependency in the project file:
 
 ```xml
-<PackageReference Include="WellTool.All" Version="8.0.1" />
+<PackageReference Include="WellTool.All" Version="8.0.0.1" />
 ```
 
 ## 🔔️Notes
 
-WellTool supports .NET Framework 4.6+ and .NET Core 3.1+, and has not been tested on other platforms. It cannot guarantee that all utility classes or methods are available.
+WellTool supports netstandard2.1 and net6.0+, and has not been tested on other platforms. It cannot guarantee that all utility classes or methods are available.
 
 ## 🚽Compile and Install
 
-Visit WellTool's GitHub homepage: <https://github.com/tozwei/WellTool> to download the entire project source code, then enter the WellTool project directory and execute:
+Visit WellTool's GitHub homepage: <https://github.com/tozwei/WellTool> or <https://gitee.com/zwell/WellTool> to download the entire project source code, then enter the WellTool project directory and execute:
 
 ```powershell
 dotnet build
