@@ -11,6 +11,12 @@ namespace WellTool.Core.Codec
     /// </summary>
     public static class Base64
     {
+        static Base64()
+        {
+            // 注册编码提供程序，支持GBK编码
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
+
         private static readonly Encoding DEFAULT_ENCODING = Encoding.UTF8;
 
         // -------------------------------------------------------------------- encode
