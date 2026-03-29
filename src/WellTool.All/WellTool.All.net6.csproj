@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net6.0;netstandard2.1</TargetFrameworks>
+		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<Version>1.0.1</Version>
+		<Version>6.0.0.1</Version>
 		<PackageId>WellTool.All</PackageId>
-		<PackageVersion>1.0.1</PackageVersion>
+		<PackageVersion>6.0.0.1</PackageVersion>
 		<Title>WellTool All</Title>
 		<Description>A comprehensive C# utility library</Description>
 		<Authors>WellTool Team</Authors>
