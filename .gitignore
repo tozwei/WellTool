@@ -104,3 +104,15 @@
 /src/WellTool.Cron.Tests/obj/WellTool.Cron.Tests.csproj.nuget.g.props
 /src/WellTool.Jwt.Tests/obj
 /src/WellTool.Jwt.Tests/bin/Debug/net8.0
+/src/WellTool.All/bin/Release
+/src/WellTool.Cron/bin/Release
+/src/WellTool.Crypto/bin/Release
+/src/WellTool.DB/bin/Release
+/src/WellTool.Dfa/bin/Release
+/src/WellTool.Extra/bin/Release
+/src/WellTool.Json/bin/Release
+/src/WellTool.Jwt/bin/Release
+/src/WellTool.Script/bin/Release
+/src/WellTool.Poi/bin/Release
+/src/WellTool.Socket/bin/Release
+/src/WellTool.System/bin/Release
