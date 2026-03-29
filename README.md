@@ -3,6 +3,7 @@
 🍬A set of tools that keep C# sweet.
 
 👉 https://github.com/tozwei/WellTool 👈
+👉 https://gitee.com/zwell/WellTool 👈
 
 ## 📚简介
 WellTool 是一个功能丰富且易用的 C# 工具库，通过诸多实用工具类的使用，旨在帮助开发者快速、便捷地完成各类开发任务。
