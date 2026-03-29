@@ -5,6 +5,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>10.0</LangVersion>
+    <Version>1.0.1</Version>
+    <PackageId>WellTool.Socket</PackageId>
+    <PackageVersion>1.0.1</PackageVersion>
+    <Title>WellTool Socket</Title>
+    <Description>Network communication encapsulation based on C#</Description>
+    <Authors>WellTool Team</Authors>
+    <Company>WellTool</Company>
+    <Copyright>© 2026 WellTool</Copyright>
+    <PackageTags>socket;network</PackageTags>
   </PropertyGroup>
 
 	<ItemGroup>

@@ -1,11 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-
 	<PropertyGroup>
 		<TargetFrameworks>net8.0;net6.0;netstandard2.1</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
+		<Version>1.0.1</Version>
+		<PackageId>WellTool.Aop</PackageId>
+		<PackageVersion>1.0.1</PackageVersion>
+		<Title>WellTool Aop</Title>
+		<Description>Dynamic proxy encapsulation, providing aspect support</Description>
+		<Authors>WellTool Team</Authors>
+		<Company>WellTool</Company>
+		<Copyright>© 2026 WellTool</Copyright>
+		<PackageTags>aop;proxy</PackageTags>
 	</PropertyGroup>
 
 </Project>

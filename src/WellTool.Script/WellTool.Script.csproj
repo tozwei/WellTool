@@ -5,6 +5,15 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
+		<Version>1.0.1</Version>
+		<PackageId>WellTool.Script</PackageId>
+		<PackageVersion>1.0.1</PackageVersion>
+		<Title>WellTool Script</Title>
+		<Description>Script execution encapsulation, such as JavaScript</Description>
+		<Authors>WellTool Team</Authors>
+		<Company>WellTool</Company>
+		<Copyright>© 2026 WellTool</Copyright>
+		<PackageTags>script;javascript</PackageTags>
 	</PropertyGroup>
 
   <ItemGroup>

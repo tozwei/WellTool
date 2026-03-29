@@ -1,10 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net8.0;net6.0;netstandard2.1</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
+		<Version>1.0.1</Version>
+		<PackageId>WellTool.Json</PackageId>
+		<PackageVersion>1.0.1</PackageVersion>
+		<Title>WellTool Json</Title>
+		<Description>JSON implementation</Description>
+		<Authors>WellTool Team</Authors>
+		<Company>WellTool</Company>
+		<Copyright>© 2026 WellTool</Copyright>
+		<PackageTags>json;util</PackageTags>
 	</PropertyGroup>
 
 </Project>

@@ -5,6 +5,15 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
+		<Version>1.0.1</Version>
+		<PackageId>WellTool.Jwt</PackageId>
+		<PackageVersion>1.0.1</PackageVersion>
+		<Title>WellTool Jwt</Title>
+		<Description>JSON Web Token (JWT) encapsulation implementation</Description>
+		<Authors>WellTool Team</Authors>
+		<Company>WellTool</Company>
+		<Copyright>© 2026 WellTool</Copyright>
+		<PackageTags>jwt;security</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>

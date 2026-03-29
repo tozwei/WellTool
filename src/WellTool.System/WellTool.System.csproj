@@ -5,6 +5,15 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
+		<Version>1.0.1</Version>
+		<PackageId>WellTool.System</PackageId>
+		<PackageVersion>1.0.1</PackageVersion>
+		<Title>WellTool System</Title>
+		<Description>System parameter call encapsulation (system information, etc.)</Description>
+		<Authors>WellTool Team</Authors>
+		<Company>WellTool</Company>
+		<Copyright>© 2026 WellTool</Copyright>
+		<PackageTags>system;info</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
