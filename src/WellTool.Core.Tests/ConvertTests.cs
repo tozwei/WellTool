@@ -11,7 +11,7 @@ using WellTool.Core.Util;
 // 使用别名避免Assert引用歧义
 using XAssert = Xunit.Assert;
 // 使用别名避免Convert引用歧义
-using WellConvert = WellTool.Core.Converter.Convert;
+using WellConvert = WellTool.Core.Converter.Converter;
 
 namespace WellTool.Core.Tests
 {
