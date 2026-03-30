@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace WellTool.Setting;
@@ -13,6 +14,11 @@ public static class SettingUtil
     /// 配置文件缓存
     /// </summary>
     private static readonly ConcurrentDictionary<string, Setting> _settingMap = new();
+    
+    /// <summary>
+    /// .NET配置缓存
+    /// </summary>
+    private static IConfiguration? _configuration;
 
     /// <summary>
     /// 获取当前环境下的配置文件<br/>
@@ -53,5 +59,71 @@ public static class SettingUtil
             }
         }
         return null;
+    }
+    
+    /// <summary>
+    /// 获取.NET配置
+    /// </summary>
+    /// <returns>.NET配置对象</returns>
+    public static IConfiguration GetNetConfig()
+    {
+        if (_configuration == null)
+        {
+            _configuration = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddYamlFile("appsettings.yml", optional: true, reloadOnChange: true)
+                .AddYamlFile("appsettings.yaml", optional: true, reloadOnChange: true)
+                .AddXmlFile("app.config", optional: true, reloadOnChange: true)
+                .AddXmlFile("web.config", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .AddCommandLine(Environment.GetCommandLineArgs())
+                .Build();
+        }
+        return _configuration;
+    }
+    
+    /// <summary>
+    /// 从.NET配置中获取值
+    /// </summary>
+    /// <param name="key">配置键</param>
+    /// <returns>配置值</returns>
+    public static string? GetNetConfigValue(string key)
+    {
+        return GetNetConfig()[key];
+    }
+    
+    /// <summary>
+    /// 从.NET配置中获取值，如果不存在则返回默认值
+    /// </summary>
+    /// <param name="key">配置键</param>
+    /// <param name="defaultValue">默认值</param>
+    /// <returns>配置值或默认值</returns>
+    public static string GetNetConfigValue(string key, string defaultValue)
+    {
+        return GetNetConfig().GetValue<string>(key, defaultValue);
+    }
+    
+    /// <summary>
+    /// 从.NET配置中获取指定类型的值
+    /// </summary>
+    /// <typeparam name="T">值类型</typeparam>
+    /// <param name="key">配置键</param>
+    /// <returns>配置值</returns>
+    public static T? GetNetConfigValue<T>(string key)
+    {
+        return GetNetConfig().GetValue<T>(key);
+    }
+    
+    /// <summary>
+    /// 从.NET配置中获取指定类型的值，如果不存在则返回默认值
+    /// </summary>
+    /// <typeparam name="T">值类型</typeparam>
+    /// <param name="key">配置键</param>
+    /// <param name="defaultValue">默认值</param>
+    /// <returns>配置值或默认值</returns>
+    public static T GetNetConfigValue<T>(string key, T defaultValue)
+    {
+        return GetNetConfig().GetValue<T>(key, defaultValue);
     }
 }

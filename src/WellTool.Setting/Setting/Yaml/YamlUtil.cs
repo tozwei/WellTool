@@ -4,7 +4,7 @@ using YamlDotNet.Serialization.NamingConventions;
 namespace WellTool.Setting.Yaml;
 
 /// <summary>
-/// 基于 YamlDotNet 的 YAML 读写工具
+/// 基于 Yaml DotNet 的 YAML 读写工具
 /// </summary>
 public static class YamlUtil
 {
