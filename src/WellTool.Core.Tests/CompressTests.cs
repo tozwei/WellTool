@@ -21,7 +21,7 @@ namespace WellTool.Core.Tests
                 // 创建测试目录和文件
                 Directory.CreateDirectory(tempDir);
                 File.WriteAllText(Path.Combine(tempDir, "test1.txt"), "Hello, World!");
-                File.WriteAllText(Path.Combine(tempDir, "test2.txt"), "Hutool is great!");
+                File.WriteAllText(Path.Combine(tempDir, "test2.txt"), "WellTool is great!");
                 
                 // 创建zip文件
                 using (var writer = ZipWriter.Of(tempZipFile))
@@ -52,7 +52,7 @@ namespace WellTool.Core.Tests
                     using (var sr = new StreamReader(test2Stream))
                     {
                         var content = sr.ReadToEnd();
-                        Assert.Equal("Hutool is great!", content);
+                        Assert.Equal("WellTool is great!", content);
                     }
                 }
             }
@@ -84,7 +84,7 @@ namespace WellTool.Core.Tests
                 // 创建测试目录和文件
                 Directory.CreateDirectory(tempDir);
                 File.WriteAllText(Path.Combine(tempDir, "test1.txt"), "Hello, World!");
-                File.WriteAllText(Path.Combine(tempDir, "test2.txt"), "Hutool is great!");
+                File.WriteAllText(Path.Combine(tempDir, "test2.txt"), "WellTool is great!");
                 
                 // 创建zip文件
                 using (var writer = ZipWriter.Of(tempZipFile))
@@ -109,7 +109,7 @@ namespace WellTool.Core.Tests
                 var test2Content = File.ReadAllText(test2Path);
                 
                 Assert.Equal("Hello, World!", test1Content);
-                Assert.Equal("Hutool is great!", test2Content);
+                Assert.Equal("WellTool is great!", test2Content);
             }
             finally
             {

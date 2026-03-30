@@ -267,7 +267,6 @@ namespace WellTool.Core.Tests
         [Fact]
         public void ToBigDecimalTest()
         {
-            // https://github.com/chinabugotech/hutool/issues/1818
             string str = "33020000210909112800000124";
             decimal? bigDecimal = WellConvert.ToDecimal(str);
             XAssert.Equal(str, bigDecimal.ToString());
@@ -276,7 +275,6 @@ namespace WellTool.Core.Tests
         [Fact]
         public void ToFloatTest()
         {
-            // https://gitee.com/chinabugotech/hutool/issues/I4M0E4
             string hex2 = "CD0CCB43";
             byte[] value = new byte[] { 0xCD, 0x0C, 0xCB, 0x43 };
             float? f = WellConvert.ToFloat(value);
