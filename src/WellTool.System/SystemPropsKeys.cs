@@ -5,103 +5,103 @@ namespace WellTool.System;
 /// </summary>
 public static class SystemPropsKeys
 {
-    // ----- Java运行时环境信息 -----/
+    // ----- .NET运行时环境信息 -----
     /// <summary>
-    /// Java 运行时环境规范名称
+    /// .NET 运行时环境规范名称
     /// </summary>
-    public const string SPECIFICATION_NAME = "java.specification.name";
+    public const string SPECIFICATION_NAME = "dotnet.specification.name";
 
     /// <summary>
-    /// Java 运行时环境版本
+    /// .NET 运行时环境版本
     /// </summary>
-    public const string VERSION = "java.version";
+    public const string VERSION = "dotnet.version";
 
     /// <summary>
-    /// Java 运行时环境规范版本
+    /// .NET 运行时环境规范版本
     /// </summary>
-    public const string SPECIFICATION_VERSION = "java.specification.version";
+    public const string SPECIFICATION_VERSION = "dotnet.specification.version";
 
     /// <summary>
-    /// Java 运行时环境供应商
+    /// .NET 运行时环境供应商
     /// </summary>
-    public const string VENDOR = "java.vendor";
+    public const string VENDOR = "dotnet.vendor";
 
     /// <summary>
-    /// Java 运行时环境规范供应商
+    /// .NET 运行时环境规范供应商
     /// </summary>
-    public const string SPECIFICATION_VENDOR = "java.specification.vendor";
+    public const string SPECIFICATION_VENDOR = "dotnet.specification.vendor";
 
     /// <summary>
-    /// Java 供应商的 URL
+    /// .NET 供应商的 URL
     /// </summary>
-    public const string VENDOR_URL = "java.vendor.url";
+    public const string VENDOR_URL = "dotnet.vendor.url";
 
     /// <summary>
-    /// Java 安装目录
+    /// .NET 安装目录
     /// </summary>
-    public const string HOME = "java.home";
+    public const string HOME = "dotnet.home";
 
     /// <summary>
     /// 加载库时搜索的路径列表
     /// </summary>
-    public const string LIBRARY_PATH = "java.library.path";
+    public const string LIBRARY_PATH = "dotnet.library.path";
 
     /// <summary>
     /// 默认的临时文件路径
     /// </summary>
-    public const string TMPDIR = "java.io.tmpdir";
+    public const string TMPDIR = "dotnet.io.tmpdir";
 
     /// <summary>
     /// 要使用的 JIT 编译器的名称
     /// </summary>
-    public const string COMPILER = "java.compiler";
+    public const string COMPILER = "dotnet.compiler";
 
     /// <summary>
     /// 一个或多个扩展目录的路径
     /// </summary>
-    public const string EXT_DIRS = "java.ext.dirs";
+    public const string EXT_DIRS = "dotnet.ext.dirs";
 
-    // ----- Java虚拟机信息 -----/
+    // ----- .NET虚拟机信息 -----
     /// <summary>
-    /// Java 虚拟机实现名称
+    /// .NET 虚拟机实现名称
     /// </summary>
-    public const string VM_NAME = "java.vm.name";
-
-    /// <summary>
-    /// Java 虚拟机规范名称
-    /// </summary>
-    public const string VM_SPECIFICATION_NAME = "java.vm.specification.name";
+    public const string VM_NAME = "dotnet.vm.name";
 
     /// <summary>
-    /// Java 虚拟机实现版本
+    /// .NET 虚拟机规范名称
     /// </summary>
-    public const string VM_VERSION = "java.vm.version";
+    public const string VM_SPECIFICATION_NAME = "dotnet.vm.specification.name";
 
     /// <summary>
-    /// Java 虚拟机规范版本
+    /// .NET 虚拟机实现版本
     /// </summary>
-    public const string VM_SPECIFICATION_VERSION = "java.vm.specification.version";
+    public const string VM_VERSION = "dotnet.vm.version";
 
     /// <summary>
-    /// Java 虚拟机实现供应商
+    /// .NET 虚拟机规范版本
     /// </summary>
-    public const string VM_VENDOR = "java.vm.vendor";
+    public const string VM_SPECIFICATION_VERSION = "dotnet.vm.specification.version";
 
     /// <summary>
-    /// Java 虚拟机规范供应商
+    /// .NET 虚拟机实现供应商
     /// </summary>
-    public const string VM_SPECIFICATION_VENDOR = "java.vm.specification.vendor";
-
-    // ----- Java类信息 -----/
-    /// <summary>
-    /// Java 类格式版本号
-    /// </summary>
-    public const string CLASS_VERSION = "java.class.version";
+    public const string VM_VENDOR = "dotnet.vm.vendor";
 
     /// <summary>
-    /// Java 类路径
+    /// .NET 虚拟机规范供应商
     /// </summary>
-    public const string CLASS_PATH = "java.class.path";
+    public const string VM_SPECIFICATION_VENDOR = "dotnet.vm.specification.vendor";
+
+    // ----- .NET类信息 -----
+    /// <summary>
+    /// .NET 类格式版本号
+    /// </summary>
+    public const string CLASS_VERSION = "dotnet.class.version";
+
+    /// <summary>
+    /// .NET 类路径
+    /// </summary>
+    public const string CLASS_PATH = "dotnet.class.path";
 
     // ----- OS信息 -----/
     /// <summary>
