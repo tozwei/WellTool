@@ -8,7 +8,7 @@ namespace WellTool.Core.Converter
     /// <summary>
     /// 类型转换工具类
     /// </summary>
-    public static class Convert
+    public static class Converter
     {
         /// <summary>
         /// 获取转换器注册表

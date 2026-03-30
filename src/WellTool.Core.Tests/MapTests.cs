@@ -33,132 +33,132 @@ namespace WellTool.Core.Tests
             public long GroupId { get; set; }
         }
 
-        // [Fact]
-        // public void FilterTest()
-        // {
-        //     var map = new Dictionary<string, string>();
-        //     map["a"] = "1";
-        //     map["b"] = "2";
-        //     map["c"] = "3";
-        //     map["d"] = "4";
+        [Fact]
+        public void FilterTest()
+        {
+            var map = new Dictionary<string, string>();
+            map["a"] = "1";
+            map["b"] = "2";
+            map["c"] = "3";
+            map["d"] = "4";
 
-        //     var map2 = MapUtil.Filter(map, t => Convert.ToInt32(t.Value) % 2 == 0);
+            var map2 = MapUtil.Filter(map, t => System.Convert.ToInt32(t.Value) % 2 == 0);
 
-        //     Assert.Equal(2, map2.Count);
-        //     Assert.Equal("2", map2["b"]);
-        //     Assert.Equal("4", map2["d"]);
-        // }
+            Assert.Equal(2, map2.Count);
+            Assert.Equal("2", map2["b"]);
+            Assert.Equal("4", map2["d"]);
+        }
 
-        // [Fact]
-        // public void MapTest()
-        // {
-        //     var adjectivesMap = new Dictionary<int, string>
-        //     {
-        //         { 0, "lovely" },
-        //         { 1, "friendly" },
-        //         { 2, "happily" }
-        //     };
+        [Fact]
+        public void MapTest()
+        {
+            var adjectivesMap = new Dictionary<int, string>
+            {
+                { 0, "lovely" },
+                { 1, "friendly" },
+                { 2, "happily" }
+            };
 
-        //     var resultMap = MapUtil.Map(adjectivesMap, (k, v) => v + " " + PeopleEnum.GetValues(typeof(PeopleEnum))[k].ToString().ToLower());
+            var resultMap = MapUtil.Map(adjectivesMap, (k, v) => v + " " + PeopleEnum.GetValues(typeof(PeopleEnum))[k].ToString().ToLower());
 
-        //     Assert.Equal("lovely girl", resultMap[0]);
-        //     Assert.Equal("friendly boy", resultMap[1]);
-        //     Assert.Equal("happily child", resultMap[2]);
+            Assert.Equal("lovely girl", resultMap[0]);
+            Assert.Equal("friendly boy", resultMap[1]);
+            Assert.Equal("happily child", resultMap[2]);
 
-        //     var customers = new Queue<string>();
-        //     customers.Enqueue("刑部尚书手工耿");
-        //     customers.Enqueue("木瓜大盗大漠叔");
-        //     customers.Enqueue("竹鼠发烧找华农");
-        //     customers.Enqueue("朴实无华朱一旦");
+            var customers = new Queue<string>();
+            customers.Enqueue("刑部尚书手工耿");
+            customers.Enqueue("木瓜大盗大漠叔");
+            customers.Enqueue("竹鼠发烧找华农");
+            customers.Enqueue("朴实无华朱一旦");
 
-        //     var groups = Enumerable.Range(0, 4).Select(i => new Group { Id = i + 1L }).ToList();
+            var groups = Enumerable.Range(0, 4).Select(i => new Group { Id = i + 1L }).ToList();
 
-        //     var idUserMap = Enumerable.Range(0, 4).Select(i => new User { Id = i + 1L, Name = customers.Dequeue() }).ToDictionary(u => u.Id);
+            var idUserMap = Enumerable.Range(0, 4).Select(i => new User { Id = i + 1L, Name = customers.Dequeue() }).ToDictionary(u => u.Id);
 
-        //     var groupIdUserIdsMap = groups.SelectMany(group => idUserMap.Keys.Select(userId => new UserGroup { GroupId = group.Id, UserId = userId }))
-        //         .GroupBy(ug => ug.GroupId)
-        //         .ToDictionary(g => g.Key, g => g.Select(ug => ug.UserId).ToList());
+            var groupIdUserIdsMap = groups.SelectMany(group => idUserMap.Keys.Select(userId => new UserGroup { GroupId = group.Id, UserId = userId }))
+                .GroupBy(ug => ug.GroupId)
+                .ToDictionary(g => g.Key, g => g.Select(ug => ug.UserId).ToList());
 
-        //     var groupIdUserMap = MapUtil.Map(groupIdUserIdsMap, (groupId, userIds) => userIds.Select(id => idUserMap[id]).ToList());
+            var groupIdUserMap = MapUtil.Map(groupIdUserIdsMap, (groupId, userIds) => userIds.Select(id => idUserMap[id]).ToList());
 
-        //     groups.ForEach(group =>
-        //     {
-        //         if (groupIdUserMap.TryGetValue(group.Id, out var users))
-        //         {
-        //             group.Users = users;
-        //         }
-        //     });
+            groups.ForEach(group =>
+            {
+                if (groupIdUserMap.TryGetValue(group.Id, out var users))
+                {
+                    group.Users = users;
+                }
+            });
 
-        //     groups.ForEach(group =>
-        //     {
-        //         var users = group.Users;
-        //         Assert.Equal("刑部尚书手工耿", users[0].Name);
-        //         Assert.Equal("木瓜大盗大漠叔", users[1].Name);
-        //         Assert.Equal("竹鼠发烧找华农", users[2].Name);
-        //         Assert.Equal("朴实无华朱一旦", users[3].Name);
-        //     });
+            groups.ForEach(group =>
+            {
+                var users = group.Users;
+                Assert.Equal("刑部尚书手工耿", users[0].Name);
+                Assert.Equal("木瓜大盗大漠叔", users[1].Name);
+                Assert.Equal("竹鼠发烧找华农", users[2].Name);
+                Assert.Equal("朴实无华朱一旦", users[3].Name);
+            });
 
-        //     var nullMap = MapUtil.Map(new Dictionary<int, int> { { 0, 0 } }, (k, v) => (int?)null);
-        //     foreach (var kvp in nullMap)
-        //     {
-        //         Assert.Null(kvp.Value);
-        //     }
-        // }
+            var nullMap = MapUtil.Map(new Dictionary<int, int> { { 0, 0 } }, (k, v) => (int?)null);
+            foreach (var kvp in nullMap)
+            {
+                Assert.Null(kvp.Value);
+            }
+        }
 
-        // [Fact]
-        // public void FilterMapWrapperTest()
-        // {
-        //     var map = new Dictionary<string, string>();
-        //     map["a"] = "1";
-        //     map["b"] = "2";
-        //     map["c"] = "3";
-        //     map["d"] = "4";
+        [Fact]
+        public void FilterMapWrapperTest()
+        {
+            var map = new Dictionary<string, string>();
+            map["a"] = "1";
+            map["b"] = "2";
+            map["c"] = "3";
+            map["d"] = "4";
 
-        //     var camelCaseMap = MapUtil.ToCamelCaseMap(map);
+            var camelCaseMap = MapUtil.ToCamelCaseMap(map);
 
-        //     var map2 = MapUtil.Filter(camelCaseMap, t => Convert.ToInt32(t.Value) % 2 == 0);
+            var map2 = MapUtil.Filter(camelCaseMap, t => System.Convert.ToInt32(t.Value) % 2 == 0);
 
-        //     Assert.Equal(2, map2.Count);
-        //     Assert.Equal("2", map2["b"]);
-        //     Assert.Equal("4", map2["d"]);
-        // }
+            Assert.Equal(2, map2.Count);
+            Assert.Equal("2", map2["b"]);
+            Assert.Equal("4", map2["d"]);
+        }
 
-        // [Fact]
-        // public void FilterContainsTest()
-        // {
-        //     var map = new Dictionary<string, string>();
-        //     map["abc"] = "1";
-        //     map["bcd"] = "2";
-        //     map["def"] = "3";
-        //     map["fgh"] = "4";
+        [Fact]
+        public void FilterContainsTest()
+        {
+            var map = new Dictionary<string, string>();
+            map["abc"] = "1";
+            map["bcd"] = "2";
+            map["def"] = "3";
+            map["fgh"] = "4";
 
-        //     var map2 = MapUtil.Filter(map, t => StrUtil.Contains(t.Key, "bc"));
-        //     Assert.Equal(2, map2.Count);
-        //     Assert.Equal("1", map2["abc"]);
-        //     Assert.Equal("2", map2["bcd"]);
-        // }
+            var map2 = MapUtil.Filter(map, t => StrUtil.Contains(t.Key, "bc"));
+            Assert.Equal(2, map2.Count);
+            Assert.Equal("1", map2["abc"]);
+            Assert.Equal("2", map2["bcd"]);
+        }
 
-        // [Fact]
-        // public void EditTest()
-        // {
-        //     var map = new Dictionary<string, string>();
-        //     map["a"] = "1";
-        //     map["b"] = "2";
-        //     map["c"] = "3";
-        //     map["d"] = "4";
+        [Fact]
+        public void EditTest()
+        {
+            var map = new Dictionary<string, string>();
+            map["a"] = "1";
+            map["b"] = "2";
+            map["c"] = "3";
+            map["d"] = "4";
 
-        //     var map2 = MapUtil.Edit(map, t =>
-        //     {
-        //         t.Value = t.Value + "0";
-        //         return t;
-        //     });
+            var map2 = MapUtil.Edit(map, t =>
+            {
+                t.Value = t.Value + "0";
+                return t;
+            });
 
-        //     Assert.Equal(4, map2.Count);
-        //     Assert.Equal("10", map2["a"]);
-        //     Assert.Equal("20", map2["b"]);
-        //     Assert.Equal("30", map2["c"]);
-        //     Assert.Equal("40", map2["d"]);
-        // }
+            Assert.Equal(4, map2.Count);
+            Assert.Equal("10", map2["a"]);
+            Assert.Equal("20", map2["b"]);
+            Assert.Equal("30", map2["c"]);
+            Assert.Equal("40", map2["d"]);
+        }
 
         // [Fact]
         // public void ReverseTest()

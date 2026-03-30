@@ -11,7 +11,7 @@ namespace WellTool.Core.Converter
 
         public static T CastTo<T>(object obj)
         {
-            return Convert.To<T>(obj);
+            return Converter.To<T>(obj);
         }
 
         public static ICollection<T> CastUp<T>(ICollection<object> collection)

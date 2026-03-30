@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using Xunit;
 using WellToolConvert = WellTool.Core.Converter;
-using WellConvert = WellTool.Core.Converter.Convert;
+using WellConvert = WellTool.Core.Converter.Converter;
 
 namespace WellTool.Core.Tests
 {
