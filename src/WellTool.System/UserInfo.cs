@@ -4,7 +4,7 @@ using System.Globalization;
 namespace WellTool.System;
 
 /// <summary>
-/// 用户信息（对应Java的UserInfo）
+/// 用户信息
 /// </summary>
 public class UserInfo
 {

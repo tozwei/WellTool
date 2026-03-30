@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace WellTool.System;
 
 /// <summary>
-/// 操作系统信息（对应Java的OsInfo）
+/// 操作系统信息
 /// </summary>
 public class OsInfo
 {

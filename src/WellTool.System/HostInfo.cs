@@ -7,7 +7,7 @@ using System.Text;
 namespace WellTool.System;
 
 /// <summary>
-/// 主机信息（对应Java的HostInfo）
+/// 主机信息（对应.Net的HostInfo）
 /// </summary>
 public class HostInfo
 {
