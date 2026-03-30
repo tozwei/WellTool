@@ -16,7 +16,7 @@ namespace WellTool;
 /// <summary>
 /// WellTool 统一入口类
 /// </summary>
-public static class Hutool
+public static class WellToolMain
 {
     // Poi 模块
     public static class Poi
