@@ -16,6 +16,8 @@
 		<PackageTags>utility;tools;helpers</PackageTags>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<IncludeContentInPack>true</IncludeContentInPack>
+		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
 	</PropertyGroup>
 
 
@@ -46,4 +48,12 @@
   <PropertyGroup>
     <RestoreSources>$(RestoreSources);$(MSBuildProjectDirectory)\..\nupkg</RestoreSources>
   </PropertyGroup>
+
+
+   <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+		<ItemGroup>
+			<!-- 筛选出所有标记为 PrivateAssets="all" 的项目引用 -->
+			<BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'All'))" />
+		</ItemGroup>
+	</Target>
 </Project>

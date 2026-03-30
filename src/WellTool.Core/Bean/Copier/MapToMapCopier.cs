@@ -7,8 +7,9 @@ namespace WellTool.Core.Bean.Copier
 	/// <summary>
 	/// Map属性拷贝到Map中的拷贝器
 	/// </summary>
+	/// <typeparam name="T">目标Map类型</typeparam>
 	/// <since>5.8.0</since>
-	public class MapToMapCopier : AbsCopier<IDictionary<object, object>, IDictionary<object, object>>
+	public class MapToMapCopier<T> : AbsCopier<IDictionary<object, object>, T> where T : IDictionary<object, object>
 	{
 		// 提前获取目标值真实类型
 		private readonly Type[] _targetTypeArguments;
@@ -20,7 +21,7 @@ namespace WellTool.Core.Bean.Copier
 		/// <param name="target">目标Map对象</param>
 		/// <param name="targetType">目标泛型类型</param>
 		/// <param name="copyOptions">拷贝选项</param>
-		public MapToMapCopier(IDictionary<object, object> source, IDictionary<object, object> target, Type targetType, CopyOptions copyOptions) : base(source, target, copyOptions)
+		public MapToMapCopier(IDictionary<object, object> source, T target, Type targetType, CopyOptions copyOptions) : base(source, target, copyOptions)
 		{
 			_targetTypeArguments = GetTypeArguments(targetType);
 		}
@@ -29,7 +30,7 @@ namespace WellTool.Core.Bean.Copier
 		/// 执行拷贝
 		/// </summary>
 		/// <returns>目标对象</returns>
-		public override IDictionary<object, object> Copy()
+		public override T Copy()
 		{
 			foreach (var entry in Source)
 			{

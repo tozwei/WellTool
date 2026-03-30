@@ -72,7 +72,8 @@ namespace WellTool.Core.Bean.Copier
 			{
 				if (target is IDictionary<object, object> mapTarget)
 				{
-					copier = (ICopier<T>)new MapToMapCopier(mapSource, mapTarget, targetType, copyOptions);
+					// 使用目标对象的实际类型作为泛型参数
+					copier = (ICopier<T>)Activator.CreateInstance(typeof(MapToMapCopier<>).MakeGenericType(target.GetType()), mapSource, mapTarget, targetType, copyOptions);
 				}
 				else
 				{
@@ -89,7 +90,8 @@ namespace WellTool.Core.Bean.Copier
 				}
 				if (target is IDictionary<object, object> mapTarget)
 				{
-					copier = (ICopier<T>)new MapToMapCopier(dictSource, mapTarget, targetType, copyOptions);
+					// 使用目标对象的实际类型作为泛型参数
+					copier = (ICopier<T>)Activator.CreateInstance(typeof(MapToMapCopier<>).MakeGenericType(target.GetType()), dictSource, mapTarget, targetType, copyOptions);
 				}
 				else
 				{
@@ -104,14 +106,33 @@ namespace WellTool.Core.Bean.Copier
 			{
 				if (target is IDictionary<object, object> mapTarget)
 				{
-					copier = (ICopier<T>)new BeanToMapCopier(source, mapTarget, targetType, copyOptions);
+					// 创建一个适配器来处理类型转换
+					var beanToMapCopier = new BeanToMapCopier(source, mapTarget, targetType, copyOptions);
+					copier = new CopierAdapter<T>(beanToMapCopier);
 				}
 				else
 				{
 					copier = new BeanToBeanCopier<T>(source, target, targetType, copyOptions);
 				}
 			}
+
 			_copier = copier;
+		}
+
+		// 适配器类，用于将ICopier<IDictionary<object, object>>转换为ICopier<T>
+		private class CopierAdapter<U> : ICopier<U>
+		{
+			private readonly ICopier<IDictionary<object, object>> _copier;
+
+			public CopierAdapter(ICopier<IDictionary<object, object>> copier)
+			{
+				_copier = copier;
+			}
+
+			public U Copy()
+			{
+				return (U)(object)_copier.Copy();
+			}
 		}
 
 		/// <summary>
