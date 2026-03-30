@@ -14,54 +14,34 @@
 		<Company>WellTool</Company>
 		<Copyright>© 2026 WellTool</Copyright>
 		<PackageTags>utility;tools;helpers</PackageTags>
+		<IncludeBuildOutput>true</IncludeBuildOutput>
+		<IncludeContentInPack>true</IncludeContentInPack>
 	</PropertyGroup>
 
+
+
 	<ItemGroup>
-		<ProjectReference Include="..\WellTool.AI\WellTool.AI.csproj" />
-		<ProjectReference Include="..\WellTool.Aop\WellTool.Aop.csproj" />
-		<ProjectReference Include="..\WellTool.BloomFilter\WellTool.BloomFilter.csproj" />
-		<ProjectReference Include="..\WellTool.Cache\WellTool.Cache.csproj" />
-		<ProjectReference Include="..\WellTool.Captcha\WellTool.Captcha.csproj" />
-		<ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
-		<ProjectReference Include="..\WellTool.Cron\WellTool.Cron.csproj" />
-		<ProjectReference Include="..\WellTool.Crypto\WellTool.Crypto.csproj" />
-		<ProjectReference Include="..\WellTool.DB\WellTool.DB.csproj" />
-		<ProjectReference Include="..\WellTool.Dfa\WellTool.Dfa.csproj" />
-		<ProjectReference Include="..\WellTool.Extra\WellTool.Extra.csproj" />
-		<ProjectReference Include="..\WellTool.Http\WellTool.Http.csproj" />
-		<ProjectReference Include="..\WellTool.Json\WellTool.Json.csproj" />
-		<ProjectReference Include="..\WellTool.Jwt\WellTool.Jwt.csproj" />
-		<ProjectReference Include="..\WellTool.Log\WellTool.Log.csproj" />
-		<ProjectReference Include="..\WellTool.Poi\WellTool.Poi.csproj" />
-		<ProjectReference Include="..\WellTool.Script\WellTool.Script.csproj" />
-		<ProjectReference Include="..\WellTool.Setting\WellTool.Setting.csproj" />
-		<ProjectReference Include="..\WellTool.Socket\WellTool.Socket.csproj" />
-		<ProjectReference Include="..\WellTool.System\WellTool.System.csproj" />
+		<ProjectReference Include="..\WellTool.AI\WellTool.AI.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Aop\WellTool.Aop.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.BloomFilter\WellTool.BloomFilter.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Cache\WellTool.Cache.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Captcha\WellTool.Captcha.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Cron\WellTool.Cron.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Crypto\WellTool.Crypto.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.DB\WellTool.DB.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Dfa\WellTool.Dfa.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Extra\WellTool.Extra.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Http\WellTool.Http.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Json\WellTool.Json.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Jwt\WellTool.Jwt.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Log\WellTool.Log.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Poi\WellTool.Poi.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Script\WellTool.Script.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Setting\WellTool.Setting.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.Socket\WellTool.Socket.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\WellTool.System\WellTool.System.csproj" PrivateAssets="all" />
 	</ItemGroup>
-
-
-	<!--<ItemGroup>
-		<Compile Include="..\WellTool.AI\**\*.cs" />
-		<Compile Include="..\WellTool.Aop\**\*.cs" />
-		<Compile Include="..\WellTool.BloomFilter\**\*.cs" />
-		<Compile Include="..\WellTool.Cache\**\*.cs" />
-		<Compile Include="..\WellTool.Captcha\**\*.cs" />
-		<Compile Include="..\WellTool.Core\**\*.cs" />
-		<Compile Include="..\WellTool.Cron\**\*.cs" />
-		<Compile Include="..\WellTool.Crypto\**\*.cs" />
-		<Compile Include="..\WellTool.DB\**\*.cs" />
-		<Compile Include="..\WellTool.Dfa\**\*.cs" />
-		<Compile Include="..\WellTool.Extra\**\*.cs" />
-		<Compile Include="..\WellTool.Http\**\*.cs" />
-		<Compile Include="..\WellTool.Json\**\*.cs" />
-		<Compile Include="..\WellTool.Jwt\**\*.cs" />
-		<Compile Include="..\WellTool.Log\**\*.cs" />
-		<Compile Include="..\WellTool.Poi\**\*.cs" />
-		<Compile Include="..\WellTool.Script\**\*.cs" />
-		<Compile Include="..\WellTool.Setting\**\*.cs" />
-		<Compile Include="..\WellTool.Socket\**\*.cs" />
-		<Compile Include="..\WellTool.System\**\*.cs" />
-	</ItemGroup>-->
 
   <PropertyGroup>
     <RestoreSources>$(RestoreSources);$(MSBuildProjectDirectory)\..\nupkg</RestoreSources>
