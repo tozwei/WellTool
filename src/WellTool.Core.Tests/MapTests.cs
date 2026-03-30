@@ -686,13 +686,11 @@ namespace WellTool.Core.Tests
                 { "person", person }
             };
 
-            // MapUtil.Flatten方法不存在，暂时注释
-            // var flattenMap = MapUtil.Flatten(map);
-            // Assert.Equal("ANTA", MapUtil.Get<string, object>(flattenMap, "clothesName"));
-            // Assert.Equal("200", MapUtil.Get<string, object>(flattenMap, "clothesPrice"));
-            // Assert.Equal("XXXX", MapUtil.Get<string, object>(flattenMap, "personName"));
-            // Assert.Equal("AAA", MapUtil.Get<string, object>(flattenMap, "home"));
-            Assert.True(true);
+            var flattenMap = MapUtil.Flatten(map);
+            Assert.Equal("ANTA", MapUtil.Get<string, object>(flattenMap, "personclothesclothesName"));
+            Assert.Equal("200", MapUtil.Get<string, object>(flattenMap, "personclothesclothesPrice"));
+            Assert.Equal("XXXX", MapUtil.Get<string, object>(flattenMap, "personpersonName"));
+            Assert.Equal("AAA", MapUtil.Get<string, object>(flattenMap, "home"));
         }
 
         #region BiMap测试

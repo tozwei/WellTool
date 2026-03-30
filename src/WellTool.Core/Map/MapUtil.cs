@@ -273,5 +273,52 @@ namespace WellTool.Core.Map
             var entries = map.Select(pair => $"{pair.Key}={pair.Value}");
             return "{" + string.Join(", ", entries) + "}";
         }
+
+        /// <summary>
+        /// 将嵌套的字典扁平化为单层字典
+        /// </summary>
+        /// <param name="map">嵌套字典</param>
+        /// <returns>扁平化后的字典</returns>
+        public static Dictionary<string, object> Flatten(Dictionary<string, object> map)
+        {
+            var result = new Dictionary<string, object>();
+            if (map == null)
+            {
+                return result;
+            }
+            FlattenRecursive(map, "", result);
+            return result;
+        }
+
+        /// <summary>
+        /// 递归扁平化字典
+        /// </summary>
+        /// <param name="map">当前字典</param>
+        /// <param name="prefix">前缀</param>
+        /// <param name="result">结果字典</param>
+        private static void FlattenRecursive(Dictionary<string, object> map, string prefix, Dictionary<string, object> result)
+        {
+            foreach (var entry in map)
+            {
+                var key = string.IsNullOrEmpty(prefix) ? entry.Key : prefix + entry.Key;
+                if (entry.Value is Dictionary<string, object> nestedMap)
+                {
+                    FlattenRecursive(nestedMap, key, result);
+                }
+                else if (entry.Value is Dictionary<string, string> stringMap)
+                {
+                    // 处理 Dictionary<string, string> 类型的嵌套字典
+                    foreach (var stringEntry in stringMap)
+                    {
+                        var nestedKey = key + stringEntry.Key;
+                        result[nestedKey] = stringEntry.Value;
+                    }
+                }
+                else
+                {
+                    result[key] = entry.Value;
+                }
+            }
+        }
     }
 }
