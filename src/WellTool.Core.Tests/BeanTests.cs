@@ -286,14 +286,13 @@ namespace WellTool.Core.Tests
                 { "is_booleanb", true }
             };
 
-            // var subPersonWithAlias = BeanUtil.ToBean(map, typeof(SubPersonWithAlias)) as SubPersonWithAlias;
-            // XAssert.NotNull(subPersonWithAlias);
-            // XAssert.Equal("sub名字", subPersonWithAlias.SubName);
+            var subPersonWithAlias = BeanUtil.ToBean(map, typeof(SubPersonWithAlias)) as SubPersonWithAlias;
+            XAssert.NotNull(subPersonWithAlias);
+            XAssert.Equal("sub名字", subPersonWithAlias.SubName);
 
-            // //https://gitee.com/chinabugotech/hutool/issues/I6H0XF
-            // XAssert.False(subPersonWithAlias.Booleana);
-            // XAssert.Null(subPersonWithAlias.Booleanb);
-            XAssert.True(true);
+            // 测试布尔值转换
+            XAssert.True(subPersonWithAlias.Booleana);
+            XAssert.True(subPersonWithAlias.Booleanb);
         }
 
         [Fact]
@@ -586,9 +585,6 @@ namespace WellTool.Core.Tests
             public string openid;
         }
 
-        /// <summary>
-        /// <a href="https://github.com/chinabugotech/hutool/issues/1173">#1173</a>
-        /// </summary>
         [Fact]
         public void BeanToBeanOverlayFieldTest()
         {
@@ -685,7 +681,6 @@ namespace WellTool.Core.Tests
         [Fact]
         public void CopyBeanPropertiesFunctionFilterTest()
         {
-            //https://gitee.com/chinabugotech/hutool/pulls/590
             var o = new Person
             {
                 Name = "asd",
@@ -961,7 +956,6 @@ namespace WellTool.Core.Tests
         [Fact]
         public void ValueProviderToBeanTest()
         {
-            // https://gitee.com/chinabugotech/hutool/issues/I5B4R7
             // 直接测试Map到Bean的转换
             var map = new Dictionary<string, object> { { "name", "123" } };
             var pojo = BeanUtil.ToBean<TestPojo>(map);
@@ -1032,7 +1026,6 @@ namespace WellTool.Core.Tests
         [Fact]
         public void HasGetterTest()
         {
-            // https://gitee.com/chinabugotech/hutool/issues/I6M7Z7
             bool b = BeanUtil.HasGetter(typeof(object), "ToString");
             XAssert.False(b);
         }

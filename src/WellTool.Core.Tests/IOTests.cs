@@ -294,11 +294,9 @@ namespace WellTool.Core.Tests
                 XAssert.Equal("application/vnd.openxmlformats-officedocument.presentationml.presentation", mimeType);
             }
             
-            // pr#2617@Github
             mimeType = FileUtil.GetMimeType("test.wgt");
             XAssert.Equal("application/widget", mimeType);
             
-            // issue#3092
             mimeType = FileUtil.GetMimeType("https://xxx.oss-cn-hangzhou.aliyuncs.com/xxx.webp");
             XAssert.Equal("image/webp", mimeType);
         }
