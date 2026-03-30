@@ -1,0 +1,21 @@
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "age": 31,
+  "contactDetails": [
+    {
+      "type": "email",
+      "value": "john.doe@example.com"
+    },
+    {
+      "type": "phone",
+      "value": "+1 234 567 890"
+    }
+  ],
+  "homeAddress": {
+    "line": "Xyz, DEF Street",
+    "city": "City Y",
+    "state": "State Z",
+    "zipCode": "12345"
+  }
+}
