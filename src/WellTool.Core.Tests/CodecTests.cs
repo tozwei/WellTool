@@ -237,16 +237,16 @@ namespace WellTool.Core.Tests
 
         #region PercentCodec测试
 
-        // [Fact]
-        // public void PercentEncodeDecodeTest()
-        // {
-        //     string str = "Hello World!";
-        //     var percentCodec = new PercentCodec();
-        //     string encoded = percentCodec.Encode(str, Encoding.UTF8);
-        //     // PercentCodec.Decode方法不存在，暂时注释掉解码测试
-        //     // string decoded = percentCodec.Decode(encoded);
-        //     // XAssert.Equal(str, decoded);
-        // }
+        [Fact]
+        public void PercentEncodeDecodeTest()
+        {
+            string str = "Hello World!";
+            var percentCodec = new PercentCodec();
+            string encoded = percentCodec.Encode(str, Encoding.UTF8);
+            // PercentCodec.Decode方法不存在，暂时只测试编码
+            XAssert.NotNull(encoded);
+            XAssert.NotEmpty(encoded);
+        }
 
         #endregion
     }

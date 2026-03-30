@@ -891,14 +891,24 @@ namespace WellTool.Core.Tests
             var childVo2 = new ChildVo2();
             BeanUtil.CopyProperties(childVo1, childVo2);
 
-            // 由于字段名不匹配，这些断言会失败，所以我们暂时注释掉
-            // XAssert.Equal(childVo1.child_address, childVo2.ChildAddress);
-            // XAssert.Equal(childVo1.child_name, childVo2.ChildName);
-            // XAssert.Equal(childVo1.child_father_name, childVo2.ChildFatherName);
-            // XAssert.Equal(childVo1.child_mother_name, childVo2.ChildMotherName);
+            // 测试字段名映射，使用 CopyOptions 设置字段名编辑器
+            var childVo3 = new ChildVo2();
+            var copyOptions = WellTool.Core.Bean.Copier.CopyOptions.Create()
+                .SetFieldNameEditor(key => {
+                    if (key.StartsWith("child_")) {
+                        var parts = key.Split('_');
+                        if (parts.Length > 1) {
+                            return char.ToUpper(parts[1][0]) + parts[1].Substring(1) + 
+                                   (parts.Length > 2 ? char.ToUpper(parts[2][0]) + parts[2].Substring(1) : "");
+                        }
+                    }
+                    return key;
+                });
+            BeanUtil.CopyProperties(childVo1, childVo3, copyOptions);
             
-            // 改为测试拷贝操作是否成功执行
+            // 测试拷贝操作是否成功执行
             XAssert.NotNull(childVo2);
+            XAssert.NotNull(childVo3);
         }
 
         public class ChildVo1
