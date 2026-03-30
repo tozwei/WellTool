@@ -560,7 +560,7 @@ public static partial class HttpUtil
         var encoded = HttpUtility.UrlEncode(value, encoding)
             ?.Replace("+", "%20") ?? string.Empty; // 将 + 替换为%20，保持标准 URL 编码
 
-        // 将小写十六进制转换为大写（与 Java Hutool 保持一致）
+        // 将小写十六进制转换为大写
         return System.Text.RegularExpressions.Regex.Replace(encoded, @"%[0-9a-fA-F]{2}", m => m.Value.ToUpper());
     }
 
@@ -580,10 +580,9 @@ public static partial class HttpUtil
         return HttpUtility.UrlDecode(value, encoding) ?? string.Empty;
     }
 
-    // ==================== 以下是 Java Hutool 兼容方法（大写命名）====================
 
     /// <summary>
-    /// 对 URL 参数进行编码（Java Hutool 兼容方法）
+    /// 对 URL 参数进行编码
     /// </summary>
     public static string ENCODE_PARAMS(string urlWithParams, Encoding? charset)
     {
@@ -591,7 +590,7 @@ public static partial class HttpUtil
     }
 
     /// <summary>
-    /// 将 URL 参数解析为 Map（Java Hutool 兼容方法）
+    /// 将 URL 参数解析为 Map
     /// </summary>
     public static Dictionary<string, List<string>> DECODE_PARAMS(string paramsStr, Encoding? charset)
     {
@@ -605,7 +604,7 @@ public static partial class HttpUtil
     }
 
     /// <summary>
-    /// 将 URL 参数解析为 Map（Java Hutool 兼容方法，返回 List 形式）
+    /// 将 URL 参数解析为 Map
     /// </summary>
     public static Dictionary<string, List<string>> DECODE_PARAM_MAP(string paramsStr, Encoding? charset)
     {
@@ -619,7 +618,7 @@ public static partial class HttpUtil
     }
 
     /// <summary>
-    /// 将表单数据加到 URL 中（Java Hutool 兼容方法）
+    /// 将表单数据加到 URL 中
     /// </summary>
     public static string UrlWithForm(string url, IDictionary<string, object?> form, Encoding? charset, bool isEncodeParams)
     {
@@ -628,7 +627,7 @@ public static partial class HttpUtil
     }
 
     /// <summary>
-    /// 将查询字符串加到 URL 中（Java Hutool 兼容方法）
+    /// 将查询字符串加到 URL 中
     /// </summary>
     public static string UrlWithForm(string url, string queryString, Encoding? charset, bool isEncode)
     {

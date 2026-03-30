@@ -74,25 +74,25 @@ namespace WellTool.Core.Tests
             XAssert.Equal("DFDFSDFWERWER", person.Openid);
         }
 
-        // [Fact]
-        // public void ToBeanTest()
-        // {
-        //     var person = new SubPerson
-        //     {
-        //         Age = 14,
-        //         Openid = "11213232",
-        //         Name = "测试A11",
-        //         SubName = "sub名字"
-        //     };
+        [Fact]
+        public void ToBeanTest()
+        {
+            var person = new SubPerson
+            {
+                Age = 14,
+                Openid = "11213232",
+                Name = "测试A11",
+                SubName = "sub名字"
+            };
 
-        //     var map = BeanUtil.ToBean(person, typeof(Dictionary<string, object>)) as Dictionary<string, object>;
-        //     XAssert.NotNull(map);
-        //     XAssert.Equal("测试A11", map["name"]);
-        //     XAssert.Equal(14, map["age"]);
-        //     XAssert.Equal("11213232", map["openid"]);
-        //     // static属性应被忽略
-        //     XAssert.False(map.ContainsKey("SUBNAME"));
-        // }
+            var map = BeanUtil.BeanToMap(person);
+            XAssert.NotNull(map);
+            XAssert.Equal("测试A11", map["name"]);
+            XAssert.Equal(14, map["age"]);
+            XAssert.Equal("11213232", map["openid"]);
+            // static属性应被忽略
+            XAssert.False(map.ContainsKey("SUBNAME"));
+        }
 
         /// <summary>
         /// 忽略转换错误测试
@@ -316,125 +316,126 @@ namespace WellTool.Core.Tests
         //     XAssert.Equal(DateOnly.FromDateTime(now), map["date2"]);
         // }
 
-        // [Fact]
-        // public void GetPropertyTest()
-        // {
-        //     var person = new SubPerson
-        //     {
-        //         Age = 14,
-        //         Openid = "11213232",
-        //         Name = "测试A11",
-        //         SubName = "sub名字"
-        //     };
+        [Fact]
+        public void GetPropertyTest()
+        {
+            var person = new SubPerson
+            {
+                Age = 14,
+                Openid = "11213232",
+                Name = "测试A11",
+                SubName = "sub名字"
+            };
 
-        //     var name = BeanUtil.GetProperty(person, "name");
-        //     XAssert.Equal("测试A11", name);
-        //     var subName = BeanUtil.GetProperty(person, "subName");
-        //     XAssert.Equal("sub名字", subName);
-        // }
+            var name = BeanUtil.GetProperty(person, "name");
+            XAssert.Equal("测试A11", name);
+            var subName = BeanUtil.GetProperty(person, "subName");
+            XAssert.Equal("sub名字", subName);
+        }
 
-        // [Fact]
-        // public void GetNullPropertyTest()
-        // {
-        //     var property = BeanUtil.GetProperty(null, "name");
-        //     XAssert.Null(property);
-        // }
+        [Fact]
+        public void GetNullPropertyTest()
+        {
+            var property = BeanUtil.GetProperty(null, "name");
+            XAssert.Null(property);
+        }
 
-        // [Fact]
-        // public void GetPropertyDescriptorsTest()
-        // {
-        //     var set = new HashSet<string>();
-        //     var propertyDescriptors = BeanUtil.GetPropertyDescriptors(typeof(SubPerson));
-        //     foreach (var propertyDescriptor in propertyDescriptors)
-        //     {
-        //         set.Add(propertyDescriptor.Name);
-        //     }
-        //     XAssert.Contains("age", set);
-        //     XAssert.Contains("id", set);
-        //     XAssert.Contains("name", set);
-        //     XAssert.Contains("openid", set);
-        //     XAssert.Contains("slow", set);
-        //     XAssert.Contains("subName", set);
-        // }
+        [Fact]
+        public void GetPropertyDescriptorsTest()
+        {
+            var set = new HashSet<string>();
+            var propertyDescriptors = BeanUtil.GetPropertyDescriptors(typeof(SubPerson));
+            foreach (var propertyDescriptor in propertyDescriptors)
+            {
+                set.Add(propertyDescriptor.Name);
+            }
+            XAssert.Contains("Age", set);
+            XAssert.Contains("Id", set);
+            XAssert.Contains("Name", set);
+            XAssert.Contains("Openid", set);
+            XAssert.Contains("Slow", set);
+            XAssert.Contains("SubName", set);
+            XAssert.Contains("Date", set);
+            XAssert.Contains("Date2", set);
+        }
 
-        // [Fact]
-        // public void CopyPropertiesTest()
-        // {
-        //     var person = new SubPerson
-        //     {
-        //         Age = 14,
-        //         Openid = "11213232",
-        //         Name = "测试A11",
-        //         SubName = "sub名字"
-        //     };
+        [Fact]
+        public void CopyPropertiesTest()
+        {
+            var person = new SubPerson
+            {
+                Age = 14,
+                Openid = "11213232",
+                Name = "测试A11",
+                SubName = "sub名字"
+            };
 
-        //     var person1 = BeanUtil.CopyProperties(person, typeof(SubPerson)) as SubPerson;
-        //     XAssert.NotNull(person1);
-        //     XAssert.Equal(14, person1.Age);
-        //     XAssert.Equal("11213232", person1.Openid);
-        //     XAssert.Equal("测试A11", person1.Name);
-        //     XAssert.Equal("sub名字", person1.SubName);
-        // }
+            var person1 = BeanUtil.CopyProperties(person, new SubPerson());
+            XAssert.NotNull(person1);
+            XAssert.Equal(14, person1.Age);
+            XAssert.Equal("11213232", person1.Openid);
+            XAssert.Equal("测试A11", person1.Name);
+            XAssert.Equal("sub名字", person1.SubName);
+        }
 
-        // [Fact]
-        // public void CopyPropertiesHasBooleanTest()
-        // {
-        //     var p1 = new SubPerson
-        //     {
-        //         Slow = true
-        //     };
+        [Fact]
+        public void CopyPropertiesHasBooleanTest()
+        {
+            var p1 = new SubPerson
+            {
+                Slow = true
+            };
 
-        //     // 测试boolean参数值isXXX形式
-        //     var p2 = new SubPerson();
-        //     BeanUtil.CopyProperties(p1, p2);
-        //     XAssert.True(p2.Slow);
+            // 测试boolean参数值
+            var p2 = new SubPerson();
+            BeanUtil.CopyProperties(p1, p2);
+            XAssert.True(p2.Slow);
 
-        //     // 测试boolean参数值非isXXX形式
-        //     var p3 = new SubPerson2();
-        //     BeanUtil.CopyProperties(p1, p3);
-        //     XAssert.True(p3.Slow);
-        // }
+            // 测试boolean参数值
+            var p3 = new SubPerson2();
+            BeanUtil.CopyProperties(p1, p3);
+            XAssert.True(p3.Slow);
+        }
 
-        // [Fact]
-        // public void CopyPropertiesIgnoreNullTest()
-        // {
-        //     var p1 = new SubPerson
-        //     {
-        //         Slow = true,
-        //         Name = null
-        //     };
+        [Fact]
+        public void CopyPropertiesIgnoreNullTest()
+        {
+            var p1 = new SubPerson
+            {
+                Slow = true,
+                Name = null
+            };
 
-        //     var p2 = new SubPerson2
-        //     {
-        //         Name = "oldName"
-        //     };
+            var p2 = new SubPerson2
+            {
+                Name = "oldName"
+            };
 
-        //     // null值不覆盖目标属性
-        //     BeanUtil.CopyProperties(p1, p2, CopyOptions.Create().IgnoreNullValue());
-        //     XAssert.Equal("oldName", p2.Name);
+            // null值不覆盖目标属性
+            BeanUtil.CopyProperties(p1, p2, WellTool.Core.Bean.Copier.CopyOptions.Create().SetIgnoreNullValue(true));
+            XAssert.Equal("oldName", p2.Name);
 
-        //     // null覆盖目标属性
-        //     BeanUtil.CopyProperties(p1, p2);
-        //     XAssert.Null(p2.Name);
-        // }
+            // null覆盖目标属性
+            BeanUtil.CopyProperties(p1, p2);
+            XAssert.Null(p2.Name);
+        }
 
-        // [Fact]
-        // public void CopyPropertiesBeanToMapTest()
-        // {
-        //     // 测试BeanToMap
-        //     var p1 = new SubPerson
-        //     {
-        //         Slow = true,
-        //         Name = "测试",
-        //         SubName = "sub测试"
-        //     };
+        [Fact]
+        public void CopyPropertiesBeanToMapTest()
+        {
+            // 测试BeanToMap
+            var p1 = new SubPerson
+            {
+                Slow = true,
+                Name = "测试",
+                SubName = "sub测试"
+            };
 
-        //     var map = new Dictionary<string, object>();
-        //     BeanUtil.CopyProperties(p1, map);
-        //     XAssert.True((bool)map["slow"]);
-        //     XAssert.Equal("测试", map["name"]);
-        //     XAssert.Equal("sub测试", map["subName"]);
-        // }
+            var map = BeanUtil.BeanToMap(p1);
+            XAssert.True((bool)map["slow"]);
+            XAssert.Equal("测试", map["name"]);
+            XAssert.Equal("sub测试", map["subName"]);
+        }
 
         // [Fact]
         // public void CopyPropertiesMapToMapTest()
@@ -472,21 +473,21 @@ namespace WellTool.Core.Tests
         //     XAssert.False(map.ContainsKey("subName"));
         // }
 
-        // [Fact]
-        // public void TrimBeanStrFieldsTest()
-        // {
-        //     var person = new Person
-        //     {
-        //         Age = 1,
-        //         Name = "  张三 ",
-        //         Openid = null
-        //     };
-        //     var person2 = BeanUtil.TrimStrFields(person) as Person;
+        [Fact]
+        public void TrimBeanStrFieldsTest()
+        {
+            var person = new Person
+            {
+                Age = 1,
+                Name = "  张三 ",
+                Openid = null
+            };
+            var person2 = BeanUtil.TrimStrFields(person) as Person;
 
-        //     // 是否改变原对象
-        //     XAssert.Equal("张三", person.Name);
-        //     XAssert.Equal("张三", person2.Name);
-        // }
+            // 是否改变原对象
+            XAssert.Equal("张三", person.Name);
+            XAssert.Equal("张三", person2.Name);
+        }
 
         // -----------------------------------------------------------------------------------------------------------------
         public class TestValueProvider : IValueProvider<string>

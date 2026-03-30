@@ -56,7 +56,7 @@ age: 31
         {
             var dict = new Dictionary<string, object?>
             {
-                ["name"] = "hutool",
+                ["name"] = "welltool",
                 ["count"] = 1000
             };
 
@@ -68,7 +68,7 @@ age: 31
             // 读取并验证内容
             var content = File.ReadAllText(tempFile);
             Assert.Contains("name", content);
-            Assert.Contains("hutool", content);
+            Assert.Contains("welltool", content);
             Assert.Contains("count", content);
         }
         finally
