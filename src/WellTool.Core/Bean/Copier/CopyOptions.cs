@@ -113,33 +113,40 @@ namespace WellTool.Core.Bean.Copier
 		{
 			// 默认转换器
 Converter = (type, value) => {
-	if (value == null)
-	{
-		return null;
-	}
+				if (value == null)
+				{
+					return null;
+				}
 
-	if (type is Type targetType)
-	{
-		// 处理空字符串到可空类型的转换
-		if (value is string strValue && string.IsNullOrEmpty(strValue))
-		{
-			// 如果目标类型是可空类型，返回null
-			if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
-			{
-				return null;
-			}
-		}
+				if (type is Type targetType)
+				{
+					// 处理空字符串到可空类型的转换
+					if (value is string strValue && string.IsNullOrEmpty(strValue))
+					{
+						// 如果目标类型是可空类型，返回null
+						if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+						{
+							return null;
+						}
+					}
 
-		// 快速处理简单值类型的转换
-		if (IsSimpleValueType(targetType) && targetType.IsAssignableFrom(value.GetType()))
-		{
-			return value;
-		}
-	}
+					// 快速处理简单值类型的转换
+					if (IsSimpleValueType(targetType) && targetType.IsAssignableFrom(value.GetType()))
+					{
+						return value;
+					}
 
-	// 这里可以添加更多的转换逻辑
-	return value;
-};
+					// 处理字符串到布尔值的转换
+					if (targetType == typeof(bool) && value is string boolStr)
+					{
+						boolStr = boolStr.Trim().ToLower();
+						return boolStr == "true" || boolStr == "1" || boolStr == "yes" || boolStr == "y";
+					}
+				}
+
+				// 这里可以添加更多的转换逻辑
+				return value;
+			};
 		}
 
 		/// <summary>
@@ -157,33 +164,40 @@ Converter = (type, value) => {
 
 			// 默认转换器
 Converter = (type, value) => {
-	if (value == null)
-	{
-		return null;
-	}
+				if (value == null)
+				{
+					return null;
+				}
 
-	if (type is Type targetType)
-	{
-		// 处理空字符串到可空类型的转换
-		if (value is string strValue && string.IsNullOrEmpty(strValue))
-		{
-			// 如果目标类型是可空类型，返回null
-			if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
-			{
-				return null;
-			}
-		}
+				if (type is Type targetType)
+				{
+					// 处理空字符串到可空类型的转换
+					if (value is string strValue && string.IsNullOrEmpty(strValue))
+					{
+						// 如果目标类型是可空类型，返回null
+						if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+						{
+							return null;
+						}
+					}
 
-		// 快速处理简单值类型的转换
-		if (IsSimpleValueType(targetType) && targetType.IsAssignableFrom(value.GetType()))
-		{
-			return value;
-		}
-	}
+					// 快速处理简单值类型的转换
+					if (IsSimpleValueType(targetType) && targetType.IsAssignableFrom(value.GetType()))
+					{
+						return value;
+					}
 
-	// 这里可以添加更多的转换逻辑
-	return value;
-};
+					// 处理字符串到布尔值的转换
+					if (targetType == typeof(bool) && value is string boolStr)
+					{
+						boolStr = boolStr.Trim().ToLower();
+						return boolStr == "true" || boolStr == "1" || boolStr == "yes" || boolStr == "y";
+					}
+				}
+
+				// 这里可以添加更多的转换逻辑
+				return value;
+			};
 		}
 
 		/// <summary>

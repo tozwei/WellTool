@@ -545,7 +545,9 @@ namespace WellTool.Core.Tests
             [@Alias("aliasSubName")]
             public string SubName { get; set; }
             public bool? Slow { get; set; }
+            [@Alias("is_booleana")]
             public bool Booleana { get; set; }
+            [@Alias("is_booleanb")]
             public bool? Booleanb { get; set; }
         }
 
