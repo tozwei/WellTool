@@ -210,6 +210,51 @@ public static class SystemUtil
     }
 
     /// <summary>
+    /// 取得.NET Virtual Machine Specification的信息
+    /// </summary>
+    /// <returns><see cref="NetVmSpecInfo"/>对象</returns>
+    public static NetVmSpecInfo GetNetVmSpecInfo()
+    {
+        return NetVmSpecInfo.Instance;
+    }
+
+    /// <summary>
+    /// 取得.NET Virtual Machine Implementation的信息
+    /// </summary>
+    /// <returns><see cref="NetVmInfo"/>对象</returns>
+    public static NetVmInfo GetNetVmInfo()
+    {
+        return NetVmInfo.Instance;
+    }
+
+    /// <summary>
+    /// 取得.NET Specification的信息
+    /// </summary>
+    /// <returns><see cref="NetSpecInfo"/>对象</returns>
+    public static NetSpecInfo GetNetSpecInfo()
+    {
+        return NetSpecInfo.Instance;
+    }
+
+    /// <summary>
+    /// 取得.NET Implementation的信息
+    /// </summary>
+    /// <returns><see cref="NetInfo"/>对象</returns>
+    public static NetInfo GetNetInfo()
+    {
+        return NetInfo.Instance;
+    }
+
+    /// <summary>
+    /// 取得当前运行的.NET运行时的信息
+    /// </summary>
+    /// <returns><see cref="NetRuntimeInfo"/>对象</returns>
+    public static NetRuntimeInfo GetNetRuntimeInfo()
+    {
+        return NetRuntimeInfo.Instance;
+    }
+
+    /// <summary>
     /// 取得OS的信息
     /// </summary>
     /// <returns><see cref="OsInfo"/>对象</returns>
@@ -312,6 +357,16 @@ public static class SystemUtil
         sb.AppendLine(GetJavaInfo().ToString());
         sb.AppendLine("--------------");
         sb.AppendLine(GetJavaRuntimeInfo().ToString());
+        sb.AppendLine("--------------");
+        sb.AppendLine(GetNetVmSpecInfo().ToString());
+        sb.AppendLine("--------------");
+        sb.AppendLine(GetNetVmInfo().ToString());
+        sb.AppendLine("--------------");
+        sb.AppendLine(GetNetSpecInfo().ToString());
+        sb.AppendLine("--------------");
+        sb.AppendLine(GetNetInfo().ToString());
+        sb.AppendLine("--------------");
+        sb.AppendLine(GetNetRuntimeInfo().ToString());
         sb.AppendLine("--------------");
         sb.AppendLine(GetOsInfo().ToString());
         sb.AppendLine("--------------");
