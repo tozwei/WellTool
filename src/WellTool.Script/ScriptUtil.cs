@@ -54,4 +54,33 @@ public class ScriptUtil
     {
         return new JavaScriptEngine();
     }
+
+    /// <summary>
+    /// 创建全功能脚本引擎
+    /// </summary>
+    /// <returns>全功能脚本引擎</returns>
+    public FullSupportScriptEngine CreateFullSupportScriptEngine()
+    {
+        return new FullSupportScriptEngine("javascript");
+    }
+
+    /// <summary>
+    /// 创建全功能脚本引擎
+    /// </summary>
+    /// <param name="nameOrExtOrMime">脚本名或者脚本语言扩展名或者MineType</param>
+    /// <returns>全功能脚本引擎</returns>
+    public FullSupportScriptEngine CreateFullSupportScriptEngine(string nameOrExtOrMime)
+    {
+        return new FullSupportScriptEngine(nameOrExtOrMime);
+    }
+
+    /// <summary>
+    /// 创建全功能脚本引擎
+    /// </summary>
+    /// <param name="engine">Jint 引擎</param>
+    /// <returns>全功能脚本引擎</returns>
+    public FullSupportScriptEngine CreateFullSupportScriptEngine(Jint.Engine engine)
+    {
+        return new FullSupportScriptEngine(engine);
+    }
 }
