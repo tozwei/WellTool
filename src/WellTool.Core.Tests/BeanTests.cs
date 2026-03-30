@@ -434,7 +434,7 @@ namespace WellTool.Core.Tests
             var map = BeanUtil.BeanToMap(p1);
             XAssert.True((bool)map["slow"]);
             XAssert.Equal("测试", map["name"]);
-            XAssert.Equal("sub测试", map["subName"]);
+            XAssert.Equal("sub测试", map["subname"]);
         }
 
         // [Fact]
