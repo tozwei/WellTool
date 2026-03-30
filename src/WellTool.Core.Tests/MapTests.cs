@@ -160,42 +160,42 @@ namespace WellTool.Core.Tests
             Assert.Equal("40", map2["d"]);
         }
 
-        // [Fact]
-        // public void ReverseTest()
-        // {
-        //     var map = new Dictionary<string, string>();
-        //     map["a"] = "1";
-        //     map["b"] = "2";
-        //     map["c"] = "3";
-        //     map["d"] = "4";
+        [Fact]
+        public void ReverseTest()
+        {
+            var map = new Dictionary<string, string>();
+            map["a"] = "1";
+            map["b"] = "2";
+            map["c"] = "3";
+            map["d"] = "4";
 
-        //     var map2 = MapUtil.Reverse(map);
+            var map2 = MapUtil.Reverse(map);
 
-        //     Assert.Equal("a", map2["1"]);
-        //     Assert.Equal("b", map2["2"]);
-        //     Assert.Equal("c", map2["3"]);
-        //     Assert.Equal("d", map2["4"]);
-        // }
+            Assert.Equal("a", map2["1"]);
+            Assert.Equal("b", map2["2"]);
+            Assert.Equal("c", map2["3"]);
+            Assert.Equal("d", map2["4"]);
+        }
 
-        // [Fact]
-        // public void ToObjectArrayTest()
-        // {
-        //     var map = new Dictionary<string, string>();
-        //     map["a"] = "1";
-        //     map["b"] = "2";
-        //     map["c"] = "3";
-        //     map["d"] = "4";
+        [Fact]
+        public void ToObjectArrayTest()
+        {
+            var map = new Dictionary<string, string>();
+            map["a"] = "1";
+            map["b"] = "2";
+            map["c"] = "3";
+            map["d"] = "4";
 
-        //     var objectArray = MapUtil.ToObjectArray(map);
-        //     Assert.Equal("a", objectArray[0][0]);
-        //     Assert.Equal("1", objectArray[0][1]);
-        //     Assert.Equal("b", objectArray[1][0]);
-        //     Assert.Equal("2", objectArray[1][1]);
-        //     Assert.Equal("c", objectArray[2][0]);
-        //     Assert.Equal("3", objectArray[2][1]);
-        //     Assert.Equal("d", objectArray[3][0]);
-        //     Assert.Equal("4", objectArray[3][1]);
-        // }
+            var objectArray = MapUtil.ToObjectArray(map);
+            Assert.Equal("a", objectArray[0][0]);
+            Assert.Equal("1", objectArray[0][1]);
+            Assert.Equal("b", objectArray[1][0]);
+            Assert.Equal("2", objectArray[1][1]);
+            Assert.Equal("c", objectArray[2][0]);
+            Assert.Equal("3", objectArray[2][1]);
+            Assert.Equal("d", objectArray[3][0]);
+            Assert.Equal("4", objectArray[3][1]);
+        }
 
         // [Fact]
         // public void SortJoinTest()
@@ -217,14 +217,14 @@ namespace WellTool.Core.Tests
         //     Assert.Equal("key1value1key2value2key3value3123abc", join3);
         // }
 
-        // [Fact]
-        // public void OfEntriesTest()
-        // {
-        //     var map = MapUtil.OfEntries(MapUtil.Entry("a", 1), MapUtil.Entry("b", 2));
-        //     Assert.Equal(2, map.Count);
-        //     Assert.Equal(1, map["a"]);
-        //     Assert.Equal(2, map["b"]);
-        // }
+        [Fact]
+        public void OfEntriesTest()
+        {
+            var map = MapUtil.Of(new KeyValuePair<string, int>[] { MapUtil.Entry("a", 1), MapUtil.Entry("b", 2) });
+            Assert.Equal(2, map.Count);
+            Assert.Equal(1, map["a"]);
+            Assert.Equal(2, map["b"]);
+        }
 
         // [Fact]
         // public void GetIntTest()

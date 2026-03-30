@@ -32,6 +32,167 @@ namespace WellTool.Core.Map
         }
 
         /// <summary>
+        /// 如果提供的字典为null，返回一个空字典，否则返回原字典
+        /// </summary>
+        /// <typeparam name="K">键类型</typeparam>
+        /// <typeparam name="V">值类型</typeparam>
+        /// <param name="map">提供的字典，可能为null</param>
+        /// <returns>原字典，若为null返回空字典</returns>
+        public static Dictionary<K, V> EmptyIfNull<K, V>(Dictionary<K, V> map)
+        {
+            return map ?? new Dictionary<K, V>();
+        }
+
+        /// <summary>
+        /// 如果给定字典为空，返回默认字典
+        /// </summary>
+        /// <typeparam name="K">键类型</typeparam>
+        /// <typeparam name="V">值类型</typeparam>
+        /// <param name="map">字典</param>
+        /// <param name="defaultMap">默认字典</param>
+        /// <returns>非空的原字典或默认字典</returns>
+        public static Dictionary<K, V> DefaultIfEmpty<K, V>(Dictionary<K, V> map, Dictionary<K, V> defaultMap)
+        {
+            return IsEmpty(map) ? defaultMap : map;
+        }
+
+        /// <summary>
+        /// 将单一键值对转换为字典
+        /// </summary>
+        /// <typeparam name="K">键类型</typeparam>
+        /// <typeparam name="V">值类型</typeparam>
+        /// <param name="key">键</param>
+        /// <param name="value">值</param>
+        /// <returns>字典</returns>
+        public static Dictionary<K, V> Of<K, V>(K key, V value)
+        {
+            var map = new Dictionary<K, V>();
+            map[key] = value;
+            return map;
+        }
+
+        /// <summary>
+        /// 将单一键值对转换为字典
+        /// </summary>
+        /// <typeparam name="K">键类型</typeparam>
+        /// <typeparam name="V">值类型</typeparam>
+        /// <param name="key">键</param>
+        /// <param name="value">值</param>
+        /// <param name="isLinked">是否有序</param>
+        /// <returns>字典</returns>
+        public static Dictionary<K, V> Of<K, V>(K key, V value, bool isLinked)
+        {
+            var map = NewHashMap<K, V>(isLinked);
+            map[key] = value;
+            return map;
+        }
+
+        /// <summary>
+        /// 将数组转换为字典
+        /// </summary>
+        /// <typeparam name="K">键类型</typeparam>
+        /// <typeparam name="V">值类型</typeparam>
+        /// <param name="array">数组，元素类型为KeyValuePair、数组、IEnumerable</param>
+        /// <returns>字典</returns>
+        public static Dictionary<object, object> Of(object[] array)
+        {
+            if (array == null)
+            {
+                return null;
+            }
+            var map = new Dictionary<object, object>();
+            for (int i = 0; i < array.Length; i++)
+            {
+                var obj = array[i];
+                if (obj is KeyValuePair<object, object> entry)
+                {
+                    map[entry.Key] = entry.Value;
+                }
+                else if (obj is object[] entryArray)
+                {
+                    if (entryArray.Length > 1)
+                    {
+                        map[entryArray[0]] = entryArray[1];
+                    }
+                }
+                else if (obj is IEnumerable enumerable)
+                {
+                    var enumerator = enumerable.GetEnumerator();
+                    if (enumerator.MoveNext())
+                    {
+                        var key = enumerator.Current;
+                        if (enumerator.MoveNext())
+                        {
+                            var val = enumerator.Current;
+                            map[key] = val;
+                        }
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException($"Array element {i}, '{obj}', is not type of KeyValuePair or Array or IEnumerable");
+                }
+            }
+            return map;
+        }
+
+        /// <summary>
+        /// 将键和值转换为KeyValuePair
+        /// </summary>
+        /// <typeparam name="K">键类型</typeparam>
+        /// <typeparam name="V">值类型</typeparam>
+        /// <param name="key">键</param>
+        /// <param name="value">值</param>
+        /// <param name="isImmutable">是否不可变（在C#中KeyValuePair本身是不可变的）</param>
+        /// <returns>KeyValuePair</returns>
+        public static KeyValuePair<K, V> Entry<K, V>(K key, V value, bool isImmutable)
+        {
+            return new KeyValuePair<K, V>(key, value);
+        }
+
+        /// <summary>
+        /// 根据字典类型返回对应类型的空字典
+        /// </summary>
+        /// <typeparam name="K">键类型</typeparam>
+        /// <typeparam name="V">值类型</typeparam>
+        /// <typeparam name="T">字典类型</typeparam>
+        /// <param name="mapType">字典类型</param>
+        /// <returns>空字典</returns>
+        public static T Empty<K, V, T>(Type mapType) where T : Dictionary<K, V>, new()
+        {
+            return new T();
+        }
+
+        /// <summary>
+        /// 从字典中获取指定键列表对应的值列表
+        /// </summary>
+        /// <typeparam name="K">键类型</typeparam>
+        /// <typeparam name="V">值类型</typeparam>
+        /// <param name="map">字典</param>
+        /// <param name="keys">键迭代器</param>
+        /// <returns>值列表</returns>
+        public static List<V> ValuesOfKeys<K, V>(Dictionary<K, V> map, IEnumerator<K> keys)
+        {
+            var values = new List<V>();
+            if (map == null || keys == null)
+            {
+                return values;
+            }
+            while (keys.MoveNext())
+            {
+                if (map.TryGetValue(keys.Current, out var value))
+                {
+                    values.Add(value);
+                }
+                else
+                {
+                    values.Add(default);
+                }
+            }
+            return values;
+        }
+
+        /// <summary>
         /// 新建一个HashMap
         /// </summary>
         /// <typeparam name="K">Key类型</typeparam>
