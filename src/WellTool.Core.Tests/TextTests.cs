@@ -31,8 +31,8 @@ namespace WellTool.Core.Tests
         [Fact]
         public void AddPrefixIfNotTest()
         {
-            var str = "hutool";
-            var result = str.StartsWith("hu") ? str : "hu" + str;
+            var str = "welltool";
+            var result = str.StartsWith("well") ? str : "well" + str;
             Assert.Equal(str, result);
 
             result = str.StartsWith("Good") ? str : "Good" + str;
@@ -42,7 +42,7 @@ namespace WellTool.Core.Tests
         [Fact]
         public void AddSuffixIfNotTest()
         {
-            var str = "hutool";
+            var str = "welltool";
             var result = str.EndsWith("tool") ? str : str + "tool";
             Assert.Equal(str, result);
 

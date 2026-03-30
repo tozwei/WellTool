@@ -37,7 +37,7 @@ public class GlobalHeaders
         // 设置默认请求头
         SetHeader(Header.ACCEPT.GetValue(), "text/html,application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", true);
         SetHeader(Header.ACCEPT_ENCODING.GetValue(), "gzip, deflate", true);
-        SetHeader(Header.USER_AGENT.GetValue(), "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36 Hutool", true);
+        SetHeader(Header.USER_AGENT.GetValue(), "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36 WellTool", true);
 
         return this;
     }

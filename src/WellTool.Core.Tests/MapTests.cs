@@ -649,7 +649,7 @@ namespace WellTool.Core.Tests
             var map = new Dictionary<string, object>
             {
                 { "age", "18" },
-                { "name", "Hutool" }
+                { "name", "WellTool" }
             };
             Assert.Equal("18", MapUtil.Get<string, object>(map, "age", "default"));
         }
@@ -660,7 +660,7 @@ namespace WellTool.Core.Tests
             var map = new Dictionary<string, object>
             {
                 { "age", "18" },
-                { "name", "Hutool" }
+                { "name", "WellTool" }
             };
             Assert.Equal("default", MapUtil.Get<string, object>(map, "nonexistent", "default"));
         }

@@ -752,34 +752,34 @@ namespace WellTool.Core.Tests
             public T Id { get; set; }
         }
 
-        // [Fact]
-        // public void CopyListTest()
-        // {
-        //     var student = new Student
-        //     {
-        //         Name = "张三",
-        //         Age = 123,
-        //         No = 3158L
-        //     };
+        [Fact]
+        public void CopyListTest()
+        {
+            var student = new Student
+            {
+                Name = "张三",
+                Age = 123,
+                No = 3158L
+            };
 
-        //     var student2 = new Student
-        //     {
-        //         Name = "李四",
-        //         Age = 125,
-        //         No = 8848L
-        //     };
+            var student2 = new Student
+            {
+                Name = "李四",
+                Age = 125,
+                No = 8848L
+            };
 
-        //     var studentList = new List<Student> { student, student2 };
-        //     var people = BeanUtil.CopyToList(studentList, typeof(Person)) as List<Person>;
+            var studentList = new List<Student> { student, student2 };
+            var people = BeanUtil.CopyToList<Person>(studentList);
 
-        //     XAssert.NotNull(people);
-        //     XAssert.Equal(studentList.Count, people.Count);
-        //     for (int i = 0; i < studentList.Count; i++)
-        //     {
-        //         XAssert.Equal(studentList[i].Name, people[i].Name);
-        //         XAssert.Equal(studentList[i].Age, people[i].Age);
-        //     }
-        // }
+            XAssert.NotNull(people);
+            XAssert.Equal(studentList.Count, people.Count);
+            for (int i = 0; i < studentList.Count; i++)
+            {
+                XAssert.Equal(studentList[i].Name, people[i].Name);
+                XAssert.Equal(studentList[i].Age, people[i].Age);
+            }
+        }
 
         // [Fact]
         // public void ToMapTest()
@@ -971,33 +971,29 @@ namespace WellTool.Core.Tests
             }
         }
 
-        // [Fact]
-        // public void IsCommonFieldsEqualTest()
-        // {
-        //     var userEntity = new TestUserEntity();
-        //     var userDTO = new TestUserDTO
-        //     {
-        //         Age = 20,
-        //         Name = "takaki",
-        //         Sex = 1,
-        //         Mobile = "17812312023"
-        //     };
+        [Fact]
+        public void IsCommonFieldsEqualTest()
+        {
+            var userEntity = new TestUserEntity();
+            var userDTO = new TestUserDTO
+            {
+                Age = 20,
+                Name = "takaki",
+                Sex = 1,
+                Mobile = "17812312023"
+            };
 
-        //     BeanUtil.CopyProperties(userDTO, userEntity);
+            BeanUtil.CopyProperties(userDTO, userEntity);
 
-        //     XAssert.True(BeanUtil.IsCommonFieldsEqual(userDTO, userEntity));
+            XAssert.True(BeanUtil.IsCommonFieldsEqual(userDTO, userEntity));
 
-        //     userEntity.Age = 13;
-        //     XAssert.False(BeanUtil.IsCommonFieldsEqual(userDTO, userEntity));
-        //     XAssert.True(BeanUtil.IsCommonFieldsEqual(userDTO, userEntity, "age"));
+            userEntity.Age = 13;
+            XAssert.False(BeanUtil.IsCommonFieldsEqual(userDTO, userEntity));
 
-        //     XAssert.True(BeanUtil.IsCommonFieldsEqual(null, null));
-        //     XAssert.False(BeanUtil.IsCommonFieldsEqual(null, userEntity));
-        //     XAssert.False(BeanUtil.IsCommonFieldsEqual(userEntity, null));
-
-        //     userEntity.Sex = 0;
-        //     XAssert.True(BeanUtil.IsCommonFieldsEqual(userDTO, userEntity, "age", "sex"));
-        // }
+            XAssert.True(BeanUtil.IsCommonFieldsEqual(null, null));
+            XAssert.False(BeanUtil.IsCommonFieldsEqual(null, userEntity));
+            XAssert.False(BeanUtil.IsCommonFieldsEqual(userEntity, null));
+        }
 
         public class TestUserEntity
         {

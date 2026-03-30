@@ -90,6 +90,14 @@ namespace WellTool.Core.Bean
 				var propDesc = new PropDesc(property);
 				_propMap[propDesc.FieldName] = propDesc;
 				_propMapIgnoreCase[propDesc.FieldName] = propDesc;
+				
+				// 同时存储小写名称，以支持小写属性名查找
+				var lowerFieldName = propDesc.FieldName.ToLower();
+				if (lowerFieldName != propDesc.FieldName)
+				{
+					_propMap[lowerFieldName] = propDesc;
+					_propMapIgnoreCase[lowerFieldName] = propDesc;
+				}
 
 				// 处理Alias注解
 				try

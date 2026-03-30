@@ -20,7 +20,7 @@ public class ContentTypeTests
     public void GetWithLeadingSpaceTest()
     {
         var json = " {\n" +
-                   "     \"name\": \"hutool\"\n" +
+                   "     \"name\": \"welltool\"\n" +
                    " }";
         var contentType = ContentType.Get(json);
         Assert.Equal(ContentType.JSON, contentType);
@@ -41,7 +41,7 @@ public class ContentTypeTests
     public void GetContentTypeTest()
     {
         // 测试 JSON 检测
-        var json = "{\"name\":\"hutool\"}";
+        var json = "{\"name\":\"welltool\"}";
         Assert.Equal(ContentType.JSON, ContentType.Get(json));
 
         // 测试 XML 检测
