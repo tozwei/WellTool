@@ -22,7 +22,7 @@ using Xunit;
 
 namespace WellTool.Aop.Tests
 {
-    public class HutoolAopTests
+    public class WellToolAopTests
     {
         [Fact]
         public void AopTest()
