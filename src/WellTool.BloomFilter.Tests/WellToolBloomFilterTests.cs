@@ -19,7 +19,7 @@ using Xunit;
 
 namespace WellTool.BloomFilter.Tests
 {
-    public class HutoolBloomFilterTests
+    public class WellToolBloomFilterTests
     {
         [Fact]
         public void TestInitWhenMaxValueLessThanMachineNum()
