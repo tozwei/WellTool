@@ -59,7 +59,8 @@ namespace WellTool.Core.Tests
                 { 2, "happily" }
             };
 
-            var resultMap = MapUtil.Map(adjectivesMap, (k, v) => v + " " + PeopleEnum.GetValues(typeof(PeopleEnum))[k].ToString().ToLower());
+            var peopleEnums = (PeopleEnum[])PeopleEnum.GetValues(typeof(PeopleEnum));
+            var resultMap = MapUtil.Map(adjectivesMap, (k, v) => v + " " + peopleEnums[k].ToString().ToLower());
 
             Assert.Equal("lovely girl", resultMap[0]);
             Assert.Equal("friendly boy", resultMap[1]);
@@ -132,7 +133,7 @@ namespace WellTool.Core.Tests
             map["def"] = "3";
             map["fgh"] = "4";
 
-            var map2 = MapUtil.Filter(map, t => StrUtil.Contains(t.Key, "bc"));
+            var map2 = MapUtil.Filter(map, t => t.Key.Contains("bc"));
             Assert.Equal(2, map2.Count);
             Assert.Equal("1", map2["abc"]);
             Assert.Equal("2", map2["bcd"]);
@@ -149,8 +150,7 @@ namespace WellTool.Core.Tests
 
             var map2 = MapUtil.Edit(map, t =>
             {
-                t.Value = t.Value + "0";
-                return t;
+                return new KeyValuePair<string, string>(t.Key, t.Value + "0");
             });
 
             Assert.Equal(4, map2.Count);
