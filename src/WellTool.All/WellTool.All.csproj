@@ -39,6 +39,30 @@
 		<ProjectReference Include="..\WellTool.System\WellTool.System.csproj" />
 	</ItemGroup>
 
+
+	<!--<ItemGroup>
+		<Compile Include="..\WellTool.AI\**\*.cs" />
+		<Compile Include="..\WellTool.Aop\**\*.cs" />
+		<Compile Include="..\WellTool.BloomFilter\**\*.cs" />
+		<Compile Include="..\WellTool.Cache\**\*.cs" />
+		<Compile Include="..\WellTool.Captcha\**\*.cs" />
+		<Compile Include="..\WellTool.Core\**\*.cs" />
+		<Compile Include="..\WellTool.Cron\**\*.cs" />
+		<Compile Include="..\WellTool.Crypto\**\*.cs" />
+		<Compile Include="..\WellTool.DB\**\*.cs" />
+		<Compile Include="..\WellTool.Dfa\**\*.cs" />
+		<Compile Include="..\WellTool.Extra\**\*.cs" />
+		<Compile Include="..\WellTool.Http\**\*.cs" />
+		<Compile Include="..\WellTool.Json\**\*.cs" />
+		<Compile Include="..\WellTool.Jwt\**\*.cs" />
+		<Compile Include="..\WellTool.Log\**\*.cs" />
+		<Compile Include="..\WellTool.Poi\**\*.cs" />
+		<Compile Include="..\WellTool.Script\**\*.cs" />
+		<Compile Include="..\WellTool.Setting\**\*.cs" />
+		<Compile Include="..\WellTool.Socket\**\*.cs" />
+		<Compile Include="..\WellTool.System\**\*.cs" />
+	</ItemGroup>-->
+
   <PropertyGroup>
     <RestoreSources>$(RestoreSources);$(MSBuildProjectDirectory)\..\nupkg</RestoreSources>
   </PropertyGroup>
