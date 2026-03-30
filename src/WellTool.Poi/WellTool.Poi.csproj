@@ -16,4 +16,8 @@
 		<PackageTags>poi;excel;word</PackageTags>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="EPPlus" Version="7.0.10" />
+	</ItemGroup>
+
 </Project>

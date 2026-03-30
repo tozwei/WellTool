@@ -11,6 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.IO;
+using OfficeOpenXml;
+
 namespace WellTool.Poi;
 
 /// <summary>
@@ -32,13 +35,8 @@ public class ExcelUtil
     {
         try
         {
-            // 这里使用 EPPlus 库来实现 Excel 读取
-            // 实际使用时需要添加 EPPlus 包引用
-            // var package = new OfficeOpenXml.ExcelPackage(new FileInfo(filePath));
-            // return new ExcelReader(package);
-            
-            // 暂时返回 null，实际使用时需要实现
-            throw new NotImplementedException("ExcelUtil 需要添加 EPPlus 包引用并实现");
+            var package = new ExcelPackage(new FileInfo(filePath));
+            return new ExcelReader(package);
         }
         catch (Exception ex)
         {
@@ -55,13 +53,8 @@ public class ExcelUtil
     {
         try
         {
-            // 这里使用 EPPlus 库来实现 Excel 写入
-            // 实际使用时需要添加 EPPlus 包引用
-            // var package = new OfficeOpenXml.ExcelPackage(new FileInfo(filePath));
-            // return new ExcelWriter(package);
-            
-            // 暂时返回 null，实际使用时需要实现
-            throw new NotImplementedException("ExcelUtil 需要添加 EPPlus 包引用并实现");
+            var package = new ExcelPackage(new FileInfo(filePath));
+            return new ExcelWriter(package);
         }
         catch (Exception ex)
         {
