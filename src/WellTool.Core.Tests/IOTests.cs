@@ -40,15 +40,15 @@ namespace WellTool.Core.Tests
         public void EqualsTest()
         {
             // 源文件和目标文件都不存在
-            var srcFile = FileUtil.GetFile("d:/hutool.jpg");
-            var destFile = FileUtil.GetFile("d:/hutool.jpg");
+            var srcFile = FileUtil.GetFile("d:/welltool.jpg");
+            var destFile = FileUtil.GetFile("d:/welltool.jpg");
 
             var equals = FileUtil.Equals(srcFile, destFile);
             XAssert.True(equals);
 
             // 源文件存在，目标文件不存在
-            var srcFile1 = FileUtil.GetFile("hutool.jpg");
-            var destFile1 = FileUtil.GetFile("d:/hutool.jpg");
+            var srcFile1 = FileUtil.GetFile("welltool.jpg");
+            var destFile1 = FileUtil.GetFile("d:/welltool.jpg");
 
             var notEquals = FileUtil.Equals(srcFile1, destFile1);
             XAssert.False(notEquals);
@@ -223,35 +223,35 @@ namespace WellTool.Core.Tests
         [Fact]
         public void ExtNameTest()
         {
-            string path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\ddd\\" : "~/Desktop/hutool/ddd/";
+            string path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\ddd\\" : "~/Desktop/welltool/ddd/";
             string mainName = FileUtil.ExtName(path);
             XAssert.NotNull(mainName);
 
-            path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\ddd" : "~/Desktop/hutool/ddd";
+            path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\ddd" : "~/Desktop/welltool/ddd";
             mainName = FileUtil.ExtName(path);
             XAssert.NotNull(mainName);
 
-            path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\ddd.jpg" : "~/Desktop/hutool/ddd.jpg";
+            path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\ddd.jpg" : "~/Desktop/welltool/ddd.jpg";
             mainName = FileUtil.ExtName(path);
             XAssert.NotNull(mainName);
 
-            path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\fff.xlsx" : "~/Desktop/hutool/fff.xlsx";
+            path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\fff.xlsx" : "~/Desktop/welltool/fff.xlsx";
             mainName = FileUtil.ExtName(path);
             XAssert.NotNull(mainName);
 
-            path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.gz" : "~/Desktop/hutool/fff.tar.gz";
+            path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.gz" : "~/Desktop/welltool/fff.tar.gz";
             mainName = FileUtil.ExtName(path);
             XAssert.NotNull(mainName);
 
-            path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.Z" : "~/Desktop/hutool/fff.tar.Z";
+            path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.Z" : "~/Desktop/welltool/fff.tar.Z";
             mainName = FileUtil.ExtName(path);
             XAssert.NotNull(mainName);
 
-            path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.bz2" : "~/Desktop/hutool/fff.tar.bz2";
+            path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.bz2" : "~/Desktop/welltool/fff.tar.bz2";
             mainName = FileUtil.ExtName(path);
             XAssert.NotNull(mainName);
 
-            path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.xz" : "~/Desktop/hutool/fff.tar.xz";
+            path = FileUtil.IsWindows() ? "d:\\aaa\\bbb\\cc\\fff.tar.xz" : "~/Desktop/welltool/fff.tar.xz";
             mainName = FileUtil.ExtName(path);
             XAssert.NotNull(mainName);
         }

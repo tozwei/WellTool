@@ -74,8 +74,8 @@ namespace WellTool.Core.Bean.Copier
 					}
 				}
 
-				// 设置目标属性的值
-				targetPropDesc.SetValue(Target, value);
+				// 设置目标属性的值，考虑IgnoreNullValue选项
+				targetPropDesc.SetValue(Target, value, CopyOptions.IgnoreNullValue, CopyOptions.IgnoreError, CopyOptions.Override);
 			}
 
 			return Target;

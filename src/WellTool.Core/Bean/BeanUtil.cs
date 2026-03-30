@@ -301,8 +301,11 @@ namespace WellTool.Core.Bean
 				return null;
 			}
 
+			// 清除缓存，确保使用最新的BeanDesc
+			BeanDescCache.Clear();
+			
 			var beanDesc = GetBeanDesc(bean.GetType());
-			var propDesc = beanDesc.GetPropDesc(propertyName);
+			var propDesc = beanDesc.GetPropDesc(propertyName, true);
 			return propDesc?.GetValue(bean);
 		}
 
@@ -409,16 +412,40 @@ namespace WellTool.Core.Bean
 				return false;
 			}
 
+			// 清除缓存，确保使用最新的BeanDesc
+			BeanDescCache.Clear();
+			
 			var beanDesc = GetBeanDesc(bean1.GetType());
+			// 使用 HashSet 来避免重复比较相同的属性
+			var processedProperties = new HashSet<string>();
+			
 			foreach (var propDesc in beanDesc.PropDescs.Values)
 			{
-				if (propDesc.HasGetter)
+				// 只处理原始属性（字段名与PropDesc的FieldName相同）
+				if (propDesc.Field != null && propDesc.Field.Name == propDesc.FieldName && !processedProperties.Contains(propDesc.FieldName))
 				{
-					var value1 = propDesc.GetValue(bean1);
-					var value2 = propDesc.GetValue(bean2);
-					if (!Equals(value1, value2))
+					processedProperties.Add(propDesc.FieldName);
+					if (propDesc.HasGetter)
 					{
-						return false;
+						var value1 = propDesc.GetValue(bean1);
+						var value2 = propDesc.GetValue(bean2);
+						if (!Equals(value1, value2))
+						{
+							return false;
+						}
+					}
+				}
+				else if (propDesc.Property != null && propDesc.Property.Name == propDesc.FieldName && !processedProperties.Contains(propDesc.FieldName))
+				{
+					processedProperties.Add(propDesc.FieldName);
+					if (propDesc.HasGetter)
+					{
+						var value1 = propDesc.GetValue(bean1);
+						var value2 = propDesc.GetValue(bean2);
+						if (!Equals(value1, value2))
+						{
+							return false;
+						}
 					}
 				}
 			}
