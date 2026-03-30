@@ -10,39 +10,39 @@ namespace WellTool.System;
 /// </summary>
 public static class SystemUtil
 {
-    // ----- Java运行时环境信息 -----/
+    // ----- .Net运行时环境信息 -----/
     /// <summary>
-    /// Java 运行时环境规范名称的KEY
+    /// .Net 运行时环境规范名称的KEY
     /// </summary>
     public const string SPECIFICATION_NAME = SystemPropsKeys.SPECIFICATION_NAME;
 
     /// <summary>
-    /// Java 运行时环境版本的KEY
+    /// .Net 运行时环境版本的KEY
     /// </summary>
     public const string VERSION = SystemPropsKeys.VERSION;
 
     /// <summary>
-    /// Java 运行时环境规范版本的KEY
+    /// .Net 运行时环境规范版本的KEY
     /// </summary>
     public const string SPECIFICATION_VERSION = SystemPropsKeys.SPECIFICATION_VERSION;
 
     /// <summary>
-    /// Java 运行时环境供应商的KEY
+    /// .Net 运行时环境供应商的KEY
     /// </summary>
     public const string VENDOR = SystemPropsKeys.VENDOR;
 
     /// <summary>
-    /// Java 运行时环境规范供应商的KEY
+    /// .Net 运行时环境规范供应商的KEY
     /// </summary>
     public const string SPECIFICATION_VENDOR = SystemPropsKeys.SPECIFICATION_VENDOR;
 
     /// <summary>
-    /// Java 供应商的 URL的KEY
+    /// .Net 供应商的 URL的KEY
     /// </summary>
     public const string VENDOR_URL = SystemPropsKeys.VENDOR_URL;
 
     /// <summary>
-    /// Java 安装目录的KEY
+    /// .Net 安装目录的KEY
     /// </summary>
     public const string HOME = SystemPropsKeys.HOME;
 
@@ -66,45 +66,45 @@ public static class SystemUtil
     /// </summary>
     public const string EXT_DIRS = SystemPropsKeys.EXT_DIRS;
 
-    // ----- Java虚拟机信息 -----/
+    // ----- .Net虚拟机信息 -----/
     /// <summary>
-    /// Java 虚拟机实现名称的KEY
+    /// .Net 虚拟机实现名称的KEY
     /// </summary>
     public const string VM_NAME = SystemPropsKeys.VM_NAME;
 
     /// <summary>
-    /// Java 虚拟机规范名称的KEY
+    /// .Net 虚拟机规范名称的KEY
     /// </summary>
     public const string VM_SPECIFICATION_NAME = SystemPropsKeys.VM_SPECIFICATION_NAME;
 
     /// <summary>
-    /// Java 虚拟机实现版本的KEY
+    /// .Net 虚拟机实现版本的KEY
     /// </summary>
     public const string VM_VERSION = SystemPropsKeys.VM_VERSION;
 
     /// <summary>
-    /// Java 虚拟机规范版本的KEY
+    /// .Net 虚拟机规范版本的KEY
     /// </summary>
     public const string VM_SPECIFICATION_VERSION = SystemPropsKeys.VM_SPECIFICATION_VERSION;
 
     /// <summary>
-    /// Java 虚拟机实现供应商的KEY
+    /// .Net 虚拟机实现供应商的KEY
     /// </summary>
     public const string VM_VENDOR = SystemPropsKeys.VM_VENDOR;
 
     /// <summary>
-    /// Java 虚拟机规范供应商的KEY
+    /// .Net 虚拟机规范供应商的KEY
     /// </summary>
     public const string VM_SPECIFICATION_VENDOR = SystemPropsKeys.VM_SPECIFICATION_VENDOR;
 
-    // ----- Java类信息 -----/
+    // ----- .Net类信息 -----/
     /// <summary>
-    /// Java 类格式版本号的KEY
+    /// .Net 类格式版本号的KEY
     /// </summary>
     public const string CLASS_VERSION = SystemPropsKeys.CLASS_VERSION;
 
     /// <summary>
-    /// Java 类路径的KEY
+    /// .Net 类路径的KEY
     /// </summary>
     public const string CLASS_PATH = SystemPropsKeys.CLASS_PATH;
 
@@ -165,51 +165,6 @@ public static class SystemUtil
     }
 
     /// <summary>
-    /// 取得Java Virtual Machine Specification的信息
-    /// </summary>
-    /// <returns><see cref="JvmSpecInfo"/>对象</returns>
-    public static JvmSpecInfo GetJvmSpecInfo()
-    {
-        return JvmSpecInfo.Instance;
-    }
-
-    /// <summary>
-    /// 取得Java Virtual Machine Implementation的信息
-    /// </summary>
-    /// <returns><see cref="JvmInfo"/>对象</returns>
-    public static JvmInfo GetJvmInfo()
-    {
-        return JvmInfo.Instance;
-    }
-
-    /// <summary>
-    /// 取得Java Specification的信息
-    /// </summary>
-    /// <returns><see cref="JavaSpecInfo"/>对象</returns>
-    public static JavaSpecInfo GetJavaSpecInfo()
-    {
-        return JavaSpecInfo.Instance;
-    }
-
-    /// <summary>
-    /// 取得Java Implementation的信息
-    /// </summary>
-    /// <returns><see cref="JavaInfo"/>对象</returns>
-    public static JavaInfo GetJavaInfo()
-    {
-        return JavaInfo.Instance;
-    }
-
-    /// <summary>
-    /// 取得当前运行的JRE的信息
-    /// </summary>
-    /// <returns><see cref="JavaRuntimeInfo"/>对象</returns>
-    public static JavaRuntimeInfo GetJavaRuntimeInfo()
-    {
-        return JavaRuntimeInfo.Instance;
-    }
-
-    /// <summary>
     /// 取得.NET Virtual Machine Specification的信息
     /// </summary>
     /// <returns><see cref="NetVmSpecInfo"/>对象</returns>
@@ -254,6 +209,8 @@ public static class SystemUtil
         return NetRuntimeInfo.Instance;
     }
 
+
+
     /// <summary>
     /// 取得OS的信息
     /// </summary>
@@ -291,7 +248,7 @@ public static class SystemUtil
     }
 
     /// <summary>
-    /// 获取JVM中内存总大小
+    /// 获取.NET中内存总大小
     /// </summary>
     /// <returns>内存总大小</returns>
     public static long GetTotalMemory()
@@ -304,7 +261,7 @@ public static class SystemUtil
     }
 
     /// <summary>
-    /// 获取JVM中内存剩余大小
+    /// 获取.NET中内存剩余大小
     /// </summary>
     /// <returns>内存剩余大小</returns>
     public static long GetFreeMemory()
@@ -319,9 +276,9 @@ public static class SystemUtil
     }
 
     /// <summary>
-    /// 获取JVM可用的内存总大小
+    /// 获取.NET可用的内存总大小
     /// </summary>
-    /// <returns>JVM可用的内存总大小</returns>
+    /// <returns>.NET可用的内存总大小</returns>
     public static long GetMaxMemory()
     {
 #if NET6_0_OR_GREATER
@@ -347,16 +304,6 @@ public static class SystemUtil
     public static void DumpSystemInfo()
     {
         var sb = new StringBuilder();
-        sb.AppendLine("--------------");
-        sb.AppendLine(GetJvmSpecInfo().ToString());
-        sb.AppendLine("--------------");
-        sb.AppendLine(GetJvmInfo().ToString());
-        sb.AppendLine("--------------");
-        sb.AppendLine(GetJavaSpecInfo().ToString());
-        sb.AppendLine("--------------");
-        sb.AppendLine(GetJavaInfo().ToString());
-        sb.AppendLine("--------------");
-        sb.AppendLine(GetJavaRuntimeInfo().ToString());
         sb.AppendLine("--------------");
         sb.AppendLine(GetNetVmSpecInfo().ToString());
         sb.AppendLine("--------------");
