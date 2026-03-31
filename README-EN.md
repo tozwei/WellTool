@@ -5,7 +5,7 @@
 👉 <https://github.com/tozwei/WellTool> 👈
 👉 <https://gitee.com/zwell/WellTool> 👈
 
-## .Net版的Hutool
+## .NET Version of Hutool
 As the .NET version of Hutool, WellTool maintains the design philosophy and core functionality of Hutool, while being optimized and adapted for the .NET platform, providing .NET developers with a utility library that better aligns with language features.
 
 ## 📚Introduction
