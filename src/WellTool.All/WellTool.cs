@@ -112,4 +112,23 @@ public static class WellToolMain
     public static class System
     {
     }
+
+
+    // Poi 模块
+    //public static class Poi
+    //{
+    //    /// <summary>
+    //    /// Excel 工具类
+    //    /// </summary>
+    //    public static WellTool.Poi.ExcelUtil Excel => WellTool.Poi.ExcelUtil.Instance;
+    //}
+
+    //// Script 模块
+    //public static class Script
+    //{
+    //    /// <summary>
+    //    /// 脚本工具类
+    //    /// </summary>
+    //    public static WellTool.Script.ScriptUtil Util => WellTool.Script.ScriptUtil.Instance;
+    //}
 }
