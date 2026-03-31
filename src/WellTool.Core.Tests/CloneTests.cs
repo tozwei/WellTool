@@ -26,23 +26,23 @@ namespace WellTool.Core.Tests
             XAssert.Equal(dog, dog2);
         }
 
-        // [Fact]
-        // public void Clone0Test()
-        // {
-        //     var oldCar = new Car();
-        //     oldCar.Id = 1;
-        //     oldCar.WheelList = new List<Wheel> { new Wheel("h") };
+        [Fact]
+        public void Clone0Test()
+        {
+            var oldCar = new Car();
+            oldCar.Id = 1;
+            oldCar.WheelList = new List<Wheel> { new Wheel("h") };
 
-        //     var newCar = oldCar.Clone();
-        //     XAssert.Equal(oldCar.Id, newCar.Id);
-        //     XAssert.Equal(oldCar.WheelList, newCar.WheelList);
+            var newCar = oldCar.Clone();
+            XAssert.Equal(oldCar.Id, newCar.Id);
+            XAssert.Equal(oldCar.WheelList, newCar.WheelList);
 
-        //     newCar.Id = 2;
-        //     XAssert.NotEqual(oldCar.Id, newCar.Id);
-        //     newCar.WheelList.Add(new Wheel("s"));
+            newCar.Id = 2;
+            XAssert.NotEqual(oldCar.Id, newCar.Id);
+            newCar.WheelList.Add(new Wheel("s"));
 
-        //     XAssert.NotSame(oldCar, newCar);
-        // }
+            XAssert.NotSame(oldCar, newCar);
+        }
 
         //------------------------------------------------------------------------------- private Class for test
         /**

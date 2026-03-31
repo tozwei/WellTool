@@ -13,13 +13,13 @@ namespace WellTool.Core.Tests
     {
         #region Base64测试
 
-        // [Fact]
-        // public void IsBase64Test()
-        // {
-        //     var randomStr = RandomUtil.RandomString(1000);
-        //     var encoded = Base64.Encode(randomStr);
-        //     XAssert.True(Base64.IsBase64(encoded));
-        // }
+        [Fact]
+        public void IsBase64Test()
+        {
+            var randomStr = RandomUtil.RandomString(1000);
+            var encoded = Base64.Encode(randomStr);
+            XAssert.True(Base64.IsBase64(encoded));
+        }
 
         [Fact]
         public void IsBase64Test2()
@@ -115,14 +115,14 @@ namespace WellTool.Core.Tests
 
         #region Base58测试
 
-        // [Fact]
-        // public void Base58EncodeDecodeTest()
-        // {
-        //     string str = "Hello Base58";
-        //     string encoded = Base58.Encode(str);
-        //     string decoded = Base58.DecodeStr(encoded);
-        //     XAssert.Equal(str, decoded);
-        // }
+        [Fact]
+        public void Base58EncodeDecodeTest()
+        {
+            string str = "Hello Base58";
+            string encoded = Base58.Encode(str);
+            string decoded = Base58.DecodeStr(encoded);
+            XAssert.Equal(str, decoded);
+        }
 
         #endregion
 
@@ -168,15 +168,15 @@ namespace WellTool.Core.Tests
 
         #region Morse测试
 
-        // [Fact]
-        // public void MorseEncodeDecodeTest()
-        // {
-        //     string str = "HELLO";
-        //     var morse = new Morse();
-        //     string encoded = morse.Encode(str);
-        //     string decoded = morse.Decode(encoded);
-        //     XAssert.Equal(str, decoded);
-        // }
+        [Fact]
+        public void MorseEncodeDecodeTest()
+        {
+            string str = "HELLO";
+            var morse = new Morse();
+            string encoded = morse.Encode(str);
+            string decoded = morse.Decode(encoded);
+            XAssert.Equal(str, decoded);
+        }
 
         #endregion
 
@@ -208,30 +208,30 @@ namespace WellTool.Core.Tests
 
         #region BCD测试
 
-        // [Fact]
-        // public void BcdEncodeDecodeTest()
-        // {
-        //     string str = "1234567890";
-        //     byte[] encoded = BCD.Encode(str);
-        //     string decoded = BCD.Decode(encoded);
-        //     XAssert.Equal(str, decoded);
-        // }
+        [Fact]
+        public void BcdEncodeDecodeTest()
+        {
+            string str = "1234567890";
+            byte[] encoded = BCD.Encode(str);
+            string decoded = BCD.Decode(encoded);
+            XAssert.Equal(str, decoded);
+        }
 
         #endregion
 
         #region Base16测试
 
-        // [Fact]
-        // public void Base16EncodeDecodeTest()
-        // {
-        //     string str = "Hello Base16";
-        //     byte[] bytes = Encoding.UTF8.GetBytes(str);
-        //     var base16Codec = new Base16Codec();
-        //     string encoded = base16Codec.Encode(bytes);
-        //     byte[] decodedBytes = base16Codec.Decode(encoded);
-        //     string decoded = Encoding.UTF8.GetString(decodedBytes);
-        //     XAssert.Equal(str, decoded);
-        // }
+        [Fact]
+        public void Base16EncodeDecodeTest()
+        {
+            string str = "Hello Base16";
+            byte[] bytes = Encoding.UTF8.GetBytes(str);
+            var base16Codec = new Base16Codec();
+            string encoded = base16Codec.Encode(bytes);
+            byte[] decodedBytes = base16Codec.Decode(encoded);
+            string decoded = Encoding.UTF8.GetString(decodedBytes);
+            XAssert.Equal(str, decoded);
+        }
 
         #endregion
 

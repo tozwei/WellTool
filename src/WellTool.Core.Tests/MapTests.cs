@@ -197,25 +197,25 @@ namespace WellTool.Core.Tests
             Assert.Equal("4", objectArray[3][1]);
         }
 
-        // [Fact]
-        // public void SortJoinTest()
-        // {
-        //     var build = new Dictionary<string, string>
-        //     {
-        //         { "key1", "value1" },
-        //         { "key3", "value3" },
-        //         { "key2", "value2" }
-        //     };
+        [Fact]
+        public void SortJoinTest()
+        {
+            var build = new Dictionary<string, string>
+            {
+                { "key1", "value1" },
+                { "key3", "value3" },
+                { "key2", "value2" }
+            };
 
-        //     var join1 = MapUtil.SortJoin(build, string.Empty, string.Empty, false);
-        //     Assert.Equal("key1value1key2value2key3value3", join1);
+            var join1 = MapUtil.SortJoin(build, string.Empty, string.Empty, false);
+            Assert.Equal("key1value1key2value2key3value3", join1);
 
-        //     var join2 = MapUtil.SortJoin(build, string.Empty, string.Empty, false, "123");
-        //     Assert.Equal("key1value1key2value2key3value3123", join2);
+            var join2 = MapUtil.SortJoin(build, string.Empty, string.Empty, false, "123");
+            Assert.Equal("key1value1key2value2key3value3123", join2);
 
-        //     var join3 = MapUtil.SortJoin(build, string.Empty, string.Empty, false, "123", "abc");
-        //     Assert.Equal("key1value1key2value2key3value3123abc", join3);
-        // }
+            var join3 = MapUtil.SortJoin(build, string.Empty, string.Empty, false, "123", "abc");
+            Assert.Equal("key1value1key2value2key3value3123abc", join3);
+        }
 
         [Fact]
         public void OfEntriesTest()
@@ -226,211 +226,211 @@ namespace WellTool.Core.Tests
             Assert.Equal(2, map["b"]);
         }
 
-        // [Fact]
-        // public void GetIntTest()
-        // {
-        //     var map = new Dictionary<string, string> { { "age", "d" } };
-        //     Assert.Throws<FormatException>(() => MapUtil.GetInt(map, "age"));
-        // }
+        [Fact]
+        public void GetIntTest()
+        {
+            var map = new Dictionary<string, string> { { "age", "d" } };
+            Assert.Throws<FormatException>(() => MapUtil.GetInt(map, "age"));
+        }
 
-        // [Fact]
-        // public void JoinIgnoreNullTest()
-        // {
-        //     var v1 = Dict.Of().Set("id", 12).Set("name", "张三").Set("age", null);
-        //     var s = MapUtil.JoinIgnoreNull(v1, ",", "=");
-        //     Assert.Equal("id=12,name=张三", s);
-        // }
+        [Fact]
+        public void JoinIgnoreNullTest()
+        {
+            var v1 = Dict.Of().Set("id", 12).Set("name", "张三").Set("age", null);
+            var s = MapUtil.JoinIgnoreNull(v1, ",", "=");
+            Assert.Equal("id=12,name=张三", s);
+        }
 
-        // [Fact]
-        // public void RenameKeyTest()
-        // {
-        //     var v1 = Dict.Of().Set("id", 12).Set("name", "张三").Set("age", null);
-        //     var map = MapUtil.RenameKey(v1, "name", "newName");
-        //     Assert.Equal("张三", map["newName"]);
-        // }
+        [Fact]
+        public void RenameKeyTest()
+        {
+            var v1 = Dict.Of().Set("id", 12).Set("name", "张三").Set("age", null);
+            var map = MapUtil.RenameKey(v1, "name", "newName");
+            Assert.Equal("张三", map["newName"]);
+        }
 
-        // [Fact]
-        // public void RenameKeyMapEmptyNoChange()
-        // {
-        //     var map = new Dictionary<string, string>();
-        //     var result = MapUtil.RenameKey(map, "oldKey", "newKey");
-        //     Assert.True(result.Count == 0);
-        // }
+        [Fact]
+        public void RenameKeyMapEmptyNoChange()
+        {
+            var map = new Dictionary<string, string>();
+            var result = MapUtil.RenameKey(map, "oldKey", "newKey");
+            Assert.True(result.Count == 0);
+        }
 
-        // [Fact]
-        // public void RenameKeyOldKeyNotPresentNoChange()
-        // {
-        //     var map = new Dictionary<string, string> { { "anotherKey", "value" } };
-        //     var result = MapUtil.RenameKey(map, "oldKey", "newKey");
-        //     Assert.Equal(1, result.Count);
-        //     Assert.Equal("value", result["anotherKey"]);
-        // }
+        [Fact]
+        public void RenameKeyOldKeyNotPresentNoChange()
+        {
+            var map = new Dictionary<string, string> { { "anotherKey", "value" } };
+            var result = MapUtil.RenameKey(map, "oldKey", "newKey");
+            Assert.Equal(1, result.Count);
+            Assert.Equal("value", result["anotherKey"]);
+        }
 
-        // [Fact]
-        // public void RenameKeyOldKeyPresentNewKeyNotPresentKeyRenamed()
-        // {
-        //     var map = new Dictionary<string, string> { { "oldKey", "value" } };
-        //     var result = MapUtil.RenameKey(map, "oldKey", "newKey");
-        //     Assert.Equal(1, result.Count);
-        //     Assert.Equal("value", result["newKey"]);
-        // }
+        [Fact]
+        public void RenameKeyOldKeyPresentNewKeyNotPresentKeyRenamed()
+        {
+            var map = new Dictionary<string, string> { { "oldKey", "value" } };
+            var result = MapUtil.RenameKey(map, "oldKey", "newKey");
+            Assert.Equal(1, result.Count);
+            Assert.Equal("value", result["newKey"]);
+        }
 
-        // [Fact]
-        // public void RenameKeyNewKeyPresentThrowsException()
-        // {
-        //     var map = new Dictionary<string, string> { { "oldKey", "value" }, { "newKey", "existingValue" } };
-        //     Assert.Throws<ArgumentException>(() => MapUtil.RenameKey(map, "oldKey", "newKey"));
-        // }
+        [Fact]
+        public void RenameKeyNewKeyPresentThrowsException()
+        {
+            var map = new Dictionary<string, string> { { "oldKey", "value" }, { "newKey", "existingValue" } };
+            Assert.Throws<ArgumentException>(() => MapUtil.RenameKey(map, "oldKey", "newKey"));
+        }
 
-        // [Fact]
-        // public void Issue3162Test()
-        // {
-        //     var map = new Dictionary<string, object>
-        //     {
-        //         { "a", "1" },
-        //         { "b", "2" },
-        //         { "c", "3" }
-        //     };
-        //     var filtered = MapUtil.Filter(map, "a", "b");
-        //     Assert.Equal(2, filtered.Count);
-        //     Assert.Equal("1", filtered["a"]);
-        //     Assert.Equal("2", filtered["b"]);
-        // }
+        [Fact]
+        public void Issue3162Test()
+        {
+            var map = new Dictionary<string, object>
+            {
+                { "a", "1" },
+                { "b", "2" },
+                { "c", "3" }
+            };
+            var filtered = MapUtil.Filter(map, "a", "b");
+            Assert.Equal(2, filtered.Count);
+            Assert.Equal("1", filtered["a"]);
+            Assert.Equal("2", filtered["b"]);
+        }
 
-        // [Fact]
-        // public void PartitionNullMapThrowsException()
-        // {
-        //     Assert.Throws<ArgumentException>(() => MapUtil.Partition(null, 2));
-        // }
+        [Fact]
+        public void PartitionNullMapThrowsException()
+        {
+            Assert.Throws<ArgumentException>(() => MapUtil.Partition(null, 2));
+        }
 
-        // [Fact]
-        // public void PartitionSizeZeroThrowsException()
-        // {
-        //     var map = new Dictionary<string, string> { { "a", "1" } };
-        //     Assert.Throws<ArgumentException>(() => MapUtil.Partition(map, 0));
-        // }
+        [Fact]
+        public void PartitionSizeZeroThrowsException()
+        {
+            var map = new Dictionary<string, string> { { "a", "1" } };
+            Assert.Throws<ArgumentException>(() => MapUtil.Partition(map, 0));
+        }
 
-        // [Fact]
-        // public void PartitionSizeNegativeThrowsException()
-        // {
-        //     var map = new Dictionary<string, string> { { "a", "1" } };
-        //     Assert.Throws<ArgumentException>(() => MapUtil.Partition(map, -1));
-        // }
+        [Fact]
+        public void PartitionSizeNegativeThrowsException()
+        {
+            var map = new Dictionary<string, string> { { "a", "1" } };
+            Assert.Throws<ArgumentException>(() => MapUtil.Partition(map, -1));
+        }
 
-        // [Fact]
-        // public void PartitionEmptyMapReturnsEmptyList()
-        // {
-        //     var map = new Dictionary<string, string>();
-        //     var result = MapUtil.Partition(map, 2);
-        //     Assert.True(result.Count == 0);
-        // }
+        [Fact]
+        public void PartitionEmptyMapReturnsEmptyList()
+        {
+            var map = new Dictionary<string, string>();
+            var result = MapUtil.Partition(map, 2);
+            Assert.True(result.Count == 0);
+        }
 
-        // [Fact]
-        // public void PartitionMapSizeMultipleOfSizePartitionsCorrectly()
-        // {
-        //     var map = new Dictionary<string, string>
-        //     {
-        //         { "a", "1" },
-        //         { "b", "2" },
-        //         { "c", "3" },
-        //         { "d", "4" }
-        //     };
+        [Fact]
+        public void PartitionMapSizeMultipleOfSizePartitionsCorrectly()
+        {
+            var map = new Dictionary<string, string>
+            {
+                { "a", "1" },
+                { "b", "2" },
+                { "c", "3" },
+                { "d", "4" }
+            };
 
-        //     var result = MapUtil.Partition(map, 2);
+            var result = MapUtil.Partition(map, 2);
 
-        //     Assert.Equal(2, result.Count);
-        //     Assert.Equal(2, result[0].Count);
-        //     Assert.Equal(2, result[1].Count);
-        // }
+            Assert.Equal(2, result.Count);
+            Assert.Equal(2, result[0].Count);
+            Assert.Equal(2, result[1].Count);
+        }
 
-        // [Fact]
-        // public void PartitionMapSizeNotMultipleOfSizePartitionsCorrectly()
-        // {
-        //     var map = new Dictionary<string, string>
-        //     {
-        //         { "a", "1" },
-        //         { "b", "2" },
-        //         { "c", "3" },
-        //         { "d", "4" },
-        //         { "e", "5" }
-        //     };
+        [Fact]
+        public void PartitionMapSizeNotMultipleOfSizePartitionsCorrectly()
+        {
+            var map = new Dictionary<string, string>
+            {
+                { "a", "1" },
+                { "b", "2" },
+                { "c", "3" },
+                { "d", "4" },
+                { "e", "5" }
+            };
 
-        //     var result = MapUtil.Partition(map, 2);
+            var result = MapUtil.Partition(map, 2);
 
-        //     Assert.Equal(3, result.Count);
-        //     Assert.Equal(2, result[0].Count);
-        //     Assert.Equal(2, result[1].Count);
-        //     Assert.Equal(1, result[2].Count);
-        // }
+            Assert.Equal(3, result.Count);
+            Assert.Equal(2, result[0].Count);
+            Assert.Equal(2, result[1].Count);
+            Assert.Equal(1, result[2].Count);
+        }
 
-        // [Fact]
-        // public void PartitionGeneralCasePartitionsCorrectly()
-        // {
-        //     var map = new Dictionary<string, string>
-        //     {
-        //         { "a", "1" },
-        //         { "b", "2" },
-        //         { "c", "3" },
-        //         { "d", "4" },
-        //         { "e", "5" },
-        //         { "f", "6" }
-        //     };
+        [Fact]
+        public void PartitionGeneralCasePartitionsCorrectly()
+        {
+            var map = new Dictionary<string, string>
+            {
+                { "a", "1" },
+                { "b", "2" },
+                { "c", "3" },
+                { "d", "4" },
+                { "e", "5" },
+                { "f", "6" }
+            };
 
-        //     var result = MapUtil.Partition(map, 3);
+            var result = MapUtil.Partition(map, 3);
 
-        //     Assert.Equal(2, result.Count);
-        //     Assert.Equal(3, result[0].Count);
-        //     Assert.Equal(3, result[1].Count);
-        // }
+            Assert.Equal(2, result.Count);
+            Assert.Equal(3, result[0].Count);
+            Assert.Equal(3, result[1].Count);
+        }
 
-        // [Fact]
-        // public void ComputeIfAbsentKeyExistsReturnsExistingValue()
-        // {
-        //     var map = new Dictionary<string, int> { { "key", 10 } };
-        //     var result = MapUtil.ComputeIfAbsent(map, "key", k => 20);
-        //     Assert.Equal(10, result);
-        // }
+        [Fact]
+        public void ComputeIfAbsentKeyExistsReturnsExistingValue()
+        {
+            var map = new Dictionary<string, int> { { "key", 10 } };
+            var result = MapUtil.ComputeIfAbsent(map, "key", k => 20);
+            Assert.Equal(10, result);
+        }
 
-        // [Fact]
-        // public void ComputeIfAbsentKeyDoesNotExistComputesAndInsertsValue()
-        // {
-        //     var map = new Dictionary<string, int>();
-        //     var result = MapUtil.ComputeIfAbsent(map, "key", k => 20);
-        //     Assert.Equal(20, result);
-        //     Assert.Equal(20, map["key"]);
-        // }
+        [Fact]
+        public void ComputeIfAbsentKeyDoesNotExistComputesAndInsertsValue()
+        {
+            var map = new Dictionary<string, int>();
+            var result = MapUtil.ComputeIfAbsent(map, "key", k => 20);
+            Assert.Equal(20, result);
+            Assert.Equal(20, map["key"]);
+        }
 
-        // [Fact]
-        // public void ComputeIfAbsentNullValueComputesAndInsertsValue()
-        // {
-        //     var map = new Dictionary<string, int?> { { "key", null } };
-        //     var result = MapUtil.ComputeIfAbsent(map, "key", k => 20);
-        //     Assert.Equal(20, result);
-        //     Assert.Equal(20, map["key"]);
-        // }
+        [Fact]
+        public void ComputeIfAbsentNullValueComputesAndInsertsValue()
+        {
+            var map = new Dictionary<string, int?> { { "key", null } };
+            var result = MapUtil.ComputeIfAbsent(map, "key", k => 20);
+            Assert.Equal(20, result);
+            Assert.Equal(20, map["key"]);
+        }
 
-        // [Fact]
-        // public void ComputeIfAbsentEmptyMapInsertsValue()
-        // {
-        //     var map = new Dictionary<string, int>();
-        //     var result = MapUtil.ComputeIfAbsent(map, "newKey", k => 100);
-        //     Assert.Equal(100, result);
-        //     Assert.Equal(100, map["newKey"]);
-        // }
+        [Fact]
+        public void ComputeIfAbsentEmptyMapInsertsValue()
+        {
+            var map = new Dictionary<string, int>();
+            var result = MapUtil.ComputeIfAbsent(map, "newKey", k => 100);
+            Assert.Equal(100, result);
+            Assert.Equal(100, map["newKey"]);
+        }
 
-        // [Fact]
-        // public void ValuesOfKeysEmptyIteratorReturnsEmptyList()
-        // {
-        //     var map = new Dictionary<string, string>
-        //     {
-        //         { "a", "1" },
-        //         { "b", "2" },
-        //         { "c", "3" }
-        //     };
-        //     var emptyIterator = System.Linq.Enumerable.Empty<string>().GetEnumerator();
-        //     var result = MapUtil.ValuesOfKeys(map, emptyIterator);
-        //     Assert.True(result.Count == 0);
-        // }
+        [Fact]
+        public void ValuesOfKeysEmptyIteratorReturnsEmptyList()
+        {
+            var map = new Dictionary<string, string>
+            {
+                { "a", "1" },
+                { "b", "2" },
+                { "c", "3" }
+            };
+            var emptyIterator = System.Linq.Enumerable.Empty<string>().GetEnumerator();
+            var result = MapUtil.ValuesOfKeys(map, emptyIterator);
+            Assert.True(result.Count == 0);
+        }
 
         // [Fact]
         // public void ValuesOfKeysNonEmptyIteratorReturnsValuesList()

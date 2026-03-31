@@ -89,27 +89,27 @@ namespace WellTool.Core.Tests
             XAssert.True(isNotEmpty);
         }
 
-        // [Fact]
-        // public void HashTest()
-        // {
-        //     string str = "test";
-        //     byte[] data = System.Text.Encoding.UTF8.GetBytes(str);
+        [Fact]
+        public void HashTest()
+        {
+            string str = "test";
+            byte[] data = System.Text.Encoding.UTF8.GetBytes(str);
 
-        //     // 测试MD5
-        //     string md5 = WellTool.Core.Lang.Hash.MD5(data);
-        //     XAssert.NotNull(md5);
-        //     XAssert.Equal(32, md5.Length);
+            // 测试MD5
+            string md5 = WellTool.Core.Lang.Hash.MD5(data);
+            XAssert.NotNull(md5);
+            XAssert.Equal(32, md5.Length);
 
-        //     // 测试SHA1
-        //     string sha1 = WellTool.Core.Lang.Hash.SHA1(data);
-        //     XAssert.NotNull(sha1);
-        //     XAssert.Equal(40, sha1.Length);
+            // 测试SHA1
+            string sha1 = WellTool.Core.Lang.Hash.SHA1(data);
+            XAssert.NotNull(sha1);
+            XAssert.Equal(40, sha1.Length);
 
-        //     // 测试SHA256
-        //     string sha256 = WellTool.Core.Lang.Hash.SHA256(data);
-        //     XAssert.NotNull(sha256);
-        //     XAssert.Equal(64, sha256.Length);
-        // }
+            // 测试SHA256
+            string sha256 = WellTool.Core.Lang.Hash.SHA256(data);
+            XAssert.NotNull(sha256);
+            XAssert.Equal(64, sha256.Length);
+        }
 
         [Fact]
         public void TestFunc()

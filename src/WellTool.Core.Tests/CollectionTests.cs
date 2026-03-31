@@ -78,23 +78,23 @@ namespace WellTool.Core.Tests
             Assert.Contains(6, target);
         }
 
-        // [Fact]
-        // public void TestBoundedPriorityQueue()
-        // {
-        //     // 测试有界优先队列
-        //     var queue = new WellTool.Core.Collection.BoundedPriorityQueue<int>(3, (a, b) => a.CompareTo(b));
-        //     
-        //     // 添加元素
-        //     queue.Add(3);
-        //     queue.Add(1);
-        //     queue.Add(2);
-        //     
-        //     // 队列已满，添加新元素会移除最小的元素
-        //     queue.Add(4);
-        //     
-        //     Assert.Equal(3, queue.Count);
-        //     Assert.Equal(2, queue.Peek());
-        // }
+        [Fact]
+        public void TestBoundedPriorityQueue()
+        {
+            // 测试有界优先队列
+            var queue = new WellTool.Core.Collection.BoundedPriorityQueue<int>(3, (a, b) => a.CompareTo(b));
+            
+            // 添加元素
+            queue.Add(3);
+            queue.Add(1);
+            queue.Add(2);
+            
+            // 队列已满，添加新元素会移除最小的元素
+            queue.Add(4);
+            
+            Assert.Equal(3, queue.Count);
+            Assert.Equal(2, queue.Peek());
+        }
 
         [Fact]
         public void TestConcurrentHashSet()
