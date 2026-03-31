@@ -14,6 +14,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Collections.Generic;
+using WellTool.DB.Dialect;
 
 namespace WellTool.DB;
 
@@ -28,12 +29,18 @@ public class Db : IDisposable
     private DbConnection _connection;
 
     /// <summary>
+    /// 数据库方言
+    /// </summary>
+    private IDialect _dialect;
+
+    /// <summary>
     /// 构造函数
     /// </summary>
     /// <param name="connection">数据库连接</param>
     public Db(DbConnection connection)
     {
         _connection = connection;
+        _dialect = DialectFactory.GetDialect(connection);
         if (_connection.State != ConnectionState.Open)
         {
             _connection.Open();
@@ -109,9 +116,9 @@ public class Db : IDisposable
     public int Insert(string tableName, Entity entity)
     {
         var fields = entity.GetFieldNames();
-        var fieldNames = string.Join(", ", fields);
+        var fieldNames = string.Join(", ", fields.Select(f => _dialect.Quote(f)));
         var placeholders = string.Join(", ", fields.Select(f => $"@{f}"));
-        var sql = $"INSERT INTO {tableName} ({fieldNames}) VALUES ({placeholders})";
+        var sql = $"INSERT INTO {_dialect.Quote(tableName)} ({fieldNames}) VALUES ({placeholders})";
         var parameters = fields.Select(f => CreateParameter(f, entity[f])).ToArray();
         return Execute(sql, parameters);
     }
@@ -127,8 +134,8 @@ public class Db : IDisposable
     public int Update(string tableName, Entity entity, string whereClause, params DbParameter[] whereParameters)
     {
         var fields = entity.GetFieldNames();
-        var setClause = string.Join(", ", fields.Select(f => $"{f} = @{f}"));
-        var sql = $"UPDATE {tableName} SET {setClause} WHERE {whereClause}";
+        var setClause = string.Join(", ", fields.Select(f => $"{_dialect.Quote(f)} = @{f}"));
+        var sql = $"UPDATE {_dialect.Quote(tableName)} SET {setClause} WHERE {whereClause}";
         var parameters = fields.Select(f => CreateParameter(f, entity[f])).Concat(whereParameters).ToArray();
         return Execute(sql, parameters);
     }
@@ -142,8 +149,65 @@ public class Db : IDisposable
     /// <returns>受影响的行数</returns>
     public int Delete(string tableName, string whereClause, params DbParameter[] parameters)
     {
-        var sql = $"DELETE FROM {tableName} WHERE {whereClause}";
+        var sql = $"DELETE FROM {_dialect.Quote(tableName)} WHERE {whereClause}";
         return Execute(sql, parameters);
+    }
+
+    /// <summary>
+    /// 分页查询
+    /// </summary>
+    /// <param name="sql">SQL 语句</param>
+    /// <param name="page">分页参数</param>
+    /// <param name="parameters">参数</param>
+    /// <returns>分页结果</returns>
+    public PageResult<Entity> QueryPage(string sql, Page page, params DbParameter[] parameters)
+    {
+        // 构建总记录数查询 SQL
+        var countSql = $"SELECT COUNT(*) FROM ({sql}) t";
+        var total = Scalar<long>(countSql, parameters);
+
+        // 构建分页 SQL
+        var paginationSql = _dialect.BuildPaginationSql(sql, page.GetOffset(), page.GetLimit());
+        var data = Query(paginationSql, parameters);
+
+        return new PageResult<Entity>(data, total, page);
+    }
+
+    /// <summary>
+    /// 开始事务
+    /// </summary>
+    /// <returns>事务</returns>
+    public DbTransaction BeginTransaction()
+    {
+        return _connection.BeginTransaction();
+    }
+
+    /// <summary>
+    /// 开始事务
+    /// </summary>
+    /// <param name="isolationLevel">隔离级别</param>
+    /// <returns>事务</returns>
+    public DbTransaction BeginTransaction(IsolationLevel isolationLevel)
+    {
+        return _connection.BeginTransaction(isolationLevel);
+    }
+
+    /// <summary>
+    /// 获取数据库连接
+    /// </summary>
+    /// <returns>数据库连接</returns>
+    public DbConnection GetConnection()
+    {
+        return _connection;
+    }
+
+    /// <summary>
+    /// 获取数据库方言
+    /// </summary>
+    /// <returns>数据库方言</returns>
+    public IDialect GetDialect()
+    {
+        return _dialect;
     }
 
     /// <summary>

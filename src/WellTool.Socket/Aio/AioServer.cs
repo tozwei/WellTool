@@ -15,7 +15,7 @@ public class AioServer : IDisposable
 	private readonly ILogger<AioServer>? _logger;
 	private System.Net.Sockets.Socket? _serverSocket;
 	protected IIoAction<byte[]>? IoAction;
-	protected readonly SocketConfig Config;
+	public readonly SocketConfig Config;
 	private readonly CancellationTokenSource _cts = new();
 
 	/// <summary>

@@ -27,7 +27,7 @@ public class ExcelUtilTests
         try
         {
             // 首先创建一个写入器并写入一些数据
-            using var writer = WellTool.Poi.ExcelUtil.Instance.GetWriter(tempFile);
+            using var writer = WellTool.Poi.ExcelUtil.GetWriter(tempFile);
             var sheetIndex = writer.CreateSheet("Sheet1");
             
             var data = new List<List<object?>>
@@ -41,7 +41,7 @@ public class ExcelUtilTests
             writer.Save();
             
             // 然后创建读取器并读取数据
-            using var reader = WellTool.Poi.ExcelUtil.Instance.GetReader(tempFile);
+            using var reader = WellTool.Poi.ExcelUtil.GetReader(tempFile);
             var readData = reader.ReadSheet(0);
             
             // 验证读取的数据与写入的数据一致
@@ -89,7 +89,7 @@ public class ExcelUtilTests
         try
         {
             // 创建写入器并写入一些数据
-            using var writer = WellTool.Poi.ExcelUtil.Instance.GetWriter(tempFile);
+            using var writer = WellTool.Poi.ExcelUtil.GetWriter(tempFile);
             var sheetIndex = writer.CreateSheet("Sheet1");
             
             var data = new List<List<object?>>

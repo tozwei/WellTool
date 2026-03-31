@@ -57,30 +57,54 @@ public class WordTree
     }
 
     /// <summary>
-    /// 查找文本中的敏感词
-    /// </summary>
-    /// <param name="text">文本</param>
-    /// <returns>敏感词列表</returns>
-    public List<FoundWord> FindAll(string text)
-    {
-        var result = new List<FoundWord>();
-        if (string.IsNullOrEmpty(text))
+        /// 查找文本中的敏感词
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <returns>敏感词列表</returns>
+        public List<FoundWord> FindAll(string text)
         {
+            var result = new List<FoundWord>();
+            if (string.IsNullOrEmpty(text))
+            {
+                return result;
+            }
+
+            for (var i = 0; i < text.Length; i++)
+            {
+                var found = Find(text, i);
+                if (found != null)
+                {
+                    result.Add(found);
+                    i += found.Word.Length - 1;
+                }
+            }
+
             return result;
         }
 
-        for (var i = 0; i < text.Length; i++)
+        /// <summary>
+        /// 查找文本中的第一个敏感词
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <returns>第一个找到的敏感词</returns>
+        public FoundWord? FindFirst(string text)
         {
-            var found = Find(text, i);
-            if (found != null)
+            if (string.IsNullOrEmpty(text))
             {
-                result.Add(found);
-                i += found.Word.Length - 1;
+                return null;
             }
-        }
 
-        return result;
-    }
+            for (var i = 0; i < text.Length; i++)
+            {
+                var found = Find(text, i);
+                if (found != null)
+                {
+                    return found;
+                }
+            }
+
+            return null;
+        }
 
     /// <summary>
     /// 从指定位置开始查找敏感词
