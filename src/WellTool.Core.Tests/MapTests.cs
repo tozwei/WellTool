@@ -236,7 +236,7 @@ namespace WellTool.Core.Tests
         [Fact]
         public void JoinIgnoreNullTest()
         {
-            var v1 = Dict.Of().Set("id", 12).Set("name", "张三").Set("age", null);
+            var v1 = new Dictionary<string, object> { { "id", 12 }, { "name", "张三" }, { "age", null } };
             var s = MapUtil.JoinIgnoreNull(v1, ",", "=");
             Assert.Equal("id=12,name=张三", s);
         }
@@ -244,7 +244,7 @@ namespace WellTool.Core.Tests
         [Fact]
         public void RenameKeyTest()
         {
-            var v1 = Dict.Of().Set("id", 12).Set("name", "张三").Set("age", null);
+            var v1 = new Dictionary<string, object> { { "id", 12 }, { "name", "张三" }, { "age", null } };
             var map = MapUtil.RenameKey(v1, "name", "newName");
             Assert.Equal("张三", map["newName"]);
         }
@@ -300,7 +300,7 @@ namespace WellTool.Core.Tests
         [Fact]
         public void PartitionNullMapThrowsException()
         {
-            Assert.Throws<ArgumentException>(() => MapUtil.Partition(null, 2));
+            Assert.Throws<ArgumentException>(() => MapUtil.Partition<string, string>(null, 2));
         }
 
         [Fact]
@@ -432,53 +432,53 @@ namespace WellTool.Core.Tests
             Assert.True(result.Count == 0);
         }
 
-        // [Fact]
-        // public void ValuesOfKeysNonEmptyIteratorReturnsValuesList()
-        // {
-        //     var map = new Dictionary<string, string>
-        //     {
-        //         { "a", "1" },
-        //         { "b", "2" },
-        //         { "c", "3" }
-        //     };
-        //     var iterator = new List<string> { "a", "b" }.GetEnumerator();
-        //     var result = MapUtil.ValuesOfKeys(map, iterator);
-        //     Assert.Equal(new List<string> { "1", "2" }, result);
-        // }
+        [Fact]
+        public void ValuesOfKeysNonEmptyIteratorReturnsValuesList()
+        {
+            var map = new Dictionary<string, string>
+            {
+                { "a", "1" },
+                { "b", "2" },
+                { "c", "3" }
+            };
+            var iterator = new List<string> { "a", "b" }.GetEnumerator();
+            var result = MapUtil.ValuesOfKeys(map, iterator);
+            Assert.Equal(new List<string> { "1", "2" }, result);
+        }
 
-        // [Fact]
-        // public void ValuesOfKeysKeysNotInMapReturnsNulls()
-        // {
-        //     var map = new Dictionary<string, string>
-        //     {
-        //         { "a", "1" },
-        //         { "b", "2" },
-        //         { "c", "3" }
-        //     };
-        //     var iterator = new List<string> { "d", "e" }.GetEnumerator();
-        //     var result = MapUtil.ValuesOfKeys(map, iterator);
-        //     Assert.Equal(new List<string> { null, null }, result);
-        // }
+        [Fact]
+        public void ValuesOfKeysKeysNotInMapReturnsNulls()
+        {
+            var map = new Dictionary<string, string>
+            {
+                { "a", "1" },
+                { "b", "2" },
+                { "c", "3" }
+            };
+            var iterator = new List<string> { "d", "e" }.GetEnumerator();
+            var result = MapUtil.ValuesOfKeys(map, iterator);
+            Assert.Equal(new List<string> { null, null }, result);
+        }
 
-        // [Fact]
-        // public void ValuesOfKeysMixedKeysReturnsMixedValues()
-        // {
-        //     var map = new Dictionary<string, string>
-        //     {
-        //         { "a", "1" },
-        //         { "b", "2" },
-        //         { "c", "3" }
-        //     };
-        //     var iterator = new List<string> { "a", "d", "b" }.GetEnumerator();
-        //     var result = MapUtil.ValuesOfKeys(map, iterator);
-        //     Assert.Equal(new List<string> { "1", null, "2" }, result);
-        // }
+        [Fact]
+        public void ValuesOfKeysMixedKeysReturnsMixedValues()
+        {
+            var map = new Dictionary<string, string>
+            {
+                { "a", "1" },
+                { "b", "2" },
+                { "c", "3" }
+            };
+            var iterator = new List<string> { "a", "d", "b" }.GetEnumerator();
+            var result = MapUtil.ValuesOfKeys(map, iterator);
+            Assert.Equal(new List<string> { "1", null, "2" }, result);
+        }
 
-        // [Fact]
-        // public void ClearNoMapsProvidedNoAction()
-        // {
-        //     MapUtil.Clear();
-        // }
+        [Fact]
+        public void ClearNoMapsProvidedNoAction()
+        {
+            MapUtil.Clear<string, string>();
+        }
 
         [Fact]
         public void ClearEmptyMapNoChange()
@@ -496,31 +496,31 @@ namespace WellTool.Core.Tests
             Assert.True(map.Count == 0);
         }
 
-        // [Fact]
-        // public void ClearMultipleMapsClearsNonEmptyMaps()
-        // {
-        //     var map1 = new Dictionary<string, string> { { "key1", "value1" } };
-        //     var map2 = new Dictionary<string, string> { { "key2", "value2" } };
-        //     var map3 = new Dictionary<string, string>();
+        [Fact]
+        public void ClearMultipleMapsClearsNonEmptyMaps()
+        {
+            var map1 = new Dictionary<string, string> { { "key1", "value1" } };
+            var map2 = new Dictionary<string, string> { { "key2", "value2" } };
+            var map3 = new Dictionary<string, string>();
 
-        //     MapUtil.Clear(map1, map2, map3);
+            MapUtil.Clear(map1, map2, map3);
 
-        //     Assert.True(map1.Count == 0);
-        //     Assert.True(map2.Count == 0);
-        //     Assert.True(map3.Count == 0);
-        // }
+            Assert.True(map1.Count == 0);
+            Assert.True(map2.Count == 0);
+            Assert.True(map3.Count == 0);
+        }
 
-        // [Fact]
-        // public void ClearMixedMapsClearsNonEmptyMaps()
-        // {
-        //     var map = new Dictionary<string, string> { { "key", "value" } };
-        //     var emptyMap = new Dictionary<string, string>();
+        [Fact]
+        public void ClearMixedMapsClearsNonEmptyMaps()
+        {
+            var map = new Dictionary<string, string> { { "key", "value" } };
+            var emptyMap = new Dictionary<string, string>();
 
-        //     MapUtil.Clear(map, emptyMap);
+            MapUtil.Clear(map, emptyMap);
 
-        //     Assert.True(map.Count == 0);
-        //     Assert.True(emptyMap.Count == 0);
-        // }
+            Assert.True(map.Count == 0);
+            Assert.True(emptyMap.Count == 0);
+        }
 
         [Fact]
         public void EmptyNoParametersReturnsEmptyMap()
@@ -529,68 +529,68 @@ namespace WellTool.Core.Tests
             Assert.True(emptyMap.Count == 0);
         }
 
-        // [Fact]
-        // public void RemoveNullValueNullMapReturnsNull()
-        // {
-        //     var result = MapUtil.RemoveNullValue<string, string>(null);
-        //     Assert.Null(result);
-        // }
+        [Fact]
+        public void RemoveNullValueNullMapReturnsNull()
+        {
+            var result = MapUtil.RemoveNullValue<string, string>(null);
+            Assert.Null(result);
+        }
 
-        // [Fact]
-        // public void RemoveNullValueEmptyMapReturnsEmptyMap()
-        // {
-        //     var map = new Dictionary<string, string>();
-        //     var result = MapUtil.RemoveNullValue(map);
-        //     Assert.Equal(0, result.Count);
-        // }
+        [Fact]
+        public void RemoveNullValueEmptyMapReturnsEmptyMap()
+        {
+            var map = new Dictionary<string, string>();
+            var result = MapUtil.RemoveNullValue(map);
+            Assert.Equal(0, result.Count);
+        }
 
-        // [Fact]
-        // public void RemoveNullValueNoNullValuesReturnsSameMap()
-        // {
-        //     var map = new Dictionary<string, string>
-        //     {
-        //         { "key1", "value1" },
-        //         { "key2", "value2" }
-        //     };
+        [Fact]
+        public void RemoveNullValueNoNullValuesReturnsSameMap()
+        {
+            var map = new Dictionary<string, string>
+            {
+                { "key1", "value1" },
+                { "key2", "value2" }
+            };
 
-        //     var result = MapUtil.RemoveNullValue(map);
+            var result = MapUtil.RemoveNullValue(map);
 
-        //     Assert.Equal(2, result.Count);
-        //     Assert.Equal("value1", result["key1"]);
-        //     Assert.Equal("value2", result["key2"]);
-        // }
+            Assert.Equal(2, result.Count);
+            Assert.Equal("value1", result["key1"]);
+            Assert.Equal("value2", result["key2"]);
+        }
 
-        // [Fact]
-        // public void RemoveNullValueWithNullValuesRemovesNullEntries()
-        // {
-        //     var map = new Dictionary<string, string>
-        //     {
-        //         { "key1", "value1" },
-        //         { "key2", null },
-        //         { "key3", "value3" }
-        //     };
+        [Fact]
+        public void RemoveNullValueWithNullValuesRemovesNullEntries()
+        {
+            var map = new Dictionary<string, string>
+            {
+                { "key1", "value1" },
+                { "key2", null },
+                { "key3", "value3" }
+            };
 
-        //     var result = MapUtil.RemoveNullValue(map);
+            var result = MapUtil.RemoveNullValue(map);
 
-        //     Assert.Equal(2, result.Count);
-        //     Assert.Equal("value1", result["key1"]);
-        //     Assert.Equal("value3", result["key3"]);
-        //     Assert.False(result.ContainsKey("key2"));
-        // }
+            Assert.Equal(2, result.Count);
+            Assert.Equal("value1", result["key1"]);
+            Assert.Equal("value3", result["key3"]);
+            Assert.False(result.ContainsKey("key2"));
+        }
 
-        // [Fact]
-        // public void RemoveNullValueAllNullValuesReturnsEmptyMap()
-        // {
-        //     var map = new Dictionary<string, string>
-        //     {
-        //         { "key1", null },
-        //         { "key2", null }
-        //     };
+        [Fact]
+        public void RemoveNullValueAllNullValuesReturnsEmptyMap()
+        {
+            var map = new Dictionary<string, string>
+            {
+                { "key1", null },
+                { "key2", null }
+            };
 
-        //     var result = MapUtil.RemoveNullValue(map);
+            var result = MapUtil.RemoveNullValue(map);
 
-        //     Assert.Equal(0, result.Count);
-        // }
+            Assert.Equal(0, result.Count);
+        }
 
         [Fact]
         public void GetQuietlyMapIsNullReturnsDefaultValue()

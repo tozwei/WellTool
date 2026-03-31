@@ -82,15 +82,15 @@ namespace WellTool.Core.Tests
         public void TestBoundedPriorityQueue()
         {
             // 测试有界优先队列
-            var queue = new WellTool.Core.Collection.BoundedPriorityQueue<int>(3, (a, b) => a.CompareTo(b));
+            var queue = new WellTool.Core.Collection.BoundedPriorityQueue<int>(3, Comparer<int>.Create((a, b) => a.CompareTo(b)));
             
             // 添加元素
-            queue.Add(3);
-            queue.Add(1);
-            queue.Add(2);
+            queue.Enqueue(3);
+            queue.Enqueue(1);
+            queue.Enqueue(2);
             
             // 队列已满，添加新元素会移除最小的元素
-            queue.Add(4);
+            queue.Enqueue(4);
             
             Assert.Equal(3, queue.Count);
             Assert.Equal(2, queue.Peek());

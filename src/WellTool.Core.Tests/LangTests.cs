@@ -93,20 +93,19 @@ namespace WellTool.Core.Tests
         public void HashTest()
         {
             string str = "test";
-            byte[] data = System.Text.Encoding.UTF8.GetBytes(str);
 
             // 测试MD5
-            string md5 = WellTool.Core.Lang.Hash.MD5(data);
+            string md5 = WellTool.Crypto.CryptoUtil.MD5(str);
             XAssert.NotNull(md5);
             XAssert.Equal(32, md5.Length);
 
             // 测试SHA1
-            string sha1 = WellTool.Core.Lang.Hash.SHA1(data);
+            string sha1 = WellTool.Crypto.CryptoUtil.SHA1(str);
             XAssert.NotNull(sha1);
             XAssert.Equal(40, sha1.Length);
 
             // 测试SHA256
-            string sha256 = WellTool.Core.Lang.Hash.SHA256(data);
+            string sha256 = WellTool.Crypto.CryptoUtil.SHA256(str);
             XAssert.NotNull(sha256);
             XAssert.Equal(64, sha256.Length);
         }

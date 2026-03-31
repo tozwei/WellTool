@@ -3,6 +3,7 @@ using System.Text;
 using Xunit;
 using XAssert = Xunit.Assert;
 using WellTool.Core.Codec;
+using WellTool.Core.Util;
 
 namespace WellTool.Core.Tests
 {
@@ -119,8 +120,10 @@ namespace WellTool.Core.Tests
         public void Base58EncodeDecodeTest()
         {
             string str = "Hello Base58";
-            string encoded = Base58.Encode(str);
-            string decoded = Base58.DecodeStr(encoded);
+            byte[] bytes = Encoding.UTF8.GetBytes(str);
+            string encoded = Base58.Encode(bytes);
+            byte[] decodedBytes = Base58.Decode(encoded);
+            string decoded = Encoding.UTF8.GetString(decodedBytes);
             XAssert.Equal(str, decoded);
         }
 
@@ -212,8 +215,8 @@ namespace WellTool.Core.Tests
         public void BcdEncodeDecodeTest()
         {
             string str = "1234567890";
-            byte[] encoded = BCD.Encode(str);
-            string decoded = BCD.Decode(encoded);
+            byte[] encoded = BCD.StrToBcd(str);
+            string decoded = BCD.BcdToStr(encoded);
             XAssert.Equal(str, decoded);
         }
 
@@ -226,8 +229,9 @@ namespace WellTool.Core.Tests
         {
             string str = "Hello Base16";
             byte[] bytes = Encoding.UTF8.GetBytes(str);
-            var base16Codec = new Base16Codec();
-            string encoded = base16Codec.Encode(bytes);
+            var base16Codec = new Base16Codec(false);
+            char[] encodedChars = base16Codec.Encode(bytes);
+            string encoded = new string(encodedChars);
             byte[] decodedBytes = base16Codec.Decode(encoded);
             string decoded = Encoding.UTF8.GetString(decodedBytes);
             XAssert.Equal(str, decoded);
