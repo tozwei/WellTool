@@ -1,4 +1,4 @@
-namespace WellTool.Jwt.Signers;
+namespace WellTool.JWT.Signers;
 
 /// <summary>
 /// JWT签名器接口
@@ -27,4 +27,10 @@ public interface IJwtSigner
     /// </summary>
     /// <returns>算法名称</returns>
     string GetAlgorithm();
+
+    /// <summary>
+    /// 获取算法ID
+    /// </summary>
+    /// <returns>算法ID</returns>
+    string GetAlgorithmId();
 }

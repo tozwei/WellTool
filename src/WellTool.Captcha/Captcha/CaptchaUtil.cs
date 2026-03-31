@@ -7,6 +7,8 @@ namespace WellTool.Captcha;
 /// </summary>
 public static class CaptchaUtil
 {
+
+
     /// <summary>
     /// 创建线干扰的验证码，默认 5 位验证码，150 条干扰线
     /// </summary>

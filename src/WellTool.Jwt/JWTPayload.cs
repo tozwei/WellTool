@@ -11,61 +11,124 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
-namespace WellTool.Jwt;
+namespace WellTool.JWT;
 
 /// <summary>
 /// JWT 负载
 /// </summary>
-public class JWTPayload
+public class JWTPayload : Claims, RegisteredPayload<JWTPayload>
 {
     /// <summary>
-    /// 签发人
+    /// jwt签发者
     /// </summary>
-    [JsonPropertyName("iss")]
-    public string? Issuer { get; set; }
+    public const string ISSUER = "iss";
+    /// <summary>
+    /// jwt所面向的用户
+    /// </summary>
+    public const string SUBJECT = "sub";
+    /// <summary>
+    /// 接收jwt的一方
+    /// </summary>
+    public const string AUDIENCE = "aud";
+    /// <summary>
+    /// jwt的过期时间，这个过期时间必须要大于签发时间
+    /// </summary>
+    public const string EXPIRES_AT = "exp";
+    /// <summary>
+    /// 生效时间，定义在什么时间之前，该jwt都是不可用的.
+    /// </summary>
+    public const string NOT_BEFORE = "nbf";
+    /// <summary>
+    /// jwt的签发时间
+    /// </summary>
+    public const string ISSUED_AT = "iat";
+    /// <summary>
+    /// jwt的唯一身份标识，主要用来作为一次性token,从而回避重放攻击。
+    /// </summary>
+    public const string JWT_ID = "jti";
 
     /// <summary>
-    /// 签发时间
+    /// 设置 jwt签发者("iss")的Payload值
     /// </summary>
-    [JsonPropertyName("iat")]
-    public long? IssuedAt { get; set; }
+    /// <param name="issuer">jwt签发者</param>
+    /// <returns>this</returns>
+    public JWTPayload SetIssuer(string issuer)
+    {
+        return SetPayload(ISSUER, issuer);
+    }
 
     /// <summary>
-    /// 过期时间
+    /// 设置jwt所面向的用户("sub")的Payload值
     /// </summary>
-    [JsonPropertyName("exp")]
-    public long? Expiration { get; set; }
+    /// <param name="subject">jwt所面向的用户</param>
+    /// <returns>this</returns>
+    public JWTPayload SetSubject(string subject)
+    {
+        return SetPayload(SUBJECT, subject);
+    }
 
     /// <summary>
-    /// 主题
+    /// 设置接收jwt的一方("aud")的Payload值
     /// </summary>
-    [JsonPropertyName("sub")]
-    public string? Subject { get; set; }
+    /// <param name="audience">接收jwt的一方</param>
+    /// <returns>this</returns>
+    public JWTPayload SetAudience(params string[] audience)
+    {
+        return SetPayload(AUDIENCE, audience);
+    }
 
     /// <summary>
-    /// 受众
+    /// 设置jwt的过期时间("exp")的Payload值，这个过期时间必须要大于签发时间
     /// </summary>
-    [JsonPropertyName("aud")]
-    public string? Audience { get; set; }
+    /// <param name="expiresAt">jwt的过期时间</param>
+    /// <returns>this</returns>
+    public JWTPayload SetExpiresAt(DateTime expiresAt)
+    {
+        return SetPayload(EXPIRES_AT, ((DateTimeOffset)expiresAt).ToUnixTimeSeconds());
+    }
 
     /// <summary>
-    /// 生效时间
+    /// 设置不可用时间点界限("nbf")的Payload值
     /// </summary>
-    [JsonPropertyName("nbf")]
-    public long? NotBefore { get; set; }
+    /// <param name="notBefore">不可用时间点界限，在这个时间点之前，jwt不可用</param>
+    /// <returns>this</returns>
+    public JWTPayload SetNotBefore(DateTime notBefore)
+    {
+        return SetPayload(NOT_BEFORE, ((DateTimeOffset)notBefore).ToUnixTimeSeconds());
+    }
 
     /// <summary>
-    /// 令牌 ID
+    /// 设置jwt的签发时间("iat")
     /// </summary>
-    [JsonPropertyName("jti")]
-    public string? Id { get; set; }
+    /// <param name="issuedAt">签发时间</param>
+    /// <returns>this</returns>
+    public JWTPayload SetIssuedAt(DateTime issuedAt)
+    {
+        return SetPayload(ISSUED_AT, ((DateTimeOffset)issuedAt).ToUnixTimeSeconds());
+    }
 
     /// <summary>
-    /// 自定义声明
+    /// 设置jwt的唯一身份标识("jti")
     /// </summary>
-    [JsonExtensionData]
-    public Dictionary<string, object>? Extensions { get; set; }
+    /// <param name="jwtId">唯一身份标识</param>
+    /// <returns>this</returns>
+    public JWTPayload SetJWTId(string jwtId)
+    {
+        return SetPayload(JWT_ID, jwtId);
+    }
+
+    /// <summary>
+    /// 设置Payload值
+    /// </summary>
+    /// <param name="name">payload名</param>
+    /// <param name="value">payload值</param>
+    /// <returns>this</returns>
+    public JWTPayload SetPayload(string name, object value)
+    {
+        base.SetClaim(name, value);
+        return this;
+    }
 }

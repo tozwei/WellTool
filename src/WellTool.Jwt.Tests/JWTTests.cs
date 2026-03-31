@@ -11,6 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Xunit;
+
 namespace WellTool.Jwt.Tests;
 
 public class JWTTests
@@ -19,7 +21,7 @@ public class JWTTests
     public void TestJWTConstruction()
     {
         // 测试 JWT 构造函数
-        var jwt = new JWT();
+        var jwt = new WellTool.JWT.JWT();
         Assert.NotNull(jwt);
         Assert.NotNull(jwt.Header);
         Assert.NotNull(jwt.Payload);
@@ -29,18 +31,16 @@ public class JWTTests
     public void TestSign()
     {
         // 测试 JWT 签名
-        var jwt = new JWT
-        {
-            Payload = {
-                Issuer = "WellTool",
-                Subject = "test",
-                IssuedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                Expiration = DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds()
-            }
-        };
+        var jwt = new WellTool.JWT.JWT();
+        jwt.Payload
+            .SetIssuer("WellTool")
+            .SetSubject("test")
+            .SetIssuedAt(DateTime.UtcNow)
+            .SetExpiresAt(DateTime.UtcNow.AddHours(1));
 
         var secret = "secretkey";
-        var token = jwt.Sign(secret);
+        jwt.SetKey(secret);
+        var token = jwt.Sign();
         Assert.NotNull(token);
         Assert.NotEmpty(token);
     }
@@ -49,19 +49,17 @@ public class JWTTests
     public void TestParse()
     {
         // 测试 JWT 解析
-        var jwt = new JWT
-        {
-            Payload = {
-                Issuer = "WellTool",
-                Subject = "test",
-                IssuedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                Expiration = DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds()
-            }
-        };
+        var jwt = new WellTool.JWT.JWT();
+        jwt.Payload
+            .SetIssuer("WellTool")
+            .SetSubject("test")
+            .SetIssuedAt(DateTime.UtcNow)
+            .SetExpiresAt(DateTime.UtcNow.AddHours(1));
 
         var secret = "secretkey";
-        var token = jwt.Sign(secret);
-        var parsedJwt = JWT.Parse(token);
+        jwt.SetKey(secret);
+        var token = jwt.Sign();
+        var parsedJwt = WellTool.JWT.JWT.Of(token);
         Assert.NotNull(parsedJwt);
         Assert.NotNull(parsedJwt.Header);
         Assert.NotNull(parsedJwt.Payload);
@@ -71,19 +69,19 @@ public class JWTTests
     public void TestVerify()
     {
         // 测试 JWT 验证
-        var jwt = new JWT
-        {
-            Payload = {
-                Issuer = "WellTool",
-                Subject = "test",
-                IssuedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                Expiration = DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds()
-            }
-        };
+        var jwt = new WellTool.JWT.JWT();
+        jwt.Payload
+            .SetIssuer("WellTool")
+            .SetSubject("test")
+            .SetIssuedAt(DateTime.UtcNow)
+            .SetExpiresAt(DateTime.UtcNow.AddHours(1));
 
         var secret = "secretkey";
-        var token = jwt.Sign(secret);
-        var isValid = JWT.Verify(token, secret);
+        jwt.SetKey(secret);
+        var token = jwt.Sign();
+        var parsedJwt = WellTool.JWT.JWT.Of(token);
+        parsedJwt.SetKey(secret);
+        var isValid = parsedJwt.Verify();
         Assert.True(isValid);
     }
 }

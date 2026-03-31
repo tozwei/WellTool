@@ -22,6 +22,8 @@ namespace WellTool.Core.Util
     /// </summary>
     public static class IOUtil
     {
+
+
         /// <summary>
         /// 默认缓冲区大小
         /// </summary>

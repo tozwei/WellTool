@@ -5,12 +5,14 @@ using System.Text;
 namespace WellTool.Crypto
 {
     /// <summary>
-    /// 加密工具类
+    /// 安全工具类
     /// </summary>
     public static class SecureUtil
     {
+
+
         /// <summary>
-        /// 创建MD5摘要
+        /// 生成安全的随机字符串
         /// </summary>
         /// <param name="data">数据</param>
         /// <returns>MD5摘要</returns>

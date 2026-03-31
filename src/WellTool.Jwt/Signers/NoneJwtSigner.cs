@@ -1,4 +1,4 @@
-namespace WellTool.Jwt.Signers;
+namespace WellTool.JWT.Signers;
 
 /// <summary>
 /// 无签名JWT签名器
@@ -45,6 +45,15 @@ public class NoneJwtSigner : IJwtSigner
     /// </summary>
     /// <returns>算法名称</returns>
     public string GetAlgorithm()
+    {
+        return "none";
+    }
+
+    /// <summary>
+    /// 获取算法ID
+    /// </summary>
+    /// <returns>算法ID</returns>
+    public string GetAlgorithmId()
     {
         return "none";
     }

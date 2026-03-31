@@ -23,6 +23,8 @@ namespace WellTool.Core.Util
     /// </summary>
     public static class RandomUtil
     {
+
+
         private static readonly Random Random = new Random();
 
         /// <summary>

@@ -6,11 +6,11 @@ using System.Web;
 namespace WellTool.Http;
 
 /// <summary>
-/// HTTP 请求工具�?
+/// HTTP 请求工具类
 /// </summary>
 public static partial class HttpUtil
 {
-    /// <summary>
+   /// <summary>
     /// Content-Type 中的编码信息正则
     /// </summary>
     private static readonly Regex CharsetPattern = new(@"charset\s*=\s*([a-z0-9-]*)", RegexOptions.IgnoreCase | RegexOptions.Compiled);

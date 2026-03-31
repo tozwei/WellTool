@@ -22,8 +22,10 @@ namespace WellTool.Core.Util
     /// </summary>
     public static class ThreadUtil
     {
+
+
         /// <summary>
-        /// 创建一个新的线程池执行器
+        /// 线程休眠
         /// </summary>
         /// <param name="corePoolSize">核心线程数</param>
         /// <returns>线程池执行器</returns>

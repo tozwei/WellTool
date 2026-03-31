@@ -18,21 +18,98 @@ namespace WellTool;
 /// </summary>
 public static class WellToolMain
 {
+    // AI 模块
+    public static class AI
+    {
+    }
+
+    // Aop 模块
+    public static class Aop
+    {
+    }
+
+    // BloomFilter 模块
+    public static class BloomFilter
+    {
+    }
+
+    // Cache 模块
+    public static class Cache
+    {
+    }
+
+    // Captcha 模块
+    public static class Captcha
+    {
+    }
+
+    // Core 模块
+    public static class Core
+    {
+    }
+
+    // Cron 模块
+    public static class Cron
+    {
+    }
+
+    // Crypto 模块
+    public static class Crypto
+    {
+    }
+
+    // DB 模块
+    public static class DB
+    {
+    }
+
+    // Dfa 模块
+    public static class Dfa
+    {
+    }
+
+    // Http 模块
+    public static class Http
+    {
+    }
+
+    // Json 模块
+    public static class Json
+    {
+    }
+
+    // Jwt 模块
+    public static class Jwt
+    {
+    }
+
+    // Log 模块
+    public static class Log
+    {
+    }
+
     // Poi 模块
     public static class Poi
     {
-        /// <summary>
-        /// Excel 工具类
-        /// </summary>
-        public static WellTool.Poi.ExcelUtil Excel => WellTool.Poi.ExcelUtil.Instance;
     }
 
     // Script 模块
     public static class Script
     {
-        /// <summary>
-        /// 脚本工具类
-        /// </summary>
-        public static WellTool.Script.ScriptUtil Util => WellTool.Script.ScriptUtil.Instance;
+    }
+
+    // Setting 模块
+    public static class Setting
+    {
+    }
+
+    // Socket 模块
+    public static class Socket
+    {
+    }
+
+    // System 模块
+    public static class System
+    {
     }
 }

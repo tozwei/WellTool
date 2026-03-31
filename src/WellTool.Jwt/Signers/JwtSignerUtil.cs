@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace WellTool.Jwt.Signers;
+namespace WellTool.JWT.Signers;
 
 /// <summary>
 /// JWT签名器工具类

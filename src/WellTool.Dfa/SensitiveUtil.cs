@@ -17,13 +17,15 @@ using System.Text;
 namespace WellTool.Dfa;
 
 /// <summary>
-/// 敏感词工具类
-/// </summary>
-public static class SensitiveUtil
-{
-    /// <summary>
-    /// 敏感词树
+    /// 敏感词工具类
     /// </summary>
+    public static class SensitiveUtil
+    {
+
+
+        /// <summary>
+        /// 敏感词树
+        /// </summary>
     private static readonly WordTree _wordTree = new();
 
     /// <summary>

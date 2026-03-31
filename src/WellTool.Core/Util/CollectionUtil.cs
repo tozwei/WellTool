@@ -22,6 +22,8 @@ namespace WellTool.Core.Util
     /// </summary>
     public static class CollectionUtil
     {
+
+
         /// <summary>
         /// 检查集合是否为 null 或空
         /// </summary>

@@ -25,6 +25,8 @@ namespace WellTool.Core.Util
     /// </summary>
     public static class StrUtil
     {
+
+
         /// <summary>
         /// 空字符串
         /// </summary>

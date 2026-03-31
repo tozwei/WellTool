@@ -22,6 +22,8 @@ namespace WellTool.Core.Util
     /// </summary>
     public static class NumberUtil
     {
+
+
         /// <summary>
         /// 检查字符串是否为数字
         /// </summary>

@@ -17,122 +17,124 @@ using System.Data.Common;
 namespace WellTool.DB;
 
 /// <summary>
-/// 数据库工具类
-/// </summary>
-public static class DbUtil
-{
-    /// <summary>
-    /// 创建数据库连接
+    /// 数据库工具类
     /// </summary>
-    /// <param name="connectionString">连接字符串</param>
-    /// <param name="providerName">提供程序名称</param>
-    /// <returns>数据库连接</returns>
-    public static DbConnection CreateConnection(string connectionString, string providerName = "System.Data.SqlClient")
+    public static class DbUtil
     {
-        var factory = DbProviderFactories.GetFactory(providerName);
-        var connection = factory.CreateConnection();
-        if (connection == null)
+
+
+        /// <summary>
+        /// 创建数据库连接
+        /// </summary>
+        /// <param name="connectionString">连接字符串</param>
+        /// <param name="providerName">提供程序名称</param>
+        /// <returns>数据库连接</returns>
+        public static DbConnection CreateConnection(string connectionString, string providerName = "System.Data.SqlClient")
         {
-            throw new DbException("Failed to create database connection");
+            var factory = DbProviderFactories.GetFactory(providerName);
+            var connection = factory.CreateConnection();
+            if (connection == null)
+            {
+                throw new DbException("Failed to create database connection");
+            }
+            connection.ConnectionString = connectionString;
+            return connection;
         }
-        connection.ConnectionString = connectionString;
-        return connection;
-    }
 
-    /// <summary>
-    /// 执行 SQL 查询
-    /// </summary>
-    /// <param name="connection">数据库连接</param>
-    /// <param name="sql">SQL 语句</param>
-    /// <param name="parameters">参数</param>
-    /// <returns>数据读取器</returns>
-    public static DbDataReader ExecuteReader(DbConnection connection, string sql, params DbParameter[] parameters)
-    {
-        var command = CreateCommand(connection, sql, parameters);
-        return command.ExecuteReader();
-    }
-
-    /// <summary>
-    /// 执行 SQL 语句并返回受影响的行数
-    /// </summary>
-    /// <param name="connection">数据库连接</param>
-    /// <param name="sql">SQL 语句</param>
-    /// <param name="parameters">参数</param>
-    /// <returns>受影响的行数</returns>
-    public static int ExecuteNonQuery(DbConnection connection, string sql, params DbParameter[] parameters)
-    {
-        var command = CreateCommand(connection, sql, parameters);
-        return command.ExecuteNonQuery();
-    }
-
-    /// <summary>
-    /// 执行 SQL 查询并返回第一行第一列的值
-    /// </summary>
-    /// <param name="connection">数据库连接</param>
-    /// <param name="sql">SQL 语句</param>
-    /// <param name="parameters">参数</param>
-    /// <returns>查询结果</returns>
-    public static object? ExecuteScalar(DbConnection connection, string sql, params DbParameter[] parameters)
-    {
-        var command = CreateCommand(connection, sql, parameters);
-        return command.ExecuteScalar();
-    }
-
-    /// <summary>
-    /// 创建数据库命令
-    /// </summary>
-    /// <param name="connection">数据库连接</param>
-    /// <param name="sql">SQL 语句</param>
-    /// <param name="parameters">参数</param>
-    /// <returns>数据库命令</returns>
-    private static DbCommand CreateCommand(DbConnection connection, string sql, params DbParameter[] parameters)
-    {
-        var command = connection.CreateCommand();
-        command.CommandText = sql;
-        if (parameters.Length > 0)
+        /// <summary>
+        /// 执行 SQL 查询
+        /// </summary>
+        /// <param name="connection">数据库连接</param>
+        /// <param name="sql">SQL 语句</param>
+        /// <param name="parameters">参数</param>
+        /// <returns>数据读取器</returns>
+        public static DbDataReader ExecuteReader(DbConnection connection, string sql, params DbParameter[] parameters)
         {
-            command.Parameters.AddRange(parameters);
+            var command = CreateCommand(connection, sql, parameters);
+            return command.ExecuteReader();
         }
-        return command;
-    }
 
-    /// <summary>
-    /// 关闭数据库连接
-    /// </summary>
-    /// <param name="connection">数据库连接</param>
-    public static void CloseConnection(DbConnection? connection)
-    {
-        if (connection != null && connection.State != ConnectionState.Closed)
+        /// <summary>
+        /// 执行 SQL 语句并返回受影响的行数
+        /// </summary>
+        /// <param name="connection">数据库连接</param>
+        /// <param name="sql">SQL 语句</param>
+        /// <param name="parameters">参数</param>
+        /// <returns>受影响的行数</returns>
+        public static int ExecuteNonQuery(DbConnection connection, string sql, params DbParameter[] parameters)
         {
-            connection.Close();
+            var command = CreateCommand(connection, sql, parameters);
+            return command.ExecuteNonQuery();
         }
-    }
 
-    /// <summary>
-    /// 开始事务
-    /// </summary>
-    /// <param name="connection">数据库连接</param>
-    /// <returns>事务</returns>
-    public static DbTransaction BeginTransaction(DbConnection connection)
-    {
-        return connection.BeginTransaction();
-    }
+        /// <summary>
+        /// 执行 SQL 查询并返回第一行第一列的值
+        /// </summary>
+        /// <param name="connection">数据库连接</param>
+        /// <param name="sql">SQL 语句</param>
+        /// <param name="parameters">参数</param>
+        /// <returns>查询结果</returns>
+        public static object? ExecuteScalar(DbConnection connection, string sql, params DbParameter[] parameters)
+        {
+            var command = CreateCommand(connection, sql, parameters);
+            return command.ExecuteScalar();
+        }
 
-    /// <summary>
-    /// 提交事务
-    /// </summary>
-    /// <param name="transaction">事务</param>
-    public static void CommitTransaction(DbTransaction? transaction)
-    {
-        transaction?.Commit();
-    }
+        /// <summary>
+        /// 创建数据库命令
+        /// </summary>
+        /// <param name="connection">数据库连接</param>
+        /// <param name="sql">SQL 语句</param>
+        /// <param name="parameters">参数</param>
+        /// <returns>数据库命令</returns>
+        private static DbCommand CreateCommand(DbConnection connection, string sql, params DbParameter[] parameters)
+        {
+            var command = connection.CreateCommand();
+            command.CommandText = sql;
+            if (parameters.Length > 0)
+            {
+                command.Parameters.AddRange(parameters);
+            }
+            return command;
+        }
 
-    /// <summary>
-    /// 回滚事务
-    /// </summary>
-    /// <param name="transaction">事务</param>
-    public static void RollbackTransaction(DbTransaction? transaction)
-    {
-        transaction?.Rollback();
-    }
+        /// <summary>
+        /// 关闭数据库连接
+        /// </summary>
+        /// <param name="connection">数据库连接</param>
+        public static void CloseConnection(DbConnection? connection)
+        {
+            if (connection != null && connection.State != ConnectionState.Closed)
+            {
+                connection.Close();
+            }
+        }
+
+        /// <summary>
+        /// 开始事务
+        /// </summary>
+        /// <param name="connection">数据库连接</param>
+        /// <returns>事务</returns>
+        public static DbTransaction BeginTransaction(DbConnection connection)
+        {
+            return connection.BeginTransaction();
+        }
+
+        /// <summary>
+        /// 提交事务
+        /// </summary>
+        /// <param name="transaction">事务</param>
+        public static void CommitTransaction(DbTransaction? transaction)
+        {
+            transaction?.Commit();
+        }
+
+        /// <summary>
+        /// 回滚事务
+        /// </summary>
+        /// <param name="transaction">事务</param>
+        public static void RollbackTransaction(DbTransaction? transaction)
+        {
+            transaction?.Rollback();
+        }
 }

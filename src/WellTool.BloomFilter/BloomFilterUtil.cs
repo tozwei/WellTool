@@ -18,6 +18,8 @@ namespace WellTool.BloomFilter
     /// </summary>
     public static class BloomFilterUtil
     {
+
+
         /// <summary>
         /// 创建 BitMapBloomFilter
         /// </summary>

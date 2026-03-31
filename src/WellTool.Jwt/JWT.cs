@@ -12,10 +12,10 @@
 // limitations under the License.
 
 using System.Text;
-using System.Text.Json;
-using WellTool.Jwt.Signers;
+using WellTool.JWT.Signers;
+using WellTool.JWT.Exceptions;
 
-namespace WellTool.Jwt;
+namespace WellTool.JWT;
 
 /// <summary>
 /// JWT 类
@@ -101,8 +101,8 @@ public class JWT
 
         var tokens = SplitToken(token);
         _tokens = tokens;
-        Header.Parse(tokens[0], _encoding);
-        Payload.Parse(tokens[1], _encoding);
+        Header.Parse(tokens[0]);
+        Payload.Parse(tokens[1]);
         Signature = tokens[2];
 
         return this;
@@ -174,7 +174,7 @@ public class JWT
         var algorithm = Header.GetAlgorithm();
         if (string.IsNullOrWhiteSpace(algorithm))
         {
-            Header.SetAlgorithm(signer.GetAlgorithm());
+            Header.SetAlgorithm(signer.GetAlgorithmId());
         }
 
         return this;
@@ -243,7 +243,7 @@ public class JWT
         // 检查tye信息
         if (addTypeIfNot)
         {
-            var type = Header.GetType();
+            var type = Header.GetHeaderType();
             if (string.IsNullOrWhiteSpace(type))
             {
                 Header.SetType("JWT");
@@ -254,7 +254,7 @@ public class JWT
         var algorithm = GetAlgorithm();
         if (string.IsNullOrWhiteSpace(algorithm))
         {
-            Header.SetAlgorithm(signer.GetAlgorithm());
+            Header.SetAlgorithm(signer.GetAlgorithmId());
         }
 
         var headerBase64 = Base64UrlEncode(Header.ToString(), _encoding);
@@ -354,7 +354,7 @@ public class JWT
     /// <param name="input">Base64 URL 编码后的字符串</param>
     /// <param name="encoding">编码</param>
     /// <returns>解码后的字符串</returns>
-    internal static string Base64UrlDecode(string input, Encoding encoding)
+    public static string Base64UrlDecode(string input, Encoding encoding)
     {
         input = input.Replace('-', '+').Replace('_', '/');
         while (input.Length % 4 != 0)

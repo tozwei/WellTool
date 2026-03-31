@@ -11,6 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Xunit;
+
 namespace WellTool.Jwt.Tests;
 
 public class JWTSignerTests
@@ -19,23 +21,23 @@ public class JWTSignerTests
     public void TestHMacSigning()
     {
         // 测试 HMAC 签名
-        var jwt = new JWT
-        {
-            Payload = {
-                Issuer = "WellTool",
-                Subject = "test",
-                IssuedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                Expiration = DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds()
-            }
-        };
+        var jwt = new WellTool.JWT.JWT();
+        jwt.Payload
+            .SetIssuer("WellTool")
+            .SetSubject("test")
+            .SetIssuedAt(DateTime.UtcNow)
+            .SetExpiresAt(DateTime.UtcNow.AddHours(1));
 
         var secret = "secretkey";
-        var token = jwt.Sign(secret);
+        jwt.SetKey(secret);
+        var token = jwt.Sign();
         Assert.NotNull(token);
         Assert.NotEmpty(token);
 
         // 验证签名
-        var isValid = JWT.Verify(token, secret);
+        var parsedJwt = WellTool.JWT.JWT.Of(token);
+        parsedJwt.SetKey(secret);
+        var isValid = parsedJwt.Verify();
         Assert.True(isValid);
     }
 
@@ -43,27 +45,29 @@ public class JWTSignerTests
     public void TestDifferentSecrets()
     {
         // 测试不同密钥的签名和验证
-        var jwt = new JWT
-        {
-            Payload = {
-                Issuer = "WellTool",
-                Subject = "test",
-                IssuedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                Expiration = DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds()
-            }
-        };
+        var jwt = new WellTool.JWT.JWT();
+        jwt.Payload
+            .SetIssuer("WellTool")
+            .SetSubject("test")
+            .SetIssuedAt(DateTime.UtcNow)
+            .SetExpiresAt(DateTime.UtcNow.AddHours(1));
 
         var secret1 = "secretkey1";
         var secret2 = "secretkey2";
 
-        var token = jwt.Sign(secret1);
+        jwt.SetKey(secret1);
+        var token = jwt.Sign();
         
         // 使用正确的密钥验证
-        var isValidWithCorrectSecret = JWT.Verify(token, secret1);
+        var parsedJwt1 = WellTool.JWT.JWT.Of(token);
+        parsedJwt1.SetKey(secret1);
+        var isValidWithCorrectSecret = parsedJwt1.Verify();
         Assert.True(isValidWithCorrectSecret);
 
         // 使用错误的密钥验证
-        var isValidWithWrongSecret = JWT.Verify(token, secret2);
+        var parsedJwt2 = WellTool.JWT.JWT.Of(token);
+        parsedJwt2.SetKey(secret2);
+        var isValidWithWrongSecret = parsedJwt2.Verify();
         Assert.False(isValidWithWrongSecret);
     }
 }

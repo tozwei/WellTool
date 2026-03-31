@@ -22,8 +22,10 @@ namespace WellTool.Core.Util
     /// </summary>
     public static class DateUtil
     {
+
+
         /// <summary>
-        /// 获取当前日期时间
+        /// 时间格式化
         /// </summary>
         /// <returns>当前日期时间</returns>
         public static DateTime Now()

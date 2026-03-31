@@ -21,6 +21,8 @@ namespace WellTool.Aop
     /// </summary>
     public static class ProxyUtil
     {
+
+
         /// <summary>
         /// 使用切面代理对象
         /// </summary>

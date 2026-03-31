@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace WellTool.Jwt.Signers;
+namespace WellTool.JWT.Signers;
 
 /// <summary>
 /// HMAC JWT签名器
@@ -62,6 +62,15 @@ public class HMacJwtSigner : IJwtSigner
     /// </summary>
     /// <returns>算法名称</returns>
     public string GetAlgorithm()
+    {
+        return _algorithm;
+    }
+
+    /// <summary>
+    /// 获取算法ID
+    /// </summary>
+    /// <returns>算法ID</returns>
+    public string GetAlgorithmId()
     {
         return _algorithm;
     }
