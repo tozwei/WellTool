@@ -85,7 +85,9 @@ namespace WellTool.Cron.Pattern
         /// <returns>是否有效</returns>
         public static bool IsValidPattern(string pattern)
         {
-            return IsValid(pattern, false);
+            // 自动检测是否包含秒
+            bool matchSecond = pattern.Trim().Split(' ').Length == 6 || pattern.Trim().Split(' ').Length == 7;
+            return IsValid(pattern, matchSecond);
         }
 
         /// <summary>

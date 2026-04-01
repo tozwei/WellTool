@@ -67,14 +67,25 @@ namespace WellTool.Cron.Pattern
             string[] parts = pattern.Trim().Split(' ');
             int expectedParts = matchSecond ? 6 : 5;
 
-            if (parts.Length != expectedParts)
+            // 允许 7 个部分的 Cron 表达式（某些扩展语法）
+            if (parts.Length != expectedParts && parts.Length != 7)
             {
-                throw new CronException("Invalid cron pattern: {0}, expected {1} parts, got {2}", pattern, expectedParts, parts.Length);
+                throw new CronException("Invalid cron pattern: {0}, expected {1} or 7 parts, got {2}", pattern, expectedParts, parts.Length);
             }
 
             PartMatcher[] matchers = new PartMatcher[6];
 
-            if (matchSecond)
+            if (parts.Length == 7)
+            {
+                // 支持 7 个部分的表达式：秒 分 时 日 月 周 年（年部分忽略）
+                matchers[(int)Part.SECOND] = PartParser.Parse(parts[0], PartUtil.GetMin(Part.SECOND), PartUtil.GetMax(Part.SECOND));
+                matchers[(int)Part.MINUTE] = PartParser.Parse(parts[1], PartUtil.GetMin(Part.MINUTE), PartUtil.GetMax(Part.MINUTE));
+                matchers[(int)Part.HOUR] = PartParser.Parse(parts[2], PartUtil.GetMin(Part.HOUR), PartUtil.GetMax(Part.HOUR));
+                matchers[(int)Part.DAY_OF_MONTH] = PartParser.Parse(parts[3], PartUtil.GetMin(Part.DAY_OF_MONTH), PartUtil.GetMax(Part.DAY_OF_MONTH));
+                matchers[(int)Part.MONTH] = PartParser.Parse(parts[4], PartUtil.GetMin(Part.MONTH), PartUtil.GetMax(Part.MONTH));
+                matchers[(int)Part.DAY_OF_WEEK] = PartParser.Parse(parts[5], PartUtil.GetMin(Part.DAY_OF_WEEK), PartUtil.GetMax(Part.DAY_OF_WEEK));
+            }
+            else if (matchSecond)
             {
                 // 秒 分 时 日 月 周
                 matchers[(int)Part.SECOND] = PartParser.Parse(parts[0], PartUtil.GetMin(Part.SECOND), PartUtil.GetMax(Part.SECOND));

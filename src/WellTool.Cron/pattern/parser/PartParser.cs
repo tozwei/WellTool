@@ -157,6 +157,12 @@ namespace WellTool.Cron.Pattern.Parser
                     case "fri": return 5;
                     case "sat": return 6;
                 }
+                
+                // 处理数字 0，将其转换为 7（周日）
+                if (str == "0")
+                {
+                    return 7;
+                }
             }
 
             // 处理月份的英文名称
