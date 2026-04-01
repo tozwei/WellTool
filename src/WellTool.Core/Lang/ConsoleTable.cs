@@ -97,7 +97,7 @@ namespace WellTool.Core.Lang
                   .Append(" |");
             }
 
-            Console.WriteLine(sb.ToString());
+            System.Console.WriteLine(sb.ToString());
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace WellTool.Core.Lang
                   .Append("+");
             }
 
-            Console.WriteLine(sb.ToString());
+            System.Console.WriteLine(sb.ToString());
         }
 
         /// <summary>
@@ -125,13 +125,13 @@ namespace WellTool.Core.Lang
         public override string ToString()
         {
             var sb = new StringBuilder();
-            var originalOut = Console.Out;
+            var originalOut = System.Console.Out;
 
             using (var writer = new System.IO.StringWriter(sb))
             {
-                Console.SetOut(writer);
+                System.Console.SetOut(writer);
                 Print();
-                Console.SetOut(originalOut);
+                System.Console.SetOut(originalOut);
             }
 
             return sb.ToString();

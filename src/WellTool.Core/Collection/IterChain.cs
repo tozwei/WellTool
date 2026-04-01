@@ -225,7 +225,7 @@ namespace WellTool.Core.Collection
         /// 排序
         /// </summary>
         /// <returns>当前实例</returns>
-        public IterChain<T> Sort() where T : IComparable<T>
+        public IterChain<T> Sort()
         {
             return new IterChain<T>(_source.OrderBy(x => x));
         }
@@ -246,7 +246,7 @@ namespace WellTool.Core.Collection
         /// <typeparam name="R">排序键类型</typeparam>
         /// <param name="keySelector">键选择器</param>
         /// <returns>当前实例</returns>
-        public IterChain<T> SortBy<R>(Func<T, R> keySelector) where R : IComparable<R>
+        public IterChain<T> SortBy<R>(Func<T, R> keySelector)
         {
             return new IterChain<T>(_source.OrderBy(keySelector));
         }
