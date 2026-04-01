@@ -158,7 +158,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="T">字典类型</typeparam>
         /// <param name="mapType">字典类型</param>
         /// <returns>空字典</returns>
-        public static T Empty<K, V, T>(Type mapType) where T : Dictionary<K, V>, new()
+        public static T Empty<K, V, T>(Type mapType) where T : Dictionary<K, V>, new() where K : notnull
         {
             return new T();
         }

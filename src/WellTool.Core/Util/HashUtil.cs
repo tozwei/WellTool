@@ -16,7 +16,7 @@ namespace WellTool.Core.Util
         /// <returns>MD5 哈希值</returns>
         public static string MD5(string input)
         {
-            using var md5 = MD5.Create();
+            using var md5 = System.Security.Cryptography.MD5.Create();
             var bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
             return BytesToHex(bytes);
         }
@@ -28,7 +28,7 @@ namespace WellTool.Core.Util
         /// <returns>SHA1 哈希值</returns>
         public static string SHA1(string input)
         {
-            using var sha1 = SHA1.Create();
+            using var sha1 = System.Security.Cryptography.SHA1.Create();
             var bytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(input));
             return BytesToHex(bytes);
         }
@@ -40,7 +40,7 @@ namespace WellTool.Core.Util
         /// <returns>SHA256 哈希值</returns>
         public static string SHA256(string input)
         {
-            using var sha256 = SHA256.Create();
+            using var sha256 = System.Security.Cryptography.SHA256.Create();
             var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
             return BytesToHex(bytes);
         }
@@ -52,7 +52,7 @@ namespace WellTool.Core.Util
         /// <returns>SHA384 哈希值</returns>
         public static string SHA384(string input)
         {
-            using var sha384 = SHA384.Create();
+            using var sha384 = System.Security.Cryptography.SHA384.Create();
             var bytes = sha384.ComputeHash(Encoding.UTF8.GetBytes(input));
             return BytesToHex(bytes);
         }
@@ -64,7 +64,7 @@ namespace WellTool.Core.Util
         /// <returns>SHA512 哈希值</returns>
         public static string SHA512(string input)
         {
-            using var sha512 = SHA512.Create();
+            using var sha512 = System.Security.Cryptography.SHA512.Create();
             var bytes = sha512.ComputeHash(Encoding.UTF8.GetBytes(input));
             return BytesToHex(bytes);
         }
