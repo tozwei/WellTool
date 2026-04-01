@@ -126,8 +126,8 @@ namespace WellTool.Cron.Pattern
             return matchers[(int)Part.SECOND].Match(dateTime.Second) &&
                    matchers[(int)Part.MINUTE].Match(dateTime.Minute) &&
                    matchers[(int)Part.HOUR].Match(dateTime.Hour) &&
-                   matchers[(int)Part.DAY_OF_MONTH].Match(dateTime.Day) &&
-                   matchers[(int)Part.MONTH].Match(dateTime.Month) &&
+                   matchers[(int)Part.DAY_OF_MONTH].Match(dateTime.Day - 1) &&
+                   matchers[(int)Part.MONTH].Match(dateTime.Month - 1) &&
                    matchers[(int)Part.DAY_OF_WEEK].Match(dayOfWeek);
         }
 
