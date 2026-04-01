@@ -145,11 +145,11 @@ namespace WellTool.Cron.Pattern.Parser
             }
 
             // 处理星期的英文名称
-            if (max == 6) // 星期字段，范围是 0-6
+            if (max == 7) // 星期字段，范围是 0-7
             {
                 switch (str.ToLower())
                 {
-                    case "sun": return 0;
+                    case "sun": return 7; // 周日可以是 0 或 7
                     case "mon": return 1;
                     case "tue": return 2;
                     case "wed": return 3;

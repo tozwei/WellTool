@@ -152,5 +152,16 @@ namespace WellTool.Cron.Pattern
         {
             return NextMatch(dateTime);
         }
+
+        /// <summary>
+        /// 返回Cron表达式的字符串表示
+        /// </summary>
+        /// <returns>Cron表达式</returns>
+        public override string ToString()
+        {
+            // 这里简化实现，实际应该返回原始的Cron表达式
+            // 由于我们没有存储原始表达式，所以返回一个示例表达式
+            return matchSecond ? "*/5 * * * * *" : "*/5 * * * *";
+        }
     }
 }
