@@ -141,5 +141,15 @@ namespace WellTool.Cron.Pattern
 
             return null;
         }
+
+        /// <summary>
+        /// 获取下一次匹配的时间（与NextMatch方法相同，为了兼容测试代码）
+        /// </summary>
+        /// <param name="dateTime">起始时间</param>
+        /// <returns>下一次匹配的时间</returns>
+        public DateTime? NextMatchingAfter(DateTime dateTime)
+        {
+            return NextMatch(dateTime);
+        }
     }
 }

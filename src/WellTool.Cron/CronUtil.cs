@@ -116,6 +116,16 @@ namespace WellTool.Cron
         }
 
         /// <summary>
+        /// 移除Task（与Deschedule方法相同，为了兼容测试代码）
+        /// </summary>
+        /// <param name="id">任务ID</param>
+        /// <returns>是否移除成功</returns>
+        public static bool Unschedule(string id)
+        {
+            return defaultScheduler.DescheduleWithStatus(id);
+        }
+
+        /// <summary>
         /// 更新Task的Cron表达式
         /// </summary>
         /// <param name="id">任务ID</param>

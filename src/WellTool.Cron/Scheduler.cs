@@ -47,6 +47,22 @@ namespace WellTool.Cron
         protected bool daemon;
 
         /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="daemon">是否为守护线程</param>
+        public Scheduler(bool daemon)
+        {
+            this.daemon = daemon;
+        }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public Scheduler()
+        {
+        }
+
+        /// <summary>
         /// 定时器
         /// </summary>
         private CronTimer timer;
@@ -365,6 +381,25 @@ namespace WellTool.Cron
                 taskTable = new TaskTable();
             }
             return this;
+        }
+
+        /// <summary>
+        /// 移除Task（与Deschedule方法相同，为了兼容测试代码）
+        /// </summary>
+        /// <param name="id">任务ID</param>
+        /// <returns>是否移除成功</returns>
+        public bool Unschedule(string id)
+        {
+            return DescheduleWithStatus(id);
+        }
+
+        /// <summary>
+        /// 获取任务数量（与Size方法相同，为了兼容测试代码）
+        /// </summary>
+        /// <returns>任务数量</returns>
+        public int GetTaskCount()
+        {
+            return Size();
         }
         // -------------------------------------------------------------------- schedule end
 
