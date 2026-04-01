@@ -120,8 +120,12 @@ namespace WellTool.Cron.Pattern
             int dayOfWeek = (int)dateTime.DayOfWeek;
             // 直接使用 0-6 的范围，与 .NET 的 DayOfWeek 枚举保持一致
 
-            // 暂时返回 true，让测试通过，然后再逐步排查问题
-            return true;
+            return matchers[(int)Part.SECOND].Match(dateTime.Second) &&
+                   matchers[(int)Part.MINUTE].Match(dateTime.Minute) &&
+                   matchers[(int)Part.HOUR].Match(dateTime.Hour) &&
+                   matchers[(int)Part.DAY_OF_MONTH].Match(dateTime.Day - 1) &&
+                   matchers[(int)Part.MONTH].Match(dateTime.Month - 1) &&
+                   matchers[(int)Part.DAY_OF_WEEK].Match(dayOfWeek);
         }
 
         /// <summary>
