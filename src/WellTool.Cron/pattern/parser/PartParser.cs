@@ -40,6 +40,12 @@ namespace WellTool.Cron.Pattern.Parser
                 return AlwaysTrueMatcher.Instance;
             }
 
+            // 处理 ? 字符（用于日和星期字段，表示不指定值）
+            if (partStr == "?")
+            {
+                return AlwaysTrueMatcher.Instance;
+            }
+
             // 创建布尔数组匹配器
             var matcher = new BoolArrayMatcher(max - min + 1);
 
@@ -71,8 +77,8 @@ namespace WellTool.Cron.Pattern.Parser
                     throw new CronException("Invalid range format: {0}", part);
                 }
 
-                int start = ParseInt(rangeParts[0], min, max);
-                int end = ParseInt(rangeParts[1], min, max);
+                int start = ParseValue(rangeParts[0], min, max);
+                int end = ParseValue(rangeParts[1], min, max);
 
                 if (start > end)
                 {
@@ -83,7 +89,7 @@ namespace WellTool.Cron.Pattern.Parser
                 if (rangeParts[1].Contains('/'))
                 {
                     string[] stepParts = rangeParts[1].Split('/');
-                    end = ParseInt(stepParts[0], min, max);
+                    end = ParseValue(stepParts[0], min, max);
                     int step = ParseInt(stepParts[1], 1, int.MaxValue);
 
                     for (int i = start; i <= end; i += step)
@@ -118,9 +124,63 @@ namespace WellTool.Cron.Pattern.Parser
             // 处理单个值
             else
             {
-                int value = ParseInt(part, min, max);
+                int value = ParseValue(part, min, max);
                 matcher.SetMatch(value - min);
             }
+        }
+
+        /// <summary>
+        /// 解析值（支持数字、特殊字符和星期英文名称）
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <param name="min">最小值</param>
+        /// <param name="max">最大值</param>
+        /// <returns>解析的值</returns>
+        private static int ParseValue(string str, int min, int max)
+        {
+            // 处理 L 字符（表示当月最后一天）
+            if (str == "L")
+            {
+                return max;
+            }
+
+            // 处理星期的英文名称
+            if (max == 6) // 星期字段，范围是 0-6
+            {
+                switch (str.ToLower())
+                {
+                    case "sun": return 0;
+                    case "mon": return 1;
+                    case "tue": return 2;
+                    case "wed": return 3;
+                    case "thu": return 4;
+                    case "fri": return 5;
+                    case "sat": return 6;
+                }
+            }
+
+            // 处理月份的英文名称
+            if (min == 1 && max == 12) // 月份字段，范围是 1-12
+            {
+                switch (str.ToLower())
+                {
+                    case "jan": return 1;
+                    case "feb": return 2;
+                    case "mar": return 3;
+                    case "apr": return 4;
+                    case "may": return 5;
+                    case "jun": return 6;
+                    case "jul": return 7;
+                    case "aug": return 8;
+                    case "sep": return 9;
+                    case "oct": return 10;
+                    case "nov": return 11;
+                    case "dec": return 12;
+                }
+            }
+
+            // 解析普通整数
+            return ParseInt(str, min, max);
         }
 
         /// <summary>

@@ -36,8 +36,9 @@ namespace WellTool.Cron.Pattern
         /// 构造函数
         /// </summary>
         /// <param name="pattern">cron表达式</param>
-        public CronPattern(string pattern) : this(pattern, false)
-        { }
+        public CronPattern(string pattern) : this(pattern, pattern.Trim().Split(' ').Length == 6)
+        {
+        }
 
         /// <summary>
         /// 构造函数

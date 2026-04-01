@@ -240,7 +240,7 @@ namespace WellTool.Cron
         /// <returns>当前调度器</returns>
         public Scheduler Schedule(string id, string pattern, Task.Task task)
         {
-            return Schedule(id, new CronPattern(pattern, config.IsMatchSecond), task);
+            return Schedule(id, new CronPattern(pattern), task);
         }
 
         /// <summary>
