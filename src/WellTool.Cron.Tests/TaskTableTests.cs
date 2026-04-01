@@ -16,7 +16,7 @@ namespace WellTool.Cron.Tests
             // 测试添加和删除任务
             var taskTable = new TaskTable();
             var pattern = new CronPattern("*/1 * * * * *");
-            var task = new Task(() => { });
+            var task = new RunnableTask(() => { });
 
             // 添加任务
             bool added = taskTable.Add("test", pattern, task);
@@ -45,8 +45,8 @@ namespace WellTool.Cron.Tests
             // 测试清空任务表
             var taskTable = new TaskTable();
             var pattern = new CronPattern("*/1 * * * * *");
-            var task1 = new Task(() => { });
-            var task2 = new Task(() => { });
+            var task1 = new RunnableTask(() => { });
+            var task2 = new RunnableTask(() => { });
 
             // 添加任务
             taskTable.Add("test1", pattern, task1);

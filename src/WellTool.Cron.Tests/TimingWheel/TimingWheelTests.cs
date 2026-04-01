@@ -12,11 +12,11 @@ namespace WellTool.Cron.Tests.TimingWheel
         public void TestAddTask()
         {
             // 测试添加任务
-            var timingWheel = new TimingWheel(100, 10, DateTimeOffset.Now.ToUnixTimeMilliseconds());
+            var timingWheel = new WellTool.Cron.TimingWheel.TimingWheel(100, 10, DateTimeOffset.Now.ToUnixTimeMilliseconds());
             bool executed = false;
 
             // 创建一个 2 秒后执行的任务
-            var task = new TimerTask(Guid.NewGuid().ToString(), DateTimeOffset.Now.AddSeconds(2).ToUnixTimeMilliseconds(), () =>
+            var task = new TimerTask(Guid.NewGuid().ToString(), DateTimeOffset.Now.AddSeconds(2).ToUnixTimeMilliseconds(), (id) =>
             {
                 executed = true;
             });
