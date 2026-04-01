@@ -129,9 +129,9 @@ namespace WellTool.Core.Lang
 
             using (var writer = new System.IO.StringWriter(sb))
             {
-                System.System.Console.SetOut(writer);
+                System.Console.SetOut(writer);
                 Print();
-                System.System.Console.SetOut(originalOut);
+                System.Console.SetOut(originalOut);
             }
 
             return sb.ToString();

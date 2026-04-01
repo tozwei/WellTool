@@ -171,7 +171,7 @@ namespace WellTool.Core.Map
         /// <param name="map">字典</param>
         /// <param name="keys">键迭代器</param>
         /// <returns>值列表</returns>
-        public static List<V> ValuesOfKeys<K, V>(Dictionary<K, V> map, IEnumerator<K> keys)
+        public static List<V> ValuesOfKeys<K, V>(Dictionary<K, V> map, IEnumerator<K> keys) where K : notnull
         {
             var values = new List<V>();
             if (map == null || keys == null)
