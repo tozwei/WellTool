@@ -32,7 +32,7 @@ namespace WellTool.Core.Tests
             });
 
             // 等待任务执行完成
-            Thread.Sleep(100);
+            System.Threading.Thread.Sleep(100);
             Assert.True(executed);
         }
 
@@ -57,15 +57,15 @@ namespace WellTool.Core.Tests
                 var index = i;
                 tasks[i] = () =>
                 {
-                    Thread.Sleep(50);
+                    System.Threading.Thread.Sleep(50);
                     executed[index] = true;
                 };
             }
 
             AsyncUtil.Execute(tasks);
-            
+
             // 等待所有任务完成
-            Thread.Sleep(200);
+            System.Threading.Thread.Sleep(200);
             
             foreach (var exec in executed)
             {
@@ -104,13 +104,13 @@ namespace WellTool.Core.Tests
             {
                 ThreadUtil.Execute(() =>
                 {
-                    Thread.Sleep(50);
+                    System.Threading.Thread.Sleep(50);
                     finisher.CountDown();
                 });
             }
 
             // 等待完成
-            Thread.Sleep(200);
+            System.Threading.Thread.Sleep(200);
             Assert.True(completed);
         }
     }
