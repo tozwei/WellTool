@@ -33,6 +33,11 @@ namespace WellTool.Cron.Pattern
         private readonly bool matchSecond;
 
         /// <summary>
+        /// 原始表达式
+        /// </summary>
+        private readonly string pattern;
+
+        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="pattern">cron表达式</param>
@@ -47,6 +52,7 @@ namespace WellTool.Cron.Pattern
         /// <param name="matchSecond">是否支持秒匹配</param>
         public CronPattern(string pattern, bool matchSecond)
         {
+            this.pattern = pattern;
             this.matchSecond = matchSecond;
             this.matchers = Parse(pattern, matchSecond);
         }
@@ -167,9 +173,7 @@ namespace WellTool.Cron.Pattern
         /// <returns>Cron表达式</returns>
         public override string ToString()
         {
-            // 这里简化实现，实际应该返回原始的Cron表达式
-            // 由于我们没有存储原始表达式，所以返回一个示例表达式
-            return matchSecond ? "*/5 * * * * *" : "*/5 * * * *";
+            return pattern;
         }
     }
 }
