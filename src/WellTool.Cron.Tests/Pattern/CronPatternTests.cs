@@ -1,5 +1,6 @@
-using WellTool.Cron.Pattern;
 using Xunit;
+using WellTool.Cron.Pattern;
+using System;
 
 namespace WellTool.Cron.Tests.Pattern
 {

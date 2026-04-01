@@ -114,9 +114,28 @@ namespace WellTool.Cron.Pattern.Parser
                     throw new CronException("Invalid step format: {0}", part);
                 }
 
+                string rangeStr = stepParts[0];
                 int step = ParseInt(stepParts[1], 1, int.MaxValue);
 
-                for (int i = min; i <= max; i += step)
+                int start, end;
+                if (rangeStr == "*")
+                {
+                    start = min;
+                    end = max;
+                }
+                else if (rangeStr.Contains('-'))
+                {
+                    string[] rangeParts = rangeStr.Split('-');
+                    start = ParseValue(rangeParts[0], min, max);
+                    end = ParseValue(rangeParts[1], min, max);
+                }
+                else
+                {
+                    start = ParseValue(rangeStr, min, max);
+                    end = max;
+                }
+
+                for (int i = start; i <= end; i += step)
                 {
                     matcher.SetMatch(i - min);
                 }
@@ -149,7 +168,7 @@ namespace WellTool.Cron.Pattern.Parser
             {
                 switch (str.ToLower())
                 {
-                    case "sun": return 7; // 周日可以是 0 或 7
+                    case "sun": return 0; // 周日是 0
                     case "mon": return 1;
                     case "tue": return 2;
                     case "wed": return 3;
@@ -158,10 +177,10 @@ namespace WellTool.Cron.Pattern.Parser
                     case "sat": return 6;
                 }
                 
-                // 处理数字 0，将其转换为 7（周日）
-                if (str == "0")
+                // 处理数字 7，将其转换为 0（周日）
+                if (str == "7")
                 {
-                    return 7;
+                    return 0;
                 }
             }
 

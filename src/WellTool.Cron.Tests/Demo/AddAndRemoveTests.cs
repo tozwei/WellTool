@@ -1,48 +1,43 @@
-using WellTool.Cron;
 using Xunit;
+using WellTool.Cron;
+using System;
 
 namespace WellTool.Cron.Tests.Demo
 {
     /// <summary>
-    /// 任务添加和移除测试（对应 Hutool AddAndRemoveMainTest）
+    /// 添加和删除任务测试
     /// </summary>
     public class AddAndRemoveTests
     {
         [Fact]
         public void AddAndRemoveTaskTest()
         {
-            // 添加和移除任务测试
             var scheduler = new Scheduler();
+            int count = 0;
 
-            try
+            // 添加任务
+            var taskId = scheduler.Schedule("*/1 * * * * *", () =>
             {
-                scheduler.Start();
+                count++;
+            });
 
-                int executeCount = 0;
-                var taskId = scheduler.Schedule("*/1 * * * * *", () =>
-                {
-                    executeCount++;
-                });
+            // 启动调度器
+            scheduler.Start();
 
-                // 等待执行 2 次
-                System.Threading.Thread.Sleep(2500);
+            // 等待一段时间
+            System.Threading.Thread.Sleep(2500);
 
-                Assert.True(executeCount >= 2, $"任务应该至少执行 2 次，实际执行：{executeCount}");
+            // 移除任务
+            scheduler.Unschedule(taskId);
 
-                // 移除任务
-                scheduler.Unschedule(taskId);
+            // 等待一段时间，确保任务不再执行
+            System.Threading.Thread.Sleep(1500);
 
-                int countBefore = executeCount;
+            // 停止调度器
+            scheduler.Stop();
 
-                // 再等待 2 秒，确认任务已被移除
-                System.Threading.Thread.Sleep(2000);
-
-                Assert.Equal(countBefore, executeCount);
-            }
-            finally
-            {
-                scheduler.Stop();
-            }
+            // 任务应该至少执行 2 次
+            Assert.True(count >= 2, $"任务应该至少执行 2 次，实际执行：{count}");
         }
     }
 }

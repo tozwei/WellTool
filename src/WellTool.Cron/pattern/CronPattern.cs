@@ -118,10 +118,7 @@ namespace WellTool.Cron.Pattern
         {
             // 周的处理：0和7都表示周日
             int dayOfWeek = (int)dateTime.DayOfWeek;
-            if (dayOfWeek == 0)
-            {
-                dayOfWeek = 7;
-            }
+            // 直接使用 0-6 的范围，与 .NET 的 DayOfWeek 枚举保持一致
 
             return matchers[(int)Part.SECOND].Match(dateTime.Second) &&
                    matchers[(int)Part.MINUTE].Match(dateTime.Minute) &&

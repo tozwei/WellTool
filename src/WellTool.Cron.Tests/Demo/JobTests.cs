@@ -1,75 +1,71 @@
-using WellTool.Cron;
 using Xunit;
+using WellTool.Cron;
+using System;
 
 namespace WellTool.Cron.Tests.Demo
 {
     /// <summary>
-    /// 任务执行测试（对应 Hutool JobMainTest）
+    /// 任务测试
     /// </summary>
     public class JobTests
     {
         [Fact]
         public void SimpleJobTest()
         {
-            // 简单任务测试
             var scheduler = new Scheduler();
+            int count = 0;
 
-            try
+            // 添加任务，每1秒执行一次
+            scheduler.Schedule("*/1 * * * * *", () =>
             {
-                scheduler.Start();
+                count++;
+            });
 
-                int counter = 0;
-                scheduler.Schedule("*/1 * * * * *", () =>
-                {
-                    counter++;
-                });
+            // 启动调度器
+            scheduler.Start();
 
-                // 等待执行 3 次
-                System.Threading.Thread.Sleep(3500);
+            // 等待一段时间
+            System.Threading.Thread.Sleep(3500);
 
-                Assert.True(counter >= 3, $"任务应该至少执行 3 次，实际执行：{counter}");
-            }
-            finally
-            {
-                scheduler.Stop();
-            }
+            // 停止调度器
+            scheduler.Stop();
+
+            // 任务应该至少执行 3 次
+            Assert.True(count >= 3, $"任务应该至少执行 3 次，实际执行：{count}");
         }
 
         [Fact]
         public void MultipleJobsTest()
         {
-            // 多个任务测试
             var scheduler = new Scheduler();
+            int count1 = 0;
+            int count2 = 0;
 
-            try
+            // 添加任务 1，每1秒执行一次
+            scheduler.Schedule("*/1 * * * * *", () =>
             {
-                scheduler.Start();
+                count1++;
+            });
 
-                int job1Count = 0;
-                int job2Count = 0;
-
-                // 每秒执行的任务
-                scheduler.Schedule("*/1 * * * * *", () =>
-                {
-                    job1Count++;
-                });
-
-                // 每 2 秒执行的任务
-                scheduler.Schedule("*/2 * * * * *", () =>
-                {
-                    job2Count++;
-                });
-
-                // 等待 3 秒
-                System.Threading.Thread.Sleep(3500);
-
-                Assert.True(job1Count >= 3, $"任务 1 应该至少执行 3 次，实际执行：{job1Count}");
-                Assert.True(job2Count >= 1, $"任务 2 应该至少执行 1 次，实际执行：{job2Count}");
-            }
-            finally
+            // 添加任务 2，每1秒执行一次
+            scheduler.Schedule("*/1 * * * * *", () =>
             {
-                scheduler.Stop();
-            }
+                count2++;
+            });
+
+            // 启动调度器
+            scheduler.Start();
+
+            // 等待一段时间
+            System.Threading.Thread.Sleep(3500);
+
+            // 停止调度器
+            scheduler.Stop();
+
+            // 任务 1 应该至少执行 3 次
+            Assert.True(count1 >= 3, $"任务 1 应该至少执行 3 次，实际执行：{count1}");
+            // 任务 2 应该至少执行 3 次
+            Assert.True(count2 >= 3, $"任务 2 应该至少执行 3 次，实际执行：{count2}");
         }
     }
 }

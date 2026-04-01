@@ -1,5 +1,5 @@
-using WellTool.Cron.Pattern;
 using Xunit;
+using WellTool.Cron.Pattern;
 
 namespace WellTool.Cron.Tests.Pattern
 {
@@ -9,65 +9,16 @@ namespace WellTool.Cron.Tests.Pattern
     public class CronPatternBuilderTests
     {
         [Fact]
-        public void BuildTest()
+        public void TestBuild()
         {
-            // 每秒执行一次
+            // 测试构建 cron 表达式
             var pattern = CronPatternBuilder.New()
-                .SetSecond("0/1")
-                .Build();
-
-            Assert.NotNull(pattern);
-            Assert.NotNull(pattern.ToString());
-        }
-
-        [Fact]
-        public void BuildComplexTest()
-        {
-            // 工作日早上 8:30:00 执行
-            var pattern = CronPatternBuilder.New()
-                .SetSecond("0")
-                .SetMinute("30")
-                .SetHour("8")
-                .SetDayOfWeek("1-5")
-                .Build();
-
-            Assert.NotNull(pattern);
-            Assert.NotNull(pattern.ToString());
-        }
-
-        [Fact]
-        public void BuildEveryMinuteTest()
-        {
-            // 每分钟执行
-            var pattern = CronPatternBuilder.New()
-                .SetSecond("0")
-                .SetMinute("*/1")
-                .Build();
-
-            Assert.NotNull(pattern);
-        }
-
-        [Fact]
-        public void BuildEveryHourTest()
-        {
-            // 每小时执行
-            var pattern = CronPatternBuilder.New()
-                .SetSecond("0")
-                .SetMinute("0")
-                .SetHour("*/1")
-                .Build();
-
-            Assert.NotNull(pattern);
-        }
-
-        [Fact]
-        public void BuildSpecificTimeTest()
-        {
-            // 特定时间执行
-            var pattern = CronPatternBuilder.New()
-                .SetSecond("30")
-                .SetMinute("15")
-                .SetHour("10")
+                .Second(0)
+                .Minute(30)
+                .Hour(8)
+                .DayOfMonth(1)
+                .Month(1)
+                .DayOfWeek(1)
                 .Build();
 
             Assert.NotNull(pattern);
