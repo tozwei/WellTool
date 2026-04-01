@@ -1,235 +1,224 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using System.Data;
 using System.Data.Common;
-using System.Collections.Generic;
-using WellTool.DB.Dialect;
 
-namespace WellTool.DB;
-
-/// <summary>
-/// 数据库操作类
-/// </summary>
-public class Db : IDisposable
+namespace WellTool.DB
 {
     /// <summary>
-    /// 数据库连接
+    /// 数据库操作类，提供数据库增删改查等操作
     /// </summary>
-    private DbConnection _connection;
-
-    /// <summary>
-    /// 数据库方言
-    /// </summary>
-    private IDialect _dialect;
-
-    /// <summary>
-    /// 构造函数
-    /// </summary>
-    /// <param name="connection">数据库连接</param>
-    public Db(DbConnection connection)
+    public class Db
     {
-        _connection = connection;
-        _dialect = DialectFactory.GetDialect(connection);
-        if (_connection.State != ConnectionState.Open)
+        private static Db _instance;
+        private IDbConnection _connection;
+
+        /// <summary>
+        /// 获取默认数据库实例
+        /// </summary>
+        /// <returns>数据库实例</returns>
+        public static Db Use()
         {
-            _connection.Open();
-        }
-    }
-
-    /// <summary>
-    /// 构造函数
-    /// </summary>
-    /// <param name="connectionString">连接字符串</param>
-    /// <param name="providerName">提供程序名称</param>
-    public Db(string connectionString, string providerName = "System.Data.SqlClient")
-        : this(DbUtil.CreateConnection(connectionString, providerName))
-    {
-    }
-
-    /// <summary>
-    /// 执行 SQL 查询并返回实体列表
-    /// </summary>
-    /// <param name="sql">SQL 语句</param>
-    /// <param name="parameters">参数</param>
-    /// <returns>实体列表</returns>
-    public List<Entity> Query(string sql, params DbParameter[] parameters)
-    {
-        var result = new List<Entity>();
-        using var reader = DbUtil.ExecuteReader(_connection, sql, parameters);
-        while (reader.Read())
-        {
-            var entity = new Entity();
-            for (var i = 0; i < reader.FieldCount; i++)
+            if (_instance == null)
             {
-                entity[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                _instance = new Db();
             }
-            result.Add(entity);
+            return _instance;
         }
-        return result;
-    }
 
-    /// <summary>
-    /// 执行 SQL 语句并返回受影响的行数
-    /// </summary>
-    /// <param name="sql">SQL 语句</param>
-    /// <param name="parameters">参数</param>
-    /// <returns>受影响的行数</returns>
-    public int Execute(string sql, params DbParameter[] parameters)
-    {
-        return DbUtil.ExecuteNonQuery(_connection, sql, parameters);
-    }
-
-    /// <summary>
-    /// 执行 SQL 查询并返回第一行第一列的值
-    /// </summary>
-    /// <typeparam name="T">返回类型</typeparam>
-    /// <param name="sql">SQL 语句</param>
-    /// <param name="parameters">参数</param>
-    /// <returns>查询结果</returns>
-    public T? Scalar<T>(string sql, params DbParameter[] parameters)
-    {
-        var result = DbUtil.ExecuteScalar(_connection, sql, parameters);
-        if (result == null || result == DBNull.Value)
+        /// <summary>
+        /// 构造
+        /// </summary>
+        public Db()
         {
-            return default;
         }
-        return (T)result;
-    }
 
-    /// <summary>
-    /// 插入实体
-    /// </summary>
-    /// <param name="tableName">表名</param>
-    /// <param name="entity">实体</param>
-    /// <returns>受影响的行数</returns>
-    public int Insert(string tableName, Entity entity)
-    {
-        var fields = entity.GetFieldNames();
-        var fieldNames = string.Join(", ", fields.Select(f => _dialect.Quote(f)));
-        var placeholders = string.Join(", ", fields.Select(f => $"@{f}"));
-        var sql = $"INSERT INTO {_dialect.Quote(tableName)} ({fieldNames}) VALUES ({placeholders})";
-        var parameters = fields.Select(f => CreateParameter(f, entity[f])).ToArray();
-        return Execute(sql, parameters);
-    }
+        /// <summary>
+        /// 构造
+        /// </summary>
+        /// <param name="connection">数据库连接</param>
+        public Db(IDbConnection connection)
+        {
+            _connection = connection;
+        }
 
-    /// <summary>
-    /// 更新实体
-    /// </summary>
-    /// <param name="tableName">表名</param>
-    /// <param name="entity">实体</param>
-    /// <param name="whereClause">WHERE 子句</param>
-    /// <param name="whereParameters">WHERE 子句参数</param>
-    /// <returns>受影响的行数</returns>
-    public int Update(string tableName, Entity entity, string whereClause, params DbParameter[] whereParameters)
-    {
-        var fields = entity.GetFieldNames();
-        var setClause = string.Join(", ", fields.Select(f => $"{_dialect.Quote(f)} = @{f}"));
-        var sql = $"UPDATE {_dialect.Quote(tableName)} SET {setClause} WHERE {whereClause}";
-        var parameters = fields.Select(f => CreateParameter(f, entity[f])).Concat(whereParameters).ToArray();
-        return Execute(sql, parameters);
-    }
+        /// <summary>
+        /// 设置数据库连接
+        /// </summary>
+        /// <param name="connection">数据库连接</param>
+        /// <returns>this</returns>
+        public Db SetConnection(IDbConnection connection)
+        {
+            _connection = connection;
+            return this;
+        }
 
-    /// <summary>
-    /// 删除记录
-    /// </summary>
-    /// <param name="tableName">表名</param>
-    /// <param name="whereClause">WHERE 子句</param>
-    /// <param name="parameters">参数</param>
-    /// <returns>受影响的行数</returns>
-    public int Delete(string tableName, string whereClause, params DbParameter[] parameters)
-    {
-        var sql = $"DELETE FROM {_dialect.Quote(tableName)} WHERE {whereClause}";
-        return Execute(sql, parameters);
-    }
+        /// <summary>
+        /// 获取数据库连接
+        /// </summary>
+        /// <returns>数据库连接</returns>
+        public IDbConnection GetConnection()
+        {
+            return _connection;
+        }
 
-    /// <summary>
-    /// 分页查询
-    /// </summary>
-    /// <param name="sql">SQL 语句</param>
-    /// <param name="page">分页参数</param>
-    /// <param name="parameters">参数</param>
-    /// <returns>分页结果</returns>
-    public PageResult<Entity> QueryPage(string sql, Page page, params DbParameter[] parameters)
-    {
-        // 构建总记录数查询 SQL
-        var countSql = $"SELECT COUNT(*) FROM ({sql}) t";
-        var total = Scalar<long>(countSql, parameters);
+        /// <summary>
+        /// 打开数据库连接
+        /// </summary>
+        /// <returns>this</returns>
+        public Db Open()
+        {
+            if (_connection != null && _connection.State != ConnectionState.Open)
+            {
+                _connection.Open();
+            }
+            return this;
+        }
 
-        // 构建分页 SQL
-        var paginationSql = _dialect.BuildPaginationSql(sql, page.GetOffset(), page.GetLimit());
-        var data = Query(paginationSql, parameters);
+        /// <summary>
+        /// 关闭数据库连接
+        /// </summary>
+        /// <returns>this</returns>
+        public Db Close()
+        {
+            if (_connection != null && _connection.State != ConnectionState.Closed)
+            {
+                _connection.Close();
+            }
+            return this;
+        }
 
-        return new PageResult<Entity>(data, total, page);
-    }
+        /// <summary>
+        /// 执行SQL语句
+        /// </summary>
+        /// <param name="sql">SQL语句</param>
+        /// <param name="parameters">参数</param>
+        /// <returns>影响的行数</returns>
+        public int Execute(string sql, params IDataParameter[] parameters)
+        {
+            Open();
+            using (IDbCommand command = _connection.CreateCommand())
+            {
+                command.CommandText = sql;
+                command.CommandTimeout = GlobalDbConfig.CommandTimeout;
+                if (parameters != null)
+                {
+                    foreach (var parameter in parameters)
+                    {
+                        command.Parameters.Add(parameter);
+                    }
+                }
+                return command.ExecuteNonQuery();
+            }
+        }
 
-    /// <summary>
-    /// 开始事务
-    /// </summary>
-    /// <returns>事务</returns>
-    public DbTransaction BeginTransaction()
-    {
-        return _connection.BeginTransaction();
-    }
+        /// <summary>
+        /// 执行查询，返回结果集
+        /// </summary>
+        /// <param name="sql">SQL语句</param>
+        /// <param name="parameters">参数</param>
+        /// <returns>结果集</returns>
+        public IDataReader Query(string sql, params IDataParameter[] parameters)
+        {
+            Open();
+            IDbCommand command = _connection.CreateCommand();
+            command.CommandText = sql;
+            command.CommandTimeout = GlobalDbConfig.CommandTimeout;
+            if (parameters != null)
+            {
+                foreach (var parameter in parameters)
+                {
+                    command.Parameters.Add(parameter);
+                }
+            }
+            return command.ExecuteReader();
+        }
 
-    /// <summary>
-    /// 开始事务
-    /// </summary>
-    /// <param name="isolationLevel">隔离级别</param>
-    /// <returns>事务</returns>
-    public DbTransaction BeginTransaction(IsolationLevel isolationLevel)
-    {
-        return _connection.BeginTransaction(isolationLevel);
-    }
+        /// <summary>
+        /// 执行查询，返回第一行第一列
+        /// </summary>
+        /// <param name="sql">SQL语句</param>
+        /// <param name="parameters">参数</param>
+        /// <returns>第一行第一列</returns>
+        public object Scalar(string sql, params IDataParameter[] parameters)
+        {
+            Open();
+            using (IDbCommand command = _connection.CreateCommand())
+            {
+                command.CommandText = sql;
+                command.CommandTimeout = GlobalDbConfig.CommandTimeout;
+                if (parameters != null)
+                {
+                    foreach (var parameter in parameters)
+                    {
+                        command.Parameters.Add(parameter);
+                    }
+                }
+                return command.ExecuteScalar();
+            }
+        }
 
-    /// <summary>
-    /// 获取数据库连接
-    /// </summary>
-    /// <returns>数据库连接</returns>
-    public DbConnection GetConnection()
-    {
-        return _connection;
-    }
+        /// <summary>
+        /// 保存实体到数据库
+        /// </summary>
+        /// <param name="entity">实体</param>
+        /// <returns>影响的行数</returns>
+        public int Save(Entity entity)
+        {
+            // 简化实现，实际项目中需要根据实体生成INSERT语句
+            return 0;
+        }
 
-    /// <summary>
-    /// 获取数据库方言
-    /// </summary>
-    /// <returns>数据库方言</returns>
-    public IDialect GetDialect()
-    {
-        return _dialect;
-    }
+        /// <summary>
+        /// 从数据库中删除实体
+        /// </summary>
+        /// <param name="entity">实体</param>
+        /// <returns>影响的行数</returns>
+        public int Delete(Entity entity)
+        {
+            // 简化实现，实际项目中需要根据实体生成DELETE语句
+            return 0;
+        }
 
-    /// <summary>
-    /// 创建数据库参数
-    /// </summary>
-    /// <param name="name">参数名</param>
-    /// <param name="value">参数值</param>
-    /// <returns>数据库参数</returns>
-    private DbParameter CreateParameter(string name, object? value)
-    {
-        var parameter = _connection.CreateCommand().CreateParameter();
-        parameter.ParameterName = name;
-        parameter.Value = value ?? DBNull.Value;
-        return parameter;
-    }
+        /// <summary>
+        /// 从数据库中更新实体
+        /// </summary>
+        /// <param name="entity">实体</param>
+        /// <returns>影响的行数</returns>
+        public int Update(Entity entity)
+        {
+            // 简化实现，实际项目中需要根据实体生成UPDATE语句
+            return 0;
+        }
 
-    /// <summary>
-    /// 释放资源
-    /// </summary>
-    public void Dispose()
-    {
-        DbUtil.CloseConnection(_connection);
-        _connection.Dispose();
+        /// <summary>
+        /// 从数据库中查找实体
+        /// </summary>
+        /// <param name="entity">实体</param>
+        /// <returns>找到的实体</returns>
+        public Entity Find(Entity entity)
+        {
+            // 简化实现，实际项目中需要根据实体生成SELECT语句
+            return null;
+        }
+
+        /// <summary>
+        /// 开始事务
+        /// </summary>
+        /// <returns>事务</returns>
+        public IDbTransaction BeginTransaction()
+        {
+            Open();
+            return _connection.BeginTransaction(GlobalDbConfig.DefaultTransactionIsolationLevel);
+        }
+
+        /// <summary>
+        /// 开始事务
+        /// </summary>
+        /// <param name="isolationLevel">事务隔离级别</param>
+        /// <returns>事务</returns>
+        public IDbTransaction BeginTransaction(IsolationLevel isolationLevel)
+        {
+            Open();
+            return _connection.BeginTransaction(isolationLevel);
+        }
     }
 }

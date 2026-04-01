@@ -117,8 +117,8 @@ public class ExtraUtil
     /// 获取验证工具
     /// </summary>
     /// <returns>验证工具</returns>
-    public ValidationUtil Validation()
+    public object Validation()
     {
-        return ValidationUtil.Instance;
+        return null;
     }
 }

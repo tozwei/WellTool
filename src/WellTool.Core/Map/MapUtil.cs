@@ -547,95 +547,95 @@ namespace WellTool.Core.Map
         }
 
         /// <summary>
-            /// 将map转成字符串
-            /// </summary>
-            /// <typeparam name="K">键类型</typeparam>
-            /// <typeparam name="V">值类型</typeparam>
-            /// <param name="map">Map</param>
-            /// <param name="separator">entry之间的连接符</param>
-            /// <param name="keyValueSeparator">kv之间的连接符</param>
-            /// <param name="otherParams">其它附加参数字符串（例如密钥）</param>
-            /// <returns>连接字符串</returns>
-            public static string Join<K, V>(IDictionary<K, V> map, string separator, string keyValueSeparator, params string[] otherParams)
-            {
-                return Join(map, separator, keyValueSeparator, false, otherParams);
-            }
+        /// 将map转成字符串
+        /// </summary>
+        /// <typeparam name="K">键类型</typeparam>
+        /// <typeparam name="V">值类型</typeparam>
+        /// <param name="map">Map</param>
+        /// <param name="separator">entry之间的连接符</param>
+        /// <param name="keyValueSeparator">kv之间的连接符</param>
+        /// <param name="otherParams">其它附加参数字符串（例如密钥）</param>
+        /// <returns>连接字符串</returns>
+        public static string Join<K, V>(IDictionary<K, V> map, string separator, string keyValueSeparator, params string[] otherParams)
+        {
+            return Join(map, separator, keyValueSeparator, false, otherParams);
+        }
 
-            /// <summary>
-            /// 根据参数排序后拼接为字符串，常用于签名
-            /// </summary>
-            /// <typeparam name="K">键类型</typeparam>
-            /// <typeparam name="V">值类型</typeparam>
-            /// <param name="params">参数</param>
-            /// <param name="separator">entry之间的连接符</param>
-            /// <param name="keyValueSeparator">kv之间的连接符</param>
-            /// <param name="isIgnoreNull">是否忽略null的键和值</param>
-            /// <param name="otherParams">其它附加参数字符串（例如密钥）</param>
-            /// <returns>签名字符串</returns>
-            public static string SortJoin<K, V>(IDictionary<K, V> @params, string separator, string keyValueSeparator, bool isIgnoreNull, params string[] otherParams)
-            {
-                var sortedMap = Sort(@params);
-                return Join<K, V>(sortedMap, separator, keyValueSeparator, isIgnoreNull, otherParams);
-            }
+        /// <summary>
+        /// 根据参数排序后拼接为字符串，常用于签名
+        /// </summary>
+        /// <typeparam name="K">键类型</typeparam>
+        /// <typeparam name="V">值类型</typeparam>
+        /// <param name="params">参数</param>
+        /// <param name="separator">entry之间的连接符</param>
+        /// <param name="keyValueSeparator">kv之间的连接符</param>
+        /// <param name="isIgnoreNull">是否忽略null的键和值</param>
+        /// <param name="otherParams">其它附加参数字符串（例如密钥）</param>
+        /// <returns>签名字符串</returns>
+        public static string SortJoin<K, V>(IDictionary<K, V> @params, string separator, string keyValueSeparator, bool isIgnoreNull, params string[] otherParams)
+        {
+            var sortedMap = Sort(@params);
+            return Join<K, V>(sortedMap, separator, keyValueSeparator, isIgnoreNull, otherParams);
+        }
 
-            /// <summary>
-            /// 将map转成字符串，忽略null的键和值
-            /// </summary>
-            /// <typeparam name="K">键类型</typeparam>
-            /// <typeparam name="V">值类型</typeparam>
-            /// <param name="map">Map</param>
-            /// <param name="separator">entry之间的连接符</param>
-            /// <param name="keyValueSeparator">kv之间的连接符</param>
-            /// <param name="otherParams">其它附加参数字符串（例如密钥）</param>
-            /// <returns>连接后的字符串</returns>
-            public static string JoinIgnoreNull<K, V>(IDictionary<K, V> map, string separator, string keyValueSeparator, params string[] otherParams)
-            {
-                return Join(map, separator, keyValueSeparator, true, otherParams);
-            }
+        /// <summary>
+        /// 将map转成字符串，忽略null的键和值
+        /// </summary>
+        /// <typeparam name="K">键类型</typeparam>
+        /// <typeparam name="V">值类型</typeparam>
+        /// <param name="map">Map</param>
+        /// <param name="separator">entry之间的连接符</param>
+        /// <param name="keyValueSeparator">kv之间的连接符</param>
+        /// <param name="otherParams">其它附加参数字符串（例如密钥）</param>
+        /// <returns>连接后的字符串</returns>
+        public static string JoinIgnoreNull<K, V>(IDictionary<K, V> map, string separator, string keyValueSeparator, params string[] otherParams)
+        {
+            return Join(map, separator, keyValueSeparator, true, otherParams);
+        }
 
-            /// <summary>
-            /// 将map转成字符串
-            /// </summary>
-            /// <typeparam name="K">键类型</typeparam>
-            /// <typeparam name="V">值类型</typeparam>
-            /// <param name="map">Map，为空返回otherParams拼接</param>
-            /// <param name="separator">entry之间的连接符</param>
-            /// <param name="keyValueSeparator">kv之间的连接符</param>
-            /// <param name="isIgnoreNull">是否忽略null的键和值</param>
-            /// <param name="otherParams">其它附加参数字符串（例如密钥）</param>
-            /// <returns>连接后的字符串，map和otherParams为空返回""</returns>
-            public static string Join<K, V>(IDictionary<K, V> map, string separator, string keyValueSeparator, bool isIgnoreNull, params string[] otherParams)
+        /// <summary>
+        /// 将map转成字符串
+        /// </summary>
+        /// <typeparam name="K">键类型</typeparam>
+        /// <typeparam name="V">值类型</typeparam>
+        /// <param name="map">Map，为空返回otherParams拼接</param>
+        /// <param name="separator">entry之间的连接符</param>
+        /// <param name="keyValueSeparator">kv之间的连接符</param>
+        /// <param name="isIgnoreNull">是否忽略null的键和值</param>
+        /// <param name="otherParams">其它附加参数字符串（例如密钥）</param>
+        /// <returns>连接后的字符串，map和otherParams为空返回""</returns>
+        public static string Join<K, V>(IDictionary<K, V> map, string separator, string keyValueSeparator, bool isIgnoreNull, params string[] otherParams)
+        {
+            var strBuilder = new System.Text.StringBuilder();
+            bool isFirst = true;
+            if (IsNotEmpty(map))
             {
-                var strBuilder = new System.Text.StringBuilder();
-                bool isFirst = true;
-                if (IsNotEmpty(map))
+                foreach (var entry in map)
                 {
-                    foreach (var entry in map)
+                    if (!isIgnoreNull || (entry.Key != null && entry.Value != null))
                     {
-                        if (!isIgnoreNull || (entry.Key != null && entry.Value != null))
+                        if (isFirst)
                         {
-                            if (isFirst)
-                            {
-                                isFirst = false;
-                            }
-                            else
-                            {
-                                strBuilder.Append(separator);
-                            }
-                            strBuilder.Append(entry.Key).Append(keyValueSeparator).Append(entry.Value);
+                            isFirst = false;
                         }
+                        else
+                        {
+                            strBuilder.Append(separator);
+                        }
+                        strBuilder.Append(entry.Key).Append(keyValueSeparator).Append(entry.Value);
                     }
                 }
-                // 补充其它字符串到末尾，默认无分隔符
-                if (otherParams != null)
-                {
-                    foreach (var otherParam in otherParams)
-                    {
-                        strBuilder.Append(otherParam);
-                    }
-                }
-                return strBuilder.ToString();
             }
+            // 补充其它字符串到末尾，默认无分隔符
+            if (otherParams != null)
+            {
+                foreach (var otherParam in otherParams)
+                {
+                    strBuilder.Append(otherParam);
+                }
+            }
+            return strBuilder.ToString();
+        }
 
         /// <summary>
         /// 编辑器接口
@@ -946,7 +946,15 @@ namespace WellTool.Core.Map
         /// <returns>值</returns>
         public static int GetInt<K, V>(Dictionary<K, V> map, K key)
         {
-            return Get(map, key, 0);
+            if (map == null)
+            {
+                return 0;
+            }
+            if (map.TryGetValue(key, out var value) && value != null)
+            {
+                return Convert.ToInt32(value);
+            }
+            return 0;
         }
 
         /// <summary>
@@ -960,7 +968,22 @@ namespace WellTool.Core.Map
         /// <returns>值</returns>
         public static int GetInt<K, V>(Dictionary<K, V> map, K key, int defaultValue)
         {
-            return Get(map, key, defaultValue);
+            if (map == null)
+            {
+                return defaultValue;
+            }
+            if (map.TryGetValue(key, out var value) && value != null)
+            {
+                try
+                {
+                    return Convert.ToInt32(value);
+                }
+                catch
+                {
+                    return defaultValue;
+                }
+            }
+            return defaultValue;
         }
 
         /// <summary>
@@ -1622,11 +1645,15 @@ namespace WellTool.Core.Map
         /// <returns>子Map列表</returns>
         public static List<Dictionary<K, V>> Partition<K, V>(Dictionary<K, V> map, int size)
         {
-            var result = new List<Dictionary<K, V>>();
-            if (map == null || size <= 0)
+            if (map == null)
             {
-                return result;
+                throw new ArgumentException("Map cannot be null");
             }
+            if (size <= 0)
+            {
+                throw new ArgumentException("Size must be greater than 0");
+            }
+            var result = new List<Dictionary<K, V>>();
             var currentMap = new Dictionary<K, V>();
             int count = 0;
             foreach (var entry in map)

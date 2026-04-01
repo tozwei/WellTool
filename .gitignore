@@ -117,3 +117,5 @@
 /src/WellTool.Socket/bin/Release
 /src/WellTool.System/bin/Release
 /src/nupkg
+
+.fake
