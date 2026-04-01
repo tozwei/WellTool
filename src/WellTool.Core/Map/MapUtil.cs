@@ -26,7 +26,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="K">键类型</typeparam>
         /// <typeparam name="V">值类型</typeparam>
         /// <returns>空字典</returns>
-        public static Dictionary<K, V> Empty<K, V>()
+        public static Dictionary<K, V> Empty<K, V>() where K : notnull
         {
             return new Dictionary<K, V>();
         }
@@ -38,7 +38,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">提供的字典，可能为null</param>
         /// <returns>原字典，若为null返回空字典</returns>
-        public static Dictionary<K, V> EmptyIfNull<K, V>(Dictionary<K, V> map)
+        public static Dictionary<K, V> EmptyIfNull<K, V>(Dictionary<K, V> map) where K : notnull
         {
             return map ?? new Dictionary<K, V>();
         }
@@ -51,7 +51,7 @@ namespace WellTool.Core.Map
         /// <param name="map">字典</param>
         /// <param name="defaultMap">默认字典</param>
         /// <returns>非空的原字典或默认字典</returns>
-        public static Dictionary<K, V> DefaultIfEmpty<K, V>(Dictionary<K, V> map, Dictionary<K, V> defaultMap)
+        public static Dictionary<K, V> DefaultIfEmpty<K, V>(Dictionary<K, V> map, Dictionary<K, V> defaultMap) where K : notnull
         {
             return IsEmpty(map) ? defaultMap : map;
         }
@@ -64,7 +64,7 @@ namespace WellTool.Core.Map
         /// <param name="key">键</param>
         /// <param name="value">值</param>
         /// <returns>字典</returns>
-        public static Dictionary<K, V> Of<K, V>(K key, V value)
+        public static Dictionary<K, V> Of<K, V>(K key, V value) where K : notnull
         {
             var map = new Dictionary<K, V>();
             map[key] = value;
@@ -80,7 +80,7 @@ namespace WellTool.Core.Map
         /// <param name="value">值</param>
         /// <param name="isLinked">是否有序</param>
         /// <returns>字典</returns>
-        public static Dictionary<K, V> Of<K, V>(K key, V value, bool isLinked)
+        public static Dictionary<K, V> Of<K, V>(K key, V value, bool isLinked) where K : notnull
         {
             var map = NewHashMap<K, V>(isLinked);
             map[key] = value;
@@ -198,7 +198,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="K">Key类型</typeparam>
         /// <typeparam name="V">Value类型</typeparam>
         /// <returns>HashMap对象</returns>
-        public static Dictionary<K, V> NewHashMap<K, V>()
+        public static Dictionary<K, V> NewHashMap<K, V>() where K : notnull
         {
             return new Dictionary<K, V>();
         }
@@ -211,7 +211,7 @@ namespace WellTool.Core.Map
         /// <param name="size">初始大小</param>
         /// <param name="isLinked">Map的Key是否有序，有序返回LinkedDictionary，否则返回Dictionary</param>
         /// <returns>HashMap对象</returns>
-        public static Dictionary<K, V> NewHashMap<K, V>(int size, bool isLinked)
+        public static Dictionary<K, V> NewHashMap<K, V>(int size, bool isLinked) where K : notnull
         {
             if (isLinked)
             {
@@ -227,7 +227,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">Value类型</typeparam>
         /// <param name="size">初始大小</param>
         /// <returns>HashMap对象</returns>
-        public static Dictionary<K, V> NewHashMap<K, V>(int size)
+        public static Dictionary<K, V> NewHashMap<K, V>(int size) where K : notnull
         {
             return NewHashMap<K, V>(size, false);
         }
@@ -239,7 +239,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">Value类型</typeparam>
         /// <param name="isLinked">Map的Key是否有序，有序返回LinkedDictionary，否则返回Dictionary</param>
         /// <returns>HashMap对象</returns>
-        public static Dictionary<K, V> NewHashMap<K, V>(bool isLinked)
+        public static Dictionary<K, V> NewHashMap<K, V>(bool isLinked) where K : notnull
         {
             return NewHashMap<K, V>(DEFAULT_INITIAL_CAPACITY, isLinked);
         }
@@ -251,7 +251,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">value的类型</typeparam>
         /// <param name="comparator">Key比较器</param>
         /// <returns>TreeMap</returns>
-        public static SortedDictionary<K, V> NewTreeMap<K, V>(IComparer<K> comparator)
+        public static SortedDictionary<K, V> NewTreeMap<K, V>(IComparer<K> comparator) where K : notnull
         {
             return new SortedDictionary<K, V>(comparator);
         }
@@ -264,7 +264,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="comparator">Key比较器</param>
         /// <returns>TreeMap</returns>
-        public static SortedDictionary<K, V> NewTreeMap<K, V>(Dictionary<K, V> map, IComparer<K> comparator)
+        public static SortedDictionary<K, V> NewTreeMap<K, V>(Dictionary<K, V> map, IComparer<K> comparator) where K : notnull
         {
             var treeMap = new SortedDictionary<K, V>(comparator);
             if (IsNotEmpty(map))
@@ -284,7 +284,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">value的类型</typeparam>
         /// <param name="size">初始容量</param>
         /// <returns>IdentityDictionary</returns>
-        public static Dictionary<K, V> NewIdentityMap<K, V>(int size)
+        public static Dictionary<K, V> NewIdentityMap<K, V>(int size) where K : notnull
         {
             return new Dictionary<K, V>(size);
         }
@@ -295,7 +295,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="K">key的类型</typeparam>
         /// <typeparam name="V">value的类型</typeparam>
         /// <returns>ConcurrentHashMap</returns>
-        public static ConcurrentDictionary<K, V> NewConcurrentHashMap<K, V>()
+        public static ConcurrentDictionary<K, V> NewConcurrentHashMap<K, V>() where K : notnull
         {
             return new ConcurrentDictionary<K, V>();
         }
@@ -307,7 +307,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">value的类型</typeparam>
         /// <param name="size">初始容量，当传入的容量小于等于0时，容量为DEFAULT_INITIAL_CAPACITY</param>
         /// <returns>ConcurrentHashMap</returns>
-        public static ConcurrentDictionary<K, V> NewConcurrentHashMap<K, V>(int size)
+        public static ConcurrentDictionary<K, V> NewConcurrentHashMap<K, V>(int size) where K : notnull
         {
             var initCapacity = size <= 0 ? DEFAULT_INITIAL_CAPACITY : size;
             return new ConcurrentDictionary<K, V>();
@@ -320,7 +320,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">value的类型</typeparam>
         /// <param name="map">map</param>
         /// <returns>ConcurrentHashMap</returns>
-        public static ConcurrentDictionary<K, V> NewConcurrentHashMap<K, V>(Dictionary<K, V> map)
+        public static ConcurrentDictionary<K, V> NewConcurrentHashMap<K, V>(Dictionary<K, V> map) where K : notnull
         {
             if (IsEmpty(map))
             {
@@ -341,7 +341,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">map值类型</typeparam>
         /// <param name="mapType">map类型</param>
         /// <returns>Map实例</returns>
-        public static Dictionary<K, V> CreateMap<K, V>(Type mapType)
+        public static Dictionary<K, V> CreateMap<K, V>(Type mapType) where K : notnull
         {
             if (mapType == null || typeof(Dictionary<K, V>).IsAssignableFrom(mapType))
             {
@@ -368,7 +368,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="mapList">Map列表</param>
         /// <returns>Map</returns>
-        public static Dictionary<K, List<V>> ToListMap<K, V>(IEnumerable<Dictionary<K, V>> mapList)
+        public static Dictionary<K, List<V>> ToListMap<K, V>(IEnumerable<Dictionary<K, V>> mapList) where K : notnull
         {
             var resultMap = new Dictionary<K, List<V>>();
             if (mapList == null)
@@ -404,7 +404,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="listMap">列表Map</param>
         /// <returns>Map列表</returns>
-        public static List<Dictionary<K, V>> ToMapList<K, V>(Dictionary<K, IEnumerable<V>> listMap)
+        public static List<Dictionary<K, V>> ToMapList<K, V>(Dictionary<K, IEnumerable<V>> listMap) where K : notnull
         {
             var resultList = new List<Dictionary<K, V>>();
             if (IsEmpty(listMap))
@@ -448,7 +448,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="entries">entry列表</param>
         /// <returns>entries</returns>
-        public static Dictionary<K, List<V>> Grouping<K, V>(IEnumerable<KeyValuePair<K, V>> entries)
+        public static Dictionary<K, List<V>> Grouping<K, V>(IEnumerable<KeyValuePair<K, V>> entries) where K : notnull
         {
             var map = new Dictionary<K, List<V>>();
             if (entries == null)
@@ -474,7 +474,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">value的类型</typeparam>
         /// <param name="map">原Map</param>
         /// <returns>驼峰风格Map</returns>
-        public static Dictionary<K, V> ToCamelCaseMap<K, V>(Dictionary<K, V> map)
+        public static Dictionary<K, V> ToCamelCaseMap<K, V>(Dictionary<K, V> map) where K : notnull
         {
             if (IsEmpty(map))
             {
@@ -526,7 +526,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">map</param>
         /// <returns>数组</returns>
-        public static object[][] ToObjectArray<K, V>(Dictionary<K, V> map)
+        public static object[][] ToObjectArray<K, V>(Dictionary<K, V> map) where K : notnull
         {
             if (map == null)
             {
@@ -556,7 +556,7 @@ namespace WellTool.Core.Map
         /// <param name="keyValueSeparator">kv之间的连接符</param>
         /// <param name="otherParams">其它附加参数字符串（例如密钥）</param>
         /// <returns>连接字符串</returns>
-        public static string Join<K, V>(IDictionary<K, V> map, string separator, string keyValueSeparator, params string[] otherParams)
+        public static string Join<K, V>(IDictionary<K, V> map, string separator, string keyValueSeparator, params string[] otherParams) where K : notnull
         {
             return Join(map, separator, keyValueSeparator, false, otherParams);
         }
@@ -572,7 +572,7 @@ namespace WellTool.Core.Map
         /// <param name="isIgnoreNull">是否忽略null的键和值</param>
         /// <param name="otherParams">其它附加参数字符串（例如密钥）</param>
         /// <returns>签名字符串</returns>
-        public static string SortJoin<K, V>(IDictionary<K, V> @params, string separator, string keyValueSeparator, bool isIgnoreNull, params string[] otherParams)
+        public static string SortJoin<K, V>(IDictionary<K, V> @params, string separator, string keyValueSeparator, bool isIgnoreNull, params string[] otherParams) where K : notnull
         {
             var sortedMap = Sort(@params);
             return Join<K, V>(sortedMap, separator, keyValueSeparator, isIgnoreNull, otherParams);
@@ -588,7 +588,7 @@ namespace WellTool.Core.Map
         /// <param name="keyValueSeparator">kv之间的连接符</param>
         /// <param name="otherParams">其它附加参数字符串（例如密钥）</param>
         /// <returns>连接后的字符串</returns>
-        public static string JoinIgnoreNull<K, V>(IDictionary<K, V> map, string separator, string keyValueSeparator, params string[] otherParams)
+        public static string JoinIgnoreNull<K, V>(IDictionary<K, V> map, string separator, string keyValueSeparator, params string[] otherParams) where K : notnull
         {
             return Join(map, separator, keyValueSeparator, true, otherParams);
         }
@@ -604,7 +604,7 @@ namespace WellTool.Core.Map
         /// <param name="isIgnoreNull">是否忽略null的键和值</param>
         /// <param name="otherParams">其它附加参数字符串（例如密钥）</param>
         /// <returns>连接后的字符串，map和otherParams为空返回""</returns>
-        public static string Join<K, V>(IDictionary<K, V> map, string separator, string keyValueSeparator, bool isIgnoreNull, params string[] otherParams)
+        public static string Join<K, V>(IDictionary<K, V> map, string separator, string keyValueSeparator, bool isIgnoreNull, params string[] otherParams) where K : notnull
         {
             var strBuilder = new System.Text.StringBuilder();
             bool isFirst = true;
@@ -673,7 +673,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="editor">编辑器接口</param>
         /// <returns>编辑后的Map</returns>
-        public static Dictionary<K, V> Edit<K, V>(Dictionary<K, V> map, Editor<KeyValuePair<K, V>> editor)
+        public static Dictionary<K, V> Edit<K, V>(Dictionary<K, V> map, Editor<KeyValuePair<K, V>> editor) where K : notnull
         {
             if (map == null || editor == null)
             {
@@ -705,7 +705,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="func">编辑函数</param>
         /// <returns>编辑后的Map</returns>
-        public static Dictionary<K, V> Edit<K, V>(Dictionary<K, V> map, Func<KeyValuePair<K, V>, KeyValuePair<K, V>> func)
+        public static Dictionary<K, V> Edit<K, V>(Dictionary<K, V> map, Func<KeyValuePair<K, V>, KeyValuePair<K, V>> func) where K : notnull
         {
             if (map == null || func == null)
             {
@@ -742,7 +742,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="filter">过滤器接口，null返回原Map</param>
         /// <returns>过滤后的Map</returns>
-        public static Dictionary<K, V> Filter<K, V>(Dictionary<K, V> map, IFilter<KeyValuePair<K, V>> filter)
+        public static Dictionary<K, V> Filter<K, V>(Dictionary<K, V> map, IFilter<KeyValuePair<K, V>> filter) where K : notnull
         {
             if (map == null || filter == null)
             {
@@ -759,7 +759,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="predicate">过滤条件</param>
         /// <returns>过滤后的Map</returns>
-        public static Dictionary<K, V> Filter<K, V>(Dictionary<K, V> map, Func<KeyValuePair<K, V>, bool> predicate)
+        public static Dictionary<K, V> Filter<K, V>(Dictionary<K, V> map, Func<KeyValuePair<K, V>, bool> predicate) where K : notnull
         {
             if (map == null || predicate == null)
             {
@@ -816,7 +816,7 @@ namespace WellTool.Core.Map
         /// <param name="map">原有的map</param>
         /// <param name="biFunction">lambda，参数包含key,value，返回值会作为新的value</param>
         /// <returns>值可以为不同类型的Map</returns>
-        public static Dictionary<K, R> Transform<K, V, R>(Dictionary<K, V> map, Func<K, V, R> biFunction)
+        public static Dictionary<K, R> Transform<K, V, R>(Dictionary<K, V> map, Func<K, V, R> biFunction) where K : notnull
         {
             if (map == null || biFunction == null)
             {
@@ -839,7 +839,7 @@ namespace WellTool.Core.Map
         /// <param name="map">原有的map</param>
         /// <param name="biFunction">lambda，参数包含key,value，返回值会作为新的value</param>
         /// <returns>值可以为不同类型的Map</returns>
-        public static Dictionary<K, R> Map<K, V, R>(Dictionary<K, V> map, Func<K, V, R> biFunction)
+        public static Dictionary<K, R> Map<K, V, R>(Dictionary<K, V> map, Func<K, V, R> biFunction) where K : notnull
         {
             return Transform(map, biFunction);
         }
@@ -852,7 +852,7 @@ namespace WellTool.Core.Map
         /// <param name="map">原始Map</param>
         /// <param name="keys">键列表，null返回原Map</param>
         /// <returns>Map结果，结果的Map类型与原Map保持一致</returns>
-        public static Dictionary<K, V> Filter<K, V>(Dictionary<K, V> map, params K[] keys)
+        public static Dictionary<K, V> Filter<K, V>(Dictionary<K, V> map, params K[] keys) where K : notnull
         {
             if (map == null || keys == null)
             {
@@ -883,7 +883,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="keys">键列表</param>
         /// <returns>修改后的key</returns>
-        public static Dictionary<K, V> RemoveAny<K, V>(Dictionary<K, V> map, params K[] keys)
+        public static Dictionary<K, V> RemoveAny<K, V>(Dictionary<K, V> map, params K[] keys) where K : notnull
         {
             if (map == null || keys == null)
             {
@@ -904,7 +904,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="keys">键列表</param>
         /// <returns>新Map，只包含指定的key</returns>
-        public static Dictionary<K, V> GetAny<K, V>(Dictionary<K, V> map, params K[] keys)
+        public static Dictionary<K, V> GetAny<K, V>(Dictionary<K, V> map, params K[] keys) where K : notnull
         {
             return Filter(map, keys);
         }
@@ -917,7 +917,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="key">键</param>
         /// <returns>值</returns>
-        public static string GetStr<K, V>(Dictionary<K, V> map, K key)
+        public static string GetStr<K, V>(Dictionary<K, V> map, K key) where K : notnull
         {
             return Get(map, key, string.Empty);
         }
@@ -931,7 +931,7 @@ namespace WellTool.Core.Map
         /// <param name="key">键</param>
         /// <param name="defaultValue">默认值</param>
         /// <returns>值</returns>
-        public static string GetStr<K, V>(Dictionary<K, V> map, K key, string defaultValue)
+        public static string GetStr<K, V>(Dictionary<K, V> map, K key, string defaultValue) where K : notnull
         {
             return Get(map, key, defaultValue);
         }
@@ -944,7 +944,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="key">键</param>
         /// <returns>值</returns>
-        public static int GetInt<K, V>(Dictionary<K, V> map, K key)
+        public static int GetInt<K, V>(Dictionary<K, V> map, K key) where K : notnull
         {
             if (map == null)
             {
@@ -966,7 +966,7 @@ namespace WellTool.Core.Map
         /// <param name="key">键</param>
         /// <param name="defaultValue">默认值</param>
         /// <returns>值</returns>
-        public static int GetInt<K, V>(Dictionary<K, V> map, K key, int defaultValue)
+        public static int GetInt<K, V>(Dictionary<K, V> map, K key, int defaultValue) where K : notnull
         {
             if (map == null)
             {
@@ -994,7 +994,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="key">键</param>
         /// <returns>值</returns>
-        public static double GetDouble<K, V>(Dictionary<K, V> map, K key)
+        public static double GetDouble<K, V>(Dictionary<K, V> map, K key) where K : notnull
         {
             return Get(map, key, 0.0);
         }
@@ -1008,7 +1008,7 @@ namespace WellTool.Core.Map
         /// <param name="key">键</param>
         /// <param name="defaultValue">默认值</param>
         /// <returns>值</returns>
-        public static double GetDouble<K, V>(Dictionary<K, V> map, K key, double defaultValue)
+        public static double GetDouble<K, V>(Dictionary<K, V> map, K key, double defaultValue) where K : notnull
         {
             return Get(map, key, defaultValue);
         }
@@ -1021,7 +1021,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="key">键</param>
         /// <returns>值</returns>
-        public static float GetFloat<K, V>(Dictionary<K, V> map, K key)
+        public static float GetFloat<K, V>(Dictionary<K, V> map, K key) where K : notnull
         {
             return Get(map, key, 0.0f);
         }
@@ -1035,7 +1035,7 @@ namespace WellTool.Core.Map
         /// <param name="key">键</param>
         /// <param name="defaultValue">默认值</param>
         /// <returns>值</returns>
-        public static float GetFloat<K, V>(Dictionary<K, V> map, K key, float defaultValue)
+        public static float GetFloat<K, V>(Dictionary<K, V> map, K key, float defaultValue) where K : notnull
         {
             return Get(map, key, defaultValue);
         }
@@ -1048,7 +1048,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="key">键</param>
         /// <returns>值</returns>
-        public static short GetShort<K, V>(Dictionary<K, V> map, K key)
+        public static short GetShort<K, V>(Dictionary<K, V> map, K key) where K : notnull
         {
             return Get(map, key, (short)0);
         }
@@ -1062,7 +1062,7 @@ namespace WellTool.Core.Map
         /// <param name="key">键</param>
         /// <param name="defaultValue">默认值</param>
         /// <returns>值</returns>
-        public static short GetShort<K, V>(Dictionary<K, V> map, K key, short defaultValue)
+        public static short GetShort<K, V>(Dictionary<K, V> map, K key, short defaultValue) where K : notnull
         {
             return Get(map, key, defaultValue);
         }
@@ -1075,7 +1075,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="key">键</param>
         /// <returns>值</returns>
-        public static bool GetBool<K, V>(Dictionary<K, V> map, K key)
+        public static bool GetBool<K, V>(Dictionary<K, V> map, K key) where K : notnull
         {
             return Get(map, key, false);
         }
@@ -1089,7 +1089,7 @@ namespace WellTool.Core.Map
         /// <param name="key">键</param>
         /// <param name="defaultValue">默认值</param>
         /// <returns>值</returns>
-        public static bool GetBool<K, V>(Dictionary<K, V> map, K key, bool defaultValue)
+        public static bool GetBool<K, V>(Dictionary<K, V> map, K key, bool defaultValue) where K : notnull
         {
             return Get(map, key, defaultValue);
         }
@@ -1102,7 +1102,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="key">键</param>
         /// <returns>值</returns>
-        public static char GetChar<K, V>(Dictionary<K, V> map, K key)
+        public static char GetChar<K, V>(Dictionary<K, V> map, K key) where K : notnull
         {
             return Get(map, key, '\0');
         }
@@ -1116,7 +1116,7 @@ namespace WellTool.Core.Map
         /// <param name="key">键</param>
         /// <param name="defaultValue">默认值</param>
         /// <returns>值</returns>
-        public static char GetChar<K, V>(Dictionary<K, V> map, K key, char defaultValue)
+        public static char GetChar<K, V>(Dictionary<K, V> map, K key, char defaultValue) where K : notnull
         {
             return Get(map, key, defaultValue);
         }
@@ -1129,7 +1129,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="key">键</param>
         /// <returns>值</returns>
-        public static long GetLong<K, V>(Dictionary<K, V> map, K key)
+        public static long GetLong<K, V>(Dictionary<K, V> map, K key) where K : notnull
         {
             return Get(map, key, 0L);
         }
@@ -1143,7 +1143,7 @@ namespace WellTool.Core.Map
         /// <param name="key">键</param>
         /// <param name="defaultValue">默认值</param>
         /// <returns>值</returns>
-        public static long GetLong<K, V>(Dictionary<K, V> map, K key, long defaultValue)
+        public static long GetLong<K, V>(Dictionary<K, V> map, K key, long defaultValue) where K : notnull
         {
             return Get(map, key, defaultValue);
         }
@@ -1156,7 +1156,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="key">键</param>
         /// <returns>值</returns>
-        public static DateTime GetDate<K, V>(Dictionary<K, V> map, K key)
+        public static DateTime GetDate<K, V>(Dictionary<K, V> map, K key) where K : notnull
         {
             return Get(map, key, DateTime.MinValue);
         }
@@ -1170,7 +1170,7 @@ namespace WellTool.Core.Map
         /// <param name="key">键</param>
         /// <param name="defaultValue">默认值</param>
         /// <returns>值</returns>
-        public static DateTime GetDate<K, V>(Dictionary<K, V> map, K key, DateTime defaultValue)
+        public static DateTime GetDate<K, V>(Dictionary<K, V> map, K key, DateTime defaultValue) where K : notnull
         {
             return Get(map, key, defaultValue);
         }
@@ -1185,7 +1185,7 @@ namespace WellTool.Core.Map
         /// <param name="key">键</param>
         /// <param name="defaultValue">默认值</param>
         /// <returns>值</returns>
-        public static T Get<K, V, T>(Dictionary<K, V> map, K key, T defaultValue)
+        public static T Get<K, V, T>(Dictionary<K, V> map, K key, T defaultValue) where K : notnull
         {
             if (map == null)
             {
@@ -1215,7 +1215,7 @@ namespace WellTool.Core.Map
         /// <param name="key">键</param>
         /// <param name="defaultValue">默认值</param>
         /// <returns>值</returns>
-        public static T GetQuietly<K, V, T>(Dictionary<K, V> map, K key, T defaultValue)
+        public static T GetQuietly<K, V, T>(Dictionary<K, V> map, K key, T defaultValue) where K : notnull
         {
             try
             {
@@ -1254,7 +1254,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">Map对象</param>
         /// <returns>互换后的Map</returns>
-        public static Dictionary<V, K> Inverse<K, V>(Dictionary<K, V> map)
+        public static Dictionary<V, K> Inverse<K, V>(Dictionary<K, V> map) where K : notnull where V : notnull
         {
             if (map == null)
             {
@@ -1275,7 +1275,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">value的类型</typeparam>
         /// <param name="map">Map</param>
         /// <returns>TreeMap</returns>
-        public static SortedDictionary<K, V> Sort<K, V>(IDictionary<K, V> map)
+        public static SortedDictionary<K, V> Sort<K, V>(IDictionary<K, V> map) where K : notnull
         {
             return Sort(map, null);
         }
@@ -1288,7 +1288,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map，为null返回null</param>
         /// <param name="comparator">Key比较器</param>
         /// <returns>TreeMap，map为null返回null</returns>
-        public static SortedDictionary<K, V> Sort<K, V>(IDictionary<K, V> map, IComparer<K> comparator)
+        public static SortedDictionary<K, V> Sort<K, V>(IDictionary<K, V> map, IComparer<K> comparator) where K : notnull
         {
             if (map == null)
             {
@@ -1311,6 +1311,7 @@ namespace WellTool.Core.Map
         /// <param name="isDesc">是否倒序</param>
         /// <returns>排序后新的Map</returns>
         public static Dictionary<K, V> SortByValue<K, V>(Dictionary<K, V> map, bool isDesc)
+            where K : notnull
             where V : IComparable<V>
         {
             if (map == null)
@@ -1337,7 +1338,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">被代理的Map</param>
         /// <returns>MapProxy</returns>
-        public static MapWrapper<K, V> CreateProxy<K, V>(Dictionary<K, V> map)
+        public static MapWrapper<K, V> CreateProxy<K, V>(Dictionary<K, V> map) where K : notnull
         {
             return Wrap(map);
         }
@@ -1349,7 +1350,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">value的类型</typeparam>
         /// <param name="map">被代理的Map</param>
         /// <returns>MapWrapper</returns>
-        public static MapWrapper<K, V> Wrap<K, V>(Dictionary<K, V> map)
+        public static MapWrapper<K, V> Wrap<K, V>(Dictionary<K, V> map) where K : notnull
         {
             return new MapWrapper<K, V>(map);
         }
@@ -1361,7 +1362,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">Map</param>
         /// <returns>不修改Map</returns>
-        public static IReadOnlyDictionary<K, V> Unmodifiable<K, V>(Dictionary<K, V> map)
+        public static IReadOnlyDictionary<K, V> Unmodifiable<K, V>(Dictionary<K, V> map) where K : notnull
         {
             return new System.Collections.ObjectModel.ReadOnlyDictionary<K, V>(map);
         }
@@ -1424,7 +1425,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">Value类型</typeparam>
         /// <param name="map">实际使用的map</param>
         /// <returns>map创建类</returns>
-        public static MapBuilder<K, V> Builder<K, V>(Dictionary<K, V> map)
+        public static MapBuilder<K, V> Builder<K, V>(Dictionary<K, V> map) where K : notnull
         {
             return new MapBuilder<K, V>(map);
         }
@@ -1437,7 +1438,7 @@ namespace WellTool.Core.Map
         /// <param name="k">key</param>
         /// <param name="v">value</param>
         /// <returns>map创建类</returns>
-        public static MapBuilder<K, V> Builder<K, V>(K k, V v)
+        public static MapBuilder<K, V> Builder<K, V>(K k, V v) where K : notnull
         {
             return Builder(new Dictionary<K, V>()).Put(k, v);
         }
@@ -1451,7 +1452,7 @@ namespace WellTool.Core.Map
         /// <param name="oldKey">原键</param>
         /// <param name="newKey">新键</param>
         /// <returns>map</returns>
-        public static Dictionary<K, V> RenameKey<K, V>(Dictionary<K, V> map, K oldKey, K newKey)
+        public static Dictionary<K, V> RenameKey<K, V>(Dictionary<K, V> map, K oldKey, K newKey) where K : notnull
         {
             if (IsNotEmpty(map) && map.ContainsKey(oldKey))
             {
@@ -1472,7 +1473,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">value的类型</typeparam>
         /// <param name="map">Map</param>
         /// <returns>map</returns>
-        public static Dictionary<K, V> RemoveNullValue<K, V>(Dictionary<K, V> map)
+        public static Dictionary<K, V> RemoveNullValue<K, V>(Dictionary<K, V> map) where K : notnull
         {
             if (IsEmpty(map))
             {
@@ -1501,7 +1502,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="value">给定值</param>
         /// <returns>map</returns>
-        public static Dictionary<K, V> RemoveByValue<K, V>(Dictionary<K, V> map, V value)
+        public static Dictionary<K, V> RemoveByValue<K, V>(Dictionary<K, V> map, V value) where K : notnull
         {
             if (IsEmpty(map))
             {
@@ -1530,7 +1531,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="predicate">移除条件</param>
         /// <returns>map</returns>
-        public static Dictionary<K, V> RemoveIf<K, V>(Dictionary<K, V> map, Func<KeyValuePair<K, V>, bool> predicate)
+        public static Dictionary<K, V> RemoveIf<K, V>(Dictionary<K, V> map, Func<KeyValuePair<K, V>, bool> predicate) where K : notnull
         {
             if (IsEmpty(map))
             {
@@ -1559,7 +1560,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="K">键类型</typeparam>
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="maps">一个或多个Map</param>
-        public static void Clear<K, V>(params Dictionary<K, V>[] maps)
+        public static void Clear<K, V>(params Dictionary<K, V>[] maps) where K : notnull
         {
             foreach (var map in maps)
             {
@@ -1578,7 +1579,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="keys">键列表</param>
         /// <returns>值列表</returns>
-        public static List<V> ValuesOfKeys<K, V>(Dictionary<K, V> map, IEnumerable<K> keys)
+        public static List<V> ValuesOfKeys<K, V>(Dictionary<K, V> map, IEnumerable<K> keys) where K : notnull
         {
             var values = new List<V>();
             if (map == null || keys == null)
@@ -1621,7 +1622,7 @@ namespace WellTool.Core.Map
         /// <param name="key">键</param>
         /// <param name="mappingFunction">值不存在时值的生成函数</param>
         /// <returns>值</returns>
-        public static V ComputeIfAbsent<K, V>(Dictionary<K, V> map, K key, Func<K, V> mappingFunction)
+        public static V ComputeIfAbsent<K, V>(Dictionary<K, V> map, K key, Func<K, V> mappingFunction) where K : notnull
         {
             if (map == null)
             {
@@ -1643,7 +1644,7 @@ namespace WellTool.Core.Map
         /// <param name="map">Map</param>
         /// <param name="size">子Map的大小</param>
         /// <returns>子Map列表</returns>
-        public static List<Dictionary<K, V>> Partition<K, V>(Dictionary<K, V> map, int size)
+        public static List<Dictionary<K, V>> Partition<K, V>(Dictionary<K, V> map, int size) where K : notnull
         {
             if (map == null)
             {
@@ -1681,7 +1682,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">入参Map</param>
         /// <returns>单层级Map返回值</returns>
-        public static Dictionary<K, V> Flatten<K, V>(Dictionary<K, V> map)
+        public static Dictionary<K, V> Flatten<K, V>(Dictionary<K, V> map) where K : notnull
         {
             var result = new Dictionary<K, V>();
             if (map == null)
@@ -1699,7 +1700,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">入参Map</param>
         /// <param name="flatMap">单层级Map返回值</param>
-        private static void Flatten<K, V>(Dictionary<K, V> map, Dictionary<K, V> flatMap)
+        private static void Flatten<K, V>(Dictionary<K, V> map, Dictionary<K, V> flatMap) where K : notnull
         {
             if (map == null)
             {
@@ -1760,7 +1761,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">字典</param>
         /// <returns>是否为空</returns>
-        public static bool IsEmpty<K, V>(IDictionary<K, V> map)
+        public static bool IsEmpty<K, V>(IDictionary<K, V> map) where K : notnull
         {
             return map == null || map.Count == 0;
         }
@@ -1772,7 +1773,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">字典</param>
         /// <returns>是否不为空</returns>
-        public static bool IsNotEmpty<K, V>(IDictionary<K, V> map)
+        public static bool IsNotEmpty<K, V>(IDictionary<K, V> map) where K : notnull
         {
             return !IsEmpty(map);
         }
@@ -1784,7 +1785,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">字典</param>
         /// <returns>字典大小</returns>
-        public static int Size<K, V>(Dictionary<K, V> map)
+        public static int Size<K, V>(Dictionary<K, V> map) where K : notnull
         {
             return map?.Count ?? 0;
         }
@@ -1797,7 +1798,7 @@ namespace WellTool.Core.Map
         /// <param name="map">字典</param>
         /// <param name="key">键</param>
         /// <returns>是否包含</returns>
-        public static bool ContainsKey<K, V>(Dictionary<K, V> map, K key)
+        public static bool ContainsKey<K, V>(Dictionary<K, V> map, K key) where K : notnull
         {
             return map?.ContainsKey(key) ?? false;
         }
@@ -1810,7 +1811,7 @@ namespace WellTool.Core.Map
         /// <param name="map">字典</param>
         /// <param name="value">值</param>
         /// <returns>是否包含</returns>
-        public static bool ContainsValue<K, V>(Dictionary<K, V> map, V value)
+        public static bool ContainsValue<K, V>(Dictionary<K, V> map, V value) where K : notnull
         {
             return map?.ContainsValue(value) ?? false;
         }
@@ -1845,7 +1846,7 @@ namespace WellTool.Core.Map
         /// <param name="map">字典</param>
         /// <param name="key">键</param>
         /// <param name="value">值</param>
-        public static void Put<K, V>(Dictionary<K, V> map, K key, V value)
+        public static void Put<K, V>(Dictionary<K, V> map, K key, V value) where K : notnull
         {
             map[key] = value;
         }
@@ -1858,7 +1859,7 @@ namespace WellTool.Core.Map
         /// <param name="map">字典</param>
         /// <param name="key">键</param>
         /// <returns>是否移除成功</returns>
-        public static bool Remove<K, V>(Dictionary<K, V> map, K key)
+        public static bool Remove<K, V>(Dictionary<K, V> map, K key) where K : notnull
         {
             return map?.Remove(key) ?? false;
         }
@@ -1881,7 +1882,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">字典</param>
         /// <returns>键集合</returns>
-        public static ICollection<K> Keys<K, V>(Dictionary<K, V> map)
+        public static ICollection<K> Keys<K, V>(Dictionary<K, V> map) where K : notnull
         {
             return map != null ? map.Keys.ToList() : new List<K>();
         }
@@ -1893,7 +1894,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">字典</param>
         /// <returns>值集合</returns>
-        public static ICollection<V> Values<K, V>(Dictionary<K, V> map)
+        public static ICollection<V> Values<K, V>(Dictionary<K, V> map) where K : notnull
         {
             return map != null ? map.Values.ToList() : new List<V>();
         }
@@ -1905,7 +1906,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">字典</param>
         /// <returns>键值对集合</returns>
-        public static ICollection<KeyValuePair<K, V>> Entries<K, V>(Dictionary<K, V> map)
+        public static ICollection<KeyValuePair<K, V>> Entries<K, V>(Dictionary<K, V> map) where K : notnull
         {
             return map?.ToList() ?? new List<KeyValuePair<K, V>>();
         }
@@ -1918,7 +1919,7 @@ namespace WellTool.Core.Map
         /// <param name="map1">第一个字典</param>
         /// <param name="map2">第二个字典</param>
         /// <returns>合并后的字典</returns>
-        public static Dictionary<K, V> Merge<K, V>(Dictionary<K, V> map1, Dictionary<K, V> map2)
+        public static Dictionary<K, V> Merge<K, V>(Dictionary<K, V> map1, Dictionary<K, V> map2) where K : notnull
         {
             var result = new Dictionary<K, V>();
             if (map1 != null)
@@ -1945,7 +1946,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">字典</param>
         /// <returns>克隆后的字典</returns>
-        public static Dictionary<K, V> Clone<K, V>(Dictionary<K, V> map)
+        public static Dictionary<K, V> Clone<K, V>(Dictionary<K, V> map) where K : notnull
         {
             if (map == null)
             {
@@ -1961,7 +1962,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">字典</param>
         /// <returns>字符串表示</returns>
-        public static string ToString<K, V>(Dictionary<K, V> map)
+        public static string ToString<K, V>(Dictionary<K, V> map) where K : notnull
         {
             if (IsEmpty(map))
             {

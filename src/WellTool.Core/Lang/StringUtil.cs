@@ -445,5 +445,41 @@ namespace WellTool.Core.Lang
             }
             return str;
         }
+
+        /// <summary>
+        /// 首字母大写
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns>首字母大写的字符串</returns>
+        public static string UpperFirst(string str)
+        {
+            if (IsEmpty(str))
+            {
+                return str;
+            }
+            if (char.IsUpper(str[0]))
+            {
+                return str;
+            }
+            return char.ToUpper(str[0]) + str.Substring(1);
+        }
+
+        /// <summary>
+        /// 首字母小写
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns>首字母小写的字符串</returns>
+        public static string LowerFirst(string str)
+        {
+            if (IsEmpty(str))
+            {
+                return str;
+            }
+            if (char.IsLower(str[0]))
+            {
+                return str;
+            }
+            return char.ToLower(str[0]) + str.Substring(1);
+        }
     }
 }

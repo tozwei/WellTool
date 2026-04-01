@@ -58,9 +58,9 @@ namespace WellTool.Core.Util
         /// 获取当前线程
         /// </summary>
         /// <returns>当前线程</returns>
-        public static Thread CurrentThread()
+        public static System.Threading.Thread CurrentThread()
         {
-            return Thread.CurrentThread;
+            return System.Threading.Thread.CurrentThread;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace WellTool.Core.Util
         /// <returns>当前线程ID</returns>
         public static long CurrentThreadId()
         {
-            return Thread.CurrentThread.ManagedThreadId;
+            return System.Threading.Thread.CurrentThread.ManagedThreadId;
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace WellTool.Core.Util
         /// </summary>
         public static void Interrupt()
         {
-            Thread.CurrentThread.Interrupt();
+            System.Threading.Thread.CurrentThread.Interrupt();
         }
 
         /// <summary>
@@ -86,24 +86,24 @@ namespace WellTool.Core.Util
         /// <returns>如果线程被中断则返回 true，否则返回 false</returns>
         public static bool IsInterrupted()
         {
-            return (Thread.CurrentThread.ThreadState & ThreadState.Aborted) != 0;
+            return (System.Threading.Thread.CurrentThread.ThreadState & System.Threading.ThreadState.Aborted) != 0;
         }
 
         /// <summary>
-        /// 使当前线程让出CPU时间片
+        /// 线程让步
         /// </summary>
         public static void Yield()
         {
-            Thread.Yield();
+            System.Threading.Thread.Yield();
         }
 
         /// <summary>
-        /// 使当前线程等待指定的时间
+        /// 线程休眠
         /// </summary>
-        /// <param name="millis">等待毫秒数</param>
+        /// <param name="millis">毫秒数</param>
         public static void Sleep(long millis)
         {
-            Thread.Sleep((int)millis);
+            System.Threading.Thread.Sleep((int)millis);
         }
     }
 

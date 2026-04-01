@@ -67,9 +67,24 @@ namespace WellTool.Cron
         protected TaskListenerManager listenerManager = new TaskListenerManager();
 
         /// <summary>
+        /// 任务执行器管理器
+        /// </summary>
+        protected TaskExecutorManager taskExecutorManager;
+
+        /// <summary>
         /// 线程池
         /// </summary>
         protected TaskFactory taskFactory;
+
+        /// <summary>
+        /// 监听器管理器属性访问器
+        /// </summary>
+        public TaskListenerManager ListenerManager => listenerManager;
+
+        /// <summary>
+        /// 任务执行器管理器属性访问器
+        /// </summary>
+        public TaskExecutorManager TaskExecutorManager => taskExecutorManager;
 
         // --------------------------------------------------------- Getters and Setters start
         /// <summary>
@@ -165,6 +180,15 @@ namespace WellTool.Cron
         public TaskListenerManager GetListenerManager()
         {
             return listenerManager;
+        }
+
+        /// <summary>
+        /// 获取任务执行器管理器
+        /// </summary>
+        /// <returns>任务执行器管理器</returns>
+        public TaskExecutorManager GetTaskExecutorManager()
+        {
+            return taskExecutorManager;
         }
 
         /// <summary>
@@ -376,6 +400,9 @@ namespace WellTool.Cron
 
                 // 初始化线程池
                 taskFactory = new TaskFactory();
+
+                // 初始化任务执行器管理器
+                taskExecutorManager = new TaskExecutorManager(this);
 
                 // 启动任务启动器管理器
                 taskLauncherManager = new TaskLauncherManager(this);

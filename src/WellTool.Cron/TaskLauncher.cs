@@ -49,8 +49,8 @@ namespace WellTool.Cron
                 if (task.Pattern.Match(now))
                 {
                     // 执行任务
-                    var executor = new TaskExecutor(task, scheduler.GetListenerManager());
-                    executor.ExecuteAsync();
+                    var executor = new TaskExecutor(scheduler, task);
+                    executor.Run();
                 }
             }
         }

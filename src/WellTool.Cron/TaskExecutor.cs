@@ -12,62 +12,76 @@
 // limitations under the License.
 
 using System;
-using System.Threading;
-using WellTool.Cron.Listener;
 using WellTool.Cron.Task;
 
 namespace WellTool.Cron
 {
     /// <summary>
     /// 任务执行器
+    /// 执行具体的任务，执行完毕销毁
+    /// 任务执行器唯一关联一个任务，负责管理任务的运行的生命周期
     /// </summary>
     public class TaskExecutor
     {
+        /// <summary>
+        /// 调度器
+        /// </summary>
+        private readonly Scheduler scheduler;
+
         /// <summary>
         /// 任务
         /// </summary>
         private readonly CronTask task;
 
         /// <summary>
-        /// 监听器管理器
+        /// 获得原始任务对象
         /// </summary>
-        private readonly TaskListenerManager listenerManager;
+        /// <returns>任务对象</returns>
+        public WellTool.Cron.Task.Task GetTask()
+        {
+            return task.Task;
+        }
 
         /// <summary>
-        /// 构造函数
+        /// 获得原始 CronTask 对象
         /// </summary>
-        /// <param name="task">任务</param>
-        /// <param name="listenerManager">监听器管理器</param>
-        public TaskExecutor(CronTask task, TaskListenerManager listenerManager)
+        /// <returns>CronTask 对象</returns>
+        public CronTask GetCronTask()
         {
+            return task;
+        }
+
+        /// <summary>
+        /// 构造
+        /// </summary>
+        /// <param name="scheduler">调度器</param>
+        /// <param name="task">被执行的任务</param>
+        public TaskExecutor(Scheduler scheduler, CronTask task)
+        {
+            this.scheduler = scheduler;
             this.task = task;
-            this.listenerManager = listenerManager;
         }
 
         /// <summary>
         /// 执行任务
         /// </summary>
-        public void Execute()
+        public void Run()
         {
-            listenerManager.NotifyTaskStart(task.Id);
-
             try
             {
+                scheduler.ListenerManager.NotifyTaskStart(task.Id);
                 task.Execute();
-                listenerManager.NotifyTaskSuccess(task.Id);
+                scheduler.ListenerManager.NotifyTaskSuccess(task.Id);
             }
             catch (Exception ex)
             {
-                listenerManager.NotifyTaskFailure(task.Id, ex);
+                scheduler.ListenerManager.NotifyTaskFailure(task.Id, ex);
             }
-        }
-
-        /// <summary>
-        /// 异步执行任务
-        /// </summary>
-        public void ExecuteAsync()
-        {
-            ThreadPool.QueueUserWorkItem(_ => Execute());
+            finally
+            {
+                scheduler.TaskExecutorManager.NotifyExecutorCompleted(this);
+            }
         }
     }
 }
+
