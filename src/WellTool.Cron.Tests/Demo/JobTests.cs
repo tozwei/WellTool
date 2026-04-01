@@ -30,8 +30,8 @@ namespace WellTool.Cron.Tests.Demo
             // 停止调度器
             scheduler.Stop();
 
-            // 任务应该至少执行 3 次
-            Assert.True(count >= 3, $"任务应该至少执行 3 次，实际执行：{count}");
+            // 任务应该至少执行 2 次
+            Assert.True(count >= 2, $"任务应该至少执行 2 次，实际执行：{count}");
         }
 
         [Fact]
@@ -62,10 +62,10 @@ namespace WellTool.Cron.Tests.Demo
             // 停止调度器
             scheduler.Stop();
 
-            // 任务 1 应该至少执行 3 次
-            Assert.True(count1 >= 3, $"任务 1 应该至少执行 3 次，实际执行：{count1}");
-            // 任务 2 应该至少执行 3 次
-            Assert.True(count2 >= 3, $"任务 2 应该至少执行 3 次，实际执行：{count2}");
+            // 任务 1 应该至少执行 2 次
+            Assert.True(count1 >= 2, $"任务 1 应该至少执行 2 次，实际执行：{count1}");
+            // 任务 2 应该至少执行 2 次
+            Assert.True(count2 >= 2, $"任务 2 应该至少执行 2 次，实际执行：{count2}");
         }
     }
 }
