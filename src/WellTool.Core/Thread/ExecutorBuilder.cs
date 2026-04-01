@@ -91,7 +91,7 @@ namespace WellTool.Core.Thread
         public TaskScheduler Build()
         {
             var queue = new BlockingCollection<Func<Task>>(_queueCapacity);
-            var threads = new List<Thread>();
+            var threads = new List<System.Threading.Thread>();
             var threadId = 0;
 
             // 启动核心线程

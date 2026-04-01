@@ -1726,7 +1726,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="pairs">键值对数组</param>
         /// <returns>字典</returns>
-        public static Dictionary<K, V> Of<K, V>(params KeyValuePair<K, V>[] pairs)
+        public static Dictionary<K, V> Of<K, V>(params KeyValuePair<K, V>[] pairs) where K : notnull
         {
             var map = new Dictionary<K, V>();
             foreach (var pair in pairs)
@@ -1744,7 +1744,7 @@ namespace WellTool.Core.Map
         /// <param name="keys">键数组</param>
         /// <param name="values">值数组</param>
         /// <returns>字典</returns>
-        public static Dictionary<K, V> Of<K, V>(K[] keys, V[] values)
+        public static Dictionary<K, V> Of<K, V>(K[] keys, V[] values) where K : notnull
         {
             var map = new Dictionary<K, V>();
             for (int i = 0; i < keys.Length && i < values.Length; i++)
