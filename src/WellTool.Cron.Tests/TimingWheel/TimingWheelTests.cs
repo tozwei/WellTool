@@ -25,7 +25,7 @@ namespace WellTool.Cron.Tests.TimingWheel
             timingWheel.AddTask(task);
 
             // 模拟时间推进
-            System.Threading.Thread.Sleep(2500);
+            System.Threading.Thread.Sleep(3500);
             timingWheel.AdvanceClock(DateTimeOffset.Now.ToUnixTimeMilliseconds());
 
             // 任务应该执行

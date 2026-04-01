@@ -159,7 +159,8 @@ namespace WellTool.Cron.TimingWheel
                 return;
             }
 
-            // 更新当前时间
+            // 计算需要推进的槽位数
+            long oldTime = currentTime;
             currentTime = timeMs - (timeMs % tickMs);
 
             // 推进上层时间轮
@@ -168,19 +169,26 @@ namespace WellTool.Cron.TimingWheel
                 overflowWheel.AdvanceClock(currentTime);
             }
 
-            // 处理过期的槽位
-            int index = (int)(currentTime / tickMs % wheelSize);
-            var bucket = buckets[index];
-            bucket.Expiration = currentTime + tickMs;
+            // 处理所有过期的槽位
+            long oldVirtualId = oldTime / tickMs;
+            long newVirtualId = currentTime / tickMs;
+            int steps = (int)(newVirtualId - oldVirtualId);
 
-            // 执行槽位中的所有任务
-            var tasks = bucket.GetTasks();
-            foreach (var task in tasks)
+            for (int i = 0; i < steps; i++)
             {
-                task.Execute();
-                taskMap.Remove(task.Id);
+                int index = (int)((oldVirtualId + i) % wheelSize);
+                var bucket = buckets[index];
+                bucket.Expiration = (oldVirtualId + i + 1) * tickMs;
+
+                // 执行槽位中的所有任务
+                var tasks = bucket.GetTasks();
+                foreach (var task in tasks)
+                {
+                    task.Execute();
+                    taskMap.Remove(task.Id);
+                }
+                bucket.Clear();
             }
-            bucket.Clear();
         }
 
         /// <summary>

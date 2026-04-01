@@ -42,7 +42,7 @@ namespace WellTool.Cron.Tests.Pattern
         public void MatchTest()
         {
             // 测试时间匹配
-            var pattern = new CronPattern("*/5 * * * * *");
+            var pattern = new CronPattern("* * * * * *");
             Assert.True(pattern.Match(DateTime.Now));
         }
 

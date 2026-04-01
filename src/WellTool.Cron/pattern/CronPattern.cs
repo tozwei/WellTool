@@ -126,10 +126,34 @@ namespace WellTool.Cron.Pattern
             int dayOfWeek = (int)dateTime.DayOfWeek;
             // 直接使用 0-6 的范围，与 .NET 的 DayOfWeek 枚举保持一致
 
+            // 处理 DAY_OF_MONTH 部分，考虑 L 字符的特殊含义
+            bool dayOfMonthMatch = false;
+            if (matchers[(int)Part.DAY_OF_MONTH] is BoolArrayMatcher dayOfMonthMatcher)
+            {
+                // 检查是否匹配当天的日期
+                if (dayOfMonthMatcher.Match(dateTime.Day - 1))
+                {
+                    dayOfMonthMatch = true;
+                }
+                // 检查是否匹配当月的最后一天
+                else
+                {
+                    int daysInMonth = DateTime.DaysInMonth(dateTime.Year, dateTime.Month);
+                    if (dateTime.Day == daysInMonth && dayOfMonthMatcher.Match(30)) // 30 是 PartUtil.GetMax(Part.DAY_OF_MONTH) - 1
+                    {
+                        dayOfMonthMatch = true;
+                    }
+                }
+            }
+            else
+            {
+                dayOfMonthMatch = matchers[(int)Part.DAY_OF_MONTH].Match(dateTime.Day - 1);
+            }
+
             return matchers[(int)Part.SECOND].Match(dateTime.Second) &&
                    matchers[(int)Part.MINUTE].Match(dateTime.Minute) &&
                    matchers[(int)Part.HOUR].Match(dateTime.Hour) &&
-                   matchers[(int)Part.DAY_OF_MONTH].Match(dateTime.Day - 1) &&
+                   dayOfMonthMatch &&
                    matchers[(int)Part.MONTH].Match(dateTime.Month - 1) &&
                    matchers[(int)Part.DAY_OF_WEEK].Match(dayOfWeek);
         }
@@ -144,8 +168,9 @@ namespace WellTool.Cron.Pattern
             // 从下一秒开始查找
             DateTime nextTime = dateTime.AddSeconds(1);
             
-            // 最多查找10000次，避免无限循环
-            for (int i = 0; i < 10000; i++)
+            // 最多查找31天，避免无限循环
+            DateTime maxTime = nextTime.AddDays(31);
+            while (nextTime < maxTime)
             {
                 if (Match(nextTime))
                 {

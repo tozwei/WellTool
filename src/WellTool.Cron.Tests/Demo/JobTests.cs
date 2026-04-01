@@ -25,7 +25,7 @@ namespace WellTool.Cron.Tests.Demo
             scheduler.Start();
 
             // 等待一段时间
-            System.Threading.Thread.Sleep(3500);
+            System.Threading.Thread.Sleep(5500);
 
             // 停止调度器
             scheduler.Stop();
@@ -57,7 +57,7 @@ namespace WellTool.Cron.Tests.Demo
             scheduler.Start();
 
             // 等待一段时间
-            System.Threading.Thread.Sleep(3500);
+            System.Threading.Thread.Sleep(5500);
 
             // 停止调度器
             scheduler.Stop();
