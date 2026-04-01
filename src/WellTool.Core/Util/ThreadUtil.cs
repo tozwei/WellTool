@@ -51,7 +51,7 @@ namespace WellTool.Core.Util
         /// <param name="millis">睡眠毫秒数</param>
         public static void SafeSleep(long millis)
         {
-            Thread.Sleep((int)millis);
+            System.Threading.Thread.Sleep((int)millis);
         }
 
         /// <summary>

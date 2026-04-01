@@ -1233,7 +1233,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="T">键和值类型</typeparam>
         /// <param name="map">Map对象，键值类型必须一致</param>
         /// <returns>互换后的Map</returns>
-        public static Dictionary<T, T> Reverse<T>(Dictionary<T, T> map)
+        public static Dictionary<T, T> Reverse<T>(Dictionary<T, T> map) where T : notnull
         {
             if (map == null)
             {
@@ -1825,7 +1825,7 @@ namespace WellTool.Core.Map
         /// <param name="key">键</param>
         /// <param name="defaultValue">默认值</param>
         /// <returns>值</returns>
-        public static V Get<K, V>(Dictionary<K, V> map, K key, V defaultValue = default)
+        public static V Get<K, V>(Dictionary<K, V> map, K key, V defaultValue = default) where K : notnull
         {
             if (map == null)
             {
