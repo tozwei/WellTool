@@ -7,3 +7,4 @@ obj/
 
 # Ignore Visual Studio generated files
 .vs/
+.fake
