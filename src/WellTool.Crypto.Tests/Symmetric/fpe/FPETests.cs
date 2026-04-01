@@ -1,4 +1,4 @@
-using WellTool.Crypto.Symmetric.FPE;
+using Org.BouncyCastle.Crypto.Utilities;
 using Xunit;
 
 namespace WellTool.Crypto.Tests.Symmetric.FPE
