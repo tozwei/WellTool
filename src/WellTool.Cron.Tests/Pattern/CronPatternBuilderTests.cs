@@ -13,12 +13,12 @@ namespace WellTool.Cron.Tests.Pattern
         {
             // 测试构建 cron 表达式
             var pattern = CronPatternBuilder.New()
-                .Second(0)
-                .Minute(30)
-                .Hour(8)
-                .DayOfMonth(1)
-                .Month(1)
-                .DayOfWeek(1)
+                .SetSecond("0")
+                .SetMinute("30")
+                .SetHour("8")
+                .SetDayOfMonth("1")
+                .SetMonth("1")
+                .SetDayOfWeek("1")
                 .Build();
 
             Assert.NotNull(pattern);

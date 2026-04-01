@@ -1,5 +1,7 @@
 using Xunit;
 using WellTool.Cron;
+using WellTool.Cron.Task;
+using WellTool.Cron.Pattern;
 
 namespace WellTool.Cron.Tests
 {
@@ -13,10 +15,11 @@ namespace WellTool.Cron.Tests
         {
             // 测试添加和删除任务
             var taskTable = new TaskTable();
-            var task = new RunnableTask(() => { });
+            var pattern = new CronPattern("*/1 * * * * *");
+            var task = new Task(() => { });
 
             // 添加任务
-            bool added = taskTable.Add("test", task);
+            bool added = taskTable.Add("test", pattern, task);
             Assert.True(added, "任务应该添加成功");
 
             // 检查任务是否存在
@@ -25,7 +28,7 @@ namespace WellTool.Cron.Tests
 
             // 获取任务
             var retrievedTask = taskTable.Get("test");
-            Assert.NotNull(retrievedTask, "任务应该能够被获取");
+            Assert.NotNull(retrievedTask);
 
             // 删除任务
             bool removed = taskTable.Remove("test");
@@ -41,12 +44,13 @@ namespace WellTool.Cron.Tests
         {
             // 测试清空任务表
             var taskTable = new TaskTable();
-            var task1 = new RunnableTask(() => { });
-            var task2 = new RunnableTask(() => { });
+            var pattern = new CronPattern("*/1 * * * * *");
+            var task1 = new Task(() => { });
+            var task2 = new Task(() => { });
 
             // 添加任务
-            taskTable.Add("test1", task1);
-            taskTable.Add("test2", task2);
+            taskTable.Add("test1", pattern, task1);
+            taskTable.Add("test2", pattern, task2);
 
             // 清空任务表
             taskTable.Clear();
