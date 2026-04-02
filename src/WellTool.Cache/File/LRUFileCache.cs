@@ -103,13 +103,13 @@ namespace WellTool.Cache.File
             // 读取文件
             bytes = ReadBytes(file);
 
-            if (MaxFileSize > 0 && file.Length > MaxFileSize)
+            if (_maxFileSize > 0 && file.Length > _maxFileSize)
             {
                 // 大于缓存空间，不缓存，直接返回
                 return bytes;
             }
 
-            UsedSize += bytes.Length;
+            _usedSize += bytes.Length;
 
             // 文件放入缓存
             _cache.Put(file, bytes);
@@ -154,13 +154,13 @@ namespace WellTool.Cache.File
 
             public override bool IsFull()
             {
-                return _outer.UsedSize > Capacity;
+                return _outer._usedSize > _outer._capacity;
             }
 
             protected override void OnRemove(FileInfo key, byte[] cachedObject)
             {
                 base.OnRemove(key, cachedObject);
-                _outer.SubUsedSize(cachedObject.Length);
+                _outer._usedSize -= cachedObject.Length;
             }
         }
     }

@@ -63,7 +63,7 @@ namespace WellTool.Cache.Tests
             for (int i = 0; i < 10; i++)
             {
                 var value = cache.Get(i);
-                sb1.Append(value?.ToString() ?? "null");
+                sb1.Append(value.ToString());
             }
             Assert.Equal("0123456789", sb1.ToString());
 
@@ -75,7 +75,14 @@ namespace WellTool.Cache.Tests
             for (int i = 0; i < 10; i++)
             {
                 var value = cache.Get(i);
-                sb2.Append(value?.ToString() ?? "null");
+                if (value == null)
+                {
+                    sb2.Append("null");
+                }
+                else
+                {
+                    sb2.Append(value.ToString());
+                }
             }
             Assert.Equal("null123456789", sb2.ToString());
         }
