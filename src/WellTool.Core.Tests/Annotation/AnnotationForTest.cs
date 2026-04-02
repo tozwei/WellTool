@@ -1,0 +1,46 @@
+// Copyright (c) 2025 WellTool Team
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using System;
+
+namespace WellTool.Core.Tests.Annotation;
+
+/// <summary>
+/// 用于测试的注解
+/// </summary>
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
+public class AnnotationForTestAttribute : Attribute
+{
+    public string Value { get; set; } = "";
+
+    public string Retry { get; set; } = "";
+
+    public string[] Names { get; set; } = new string[] { "" };
+
+    public AnnotationForTestAttribute()
+    {}
+
+    public AnnotationForTestAttribute(string value)
+    {
+        Value = value;
+    }
+}
+
+/// <summary>
+/// 重复注解测试
+/// </summary>
+[AnnotationForTest("repeat-annotation")]
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
+public class RepeatAnnotationForTestAttribute : Attribute
+{
+}
