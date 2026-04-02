@@ -24,7 +24,17 @@ namespace WellTool.Cron.Pattern
         private string dayOfMonth = "*";
         private string month = "*";
         private string dayOfWeek = "*";
+        private string year = "*";
         private bool matchSecond = false;
+
+        /// <summary>
+        /// 创建新的CronPatternBuilder实例
+        /// </summary>
+        /// <returns>CronPatternBuilder实例</returns>
+        public static CronPatternBuilder Of()
+        {
+            return new CronPatternBuilder();
+        }
 
         /// <summary>
         /// 创建新的CronPatternBuilder实例
@@ -33,6 +43,54 @@ namespace WellTool.Cron.Pattern
         public static CronPatternBuilder New()
         {
             return new CronPatternBuilder();
+        }
+
+        /// <summary>
+        /// 设置指定部分的值
+        /// </summary>
+        /// <param name="part">部分</param>
+        /// <param name="value">值</param>
+        /// <returns>当前构建器</returns>
+        public CronPatternBuilder Set(Part part, string value)
+        {
+            switch (part)
+            {
+                case Part.SECOND:
+                    second = value;
+                    matchSecond = true;
+                    break;
+                case Part.MINUTE:
+                    minute = value;
+                    break;
+                case Part.HOUR:
+                    hour = value;
+                    break;
+                case Part.DAY_OF_MONTH:
+                    dayOfMonth = value;
+                    break;
+                case Part.MONTH:
+                    month = value;
+                    break;
+                case Part.DAY_OF_WEEK:
+                    dayOfWeek = value;
+                    break;
+                case Part.YEAR:
+                    year = value;
+                    break;
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// 设置指定部分的范围值
+        /// </summary>
+        /// <param name="part">部分</param>
+        /// <param name="start">起始值</param>
+        /// <param name="end">结束值</param>
+        /// <returns>当前构建器</returns>
+        public CronPatternBuilder SetRange(Part part, int start, int end)
+        {
+            return Set(part, $"{start}-{end}");
         }
 
         /// <summary>
@@ -103,21 +161,23 @@ namespace WellTool.Cron.Pattern
         }
 
         /// <summary>
-        /// 构建Cron表达式
+        /// 构建Cron表达式字符串
         /// </summary>
-        /// <returns>CronPattern对象</returns>
-        public CronPattern Build()
+        /// <returns>Cron表达式字符串</returns>
+        public string Build()
         {
-            string pattern;
-            if (matchSecond)
+            if (matchSecond && year != "*")
             {
-                pattern = $"{second} {minute} {hour} {dayOfMonth} {month} {dayOfWeek}";
+                return $"{second} {minute} {hour} {dayOfMonth} {month} {dayOfWeek} {year}";
+            }
+            else if (matchSecond)
+            {
+                return $"{second} {minute} {hour} {dayOfMonth} {month} {dayOfWeek}";
             }
             else
             {
-                pattern = $"{minute} {hour} {dayOfMonth} {month} {dayOfWeek}";
+                return $"{minute} {hour} {dayOfMonth} {month} {dayOfWeek}";
             }
-            return new CronPattern(pattern, matchSecond);
         }
     }
 }

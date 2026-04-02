@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 
 namespace WellTool.Cron.Pattern
 {
@@ -122,6 +123,44 @@ namespace WellTool.Cron.Pattern
         {
             // 简单实现，直接返回原表达式
             return pattern;
+        }
+
+        /// <summary>
+        /// 获取匹配日期列表
+        /// </summary>
+        /// <param name="pattern">CronPattern对象</param>
+        /// <param name="begin">开始时间</param>
+        /// <param name="count">获取数量</param>
+        /// <returns>匹配日期列表</returns>
+        public static List<DateTime> MatchedDates(CronPattern pattern, DateTime begin, int count)
+        {
+            var result = new List<DateTime>();
+            var current = begin;
+            for (int i = 0; i < count; i++)
+            {
+                var next = pattern.NextMatch(current);
+                if (next.HasValue)
+                {
+                    result.Add(next.Value);
+                    current = next.Value.AddSeconds(1);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 获取下一个匹配日期
+        /// </summary>
+        /// <param name="pattern">CronPattern对象</param>
+        /// <param name="dateTime">起始时间</param>
+        /// <returns>下一个匹配日期</returns>
+        public static DateTime? NextDateAfter(CronPattern pattern, DateTime dateTime)
+        {
+            return pattern.NextMatch(dateTime);
         }
     }
 }

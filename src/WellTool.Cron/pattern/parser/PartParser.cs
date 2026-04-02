@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using WellTool.Cron.Pattern.Matcher;
 
 namespace WellTool.Cron.Pattern.Parser
@@ -20,8 +21,40 @@ namespace WellTool.Cron.Pattern.Parser
     /// </summary>
     public class PartParser
     {
+        private readonly Part part;
+        private readonly int min;
+        private readonly int max;
+
         /// <summary>
-        /// 解析cron表达式的一个部分
+        /// 创建指定部分的解析器
+        /// </summary>
+        /// <param name="part">部分</param>
+        /// <returns>解析器</returns>
+        public static PartParser Of(Pattern.Part part)
+        {
+            switch (part)
+            {
+                case Pattern.Part.SECOND:
+                    return new PartParser(part, 0, 59);
+                case Pattern.Part.MINUTE:
+                    return new PartParser(part, 0, 59);
+                case Pattern.Part.HOUR:
+                    return new PartParser(part, 0, 23);
+                case Pattern.Part.DAY_OF_MONTH:
+                    return new PartParser(part, 1, 31);
+                case Pattern.Part.MONTH:
+                    return new PartParser(part, 1, 12);
+                case Pattern.Part.DAY_OF_WEEK:
+                    return new PartParser(part, 0, 7);
+                case Pattern.Part.YEAR:
+                    return new PartParser(part, 1970, 2099);
+                default:
+                    throw new CronException("Unknown part: {0}", part);
+            }
+        }
+
+        /// <summary>
+        /// 解析表达式（静态方法，兼容旧代码）
         /// </summary>
         /// <param name="partStr">部分字符串</param>
         /// <param name="min">最小值</param>
@@ -40,7 +73,7 @@ namespace WellTool.Cron.Pattern.Parser
                 return AlwaysTrueMatcher.Instance;
             }
 
-            // 处理 ? 字符（用于日和星期字段，表示不指定值）
+            // 处理 ? 字符
             if (partStr == "?")
             {
                 return AlwaysTrueMatcher.Instance;
@@ -51,21 +84,223 @@ namespace WellTool.Cron.Pattern.Parser
 
             // 处理逗号分隔的多个值
             string[] parts = partStr.Split(',');
-            foreach (string part in parts)
+            foreach (string p in parts)
             {
-                ParsePart(part, min, max, matcher);
+                ParsePart(p, min, max, matcher);
             }
 
             return matcher;
         }
 
         /// <summary>
-        /// 解析单个部分
+        /// 私有构造函数
         /// </summary>
-        /// <param name="part">部分字符串</param>
-        /// <param name="min">最小值</param>
-        /// <param name="max">最大值</param>
-        /// <param name="matcher">匹配器</param>
+        private PartParser(Part part, int min, int max)
+        {
+            this.part = part;
+            this.min = min;
+            this.max = max;
+        }
+
+        /// <summary>
+        /// 解析表达式
+        /// </summary>
+        /// <param name="partStr">部分字符串</param>
+        /// <returns>匹配器</returns>
+        public PartMatcher Parse(string partStr)
+        {
+            if (string.IsNullOrWhiteSpace(partStr))
+            {
+                throw new CronException("Empty cron part");
+            }
+
+            // 处理通配符 *
+            if (partStr == "*")
+            {
+                return AlwaysTrueMatcher.Instance;
+            }
+
+            // 处理 ? 字符（用于日和星期字段，表示不指定值）
+            if (partStr == "?")
+            {
+                return AlwaysTrueMatcher.Instance;
+            }
+
+            // 年份特殊处理
+            if (part == Pattern.Part.YEAR)
+            {
+                return ParseYearValue(partStr);
+            }
+
+            // 日特殊处理
+            if (part == Pattern.Part.DAY_OF_MONTH)
+            {
+                return ParseDayOfMonthValue(partStr);
+            }
+
+            // 创建布尔数组匹配器
+            var matcher = new BoolArrayMatcher(max - min + 1);
+
+            // 处理逗号分隔的多个值
+            string[] parts = partStr.Split(',');
+            foreach (string p in parts)
+            {
+                ParsePart(p, matcher);
+            }
+
+            return matcher;
+        }
+
+        /// <summary>
+        /// 解析年份值
+        /// </summary>
+        private PartMatcher ParseYearValue(string partStr)
+        {
+            var values = new List<int>();
+
+            string[] parts = partStr.Split(',');
+            foreach (string p in parts)
+            {
+                ParseYearPart(p, values);
+            }
+
+            return new YearValueMatcher(values);
+        }
+
+        /// <summary>
+        /// 解析年份部分
+        /// </summary>
+        private void ParseYearPart(string part, List<int> values)
+        {
+            // 处理步长表达式，如 */5
+            if (part.Contains('/'))
+            {
+                string[] stepParts = part.Split('/');
+                string rangeStr = stepParts[0];
+                int step = ParseInt(stepParts[1], 1, int.MaxValue);
+
+                int start, end;
+                if (rangeStr == "*")
+                {
+                    start = min;
+                    end = max;
+                }
+                else if (rangeStr.Contains('-'))
+                {
+                    string[] rangeParts = rangeStr.Split('-');
+                    start = ParseInt(rangeParts[0], min, max);
+                    end = ParseInt(rangeParts[1], min, max);
+                }
+                else
+                {
+                    start = ParseInt(rangeStr, min, max);
+                    end = max;
+                }
+
+                for (int i = start; i <= end; i += step)
+                {
+                    values.Add(i);
+                }
+            }
+            // 处理范围表达式，如 2020-2030
+            else if (part.Contains('-'))
+            {
+                string[] rangeParts = part.Split('-');
+                int start = ParseInt(rangeParts[0], min, max);
+                int end = ParseInt(rangeParts[1], min, max);
+
+                for (int i = start; i <= end; i++)
+                {
+                    values.Add(i);
+                }
+            }
+            // 处理单个值
+            else
+            {
+                values.Add(ParseInt(part, min, max));
+            }
+        }
+
+        /// <summary>
+        /// 解析日值
+        /// </summary>
+        private PartMatcher ParseDayOfMonthValue(string partStr)
+        {
+            var values = new List<int>();
+
+            string[] parts = partStr.Split(',');
+            foreach (string p in parts)
+            {
+                ParseDayOfMonthPart(p, values);
+            }
+
+            return new DayOfMonthMatcher(values);
+        }
+
+        /// <summary>
+        /// 解析日部分
+        /// </summary>
+        private void ParseDayOfMonthPart(string part, List<int> values)
+        {
+            // 处理 L 字符（表示当月最后一天）
+            if (part == "L")
+            {
+                values.Add(32); // 使用32表示最后一天
+                return;
+            }
+
+            // 处理步长表达式，如 */5
+            if (part.Contains('/'))
+            {
+                string[] stepParts = part.Split('/');
+                string rangeStr = stepParts[0];
+                int step = ParseInt(stepParts[1], 1, int.MaxValue);
+
+                int start, end;
+                if (rangeStr == "*")
+                {
+                    start = min;
+                    end = max;
+                }
+                else if (rangeStr.Contains('-'))
+                {
+                    string[] rangeParts = rangeStr.Split('-');
+                    start = ParseInt(rangeParts[0], min, max);
+                    end = ParseInt(rangeParts[1], min, max);
+                }
+                else
+                {
+                    start = ParseInt(rangeStr, min, max);
+                    end = max;
+                }
+
+                for (int i = start; i <= end; i += step)
+                {
+                    values.Add(i);
+                }
+            }
+            // 处理范围表达式，如 1-5
+            else if (part.Contains('-'))
+            {
+                string[] rangeParts = part.Split('-');
+                int start = ParseInt(rangeParts[0], min, max);
+                int end = ParseInt(rangeParts[1], min, max);
+
+                for (int i = start; i <= end; i++)
+                {
+                    values.Add(i);
+                }
+            }
+            // 处理单个值
+            else
+            {
+                values.Add(ParseValue(part));
+            }
+        }
+
+        /// <summary>
+        /// 解析单个部分（静态方法，兼容旧代码）
+        /// </summary>
         private static void ParsePart(string part, int min, int max, BoolArrayMatcher matcher)
         {
             // 处理范围表达式，如 1-5
@@ -77,32 +312,17 @@ namespace WellTool.Cron.Pattern.Parser
                     throw new CronException("Invalid range format: {0}", part);
                 }
 
-                int start = ParseValue(rangeParts[0], min, max);
-                int end = ParseValue(rangeParts[1], min, max);
+                int start = ParseValueStatic(rangeParts[0], min, max);
+                int end = ParseValueStatic(rangeParts[1], min, max);
 
                 if (start > end)
                 {
                     throw new CronException("Invalid range: {0} > {1}", start, end);
                 }
 
-                // 处理步长，如 1-5/2
-                if (rangeParts[1].Contains('/'))
+                for (int i = start; i <= end; i++)
                 {
-                    string[] stepParts = rangeParts[1].Split('/');
-                    end = ParseValue(stepParts[0], min, max);
-                    int step = ParseInt(stepParts[1], 1, int.MaxValue);
-
-                    for (int i = start; i <= end; i += step)
-                    {
-                        matcher.SetMatch(i - min);
-                    }
-                }
-                else
-                {
-                    for (int i = start; i <= end; i++)
-                    {
-                        matcher.SetMatch(i - min);
-                    }
+                    matcher.SetMatch(i - min);
                 }
             }
             // 处理步长表达式，如 */5
@@ -126,12 +346,12 @@ namespace WellTool.Cron.Pattern.Parser
                 else if (rangeStr.Contains('-'))
                 {
                     string[] rangeParts = rangeStr.Split('-');
-                    start = ParseValue(rangeParts[0], min, max);
-                    end = ParseValue(rangeParts[1], min, max);
+                    start = ParseValueStatic(rangeParts[0], min, max);
+                    end = ParseValueStatic(rangeParts[1], min, max);
                 }
                 else
                 {
-                    start = ParseValue(rangeStr, min, max);
+                    start = ParseValueStatic(rangeStr, min, max);
                     end = max;
                 }
 
@@ -143,7 +363,77 @@ namespace WellTool.Cron.Pattern.Parser
             // 处理单个值
             else
             {
-                int value = ParseValue(part, min, max);
+                int value = ParseValueStatic(part, min, max);
+                matcher.SetMatch(value - min);
+            }
+        }
+
+        /// <summary>
+        /// 解析单个部分
+        /// </summary>
+        private void ParsePart(string part, BoolArrayMatcher matcher)
+        {
+            // 处理范围表达式，如 1-5
+            if (part.Contains('-'))
+            {
+                string[] rangeParts = part.Split('-');
+                if (rangeParts.Length != 2)
+                {
+                    throw new CronException("Invalid range format: {0}", part);
+                }
+
+                int start = ParseValue(rangeParts[0]);
+                int end = ParseValue(rangeParts[1]);
+
+                if (start > end)
+                {
+                    throw new CronException("Invalid range: {0} > {1}", start, end);
+                }
+
+                for (int i = start; i <= end; i++)
+                {
+                    matcher.SetMatch(i - min);
+                }
+            }
+            // 处理步长表达式，如 */5
+            else if (part.Contains('/'))
+            {
+                string[] stepParts = part.Split('/');
+                if (stepParts.Length != 2)
+                {
+                    throw new CronException("Invalid step format: {0}", part);
+                }
+
+                string rangeStr = stepParts[0];
+                int step = ParseInt(stepParts[1], 1, int.MaxValue);
+
+                int start, end;
+                if (rangeStr == "*")
+                {
+                    start = min;
+                    end = max;
+                }
+                else if (rangeStr.Contains('-'))
+                {
+                    string[] rangeParts = rangeStr.Split('-');
+                    start = ParseValue(rangeParts[0]);
+                    end = ParseValue(rangeParts[1]);
+                }
+                else
+                {
+                    start = ParseValue(rangeStr);
+                    end = max;
+                }
+
+                for (int i = start; i <= end; i += step)
+                {
+                    matcher.SetMatch(i - min);
+                }
+            }
+            // 处理单个值
+            else
+            {
+                int value = ParseValue(part);
                 matcher.SetMatch(value - min);
             }
         }
@@ -151,11 +441,7 @@ namespace WellTool.Cron.Pattern.Parser
         /// <summary>
         /// 解析值（支持数字、特殊字符和星期英文名称）
         /// </summary>
-        /// <param name="str">字符串</param>
-        /// <param name="min">最小值</param>
-        /// <param name="max">最大值</param>
-        /// <returns>解析的值</returns>
-        private static int ParseValue(string str, int min, int max)
+        private int ParseValue(string str)
         {
             // 处理 L 字符（表示当月最后一天）
             if (str == "L")
@@ -164,11 +450,11 @@ namespace WellTool.Cron.Pattern.Parser
             }
 
             // 处理星期的英文名称
-            if (max == 7) // 星期字段，范围是 0-7
+            if (part == Pattern.Part.DAY_OF_WEEK)
             {
                 switch (str.ToLower())
                 {
-                    case "sun": return 0; // 周日是 0
+                    case "sun": return 0;
                     case "mon": return 1;
                     case "tue": return 2;
                     case "wed": return 3;
@@ -176,8 +462,7 @@ namespace WellTool.Cron.Pattern.Parser
                     case "fri": return 5;
                     case "sat": return 6;
                 }
-                
-                // 处理数字 7，将其转换为 0（周日）
+
                 if (str == "7")
                 {
                     return 0;
@@ -185,7 +470,7 @@ namespace WellTool.Cron.Pattern.Parser
             }
 
             // 处理月份的英文名称
-            if (min == 1 && max == 12) // 月份字段，范围是 1-12
+            if (part == Pattern.Part.MONTH)
             {
                 switch (str.ToLower())
                 {
@@ -204,17 +489,66 @@ namespace WellTool.Cron.Pattern.Parser
                 }
             }
 
-            // 解析普通整数
+            return ParseInt(str, min, max);
+        }
+
+        /// <summary>
+        /// 解析值（静态方法，兼容旧代码）
+        /// </summary>
+        private static int ParseValueStatic(string str, int min, int max)
+        {
+            // 处理 L 字符（表示当月最后一天）
+            if (str == "L")
+            {
+                return max;
+            }
+
+            // 处理星期的英文名称
+            if (min == 0 && max == 7)
+            {
+                switch (str.ToLower())
+                {
+                    case "sun": return 0;
+                    case "mon": return 1;
+                    case "tue": return 2;
+                    case "wed": return 3;
+                    case "thu": return 4;
+                    case "fri": return 5;
+                    case "sat": return 6;
+                }
+
+                if (str == "7")
+                {
+                    return 0;
+                }
+            }
+
+            // 处理月份的英文名称
+            if (min == 1 && max == 12)
+            {
+                switch (str.ToLower())
+                {
+                    case "jan": return 1;
+                    case "feb": return 2;
+                    case "mar": return 3;
+                    case "apr": return 4;
+                    case "may": return 5;
+                    case "jun": return 6;
+                    case "jul": return 7;
+                    case "aug": return 8;
+                    case "sep": return 9;
+                    case "oct": return 10;
+                    case "nov": return 11;
+                    case "dec": return 12;
+                }
+            }
+
             return ParseInt(str, min, max);
         }
 
         /// <summary>
         /// 解析整数
         /// </summary>
-        /// <param name="str">字符串</param>
-        /// <param name="min">最小值</param>
-        /// <param name="max">最大值</param>
-        /// <returns>解析的整数</returns>
         private static int ParseInt(string str, int min, int max)
         {
             if (!int.TryParse(str, out int value))

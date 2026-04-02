@@ -46,7 +46,12 @@ namespace WellTool.Cron.Pattern
         /// <summary>
         /// 周（0-7，0和7都表示周日）
         /// </summary>
-        DAY_OF_WEEK = 5
+        DAY_OF_WEEK = 5,
+
+        /// <summary>
+        /// 年
+        /// </summary>
+        YEAR = 6
     }
 
     /// <summary>
@@ -65,15 +70,14 @@ namespace WellTool.Cron.Pattern
             {
                 case Part.SECOND:
                 case Part.MINUTE:
-                    return 0;
                 case Part.HOUR:
-                    return 0;
-                case Part.DAY_OF_MONTH:
-                    return 1;
-                case Part.MONTH:
-                    return 1;
                 case Part.DAY_OF_WEEK:
                     return 0;
+                case Part.DAY_OF_MONTH:
+                case Part.MONTH:
+                    return 1;
+                case Part.YEAR:
+                    return 1970;
                 default:
                     throw new CronException("Unknown part: {0}", part);
             }
@@ -99,6 +103,8 @@ namespace WellTool.Cron.Pattern
                     return 12;
                 case Part.DAY_OF_WEEK:
                     return 7;
+                case Part.YEAR:
+                    return 2099;
                 default:
                     throw new CronException("Unknown part: {0}", part);
             }

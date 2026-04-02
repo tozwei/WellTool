@@ -37,5 +37,15 @@ namespace WellTool.Cron.Pattern.Matcher
         {
             return true;
         }
+
+        /// <summary>
+        /// 获取大于等于指定值的下一个匹配值（总是返回指定值本身）
+        /// </summary>
+        /// <param name="value">指定值</param>
+        /// <returns>指定值</returns>
+        public int NextAfter(int value)
+        {
+            return value;
+        }
     }
 }
