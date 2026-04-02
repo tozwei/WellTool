@@ -59,11 +59,11 @@ public class ValidationUtilTest
     [Fact]
     public void TestValidate_RangeViolation_ReturnsError()
     {
-        // 测试范围违规
+        // 测试范围违规 - 使用超出范围的值
         var user = new ValidUser
         {
             Name = "John",
-            Age = 150,
+            Age = 200, // 超出 Range(0, 150) 范围
             Email = "john@example.com"
         };
         

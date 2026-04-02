@@ -12,7 +12,6 @@
 // limitations under the License.
 
 using System.IO;
-using System.IO.Compression;
 
 namespace WellTool.Extra;
 
@@ -33,15 +32,61 @@ public class CompressUtil
     /// <param name="targetZipPath">目标ZIP文件路径</param>
     public void ZipFile(string sourceFilePath, string targetZipPath)
     {
+        if (string.IsNullOrEmpty(sourceFilePath))
+            throw new ArgumentNullException(nameof(sourceFilePath));
+        if (string.IsNullOrEmpty(targetZipPath))
+            throw new ArgumentNullException(nameof(targetZipPath));
+            
         try
         {
-            using var zipArchive = System.IO.Compression.ZipFile.Open(targetZipPath, ZipArchiveMode.Create);
-            var fileName = Path.GetFileName(sourceFilePath);
-            zipArchive.CreateEntryFromFile(sourceFilePath, fileName);
+            // 删除已存在的目标文件（带重试逻辑）
+            if (File.Exists(targetZipPath))
+            {
+                DeleteFileWithRetry(targetZipPath);
+            }
+            
+            // 使用 ZipFile.CreateFromDirectory 来创建 ZIP
+            // 首先创建临时目录
+            var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            try
+            {
+                Directory.CreateDirectory(tempDir);
+                var tempFile = Path.Combine(tempDir, Path.GetFileName(sourceFilePath));
+                File.Copy(sourceFilePath, tempFile);
+                System.IO.Compression.ZipFile.CreateFromDirectory(tempDir, targetZipPath, System.IO.Compression.CompressionLevel.Optimal, false);
+            }
+            finally
+            {
+                if (Directory.Exists(tempDir))
+                {
+                    Directory.Delete(tempDir, true);
+                }
+            }
         }
         catch (Exception ex)
         {
             throw new CompressException("压缩文件失败", ex);
+        }
+    }
+    
+    /// <summary>
+    /// 带重试逻辑删除文件
+    /// </summary>
+    private void DeleteFileWithRetry(string path, int maxRetries = 3)
+    {
+        for (int i = 0; i < maxRetries; i++)
+        {
+            try
+            {
+                File.Delete(path);
+                return;
+            }
+            catch (IOException)
+            {
+                if (i == maxRetries - 1)
+                    throw;
+                System.Threading.Thread.Sleep(100);
+            }
         }
     }
 
@@ -52,16 +97,26 @@ public class CompressUtil
     /// <param name="targetZipPath">目标ZIP文件路径</param>
     public void ZipDirectory(string sourceDirectoryPath, string targetZipPath)
     {
+        if (string.IsNullOrEmpty(sourceDirectoryPath))
+            throw new ArgumentNullException(nameof(sourceDirectoryPath));
+        if (string.IsNullOrEmpty(targetZipPath))
+            throw new ArgumentNullException(nameof(targetZipPath));
+            
         try
         {
-            using var zipArchive = System.IO.Compression.ZipFile.Open(targetZipPath, ZipArchiveMode.Create);
-            var directoryInfo = new DirectoryInfo(sourceDirectoryPath);
-            
-            foreach (var file in directoryInfo.GetFiles("*", SearchOption.AllDirectories))
+            if (!Directory.Exists(sourceDirectoryPath))
             {
-                var relativePath = file.FullName.Substring(directoryInfo.FullName.Length + 1);
-                zipArchive.CreateEntryFromFile(file.FullName, relativePath);
+                throw new DirectoryNotFoundException($"源目录不存在: {sourceDirectoryPath}");
             }
+            
+            // 删除已存在的目标文件（带重试逻辑）
+            if (File.Exists(targetZipPath))
+            {
+                DeleteFileWithRetry(targetZipPath);
+            }
+            
+            // 使用 ZipFile.CreateFromDirectory 来创建 ZIP
+            System.IO.Compression.ZipFile.CreateFromDirectory(sourceDirectoryPath, targetZipPath, System.IO.Compression.CompressionLevel.Optimal, false);
         }
         catch (Exception ex)
         {
@@ -76,10 +131,26 @@ public class CompressUtil
     /// <param name="targetDirectoryPath">目标目录路径</param>
     public void Unzip(string zipFilePath, string targetDirectoryPath)
     {
+        if (string.IsNullOrEmpty(zipFilePath))
+            throw new ArgumentNullException(nameof(zipFilePath));
+        if (string.IsNullOrEmpty(targetDirectoryPath))
+            throw new ArgumentNullException(nameof(targetDirectoryPath));
+            
         try
         {
-            using var zipArchive = System.IO.Compression.ZipFile.OpenRead(zipFilePath);
-            zipArchive.ExtractToDirectory(targetDirectoryPath);
+            if (!File.Exists(zipFilePath))
+            {
+                throw new FileNotFoundException($"ZIP文件不存在: {zipFilePath}");
+            }
+            
+            // 创建目标目录（如果不存在）
+            if (!Directory.Exists(targetDirectoryPath))
+            {
+                Directory.CreateDirectory(targetDirectoryPath);
+            }
+            
+            // 使用 ZipFile.ExtractToDirectory 来解压
+            System.IO.Compression.ZipFile.ExtractToDirectory(zipFilePath, targetDirectoryPath, true);
         }
         catch (Exception ex)
         {
@@ -94,13 +165,16 @@ public class CompressUtil
     /// <returns>压缩后的数据</returns>
     public byte[] Gzip(byte[] data)
     {
+        if (data == null)
+            throw new ArgumentNullException(nameof(data));
+            
         try
         {
             using var memoryStream = new MemoryStream();
-            using var gzipStream = new GZipStream(memoryStream, CompressionMode.Compress);
-            gzipStream.Write(data, 0, data.Length);
-            gzipStream.Flush();
-            gzipStream.Close();
+            using (var gzipStream = new System.IO.Compression.GZipStream(memoryStream, System.IO.Compression.CompressionMode.Compress, leaveOpen: true))
+            {
+                gzipStream.Write(data, 0, data.Length);
+            }
             return memoryStream.ToArray();
         }
         catch (Exception ex)
@@ -116,10 +190,13 @@ public class CompressUtil
     /// <returns>解压后的数据</returns>
     public byte[] Gunzip(byte[] data)
     {
+        if (data == null)
+            throw new ArgumentNullException(nameof(data));
+            
         try
         {
             using var memoryStream = new MemoryStream(data);
-            using var gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
+            using var gzipStream = new System.IO.Compression.GZipStream(memoryStream, System.IO.Compression.CompressionMode.Decompress);
             using var outputStream = new MemoryStream();
             gzipStream.CopyTo(outputStream);
             return outputStream.ToArray();

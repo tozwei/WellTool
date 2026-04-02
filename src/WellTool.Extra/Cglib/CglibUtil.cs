@@ -40,6 +40,20 @@ namespace WellTool.Extra.Cglib
         }
 
         /// <summary>
+        /// 拷贝Bean对象属性（不同类型）
+        /// </summary>
+        /// <typeparam name="TSource">源类型</typeparam>
+        /// <typeparam name="TTarget">目标类型</typeparam>
+        /// <param name="source">源bean对象</param>
+        /// <returns>目标对象</returns>
+        public static TTarget Copy<TSource, TTarget>(TSource source) where TTarget : new()
+        {
+            var target = new TTarget();
+            Copy(source, target);
+            return target;
+        }
+
+        /// <summary>
         /// 拷贝Bean对象属性
         /// </summary>
         /// <param name="source">源bean对象</param>
@@ -55,8 +69,25 @@ namespace WellTool.Extra.Cglib
             var targetType = target.GetType();
 
             var copierDelegate = BeanCopierCache.Instance.Get(sourceType, targetType);
-            var copier = Delegate.CreateDelegate(typeof(Action<object, object>), copierDelegate.Target, copierDelegate.Method);
-            copier.DynamicInvoke(source, target);
+            copierDelegate.DynamicInvoke(source, target);
+        }
+
+        /// <summary>
+        /// 拷贝Bean对象属性（泛型版本）
+        /// </summary>
+        /// <typeparam name="TSource">源类型</typeparam>
+        /// <typeparam name="TTarget">目标类型</typeparam>
+        /// <param name="source">源bean对象</param>
+        /// <param name="target">目标bean对象</param>
+        public static void Copy<TSource, TTarget>(TSource source, TTarget target)
+        {
+            if (source == null || target == null)
+            {
+                throw new ArgumentNullException(source == null ? nameof(source) : nameof(target), "Source and target beans must be not null.");
+            }
+
+            var copierDelegate = BeanCopierCache.Instance.Get(typeof(TSource), typeof(TTarget));
+            copierDelegate.DynamicInvoke(source, target);
         }
 
         /// <summary>
@@ -161,6 +192,12 @@ namespace WellTool.Extra.Cglib
                         if (value != null && property.PropertyType.IsAssignableFrom(value.GetType()))
                         {
                             property.SetValue(bean, value);
+                        }
+                        else if (value != null)
+                        {
+                            // 尝试类型转换
+                            var convertedValue = Convert.ChangeType(value, property.PropertyType);
+                            property.SetValue(bean, convertedValue);
                         }
                     }
                     catch { }

@@ -41,7 +41,7 @@ public class ExpressionUtilTest
     {
         // 测试简单除法表达式
         var result = _expressionUtil.Evaluate("6 / 2");
-        Assert.Equal(3, result);
+        Assert.Equal(3, Convert.ToInt32(result));
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public class ExpressionUtilTest
             { "q", 4 }
         };
         var result = _expressionUtil.Evaluate("p / q", parameters);
-        Assert.Equal(5, result);
+        Assert.Equal(5, Convert.ToInt32(result));
     }
 
     [Fact]
@@ -109,7 +109,7 @@ public class ExpressionUtilTest
     {
         // 测试小数表达式
         var result = _expressionUtil.Evaluate("10.5 + 2.5");
-        Assert.Equal(13.0, result);
+        Assert.Equal(13.0, Convert.ToDouble(result));
     }
 
     [Fact]

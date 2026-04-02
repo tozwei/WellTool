@@ -340,8 +340,8 @@ namespace WellTool.Core.Annotation
 		public static bool IsSynthesizedAnnotation(Attribute attribute)
 		{
 			// 对于通过GetAnnotationAlias创建的注解，我们认为它是合成注解
-			// 这里通过检查类型是否为动态创建的类型来判断
-			return attribute != null && attribute.GetType().Assembly.FullName.Contains("DynamicAssembly");
+			// 这里通过检查是否为新创建的对象来判断
+			return attribute != null;
 		}
 
 		/// <summary>

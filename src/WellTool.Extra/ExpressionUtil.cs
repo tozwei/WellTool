@@ -12,7 +12,6 @@
 // limitations under the License.
 
 using System.Data;
-using System.Data.Common;
 
 namespace WellTool.Extra;
 
@@ -34,24 +33,44 @@ public class ExpressionUtil
     /// <returns>执行结果</returns>
     public object Evaluate(string expression, IDictionary<string, object> parameters = null)
     {
+        if (string.IsNullOrWhiteSpace(expression))
+        {
+            throw new ExpressionException("表达式不能为空");
+        }
+
         try
         {
-            // 简单实现，使用DataTable.Compute方法
             using var dataTable = new DataTable();
-            if (parameters != null)
+            
+            if (parameters != null && parameters.Count > 0)
             {
+                var processedExpression = expression;
                 foreach (var param in parameters)
                 {
-                    dataTable.Columns.Add(param.Key, param.Value.GetType());
+                    var value = param.Value;
+                    string replacement;
+                    if (value is string strValue)
+                    {
+                        replacement = $"'{strValue}'";
+                    }
+                    else if (value == null)
+                    {
+                        replacement = "0";
+                    }
+                    else
+                    {
+                        replacement = value.ToString();
+                    }
+                    processedExpression = processedExpression.Replace(param.Key, replacement);
                 }
-                var row = dataTable.NewRow();
-                foreach (var param in parameters)
-                {
-                    row[param.Key] = param.Value;
-                }
-                dataTable.Rows.Add(row);
+                return dataTable.Compute(processedExpression, string.Empty);
             }
+            
             return dataTable.Compute(expression, string.Empty);
+        }
+        catch (EvaluateException ex)
+        {
+            throw new ExpressionException($"表达式执行失败: {ex.Message}", ex);
         }
         catch (Exception ex)
         {
@@ -69,6 +88,46 @@ public class ExpressionUtil
     public T Evaluate<T>(string expression, IDictionary<string, object> parameters = null)
     {
         var result = Evaluate(expression, parameters);
+        
+        if (result == null)
+        {
+            return default;
+        }
+        
+        // 确保返回正确的类型
+        if (typeof(T) == typeof(int))
+        {
+            if (result is int intResult)
+                return (T)(object)intResult;
+            if (result is double doubleResult)
+                return (T)(object)(int)doubleResult;
+            if (result is decimal decimalResult)
+                return (T)(object)(int)decimalResult;
+            return (T)Convert.ChangeType(result, typeof(T));
+        }
+        
+        if (typeof(T) == typeof(double))
+        {
+            if (result is double dResult)
+                return (T)(object)dResult;
+            if (result is int intResult)
+                return (T)(object)(double)intResult;
+            if (result is decimal decimalResult)
+                return (T)(object)(double)decimalResult;
+            return (T)Convert.ChangeType(result, typeof(T));
+        }
+        
+        if (typeof(T) == typeof(decimal))
+        {
+            if (result is decimal decResult)
+                return (T)(object)decResult;
+            if (result is double dResult)
+                return (T)(object)(decimal)dResult;
+            if (result is int intResult)
+                return (T)(object)(decimal)intResult;
+            return (T)Convert.ChangeType(result, typeof(T));
+        }
+        
         return (T)Convert.ChangeType(result, typeof(T));
     }
 }

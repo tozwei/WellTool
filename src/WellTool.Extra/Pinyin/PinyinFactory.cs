@@ -48,11 +48,15 @@ namespace WellTool.Extra.Pinyin
 
         public string GetPinyin(string str, string separator)
         {
+            if (string.IsNullOrEmpty(str))
+                return string.Empty;
             return str;
         }
 
         public string GetPinyin(string str, string separator, bool tone)
         {
+            if (string.IsNullOrEmpty(str))
+                return string.Empty;
             return str;
         }
 
@@ -63,6 +67,8 @@ namespace WellTool.Extra.Pinyin
 
         public string GetFirstLetter(string str, string separator)
         {
+            if (string.IsNullOrEmpty(str))
+                return string.Empty;
             return str;
         }
     }

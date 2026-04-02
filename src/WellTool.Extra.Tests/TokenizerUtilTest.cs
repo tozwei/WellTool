@@ -120,7 +120,7 @@ public class TokenizerUtilTest
         var text = "Apple Banana Cherry";
         var result = _tokenizerUtil.TokenizeWithFrequency(text);
         
-        Assert.Equal(1, result.Count);
+        Assert.Equal(3, result.Count);
         Assert.Equal(1, result["Apple"]);
         Assert.Equal(1, result["Banana"]);
         Assert.Equal(1, result["Cherry"]);
@@ -160,7 +160,9 @@ public class TokenizerUtilTest
         var text = "订单号12345用户张三";
         var result = _tokenizerUtil.Tokenize(text);
         
-        Assert.Contains("订单号12345用户张三", result);
+        Assert.Contains("订单号", result);
+        Assert.Contains("用户", result);
+        Assert.Contains("张三", result);
         Assert.Contains("12345", result);
     }
 
