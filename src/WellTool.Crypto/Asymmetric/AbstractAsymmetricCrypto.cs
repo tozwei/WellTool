@@ -5,7 +5,7 @@ namespace WellTool.Crypto.Asymmetric
 {
     public abstract class AbstractAsymmetricCrypto
     {
-        protected abstract AsymmetricAlgorithm CreateAlgorithm();
+        protected abstract System.Security.Cryptography.AsymmetricAlgorithm CreateAlgorithm();
 
         public byte[] Encrypt(byte[] data, KeyType keyType)
         {
@@ -29,9 +29,9 @@ namespace WellTool.Crypto.Asymmetric
             };
         }
 
-        protected abstract byte[] EncryptWithPublicKey(byte[] data, AsymmetricAlgorithm algorithm);
-        protected abstract byte[] EncryptWithPrivateKey(byte[] data, AsymmetricAlgorithm algorithm);
-        protected abstract byte[] DecryptWithPrivateKey(byte[] data, AsymmetricAlgorithm algorithm);
-        protected abstract byte[] DecryptWithPublicKey(byte[] data, AsymmetricAlgorithm algorithm);
+        protected abstract byte[] EncryptWithPublicKey(byte[] data, System.Security.Cryptography.AsymmetricAlgorithm algorithm);
+        protected abstract byte[] EncryptWithPrivateKey(byte[] data, System.Security.Cryptography.AsymmetricAlgorithm algorithm);
+        protected abstract byte[] DecryptWithPrivateKey(byte[] data, System.Security.Cryptography.AsymmetricAlgorithm algorithm);
+        protected abstract byte[] DecryptWithPublicKey(byte[] data, System.Security.Cryptography.AsymmetricAlgorithm algorithm);
     }
 }

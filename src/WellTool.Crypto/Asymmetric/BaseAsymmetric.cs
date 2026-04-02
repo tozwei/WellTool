@@ -1,13 +1,12 @@
 using System.Security.Cryptography;
-using RSACryptoServiceProvider = System.Security.Cryptography.RSA;
 
 namespace WellTool.Crypto.Asymmetric
 {
     public abstract class BaseAsymmetric : AbstractAsymmetricCrypto
     {
-        protected AsymmetricAlgorithm Algorithm { get; set; }
+        protected System.Security.Cryptography.AsymmetricAlgorithm Algorithm { get; set; }
 
-        protected override AsymmetricAlgorithm CreateAlgorithm()
+        protected override System.Security.Cryptography.AsymmetricAlgorithm CreateAlgorithm()
         {
             if (Algorithm == null)
             {
@@ -16,9 +15,9 @@ namespace WellTool.Crypto.Asymmetric
             return Algorithm;
         }
 
-        protected abstract AsymmetricAlgorithm CreateSpecificAlgorithm();
+        protected abstract System.Security.Cryptography.AsymmetricAlgorithm CreateSpecificAlgorithm();
 
-        protected override byte[] EncryptWithPublicKey(byte[] data, AsymmetricAlgorithm algorithm)
+        protected override byte[] EncryptWithPublicKey(byte[] data, System.Security.Cryptography.AsymmetricAlgorithm algorithm)
         {
             var rsa = algorithm as System.Security.Cryptography.RSA;
             if (rsa != null)
@@ -28,7 +27,7 @@ namespace WellTool.Crypto.Asymmetric
             throw new System.NotSupportedException("Algorithm not supported");
         }
 
-        protected override byte[] EncryptWithPrivateKey(byte[] data, AsymmetricAlgorithm algorithm)
+        protected override byte[] EncryptWithPrivateKey(byte[] data, System.Security.Cryptography.AsymmetricAlgorithm algorithm)
         {
             var rsa = algorithm as System.Security.Cryptography.RSA;
             if (rsa != null)
@@ -38,7 +37,7 @@ namespace WellTool.Crypto.Asymmetric
             throw new System.NotSupportedException("Algorithm not supported");
         }
 
-        protected override byte[] DecryptWithPrivateKey(byte[] data, AsymmetricAlgorithm algorithm)
+        protected override byte[] DecryptWithPrivateKey(byte[] data, System.Security.Cryptography.AsymmetricAlgorithm algorithm)
         {
             var rsa = algorithm as System.Security.Cryptography.RSA;
             if (rsa != null)
@@ -48,7 +47,7 @@ namespace WellTool.Crypto.Asymmetric
             throw new System.NotSupportedException("Algorithm not supported");
         }
 
-        protected override byte[] DecryptWithPublicKey(byte[] data, AsymmetricAlgorithm algorithm)
+        protected override byte[] DecryptWithPublicKey(byte[] data, System.Security.Cryptography.AsymmetricAlgorithm algorithm)
         {
             throw new System.NotSupportedException("Public key decryption not supported");
         }
