@@ -93,8 +93,8 @@ namespace WellTool.Cron.Tests
             var pattern = new CronPattern("0 0 0 1 1 ? *");
             var result = CronPatternUtil.NextDateAfter(pattern, DateTime.Parse("2025-02-01 00:00:00"));
             Assert.NotNull(result);
-            Assert.Equal(1, result.Value.Day);
-            Assert.Equal(1, result.Value.Month);
+            // 应该匹配到 1月1日00:00
+            Assert.True(result.Value.Month == 1 && result.Value.Day == 1);
         }
 
         /// <summary>
