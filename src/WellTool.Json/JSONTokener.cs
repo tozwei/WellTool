@@ -1,73 +1,73 @@
 using System;
-using System.IO;
+using System.Text;
 
 namespace WellTool.Json
 {
     /// <summary>
-    /// JSON 解析器
+    /// JSON 令牌解析器
     /// </summary>
     public class JSONTokener
     {
-        private readonly TextReader _reader;
-        private int _character;
-        private bool _eof;
-        private int _index;
+        private readonly string _input;
+        private int _position;
+        private readonly int _length;
 
         /// <summary>
-        /// 构造函数
+        /// 创建 JSONTokener
         /// </summary>
-        /// <param name="s">JSON 字符串</param>
-        public JSONTokener(string s)
+        /// <param name="input">输入字符串</param>
+        public JSONTokener(string input)
         {
-            _reader = new StringReader(s);
-            _index = 0;
-            Next();
+            _input = input ?? throw new ArgumentNullException(nameof(input));
+            _length = _input.Length;
+            _position = 0;
         }
 
         /// <summary>
-        /// 构造函数
+        /// 当前读取位置
         /// </summary>
-        /// <param name="reader">文本读取器</param>
-        public JSONTokener(TextReader reader)
+        public int Position => _position;
+
+        /// <summary>
+        /// 是否到达末尾
+        /// </summary>
+        public bool EndOfFile => _position >= _length;
+
+        /// <summary>
+        /// 跳过空白字符
+        /// </summary>
+        public void SkipWhitespace()
         {
-            _reader = reader;
-            _index = 0;
-            Next();
+            while (_position < _length && char.IsWhiteSpace(_input[_position]))
+            {
+                _position++;
+            }
         }
 
         /// <summary>
-        /// 读取下一个字符
+        /// 前进一个字符
         /// </summary>
-        /// <returns>下一个字符</returns>
-        public int Next()
+        /// <returns>下一个字符，到达末尾返回 '\0'</returns>
+        public char Next()
         {
-            var c = _character;
-            if (c != -1)
+            if (_position >= _length)
             {
-                _index++;
+                return '\0';
             }
-            if (_reader != null)
-            {
-                _character = _reader.Read();
-            }
-            else
-            {
-                _character = -1;
-            }
-            if (_character == -1)
-            {
-                _eof = true;
-            }
-            return c;
+            return _input[_position++];
         }
 
         /// <summary>
-        /// 查看当前字符
+        /// 查看下一个字符（不移动位置）
         /// </summary>
-        /// <returns>当前字符</returns>
-        public int NextCharacter()
+        /// <returns>下一个字符，到达末尾返回 '\0'</returns>
+        public char NextCharacter()
         {
-            return _character;
+            if (_position >= _length)
+            {
+                return '\0';
+            }
+            return _input[_position];
         }
 
         /// <summary>
@@ -75,71 +75,99 @@ namespace WellTool.Json
         /// </summary>
         public void Back()
         {
-            if (_index > 0 && !_eof)
+            if (_position > 0)
             {
-                _index--;
-                _eof = false;
-                // 注意：TextReader 没有 BaseStream 属性，这里简化处理
-                // 对于 StringReader，我们无法回退，所以这里只更新索引和 eof 状态
-                _character = -1;
+                _position--;
             }
         }
 
         /// <summary>
-        /// 跳过空白字符
+        /// 匹配并消费指定字符
         /// </summary>
-        public void SkipWhitespace()
+        /// <param name="c">期望的字符</param>
+        public void Match(char c)
         {
-            while (char.IsWhiteSpace((char)_character))
+            var next = Next();
+            if (next != c)
             {
-                Next();
+                throw new JSONException($"Expected '{c}' but found '{next}' at position {_position}");
             }
         }
 
         /// <summary>
-        /// 读取字符串
+        /// 匹配并消费指定字符串
         /// </summary>
-        /// <returns>字符串</returns>
+        /// <param name="s">期望的字符串</param>
+        public void Match(string s)
+        {
+            foreach (var c in s)
+            {
+                Match(c);
+            }
+        }
+
+        /// <summary>
+        /// 查看下一个非空白字符
+        /// </summary>
+        /// <returns>下一个非空白字符</returns>
+        public char NextClean()
+        {
+            SkipWhitespace();
+            return NextCharacter();
+        }
+
+        /// <summary>
+        /// 读取下一个字符串
+        /// </summary>
+        /// <returns>字符串值（不包含引号）</returns>
         public string NextString()
         {
-            if (_character != '"')
-            {
-                throw new JSONException($"Expected '\"' at position {_index}");
-            }
+            // 消费开始的双引号
+            Next();
 
-            Next(); // 跳过 '"'
-            var sb = new System.Text.StringBuilder();
-
-            while (_character != -1)
+            var sb = new StringBuilder();
+            while (_position < _length)
             {
-                var c = (char)Next();
+                var c = Next();
                 if (c == '"')
                 {
                     return sb.ToString();
                 }
                 if (c == '\\')
                 {
-                    c = (char)Next();
+                    if (_position >= _length)
+                    {
+                        throw new JSONException("Unterminated string");
+                    }
+                    c = Next();
                     switch (c)
                     {
+                        case '"': sb.Append('"'); break;
+                        case '\\': sb.Append('\\'); break;
+                        case '/': sb.Append('/'); break;
                         case 'b': sb.Append('\b'); break;
                         case 'f': sb.Append('\f'); break;
                         case 'n': sb.Append('\n'); break;
                         case 'r': sb.Append('\r'); break;
                         case 't': sb.Append('\t'); break;
-                        case '"': sb.Append('"'); break;
-                        case '\\': sb.Append('\\'); break;
-                        case '/': sb.Append('/'); break;
                         case 'u':
-                            var hex = new char[4];
+                            var hex = "";
                             for (int i = 0; i < 4; i++)
                             {
-                                hex[i] = (char)Next();
+                                if (_position < _length)
+                                {
+                                    hex += Next();
+                                }
+                                else
+                                {
+                                    throw new JSONException("Invalid unicode escape");
+                                }
                             }
-                            sb.Append((char)Convert.ToInt32(new string(hex), 16));
+                            sb.Append((char)Convert.ToInt32(hex, 16));
                             break;
                         default:
-                            throw new JSONException($"Invalid escape character at position {_index}");
+                            sb.Append(c);
+                            break;
                     }
                 }
                 else
@@ -148,131 +176,163 @@ namespace WellTool.Json
                 }
             }
 
-            throw new JSONException($"Unterminated string at position {_index}");
+            throw new JSONException("Unterminated string");
         }
 
         /// <summary>
-        /// 读取数字
+        /// 读取下一个数字
         /// </summary>
-        /// <returns>数字对象</returns>
+        /// <returns>数字</returns>
         public object NextNumber()
         {
-            var sb = new System.Text.StringBuilder();
+            var sb = new StringBuilder();
+            var c = NextCharacter();
 
-            if (_character == '-')
+            // 处理负号
+            if (c == '-')
             {
-                sb.Append((char)Next());
+                sb.Append(c);
+                _position++;
+                c = NextCharacter();
             }
 
-            while (char.IsDigit((char)_character))
+            // 处理整数部分
+            while (_position < _length)
             {
-                sb.Append((char)Next());
-            }
-
-            if (_character == '.')
-            {
-                sb.Append((char)Next());
-                while (char.IsDigit((char)_character))
+                if (char.IsDigit(c) || (c == 'e' || c == 'E') || c == '+' || c == '-')
                 {
-                    sb.Append((char)Next());
+                    sb.Append(c);
+                    _position++;
+                    c = NextCharacter();
+                }
+                else
+                {
+                    break;
                 }
             }
 
-            if (_character == 'e' || _character == 'E')
+            // 处理小数部分
+            if (c == '.')
             {
-                sb.Append((char)Next());
-                if (_character == '+' || _character == '-')
+                sb.Append(c);
+                _position++;
+                c = NextCharacter();
+                while (_position < _length && (char.IsDigit(c) || c == 'e' || c == 'E' || c == '+' || c == '-'))
                 {
-                    sb.Append((char)Next());
-                }
-                while (char.IsDigit((char)_character))
-                {
-                    sb.Append((char)Next());
+                    sb.Append(c);
+                    _position++;
+                    c = NextCharacter();
                 }
             }
 
-            var s = sb.ToString();
-            if (s.Contains(".") || s.Contains("e") || s.Contains("E"))
+            var numStr = sb.ToString();
+
+            // 尝试解析为整数
+            if (numStr.IndexOf('.') < 0 && numStr.IndexOf('e') < 0 && numStr.IndexOf('E') < 0)
             {
-                return double.Parse(s);
+                if (long.TryParse(numStr, out var longVal))
+                {
+                    if (longVal >= int.MinValue && longVal <= int.MaxValue)
+                    {
+                        return (int)longVal;
+                    }
+                    return longVal;
+                }
             }
-            else
+
+            // 解析为双精度
+            if (double.TryParse(numStr, out var doubleVal))
             {
-                return long.Parse(s);
+                return doubleVal;
             }
+
+            throw new JSONException($"Invalid number: {numStr}");
         }
 
         /// <summary>
-        /// 读取布尔值
+        /// 读取下一个布尔值
         /// </summary>
         /// <returns>布尔值</returns>
         public bool NextBoolean()
         {
-            var s = NextWord();
-            if (s == "true")
+            var start = _position;
+            var remaining = _length - _position;
+
+            if (remaining >= 4 && _input.Substring(_position, 4).ToLower() == "true")
             {
+                _position += 4;
                 return true;
             }
-            else if (s == "false")
+
+            if (remaining >= 5 && _input.Substring(_position, 5).ToLower() == "false")
             {
+                _position += 5;
                 return false;
             }
-            else
-            {
-                throw new JSONException($"Expected 'true' or 'false' at position {_index}");
-            }
+
+            throw new JSONException($"Expected 'true' or 'false' at position {_position}");
         }
 
         /// <summary>
-        /// 读取 null
+        /// 读取下一个 null 值
         /// </summary>
-        /// <returns>JSONNull.Instance</returns>
-        public object NextNull()
+        /// <returns>JSONNull</returns>
+        public JSONNull NextNull()
         {
-            var s = NextWord();
-            if (s == "null")
+            var remaining = _length - _position;
+
+            if (remaining >= 4 && _input.Substring(_position, 4).ToLower() == "null")
             {
-                return JSONNull.Instance;
+                _position += 4;
+                return JSONNull.NULL;
             }
-            else
-            {
-                throw new JSONException($"Expected 'null' at position {_index}");
-            }
+
+            throw new JSONException($"Expected 'null' at position {_position}");
         }
 
         /// <summary>
-        /// 读取单词
+        /// 读取到指定字符
         /// </summary>
-        /// <returns>单词</returns>
-        public string NextWord()
+        /// <param name="separator">分隔符</param>
+        /// <returns>字符串</returns>
+        public string NextValue(char separator)
         {
-            var sb = new System.Text.StringBuilder();
-            while (_character != -1 && char.IsLetterOrDigit((char)_character))
+            var sb = new StringBuilder();
+            SkipWhitespace();
+
+            while (_position < _length)
             {
-                sb.Append((char)Next());
+                var c = NextCharacter();
+                if (c == separator || c == '\0')
+                {
+                    break;
+                }
+                sb.Append(c);
+                _position++;
             }
-            return sb.ToString();
+
+            return sb.ToString().Trim();
         }
 
         /// <summary>
-        /// 匹配字符
+        /// 剩余内容
         /// </summary>
-        /// <param name="c">要匹配的字符</param>
-        public void Match(char c)
+        /// <returns>剩余字符串</returns>
+        public string Rest()
         {
-            if (_character != c)
-            {
-                throw new JSONException($"Expected '{c}' at position {_index}");
-            }
-            Next();
+            return _input.Substring(_position);
         }
 
         /// <summary>
-        /// 是否到达文件末尾
+        /// 跳过指定字符
         /// </summary>
-        public bool EndOfFile
+        /// <param name="c">要跳过的字符</param>
+        public void Skip(char c)
         {
-            get { return _eof; }
+            if (NextCharacter() == c)
+            {
+                _position++;
+            }
         }
     }
 }

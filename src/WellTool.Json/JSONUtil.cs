@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace WellTool.Json
@@ -9,286 +12,859 @@ namespace WellTool.Json
     /// </summary>
     public static class JSONUtil
     {
-
+        #region 创建方法
 
         /// <summary>
-        /// 解析 JSON 字符串为 JSONObject
+        /// 创建 JSONObject
         /// </summary>
-        /// <param name="json">JSON 字符串</param>
         /// <returns>JSONObject</returns>
-        public static JSONObject ParseObject(string json)
+        public static JSONObject CreateObj()
         {
-            return new JSONObject(json);
+            return new JSONObject();
         }
 
         /// <summary>
-        /// 解析 JSON 字符串为 JSONArray
+        /// 创建 JSONObject
         /// </summary>
-        /// <param name="json">JSON 字符串</param>
+        /// <param name="config">JSON 配置</param>
+        /// <returns>JSONObject</returns>
+        public static JSONObject CreateObj(JSONConfig config)
+        {
+            return new JSONObject(config);
+        }
+
+        /// <summary>
+        /// 创建 JSONArray
+        /// </summary>
         /// <returns>JSONArray</returns>
-        public static JSONArray ParseArray(string json)
+        public static JSONArray CreateArray()
         {
-            return new JSONArray(json);
+            return new JSONArray();
         }
 
         /// <summary>
-        /// 将对象转换为 JSON 字符串
+        /// 创建 JSONArray
         /// </summary>
-        /// <param name="obj">对象</param>
-        /// <returns>JSON 字符串</returns>
-        public static string ToJson(object obj)
+        /// <param name="config">JSON 配置</param>
+        /// <returns>JSONArray</returns>
+        public static JSONArray CreateArray(JSONConfig config)
         {
-            if (obj == null)
-            {
-                return "null";
-            }
-            else if (obj is JSONObject jsonObj)
-            {
-                return jsonObj.ToString();
-            }
-            else if (obj is JSONArray jsonArr)
-            {
-                return jsonArr.ToString();
-            }
-            else if (obj is string s)
-            {
-                return '"' + EscapeString(s) + '"';
-            }
-            else if (obj is bool b)
-            {
-                return b.ToString().ToLower();
-            }
-            else if (obj is int i)
-            {
-                return i.ToString();
-            }
-            else if (obj is long l)
-            {
-                return l.ToString();
-            }
-            else if (obj is double d)
-            {
-                return d.ToString();
-            }
-            else if (obj is float f)
-            {
-                return f.ToString();
-            }
-            else if (obj is decimal m)
-            {
-                return m.ToString();
-            }
-            else if (obj is DateTime dt)
-            {
-                return '"' + dt.ToString("yyyy-MM-ddTHH:mm:ss.fffZ") + '"';
-            }
-            else
-            {
-                throw new JSONException($"Unsupported type: {obj.GetType()}");
-            }
+            return new JSONArray(config);
         }
 
-        /// <summary>
-        /// 转义字符串
-        /// </summary>
-        /// <param name="s">字符串</param>
-        /// <returns>转义后的字符串</returns>
-        private static string EscapeString(string s)
-        {
-            var sb = new StringBuilder();
-            foreach (var c in s)
-            {
-                switch (c)
-                {
-                    case '"': sb.Append('\\'); sb.Append('"'); break;
-                    case '\\': sb.Append('\\'); sb.Append('\\'); break;
-                    case '\b': sb.Append('\\'); sb.Append('b'); break;
-                    case '\f': sb.Append('\\'); sb.Append('f'); break;
-                    case '\n': sb.Append('\\'); sb.Append('n'); break;
-                    case '\r': sb.Append('\\'); sb.Append('r'); break;
-                    case '\t': sb.Append('\\'); sb.Append('t'); break;
-                    default:
-                        if (c < 32)
-                        {
-                            sb.Append($"\\u{(int)c:X4}");
-                        }
-                        else
-                        {
-                            sb.Append(c);
-                        }
-                        break;
-                }
-            }
-            return sb.ToString();
-        }
+        #endregion
+
+        #region 解析方法
 
         /// <summary>
-        /// 从文件中读取 JSON 并解析为 JSONObject
+        /// JSON 字符串转 JSONObject 对象
         /// </summary>
-        /// <param name="path">文件路径</param>
+        /// <param name="jsonStr">JSON 字符串</param>
         /// <returns>JSONObject</returns>
-        public static JSONObject ReadFromFile(string path)
+        public static JSONObject ParseObj(string jsonStr)
         {
-            var json = File.ReadAllText(path, Encoding.UTF8);
-            return ParseObject(json);
+            if (string.IsNullOrWhiteSpace(jsonStr))
+            {
+                return null;
+            }
+            return new JSONObject(jsonStr);
         }
 
         /// <summary>
-        /// 将 JSONObject 写入文件
+        /// JSON 字符串转 JSONObject 对象
         /// </summary>
-        /// <param name="obj">JSONObject</param>
-        /// <param name="path">文件路径</param>
-        public static void WriteToFile(JSONObject obj, string path)
+        /// <param name="obj">Bean 对象或者 Map</param>
+        /// <returns>JSONObject</returns>
+        public static JSONObject ParseObj(object obj)
         {
-            File.WriteAllText(path, obj.ToString(), Encoding.UTF8);
+            return ParseObj(obj, (JSONConfig)null);
         }
 
         /// <summary>
-        /// 将 JSONArray 写入文件
+        /// JSON 字符串转 JSONObject 对象
         /// </summary>
-        /// <param name="arr">JSONArray</param>
-        /// <param name="path">文件路径</param>
-        public static void WriteToFile(JSONArray arr, string path)
+        /// <param name="obj">Bean 对象或者 Map</param>
+        /// <returns>JSONObject</returns>
+        public static JSONObject ParseObject(object obj)
         {
-            File.WriteAllText(path, arr.ToString(), Encoding.UTF8);
+            return ParseObj(obj);
         }
 
         /// <summary>
         /// 格式化 JSON 字符串
         /// </summary>
-        /// <param name="json">JSON 字符串</param>
-        /// <returns>格式化后的 JSON 字符串</returns>
-        public static string Format(string json)
-        {
-            var obj = ParseObject(json);
-            return Format(obj);
-        }
-
-        /// <summary>
-        /// 格式化 JSONObject
-        /// </summary>
-        /// <param name="obj">JSONObject</param>
-        /// <returns>格式化后的 JSON 字符串</returns>
-        public static string Format(JSONObject obj)
-        {
-            return Format(obj, 0);
-        }
-
-        /// <summary>
-        /// 格式化 JSONArray
-        /// </summary>
-        /// <param name="arr">JSONArray</param>
-        /// <returns>格式化后的 JSON 字符串</returns>
-        public static string Format(JSONArray arr)
-        {
-            return Format(arr, 0);
-        }
-
-        /// <summary>
-        /// 格式化 JSONObject
-        /// </summary>
-        /// <param name="obj">JSONObject</param>
-        /// <param name="indent">缩进级别</param>
-        /// <returns>格式化后的 JSON 字符串</returns>
-        private static string Format(JSONObject obj, int indent)
-        {
-            var sb = new StringBuilder();
-            var indentStr = new string(' ', indent * 2);
-            sb.Append('{');
-            sb.AppendLine();
-
-            var first = true;
-            foreach (var kv in obj)
-            {
-                if (!first)
-                {
-                    sb.Append(',');
-                    sb.AppendLine();
-                }
-                first = false;
-
-                sb.Append(indentStr);
-                sb.Append(' ');
-                sb.Append('"');
-                sb.Append(EscapeString(kv.Key));
-                sb.Append('"');
-                sb.Append(':');
-                sb.Append(' ');
-                sb.Append(Format(kv.Value, indent + 1));
-            }
-
-            sb.AppendLine();
-            sb.Append(indentStr);
-            sb.Append('}');
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// 格式化 JSONArray
-        /// </summary>
-        /// <param name="arr">JSONArray</param>
-        /// <param name="indent">缩进级别</param>
-        /// <returns>格式化后的 JSON 字符串</returns>
-        private static string Format(JSONArray arr, int indent)
-        {
-            var sb = new StringBuilder();
-            var indentStr = new string(' ', indent * 2);
-            sb.Append('[');
-            sb.AppendLine();
-
-            var first = true;
-            foreach (var value in arr)
-            {
-                if (!first)
-                {
-                    sb.Append(',');
-                    sb.AppendLine();
-                }
-                first = false;
-
-                sb.Append(indentStr);
-                sb.Append(' ');
-                sb.Append(Format(value, indent + 1));
-            }
-
-            sb.AppendLine();
-            sb.Append(indentStr);
-            sb.Append(']');
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// 格式化值
-        /// </summary>
-        /// <param name="value">值</param>
-        /// <param name="indent">缩进级别</param>
+        /// <param name="jsonStr">JSON 字符串</param>
         /// <returns>格式化后的字符串</returns>
-        private static string Format(object value, int indent)
+        public static string Format(string jsonStr)
         {
-            if (value == null || value is JSONNull)
+            return FormatJsonStr(jsonStr);
+        }
+
+        /// <summary>
+        /// 格式化 JSON 对象
+        /// </summary>
+        /// <param name="json">JSON 对象</param>
+        /// <returns>格式化后的字符串</returns>
+        public static string Format(IJSON json)
+        {
+            if (json == null)
             {
-                return "null";
+                return null;
             }
-            else if (value is string s)
+            return json.ToJSONString(4);
+        }
+
+        /// <summary>
+        /// 转换为 JSON 字符串
+        /// </summary>
+        /// <param name="obj">被转为 JSON 的对象</param>
+        /// <returns>JSON 字符串</returns>
+        public static string ToJson(object obj)
+        {
+            return ToJsonStr(obj);
+        }
+
+        /// <summary>
+        /// JSON 字符串转 JSONObject 对象
+        /// </summary>
+        /// <param name="obj">Bean 对象或者 Map</param>
+        /// <param name="config">JSON 配置</param>
+        /// <returns>JSONObject</returns>
+        public static JSONObject ParseObj(object obj, JSONConfig config)
+        {
+            if (obj == null)
             {
-                return '"' + EscapeString(s) + '"';
+                return null;
             }
-            else if (value is bool b)
+
+            if (obj is string str)
             {
-                return b.ToString().ToLower();
+                return string.IsNullOrWhiteSpace(str) ? null : new JSONObject(str);
             }
-            else if (value is JSONObject obj)
+
+            if (obj is JSONObject jsonObj)
             {
-                return Format(obj, indent);
+                return jsonObj;
             }
-            else if (value is JSONArray arr)
+
+            return new JSONObject(obj, config ?? JSONConfig.Create());
+        }
+
+        /// <summary>
+        /// JSON 字符串转 JSONObject 对象
+        /// </summary>
+        /// <param name="obj">Bean 对象或者 Map</param>
+        /// <param name="ignoreNullValue">是否忽略空值</param>
+        /// <returns>JSONObject</returns>
+        public static JSONObject ParseObj(object obj, bool ignoreNullValue)
+        {
+            return new JSONObject(obj, ignoreNullValue);
+        }
+
+        /// <summary>
+        /// JSON 字符串转 JSONArray
+        /// </summary>
+        /// <param name="jsonStr">JSON 字符串</param>
+        /// <returns>JSONArray</returns>
+        public static JSONArray ParseArray(string jsonStr)
+        {
+            if (string.IsNullOrWhiteSpace(jsonStr))
             {
-                return Format(arr, indent);
+                return null;
             }
-            else
+            return new JSONArray(jsonStr);
+        }
+
+        /// <summary>
+        /// JSON 字符串转 JSONArray
+        /// </summary>
+        /// <param name="arrayOrCollection">数组或集合对象</param>
+        /// <returns>JSONArray</returns>
+        public static JSONArray ParseArray(object arrayOrCollection)
+        {
+            return ParseArray(arrayOrCollection, (JSONConfig)null);
+        }
+
+        /// <summary>
+        /// JSON 字符串转 JSONArray
+        /// </summary>
+        /// <param name="arrayOrCollection">数组或集合对象</param>
+        /// <param name="config">JSON 配置</param>
+        /// <returns>JSONArray</returns>
+        public static JSONArray ParseArray(object arrayOrCollection, JSONConfig config)
+        {
+            if (arrayOrCollection == null)
             {
-                return value.ToString();
+                return null;
+            }
+
+            if (arrayOrCollection is string str)
+            {
+                return string.IsNullOrWhiteSpace(str) ? null : new JSONArray(str);
+            }
+
+            if (arrayOrCollection is JSONArray jsonArray)
+            {
+                return jsonArray;
+            }
+
+            return new JSONArray(arrayOrCollection, config ?? JSONConfig.Create());
+        }
+
+        /// <summary>
+        /// JSON 字符串转 JSONArray
+        /// </summary>
+        /// <param name="arrayOrCollection">数组或集合对象</param>
+        /// <param name="ignoreNullValue">是否忽略空值</param>
+        /// <returns>JSONArray</returns>
+        public static JSONArray ParseArray(object arrayOrCollection, bool ignoreNullValue)
+        {
+            return new JSONArray(arrayOrCollection, ignoreNullValue);
+        }
+
+        /// <summary>
+        /// 转换对象为 JSON
+        /// </summary>
+        /// <param name="obj">对象</param>
+        /// <returns>JSON</returns>
+        public static IJSON Parse(object obj)
+        {
+            return Parse(obj, (JSONConfig)null);
+        }
+
+        /// <summary>
+        /// 转换对象为 JSON
+        /// </summary>
+        /// <param name="obj">对象</param>
+        /// <param name="config">JSON 配置</param>
+        /// <returns>JSON</returns>
+        public static IJSON Parse(object obj, JSONConfig config)
+        {
+            if (obj == null)
+            {
+                return null;
+            }
+
+            config = config ?? JSONConfig.Create();
+
+            if (obj is IJSON json)
+            {
+                return json;
+            }
+
+            if (obj is string str)
+            {
+                str = str.Trim();
+                if (str.StartsWith("{"))
+                {
+                    return new JSONObject(str);
+                }
+                if (str.StartsWith("["))
+                {
+                    return new JSONArray(str);
+                }
+            }
+
+            if (obj is IDictionary)
+            {
+                return new JSONObject(obj, config);
+            }
+
+            if (obj is IEnumerable enumerable && !(obj is string))
+            {
+                return new JSONArray(enumerable, config);
+            }
+
+            return new JSONObject(obj, config);
+        }
+
+        /// <summary>
+        /// XML 字符串转为 JSONObject
+        /// </summary>
+        /// <param name="xmlStr">XML 字符串</param>
+        /// <returns>JSONObject</returns>
+        public static JSONObject ParseFromXml(string xmlStr)
+        {
+            // XML 功能暂未实现
+            return null;
+        }
+
+        #endregion
+
+        #region 文件读取方法
+
+        /// <summary>
+        /// 读取 JSON 文件
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        /// <param name="encoding">编码</param>
+        /// <returns>JSON</returns>
+        public static IJSON ReadJSON(string filePath, System.Text.Encoding encoding = null)
+        {
+            encoding = encoding ?? System.Text.Encoding.UTF8;
+            var content = File.ReadAllText(filePath, encoding);
+            return Parse(content);
+        }
+
+        /// <summary>
+        /// 读取 JSONObject 文件
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        /// <param name="encoding">编码</param>
+        /// <returns>JSONObject</returns>
+        public static JSONObject ReadJSONObject(string filePath, System.Text.Encoding encoding = null)
+        {
+            encoding = encoding ?? System.Text.Encoding.UTF8;
+            var content = File.ReadAllText(filePath, encoding);
+            return ParseObj(content);
+        }
+
+        /// <summary>
+        /// 读取 JSONArray 文件
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        /// <param name="encoding">编码</param>
+        /// <returns>JSONArray</returns>
+        public static JSONArray ReadJSONArray(string filePath, System.Text.Encoding encoding = null)
+        {
+            encoding = encoding ?? System.Text.Encoding.UTF8;
+            var content = File.ReadAllText(filePath, encoding);
+            return ParseArray(content);
+        }
+
+        #endregion
+
+        #region ToString 方法
+
+        /// <summary>
+        /// 转为 JSON 字符串
+        /// </summary>
+        /// <param name="json">JSON</param>
+        /// <param name="indentFactor">缩进因子</param>
+        /// <returns>JSON 字符串</returns>
+        public static string ToJsonStr(IJSON json, int indentFactor)
+        {
+            if (json == null)
+            {
+                return null;
+            }
+            return json.ToJSONString(indentFactor);
+        }
+
+        /// <summary>
+        /// 转为 JSON 字符串
+        /// </summary>
+        /// <param name="json">JSON</param>
+        /// <returns>JSON 字符串</returns>
+        public static string ToJsonStr(IJSON json)
+        {
+            return ToJsonStr(json, 0);
+        }
+
+        /// <summary>
+        /// 转为 JSON 字符串
+        /// </summary>
+        /// <param name="json">JSON</param>
+        /// <param name="writer">Writer</param>
+        public static void ToJsonStr(IJSON json, TextWriter writer)
+        {
+            if (json != null && json is JSONBase jsonBase)
+            {
+                jsonBase.Write(writer, 0, 0);
             }
         }
+
+        /// <summary>
+        /// 转为格式化的 JSON 字符串
+        /// </summary>
+        /// <param name="json">JSON</param>
+        /// <returns>JSON 字符串</returns>
+        public static string ToJsonPrettyStr(IJSON json)
+        {
+            return ToJsonStr(json, 4);
+        }
+
+        /// <summary>
+        /// 转换为 JSON 字符串
+        /// </summary>
+        /// <param name="obj">被转为 JSON 的对象</param>
+        /// <returns>JSON 字符串</returns>
+        public static string ToJsonStr(object obj)
+        {
+            return ToJsonStr(obj, (JSONConfig)null);
+        }
+
+        /// <summary>
+        /// 转换为 JSON 字符串
+        /// </summary>
+        /// <param name="obj">被转为 JSON 的对象</param>
+        /// <param name="jsonConfig">JSON 配置</param>
+        /// <returns>JSON 字符串</returns>
+        public static string ToJsonStr(object obj, JSONConfig jsonConfig)
+        {
+            if (obj == null)
+            {
+                return null;
+            }
+
+            if (obj is string str)
+            {
+                return str;
+            }
+
+            if (obj is bool || obj is char || obj is int || obj is long || 
+                obj is double || obj is float || obj is decimal)
+            {
+                return obj.ToString();
+            }
+
+            var json = Parse(obj, jsonConfig);
+            return json?.ToJSONString(0);
+        }
+
+        /// <summary>
+        /// 转换为格式化 JSON 字符串
+        /// </summary>
+        /// <param name="obj">Bean 对象</param>
+        /// <returns>JSON 字符串</returns>
+        public static string ToJsonPrettyStr(object obj)
+        {
+            var json = Parse(obj);
+            return ToJsonPrettyStr(json);
+        }
+
+        /// <summary>
+        /// 转换为 XML 字符串
+        /// </summary>
+        /// <param name="json">JSON</param>
+        /// <returns>XML 字符串</returns>
+        public static string ToXmlStr(IJSON json)
+        {
+            // XML 功能暂未实现
+            return null;
+        }
+
+        #endregion
+
+        #region ToBean 方法
+
+        /// <summary>
+        /// JSON 字符串转为实体类对象
+        /// </summary>
+        /// <typeparam name="T">Bean 类型</typeparam>
+        /// <param name="jsonString">JSON 字符串</param>
+        /// <returns>实体类对象</returns>
+        public static T ToBean<T>(string jsonString)
+        {
+            return ToBean<T>(ParseObj(jsonString));
+        }
+
+        /// <summary>
+        /// JSON 字符串转为实体类对象
+        /// </summary>
+        /// <typeparam name="T">Bean 类型</typeparam>
+        /// <param name="jsonString">JSON 字符串</param>
+        /// <param name="config">JSON 配置</param>
+        /// <returns>实体类对象</returns>
+        public static T ToBean<T>(string jsonString, JSONConfig config)
+        {
+            return ToBean<T>(ParseObj(jsonString, config));
+        }
+
+        /// <summary>
+        /// JSONObject 转为实体类对象
+        /// </summary>
+        /// <typeparam name="T">Bean 类型</typeparam>
+        /// <param name="json">JSONObject</param>
+        /// <returns>实体类对象</returns>
+        public static T ToBean<T>(JSONObject json)
+        {
+            if (json == null)
+            {
+                return default;
+            }
+            return json.ToBean<T>();
+        }
+
+        /// <summary>
+        /// JSON 字符串转为实体类对象
+        /// </summary>
+        /// <typeparam name="T">Bean 类型</typeparam>
+        /// <param name="jsonString">JSON 字符串</param>
+        /// <param name="type">实体类类型</param>
+        /// <param name="ignoreError">是否忽略错误</param>
+        /// <returns>实体类对象</returns>
+        public static T ToBean<T>(string jsonString, Type type, bool ignoreError)
+        {
+            var json = Parse(jsonString, JSONConfig.Create().SetIgnoreError(ignoreError));
+            if (json == null)
+            {
+                return default;
+            }
+            if (json is JSONBase jsonBase)
+            {
+                return (T)jsonBase.ToBean(type);
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// JSON 转为实体类对象
+        /// </summary>
+        /// <typeparam name="T">Bean 类型</typeparam>
+        /// <param name="json">JSON</param>
+        /// <param name="type">类型</param>
+        /// <param name="ignoreError">是否忽略错误</param>
+        /// <returns>实体类对象</returns>
+        public static T ToBean<T>(IJSON json, Type type, bool ignoreError)
+        {
+            if (json == null)
+            {
+                return default;
+            }
+            if (json is JSONBase jsonBase)
+            {
+                return (T)jsonBase.ToBean(type);
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// JSON 转为实体类对象
+        /// </summary>
+        /// <param name="json">JSON</param>
+        /// <param name="type">类型</param>
+        /// <param name="ignoreError">是否忽略错误</param>
+        /// <returns>实体类对象</returns>
+        public static object ToBean(IJSON json, Type type, bool ignoreError)
+        {
+            if (json == null)
+            {
+                return null;
+            }
+            if (json is JSONBase jsonBase)
+            {
+                return jsonBase.ToBean(type);
+            }
+            return null;
+        }
+
+        #endregion
+
+        #region ToList 方法
+
+        /// <summary>
+        /// JSONArray 字符串转换为 Bean 的 List
+        /// </summary>
+        /// <typeparam name="T">Bean 类型</typeparam>
+        /// <param name="jsonArray">JSONArray 字符串</param>
+        /// <returns>List</returns>
+        public static List<T> ToList<T>(string jsonArray)
+        {
+            return ToList<T>(ParseArray(jsonArray), typeof(T));
+        }
+
+        /// <summary>
+        /// JSONArray 转换为 Bean 的 List
+        /// </summary>
+        /// <typeparam name="T">Bean 类型</typeparam>
+        /// <param name="jsonArray">JSONArray</param>
+        /// <returns>List</returns>
+        public static List<T> ToList<T>(JSONArray jsonArray)
+        {
+            return ToList<T>(jsonArray, typeof(T));
+        }
+
+        /// <summary>
+        /// JSONArray 转换为 Bean 的 List
+        /// </summary>
+        /// <param name="jsonArray">JSONArray</param>
+        /// <param name="elementType">List 中元素类型</param>
+        /// <returns>List</returns>
+        public static List<T> ToList<T>(JSONArray jsonArray, Type elementType)
+        {
+            if (jsonArray == null)
+            {
+                return null;
+            }
+            return JSONConverter.ToList<T>(jsonArray);
+        }
+
+        #endregion
+
+        #region 路径操作方法
+
+        /// <summary>
+        /// 通过表达式获取 JSON 中嵌套的对象
+        /// </summary>
+        /// <param name="json">JSON</param>
+        /// <param name="expression">表达式</param>
+        /// <returns>对象</returns>
+        public static object GetByPath(IJSON json, string expression)
+        {
+            if (json == null || string.IsNullOrWhiteSpace(expression))
+            {
+                return null;
+            }
+            return json.GetByPath(expression);
+        }
+
+        /// <summary>
+        /// 通过表达式获取 JSON 中嵌套的对象
+        /// </summary>
+        /// <typeparam name="T">值类型</typeparam>
+        /// <param name="json">JSON</param>
+        /// <param name="expression">表达式</param>
+        /// <param name="defaultValue">默认值</param>
+        /// <returns>对象</returns>
+        public static T GetByPath<T>(IJSON json, string expression, T defaultValue)
+        {
+            if (json == null || string.IsNullOrWhiteSpace(expression))
+            {
+                return defaultValue;
+            }
+
+            var value = json.GetByPath(expression);
+            if (value == null)
+            {
+                return defaultValue;
+            }
+
+            return JSONConverter.JsonConvert<T>(value, null);
+        }
+
+        /// <summary>
+        /// 设置表达式指定位置的值
+        /// </summary>
+        /// <param name="json">JSON</param>
+        /// <param name="expression">表达式</param>
+        /// <param name="value">值</param>
+        public static void PutByPath(IJSON json, string expression, object value)
+        {
+            json?.PutByPath(expression, value);
+        }
+
+        #endregion
+
+        #region 字符串转义方法
+
+        /// <summary>
+        /// 对所有双引号做转义处理
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns>转义后的字符串</returns>
+        public static string Quote(string str)
+        {
+            return Quote(str, true);
+        }
+
+        /// <summary>
+        /// 对所有双引号做转义处理
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <param name="isWrap">是否使用双引号包装字符串</param>
+        /// <returns>转义后的字符串</returns>
+        public static string Quote(string str, bool isWrap)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return isWrap ? "\"\"" : string.Empty;
+            }
+
+            var sb = new StringBuilder();
+            if (isWrap)
+            {
+                sb.Append('"');
+            }
+
+            foreach (var c in str)
+            {
+                switch (c)
+                {
+                    case '\\':
+                    case '"':
+                        sb.Append('\\');
+                        sb.Append(c);
+                        break;
+                    default:
+                        sb.Append(Escape(c));
+                        break;
+                }
+            }
+
+            if (isWrap)
+            {
+                sb.Append('"');
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 转义显示不可见字符
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns>转义后的字符串</returns>
+        public static string Escape(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return str;
+            }
+
+            var sb = new StringBuilder();
+            foreach (var c in str)
+            {
+                sb.Append(Escape(c));
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 转义字符
+        /// </summary>
+        private static char Escape(char c)
+        {
+            switch (c)
+            {
+                case '\b': return 'b';
+                case '\t': return 't';
+                case '\n': return 'n';
+                case '\f': return 'f';
+                case '\r': return 'r';
+                default: return c;
+            }
+        }
+
+        #endregion
+
+        #region Wrap 方法
+
+        /// <summary>
+        /// 在需要的时候包装对象
+        /// </summary>
+        /// <param name="obj">被包装的对象</param>
+        /// <param name="config">JSON 选项</param>
+        /// <returns>包装后的值</returns>
+        public static object Wrap(object obj, JSONConfig config)
+        {
+            config = config ?? JSONConfig.Create();
+
+            if (obj == null)
+            {
+                return config.IsIgnoreNullValue() ? null : JSONNull.NULL;
+            }
+
+            if (obj is string || obj is bool || obj is int || obj is long ||
+                obj is double || obj is float || obj is decimal ||
+                obj is IJSON || obj is JSONNull)
+            {
+                return obj;
+            }
+
+            if (obj is IDictionary)
+            {
+                return new JSONObject(obj, config);
+            }
+
+            if (obj is IEnumerable enumerable && !(obj is string))
+            {
+                return new JSONArray(enumerable, config);
+            }
+
+            if (obj is DateTime || obj is char)
+            {
+                return obj;
+            }
+
+            if (obj is Enum)
+            {
+                return obj.ToString();
+            }
+
+            return new JSONObject(obj, config);
+        }
+
+        #endregion
+
+        #region 类型判断方法
+
+        /// <summary>
+        /// 格式化 JSON 字符串
+        /// </summary>
+        /// <param name="jsonStr">JSON 字符串</param>
+        /// <returns>格式化后的字符串</returns>
+        public static string FormatJsonStr(string jsonStr)
+        {
+            var json = Parse(jsonStr);
+            if (json == null)
+            {
+                return jsonStr;
+            }
+            return json.ToJSONString(4);
+        }
+
+        /// <summary>
+        /// 是否为 JSON 类型字符串
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns>是否为 JSON 类型字符串</returns>
+        public static bool IsTypeJSON(string str)
+        {
+            return IsTypeJSONObject(str) || IsTypeJSONArray(str);
+        }
+
+        /// <summary>
+        /// 是否为 JSONObject 字符串
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns>是否为 JSONObject 字符串</returns>
+        public static bool IsTypeJSONObject(string str)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+            {
+                return false;
+            }
+            str = str.Trim();
+            return str.StartsWith("{") && str.EndsWith("}");
+        }
+
+        /// <summary>
+        /// 是否为 JSONArray 字符串
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns>是否为 JSONArray 字符串</returns>
+        public static bool IsTypeJSONArray(string str)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+            {
+                return false;
+            }
+            str = str.Trim();
+            return str.StartsWith("[") && str.EndsWith("]");
+        }
+
+        /// <summary>
+        /// 是否为 null 对象
+        /// </summary>
+        /// <param name="obj">对象</param>
+        /// <returns>是否为 null</returns>
+        public static bool IsNull(object obj)
+        {
+            return obj == null || obj is JSONNull;
+        }
+
+        /// <summary>
+        /// XML 转 JSONObject
+        /// </summary>
+        /// <param name="xml">XML 字符串</param>
+        /// <returns>JSONObject</returns>
+        public static JSONObject XmlToJson(string xml)
+        {
+            // XML 功能暂未实现
+            return null;
+        }
+
+        #endregion
     }
 }

@@ -527,6 +527,14 @@ namespace WellTool.Json
         }
 
         /// <summary>
+        /// 获取字符串值
+        /// </summary>
+        public string GetString(string key)
+        {
+            return GetStr(key);
+        }
+
+        /// <summary>
         /// 获取整数值
         /// </summary>
         public int GetInt(string key)
@@ -610,6 +618,22 @@ namespace WellTool.Json
             if (value is bool boolVal) return boolVal;
             if (bool.TryParse(value.ToString(), out var result)) return result;
             return defaultValue;
+        }
+
+        /// <summary>
+        /// 获取布尔值
+        /// </summary>
+        public bool GetBoolean(string key)
+        {
+            return GetBool(key);
+        }
+
+        /// <summary>
+        /// 获取布尔值
+        /// </summary>
+        public bool GetBoolean(string key, bool defaultValue)
+        {
+            return GetBool(key, defaultValue);
         }
 
         /// <summary>
@@ -864,7 +888,7 @@ namespace WellTool.Json
         /// <summary>
         /// 转换为指定类型
         /// </summary>
-        public T ToBean<T>()
+        public override T ToBean<T>()
         {
             return (T)ToBean(typeof(T));
         }

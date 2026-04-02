@@ -225,7 +225,7 @@ namespace WellTool.Json
                 if (type.IsArray)
                 {
                     var elementType = type.GetElementType();
-                    var list = jsonArray.ToList(elementType);
+                    var list = ToList(jsonArray, elementType);
                     var array = Array.CreateInstance(elementType, list.Count);
                     for (int i = 0; i < list.Count; i++)
                     {
@@ -303,7 +303,62 @@ namespace WellTool.Json
         /// <returns>List</returns>
         public static List<T> ToList<T>(JSONArray jsonArray)
         {
-            return ToList(jsonArray, typeof(T));
+            if (jsonArray == null)
+            {
+                return null;
+            }
+
+            var list = new List<T>();
+            foreach (var item in jsonArray)
+            {
+                if (item == null || item == JSONNull.NULL)
+                {
+                    list.Add(default(T));
+                }
+                else if (item is JSONArray nestedArray)
+                {
+                    // 处理嵌套数组
+                    if (typeof(T).IsArray)
+                    {
+                        var elementType = typeof(T).GetElementType();
+                        var nestedList = ToList(nestedArray, elementType);
+                        var array = Array.CreateInstance(elementType, nestedList.Count);
+                        for (int i = 0; i < nestedList.Count; i++)
+                        {
+                            array.SetValue(nestedList[i], i);
+                        }
+                        list.Add((T)(object)array);
+                    }
+                    else if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(List<>))
+                    {
+                        var elementType = typeof(T).GetGenericArguments()[0];
+                        var nestedList = ToList(nestedArray, elementType);
+                        var genericList = Activator.CreateInstance(typeof(T)) as IList;
+                        if (genericList != null)
+                        {
+                            foreach (var nestedItem in nestedList)
+                            {
+                                genericList.Add(nestedItem);
+                            }
+                            list.Add((T)genericList);
+                        }
+                    }
+                    else
+                    {
+                        // 如果 T 不是数组或列表类型，尝试直接转换
+                        list.Add(JsonConvert<T>(item));
+                    }
+                }
+                else if (item is JSONObject nestedObj)
+                {
+                    list.Add((T)nestedObj.ToBean(typeof(T)));
+                }
+                else
+                {
+                    list.Add(JsonConvert<T>(item));
+                }
+            }
+            return list;
         }
 
         /// <summary>

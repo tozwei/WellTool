@@ -2,36 +2,42 @@ using System.Text;
 
 namespace WellTool.Json.Serialize
 {
-    public class JSONArraySerializer : JSONSerializer
+    public class DefaultJSONArraySerializer : JSONSerializer
     {
-        public string Serialize(object obj)
+        public void Serialize(object obj, object writer)
         {
-            if (obj == null)
+            if (writer is StringBuilder sb)
             {
-                return "null";
-            }
-            
-            if (obj is JSONArray jsonArray)
-            {
-                var sb = new StringBuilder();
-                sb.Append("[");
-                
-                var first = true;
-                foreach (var item in jsonArray)
+                if (obj == null)
                 {
-                    if (!first)
-                    {
-                        sb.Append(",");
-                    }
-                    sb.Append(Serialize(item));
-                    first = false;
+                    sb.Append("null");
+                    return;
                 }
                 
-                sb.Append("]");
-                return sb.ToString();
+                if (obj is JSONArray jsonArray)
+                {
+                    sb.Append("[");
+                    
+                    var first = true;
+                    foreach (var item in jsonArray)
+                    {
+                        if (!first)
+                        {
+                            sb.Append(",");
+                        }
+                        // 递归序列化每个元素
+                        var itemSerializer = new DefaultJSONSerializer();
+                        itemSerializer.Serialize(item, sb);
+                        first = false;
+                    }
+                    
+                    sb.Append("]");
+                }
+                else
+                {
+                    sb.Append(obj.ToString());
+                }
             }
-            
-            return obj.ToString();
         }
     }
 }

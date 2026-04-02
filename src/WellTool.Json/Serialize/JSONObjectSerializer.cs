@@ -2,37 +2,43 @@ using System.Text;
 
 namespace WellTool.Json.Serialize
 {
-    public class JSONObjectSerializer : JSONSerializer
+    public class DefaultJSONObjectSerializer : JSONSerializer
     {
-        public string Serialize(object obj)
+        public void Serialize(object obj, object writer)
         {
-            if (obj == null)
+            if (writer is StringBuilder sb)
             {
-                return "null";
-            }
-            
-            if (obj is JSONObject jsonObject)
-            {
-                var sb = new StringBuilder();
-                sb.Append("{");
-                
-                var first = true;
-                foreach (var key in jsonObject.Keys)
+                if (obj == null)
                 {
-                    if (!first)
-                    {
-                        sb.Append(",");
-                    }
-                    sb.Append('"').Append(key).Append('"').Append(":");
-                    sb.Append(Serialize(jsonObject[key]));
-                    first = false;
+                    sb.Append("null");
+                    return;
                 }
                 
-                sb.Append("}");
-                return sb.ToString();
+                if (obj is JSONObject jsonObject)
+                {
+                    sb.Append("{");
+                    
+                    var first = true;
+                    foreach (var key in jsonObject.Keys)
+                    {
+                        if (!first)
+                        {
+                            sb.Append(",");
+                        }
+                        sb.Append('"').Append(key).Append('"').Append(":");
+                        // 递归序列化每个值
+                        var valueSerializer = new DefaultJSONSerializer();
+                        valueSerializer.Serialize(jsonObject[key], sb);
+                        first = false;
+                    }
+                    
+                    sb.Append("}");
+                }
+                else
+                {
+                    sb.Append(obj.ToString());
+                }
             }
-            
-            return obj.ToString();
         }
     }
 }

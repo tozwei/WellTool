@@ -1,46 +1,86 @@
+using System;
+
 namespace WellTool.Json
 {
     /// <summary>
-    /// JSON null 值
+    /// JSON Null 值表示
     /// </summary>
     public class JSONNull
     {
         /// <summary>
-        /// JSON null 单例
+        /// JSON Null 的单例实例
         /// </summary>
-        public static readonly JSONNull Instance = new JSONNull();
+        public static readonly JSONNull NULL = new JSONNull();
 
         /// <summary>
         /// 私有构造函数
         /// </summary>
-        private JSONNull() { }
+        private JSONNull()
+        {
+        }
 
         /// <summary>
-        /// 重写 ToString 方法
+        /// 检查是否为空
         /// </summary>
-        /// <returns>"null"</returns>
+        public static bool IsNull(object obj)
+        {
+            return obj == null || obj is JSONNull || obj == JSONNull.NULL;
+        }
+
+        /// <summary>
+        /// 返回 "null" 字符串
+        /// </summary>
         public override string ToString()
         {
             return "null";
         }
 
         /// <summary>
-        /// 重写 Equals 方法
+        /// 返回空字符串
         /// </summary>
-        /// <param name="obj">比较对象</param>
-        /// <returns>是否相等</returns>
-        public override bool Equals(object obj)
+        public string ToString(string defaultValue)
         {
-            return obj is JSONNull;
+            return defaultValue;
         }
 
         /// <summary>
-        /// 重写 GetHashCode 方法
+        /// 返回 0
         /// </summary>
-        /// <returns>哈希码</returns>
-        public override int GetHashCode()
+        public int ToInt(int defaultValue)
         {
-            return 0;
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// 返回 0L
+        /// </summary>
+        public long ToLong(long defaultValue)
+        {
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// 返回 0.0
+        /// </summary>
+        public double ToDouble(double defaultValue)
+        {
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// 返回 false
+        /// </summary>
+        public bool ToBool(bool defaultValue)
+        {
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// 返回默认值
+        /// </summary>
+        public T ToValue<T>(T defaultValue)
+        {
+            return defaultValue;
         }
     }
 }
