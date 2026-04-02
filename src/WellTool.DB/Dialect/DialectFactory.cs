@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Data.Common;
+using System.Data;
 
 namespace WellTool.DB.Dialect;
 
@@ -28,7 +28,13 @@ public static class DialectFactory
         { "System.Data.SqlClient", new Impl.SqlServerDialect() },
         { "Microsoft.Data.SqlClient", new Impl.SqlServerDialect() },
         { "MySql.Data.MySqlClient", new Impl.MySqlDialect() },
-        { "Npgsql", new Impl.PostgreSqlDialect() }
+        { "Npgsql", new Impl.PostgreSqlDialect() },
+        { "System.Data.SQLite", new Impl.Sqlite3Dialect() },
+        { "Microsoft.Data.SQLite", new Impl.Sqlite3Dialect() },
+        { "org.h2.Driver", new Impl.H2Dialect() },
+        { "oracle.jdbc.OracleDriver", new Impl.OracleDialect() },
+        { "com.sap.db.jdbc.Driver", new Impl.HanaDialect() },
+        { "dm.jdbc.driver.DmDriver", new Impl.DmDialect() }
     };
 
     /// <summary>
@@ -38,11 +44,15 @@ public static class DialectFactory
     /// <returns>方言</returns>
     public static IDialect GetDialect(string providerName)
     {
+        if (string.IsNullOrEmpty(providerName))
+        {
+            return new Impl.AnsiSqlDialect(); // 默认使用 ANSI SQL 方言
+        }
         if (_dialects.TryGetValue(providerName, out var dialect))
         {
             return dialect;
         }
-        return new Impl.SqlServerDialect(); // 默认使用 SQL Server 方言
+        return new Impl.AnsiSqlDialect(); // 默认使用 ANSI SQL 方言
     }
 
     /// <summary>
@@ -50,8 +60,12 @@ public static class DialectFactory
     /// </summary>
     /// <param name="connection">数据库连接</param>
     /// <returns>方言</returns>
-    public static IDialect GetDialect(DbConnection connection)
+    public static IDialect GetDialect(IDbConnection connection)
     {
+        if (connection == null)
+        {
+            return new Impl.AnsiSqlDialect(); // 默认使用 ANSI SQL 方言
+        }
         return GetDialect(connection.GetType().Assembly.GetName().Name);
     }
 
@@ -62,6 +76,9 @@ public static class DialectFactory
     /// <param name="dialect">方言</param>
     public static void RegisterDialect(string providerName, IDialect dialect)
     {
-        _dialects[providerName] = dialect;
+        if (!string.IsNullOrEmpty(providerName))
+        {
+            _dialects[providerName] = dialect;
+        }
     }
 }

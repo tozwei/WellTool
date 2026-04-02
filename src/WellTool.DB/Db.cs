@@ -1,5 +1,7 @@
 using System.Data;
 using System.Data.Common;
+using WellTool.DB.Dialect;
+using WellTool.DB.Sql;
 
 namespace WellTool.DB
 {
@@ -10,6 +12,8 @@ namespace WellTool.DB
     {
         private static Db _instance;
         private IDbConnection _connection;
+        private IDialect _dialect;
+        private SqlExecutor _sqlExecutor;
 
         /// <summary>
         /// 获取默认数据库实例
@@ -38,6 +42,8 @@ namespace WellTool.DB
         public Db(IDbConnection connection)
         {
             _connection = connection;
+            _dialect = DialectFactory.GetDialect(connection);
+            _sqlExecutor = new SqlExecutor(connection);
         }
 
         /// <summary>
@@ -48,6 +54,8 @@ namespace WellTool.DB
         public Db SetConnection(IDbConnection connection)
         {
             _connection = connection;
+            _dialect = DialectFactory.GetDialect(connection);
+            _sqlExecutor = new SqlExecutor(connection);
             return this;
         }
 
@@ -163,8 +171,10 @@ namespace WellTool.DB
         /// <returns>影响的行数</returns>
         public int Save(Entity entity)
         {
-            // 简化实现，实际项目中需要根据实体生成INSERT语句
-            return 0;
+            Open();
+            var sqlBuilder = new SqlBuilder(_dialect);
+            var sql = sqlBuilder.Insert(entity);
+            return Execute(sql);
         }
 
         /// <summary>
@@ -174,8 +184,10 @@ namespace WellTool.DB
         /// <returns>影响的行数</returns>
         public int Delete(Entity entity)
         {
-            // 简化实现，实际项目中需要根据实体生成DELETE语句
-            return 0;
+            Open();
+            var sqlBuilder = new SqlBuilder(_dialect);
+            var sql = sqlBuilder.Delete(entity);
+            return Execute(sql);
         }
 
         /// <summary>
@@ -185,8 +197,10 @@ namespace WellTool.DB
         /// <returns>影响的行数</returns>
         public int Update(Entity entity)
         {
-            // 简化实现，实际项目中需要根据实体生成UPDATE语句
-            return 0;
+            Open();
+            var sqlBuilder = new SqlBuilder(_dialect);
+            var sql = sqlBuilder.Update(entity);
+            return Execute(sql);
         }
 
         /// <summary>
@@ -196,7 +210,19 @@ namespace WellTool.DB
         /// <returns>找到的实体</returns>
         public Entity Find(Entity entity)
         {
-            // 简化实现，实际项目中需要根据实体生成SELECT语句
+            Open();
+            var sqlBuilder = new SqlBuilder(_dialect);
+            var sql = sqlBuilder.Select(entity);
+            using var reader = Query(sql);
+            if (reader.Read())
+            {
+                var result = new Entity(entity.TableName);
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    result[reader.GetName(i)] = reader.GetValue(i);
+                }
+                return result;
+            }
             return null;
         }
 
@@ -219,6 +245,24 @@ namespace WellTool.DB
         {
             Open();
             return _connection.BeginTransaction(isolationLevel);
+        }
+
+        /// <summary>
+        /// 获取方言
+        /// </summary>
+        /// <returns>方言</returns>
+        public IDialect GetDialect()
+        {
+            return _dialect;
+        }
+
+        /// <summary>
+        /// 获取 SQL 执行器
+        /// </summary>
+        /// <returns>SQL 执行器</returns>
+        public SqlExecutor GetSqlExecutor()
+        {
+            return _sqlExecutor;
         }
     }
 }

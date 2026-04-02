@@ -9,5 +9,7 @@ namespace WellTool.DB.DS
         public abstract IDbConnection GetConnection(string connStr);
         
         public abstract IDbDataAdapter GetAdapter();
+        
+        public abstract IDbConnection CreateDataSource(string url, string username, string password);
     }
 }

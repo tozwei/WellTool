@@ -14,14 +14,14 @@
 namespace WellTool.DB.Dialect.Impl;
 
 /// <summary>
-/// SQL Server 方言
+/// Phoenix 数据库方言
 /// </summary>
-public class SqlServerDialect : Dialect
+public class PhoenixDialect : AnsiSqlDialect
 {
     /// <summary>
     /// 获取数据库类型名称
     /// </summary>
-    public override string Name => "SQL Server";
+    public override string Name => "Phoenix";
 
     /// <summary>
     /// 构建分页 SQL
@@ -32,17 +32,6 @@ public class SqlServerDialect : Dialect
     /// <returns>分页 SQL</returns>
     public override string BuildPaginationSql(string sql, int offset, int limit)
     {
-        var rowNumber = offset + limit;
-        return $"WITH temp AS (SELECT *, ROW_NUMBER() OVER (ORDER BY (SELECT 1)) AS RowNum FROM ({sql}) t) SELECT * FROM temp WHERE RowNum BETWEEN {offset + 1} AND {rowNumber}";
-    }
-
-    /// <summary>
-    /// 转义表名或列名
-    /// </summary>
-    /// <param name="name">表名或列名</param>
-    /// <returns>转义后的表名或列名</returns>
-    public override string Quote(string name)
-    {
-        return $"[{name}]";
+        return $"{sql} LIMIT {limit} OFFSET {offset}";
     }
 }

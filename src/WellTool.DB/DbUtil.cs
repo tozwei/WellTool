@@ -137,4 +137,52 @@ namespace WellTool.DB;
         {
             transaction?.Rollback();
         }
+
+        /// <summary>
+        /// 给字符串添加引号
+        /// </summary>
+        /// <param name="value">字符串值</param>
+        /// <returns>带引号的字符串</returns>
+        public static string Quote(string value)
+        {
+            return $"'{value}'";
+        }
+
+        /// <summary>
+        /// 如果字符串没有被引号包裹，则添加引号
+        /// </summary>
+        /// <param name="value">字符串值</param>
+        /// <returns>带引号的字符串</returns>
+        public static string QuoteIfNotQuoted(string value)
+        {
+            if (IsQuoted(value))
+            {
+                return value;
+            }
+            return Quote(value);
+        }
+
+        /// <summary>
+        /// 去除字符串的引号
+        /// </summary>
+        /// <param name="value">带引号的字符串</param>
+        /// <returns>不带引号的字符串</returns>
+        public static string Unquote(string value)
+        {
+            if (IsQuoted(value))
+            {
+                return value.Substring(1, value.Length - 2);
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// 检查字符串是否被引号包裹
+        /// </summary>
+        /// <param name="value">字符串值</param>
+        /// <returns>是否被引号包裹</returns>
+        public static bool IsQuoted(string value)
+        {
+            return !string.IsNullOrEmpty(value) && value.StartsWith("'") && value.EndsWith("'");
+        }
 }

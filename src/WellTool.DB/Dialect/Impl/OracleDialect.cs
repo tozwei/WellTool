@@ -14,14 +14,14 @@
 namespace WellTool.DB.Dialect.Impl;
 
 /// <summary>
-/// SQL Server 方言
+/// Oracle 数据库方言
 /// </summary>
-public class SqlServerDialect : Dialect
+public class OracleDialect : AnsiSqlDialect
 {
     /// <summary>
     /// 获取数据库类型名称
     /// </summary>
-    public override string Name => "SQL Server";
+    public override string Name => "Oracle";
 
     /// <summary>
     /// 构建分页 SQL
@@ -32,17 +32,15 @@ public class SqlServerDialect : Dialect
     /// <returns>分页 SQL</returns>
     public override string BuildPaginationSql(string sql, int offset, int limit)
     {
-        var rowNumber = offset + limit;
-        return $"WITH temp AS (SELECT *, ROW_NUMBER() OVER (ORDER BY (SELECT 1)) AS RowNum FROM ({sql}) t) SELECT * FROM temp WHERE RowNum BETWEEN {offset + 1} AND {rowNumber}";
+        return $"SELECT * FROM (SELECT A.*, ROWNUM AS RN FROM ({sql}) A WHERE ROWNUM <= {offset + limit}) WHERE RN > {offset}";
     }
 
     /// <summary>
-    /// 转义表名或列名
+    /// 构建获取自增键的 SQL
     /// </summary>
-    /// <param name="name">表名或列名</param>
-    /// <returns>转义后的表名或列名</returns>
-    public override string Quote(string name)
+    /// <returns>获取自增键的 SQL</returns>
+    public override string BuildGetGeneratedKeysSql()
     {
-        return $"[{name}]";
+        return "SELECT LAST_INSERT_ID()";
     }
 }
