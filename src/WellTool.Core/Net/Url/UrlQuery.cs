@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using WellTool.Core.Collection;
-using WellTool.Core.Convert;
-using WellTool.Core.Map;
+using WellTool.Core.Codec;
 using WellTool.Core.Util;
 
 namespace WellTool.Core.Net.Url
@@ -11,14 +9,14 @@ namespace WellTool.Core.Net.Url
     /// <summary>
     /// URL中查询字符串部分的封装，类似于：
     /// <pre>
-    ///   key1=v1&key2=&key3=v3
+    ///   key1=v1&amp;key2=&amp;key3=v3
     /// </pre>
-    /// 查询封装分为解析查询字符串和构建查询字符串，解析可通过charset为null来自定义是否decode编码后的内容，
+    /// 查询封装分为解析查询字符串和构建查询字符串，解析可通过charset为null来自定义是否decode编码后的内容，<br>
     /// 构建则通过charset是否为null是否encode参数键值对
     /// </summary>
     public class UrlQuery
     {
-        private readonly TableMap<CharSequence, CharSequence> _query;
+        private readonly Dictionary<string, string> _query;
         /// <summary>
         /// 是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'
         /// </summary>
@@ -33,7 +31,7 @@ namespace WellTool.Core.Net.Url
         /// </summary>
         /// <param name="queryMap">初始化的查询键值对</param>
         /// <returns>UrlQuery</returns>
-        public static UrlQuery Of(IDictionary<CharSequence, object> queryMap)
+        public static UrlQuery Of(Dictionary<string, object> queryMap)
         {
             return new UrlQuery(queryMap);
         }
@@ -44,7 +42,7 @@ namespace WellTool.Core.Net.Url
         /// <param name="queryMap">初始化的查询键值对</param>
         /// <param name="isFormUrlEncoded">是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'</param>
         /// <returns>UrlQuery</returns>
-        public static UrlQuery Of(IDictionary<CharSequence, object> queryMap, bool isFormUrlEncoded)
+        public static UrlQuery Of(Dictionary<string, object> queryMap, bool isFormUrlEncoded)
         {
             return new UrlQuery(queryMap, isFormUrlEncoded);
         }
@@ -104,7 +102,7 @@ namespace WellTool.Core.Net.Url
         /// 构造
         /// </summary>
         /// <param name="queryMap">初始化的查询键值对</param>
-        public UrlQuery(IDictionary<CharSequence, object> queryMap) : this(queryMap, false)
+        public UrlQuery(Dictionary<string, object> queryMap) : this(queryMap, false)
         {
         }
 
@@ -113,18 +111,14 @@ namespace WellTool.Core.Net.Url
         /// </summary>
         /// <param name="queryMap">初始化的查询键值对</param>
         /// <param name="isFormUrlEncoded">是否为x-www-form-urlencoded模式，此模式下空格会编码为'+'</param>
-        public UrlQuery(IDictionary<CharSequence, object> queryMap, bool isFormUrlEncoded)
+        public UrlQuery(Dictionary<string, object> queryMap, bool isFormUrlEncoded)
         {
-            if (MapUtil.IsNotEmpty(queryMap))
+            _query = new Dictionary<string, string>();
+            _isFormUrlEncoded = isFormUrlEncoded;
+            if (queryMap != null && queryMap.Count > 0)
             {
-                _query = new TableMap<CharSequence, CharSequence>(queryMap.Count);
                 AddAll(queryMap);
             }
-            else
-            {
-                _query = new TableMap<CharSequence, CharSequence>(MapUtil.DefaultInitialCapacity);
-            }
-            _isFormUrlEncoded = isFormUrlEncoded;
         }
 
         /// <summary>
@@ -144,9 +138,9 @@ namespace WellTool.Core.Net.Url
         /// <param name="key">键</param>
         /// <param name="value">值，集合和数组转换为逗号分隔形式</param>
         /// <returns>this</returns>
-        public UrlQuery Add(CharSequence key, object value)
+        public UrlQuery Add(string key, object value)
         {
-            _query.Put(key, ToStr(value));
+            _query[key] = ToStr(value);
             return this;
         }
 
@@ -155,9 +149,9 @@ namespace WellTool.Core.Net.Url
         /// </summary>
         /// <param name="queryMap">query中的键值对</param>
         /// <returns>this</returns>
-        public UrlQuery AddAll(IDictionary<CharSequence, object> queryMap)
+        public UrlQuery AddAll(Dictionary<string, object> queryMap)
         {
-            if (MapUtil.IsNotEmpty(queryMap))
+            if (queryMap != null && queryMap.Count > 0)
             {
                 foreach (var entry in queryMap)
                 {
@@ -172,7 +166,7 @@ namespace WellTool.Core.Net.Url
         /// </summary>
         /// <param name="key">键</param>
         /// <returns>this</returns>
-        public UrlQuery Remove(CharSequence key)
+        public UrlQuery Remove(string key)
         {
             _query.Remove(key);
             return this;
@@ -181,7 +175,7 @@ namespace WellTool.Core.Net.Url
         /// <summary>
         /// 解析URL中的查询字符串
         /// </summary>
-        /// <param name="queryStr">查询字符串，类似于key1=v1&key2=&key3=v3</param>
+        /// <param name="queryStr">查询字符串，类似于key1=v1&amp;key2=&amp;key3=v3</param>
         /// <param name="charset">decode编码，null表示不做decode</param>
         /// <returns>this</returns>
         public UrlQuery Parse(string queryStr, Encoding charset)
@@ -192,7 +186,7 @@ namespace WellTool.Core.Net.Url
         /// <summary>
         /// 解析URL中的查询字符串
         /// </summary>
-        /// <param name="queryStr">查询字符串，类似于key1=v1&key2=&key3=v3</param>
+        /// <param name="queryStr">查询字符串，类似于key1=v1&amp;key2=&amp;key3=v3</param>
         /// <param name="charset">decode编码，null表示不做decode</param>
         /// <param name="autoRemovePath">是否自动去除path部分，{@code true}则自动去除第一个?前的内容</param>
         /// <returns>this</returns>
@@ -209,15 +203,15 @@ namespace WellTool.Core.Net.Url
                 int pathEndPos = queryStr.IndexOf('?');
                 if (pathEndPos > -1)
                 {
-                    queryStr = StrUtil.SubSuf(queryStr, pathEndPos + 1);
+                    queryStr = queryStr.Substring(pathEndPos + 1);
                     if (StrUtil.IsBlank(queryStr))
                     {
                         return this;
                     }
                 }
-                else if (queryStr.StartsWith("http://") || queryStr.StartsWith("https://"))
+                else if (queryStr.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || queryStr.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 {
-                    // issue#IBRVE4 用户传入只有URL，没有param部分，返回空
+                    // 用户传入只有URL，没有param部分，返回空
                     return this;
                 }
             }
@@ -228,10 +222,10 @@ namespace WellTool.Core.Net.Url
         /// <summary>
         /// 获得查询的Map
         /// </summary>
-        /// <returns>查询的Map，只读</returns>
-        public IDictionary<CharSequence, CharSequence> GetQueryMap()
+        /// <returns>查询的Map</returns>
+        public Dictionary<string, string> GetQueryMap()
         {
-            return MapUtil.Unmodifiable(_query);
+            return new Dictionary<string, string>(_query);
         }
 
         /// <summary>
@@ -239,17 +233,18 @@ namespace WellTool.Core.Net.Url
         /// </summary>
         /// <param name="key">键</param>
         /// <returns>值</returns>
-        public CharSequence Get(CharSequence key)
+        public string Get(string key)
         {
-            if (MapUtil.IsEmpty(_query))
+            if (_query.Count == 0)
             {
                 return null;
             }
-            return _query.Get(key);
+            _query.TryGetValue(key, out var value);
+            return value;
         }
 
         /// <summary>
-        /// 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。
+        /// 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。<br>
         /// 对于{@code null}处理规则如下：
         /// <ul>
         ///     <li>如果key为{@code null}，则这个键值对忽略</li>
@@ -264,7 +259,7 @@ namespace WellTool.Core.Net.Url
         }
 
         /// <summary>
-        /// 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。
+        /// 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。<br>
         /// 对于{@code null}处理规则如下：
         /// <ul>
         ///     <li>如果key为{@code null}，则这个键值对忽略</li>
@@ -283,13 +278,13 @@ namespace WellTool.Core.Net.Url
 
             if (_isStrict)
             {
-                return Build(RFC3986.QueryParamNameStrict, RFC3986.QueryParamValueStrict, charset, encodePercent);
+                return Build(RFC3986.QUERY_PARAM_NAME_STRICT, RFC3986.QUERY_PARAM_VALUE_STRICT, charset, encodePercent);
             }
-            return Build(RFC3986.QueryParamName, RFC3986.QueryParamValue, charset, encodePercent);
+            return Build(RFC3986.QUERY_PARAM_NAME, RFC3986.QUERY_PARAM_VALUE, charset, encodePercent);
         }
 
         /// <summary>
-        /// 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。
+        /// 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。<br>
         /// 对于{@code null}处理规则如下：
         /// <ul>
         ///     <li>如果key为{@code null}，则这个键值对忽略</li>
@@ -306,7 +301,7 @@ namespace WellTool.Core.Net.Url
         }
 
         /// <summary>
-        /// 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。
+        /// 构建URL查询字符串，即将key-value键值对转换为{@code key1=v1&key2=v2&key3=v3}形式。<br>
         /// 对于{@code null}处理规则如下：
         /// <ul>
         ///     <li>如果key为{@code null}，则这个键值对忽略</li>
@@ -320,18 +315,16 @@ namespace WellTool.Core.Net.Url
         /// <returns>URL查询字符串</returns>
         public string Build(PercentCodec keyCoder, PercentCodec valueCoder, Encoding charset, bool encodePercent)
         {
-            if (MapUtil.IsEmpty(_query))
+            if (_query.Count == 0)
             {
-                return StrUtil.EMPTY;
+                return StrUtil.Empty;
             }
 
             char[] safeChars = encodePercent ? null : new char[] { '%' };
-            var sb = new StringBuilder();
-            CharSequence name;
-            CharSequence value;
+            StringBuilder sb = new StringBuilder();
             foreach (var entry in _query)
             {
-                name = entry.Key;
+                string name = entry.Key;
                 if (name != null)
                 {
                     if (sb.Length > 0)
@@ -339,7 +332,7 @@ namespace WellTool.Core.Net.Url
                         sb.Append("&");
                     }
                     sb.Append(keyCoder.Encode(name, charset, safeChars));
-                    value = entry.Value;
+                    string value = entry.Value;
                     if (value != null)
                     {
                         sb.Append("=").Append(valueCoder.Encode(value, charset, safeChars));
@@ -350,7 +343,7 @@ namespace WellTool.Core.Net.Url
         }
 
         /// <summary>
-        /// 生成查询字符串，类似于aaa=111&bbb=222
+        /// 生成查询字符串，类似于aaa=111&amp;bbb=222<br>
         /// 此方法不对任何特殊字符编码，仅用于输出显示
         /// </summary>
         /// <returns>查询字符串</returns>
@@ -360,10 +353,10 @@ namespace WellTool.Core.Net.Url
         }
 
         /// <summary>
-        /// 解析URL中的查询字符串
+        /// 解析URL中的查询字符串<br>
         /// 规则见：https://url.spec.whatwg.org/#urlencoded-parsing
         /// </summary>
-        /// <param name="queryStr">查询字符串，类似于key1=v1&key2=&key3=v3</param>
+        /// <param name="queryStr">查询字符串，类似于key1=v1&amp;key2=&amp;key3=v3</param>
         /// <param name="charset">decode编码，null表示不做decode</param>
         /// <returns>this</returns>
         private UrlQuery DoParse(string queryStr, Encoding charset)
@@ -371,11 +364,9 @@ namespace WellTool.Core.Net.Url
             int len = queryStr.Length;
             string name = null;
             int pos = 0; // 未处理字符开始位置
-            int i; // 未处理字符结束位置
-            char c; // 当前字符
-            for (i = 0; i < len; i++)
+            for (int i = 0; i < len; i++)
             {
-                c = queryStr[i];
+                char c = queryStr[i];
                 switch (c)
                 {
                     case '=': // 键和值的分界符
@@ -391,9 +382,9 @@ namespace WellTool.Core.Net.Url
                     case '&': // 键值对之间的分界符
                         AddParam(name, queryStr.Substring(pos, i - pos), charset);
                         name = null;
-                        if (i + 4 < len && "amp;".Equals(queryStr.Substring(i + 1, 4)))
+                        if (i + 4 < len && queryStr.Substring(i + 1, 4) == "amp;")
                         {
-                            // issue#850@Github，"&amp;"转义为"&"
+                            // "&amp;"转义为"&"
                             i += 4;
                         }
                         // 开始位置从分节符后开始
@@ -403,7 +394,7 @@ namespace WellTool.Core.Net.Url
             }
 
             // 处理结尾
-            AddParam(name, queryStr.Substring(pos, i - pos), charset);
+            AddParam(name, queryStr.Substring(pos), charset);
 
             return this;
         }
@@ -415,24 +406,19 @@ namespace WellTool.Core.Net.Url
         /// <returns>字符串</returns>
         private static string ToStr(object value)
         {
-            string result;
-            if (value is IEnumerable<object>)
+            if (value == null)
             {
-                result = CollUtil.Join((IEnumerable<object>)value, ",");
+                return null;
             }
-            else if (value is IEnumerator<object>)
+            if (value is System.Collections.IEnumerable enumerable && !(value is string))
             {
-                result = IterUtil.Join((IEnumerator<object>)value, ",");
+                return StrUtil.Join(",", enumerable);
             }
-            else
-            {
-                result = Convert.ToStr(value);
-            }
-            return result;
+            return value.ToString();
         }
 
         /// <summary>
-        /// 将键值对加入到值为List类型的Map中,，情况如下：
+        /// 将键值对加入到Map中,，情况如下：
         /// <pre>
         ///     1、key和value都不为null，类似于 "a=1"或者"=1"，直接put
         ///     2、key不为null，value为null，类似于 "a="，值传""
@@ -447,10 +433,14 @@ namespace WellTool.Core.Net.Url
         {
             if (key != null)
             {
-                var actualKey = URLDecoder.Decode(key, charset, _isFormUrlEncoded);
-                _query.Put(actualKey, StrUtil.NullToEmpty(URLDecoder.Decode(value, charset, _isFormUrlEncoded)));
+                string actualKey = URLDecoder.Decode(key, charset, _isFormUrlEncoded);
+                _query[actualKey] = StrUtil.NullToEmpty(URLDecoder.Decode(value, charset, _isFormUrlEncoded));
             }
             else if (value != null)
             {
                 // name为空，value作为name，value赋值null
-                _query.Put(
+                _query[URLDecoder.Decode(value, charset, _isFormUrlEncoded)] = null;
+            }
+        }
+    }
+}

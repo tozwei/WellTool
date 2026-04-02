@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using WellTool.Core.Builder;
 using WellTool.Core.Lang;
 using WellTool.Core.Util;
 
@@ -13,7 +14,7 @@ namespace WellTool.Core.Net.Url
     /// [scheme:][//host:port][path][?query][#fragment]
     /// </pre>
     /// </summary>
-    public class UrlBuilder : IBuilder<string>
+    public class UrlBuilder : Builder<string>
     {
         private const string DEFAULT_SCHEME = "http";
 
@@ -127,18 +128,18 @@ namespace WellTool.Core.Net.Url
         public static UrlBuilder Of(string url, Encoding charset)
         {
             Assert.NotBlank(url, "Url must be not blank!");
-            return Of(new Uri(StrUtil.Trim(url)), charset);
+            return OfUri(new Uri(StrUtil.Trim(url)), charset);
         }
 
         /// <summary>
-        /// 使用URL构建UrlBuilder
+        /// 使用URI构建UrlBuilder
         /// </summary>
-        /// <param name="url">URL</param>
+        /// <param name="uri">URI</param>
         /// <param name="charset">编码，用于URLEncode和URLDecode</param>
         /// <returns>UrlBuilder</returns>
-        public static UrlBuilder Of(Uri url, Encoding charset)
+        public static UrlBuilder OfUri(Uri uri, Encoding charset)
         {
-            return Of(url.Scheme, url.Host, url.Port, url.AbsolutePath, url.Query.TrimStart('?'), url.Fragment.TrimStart('#'), charset);
+            return Of(uri.Scheme, uri.Host, uri.Port, uri.AbsolutePath, uri.Query.TrimStart('?'), uri.Fragment.TrimStart('#'), charset);
         }
 
         /// <summary>
@@ -358,7 +359,7 @@ namespace WellTool.Core.Net.Url
         /// </summary>
         /// <param name="path">路径，例如aaa/bbb/ccc</param>
         /// <returns>this</returns>
-        public UrlBuilder AddPath(CharSequence path)
+        public UrlBuilder AddPath(string path)
         {
             UrlPath.Of(path, _charset).GetSegments().ForEach(AddPathSegment);
             return this;
@@ -369,7 +370,7 @@ namespace WellTool.Core.Net.Url
         /// </summary>
         /// <param name="segment">路径节点</param>
         /// <returns>this</returns>
-        public UrlBuilder AddPathSegment(CharSequence segment)
+        public UrlBuilder AddPathSegment(string segment)
         {
             if (StrUtil.IsEmpty(segment))
             {
@@ -389,7 +390,7 @@ namespace WellTool.Core.Net.Url
         /// <param name="path">path节点</param>
         /// <returns>this</returns>
         [Obsolete("方法重复，请使用AddPath")]
-        public UrlBuilder AppendPath(CharSequence path)
+        public UrlBuilder AppendPath(string path)
         {
             return AddPath(path);
         }

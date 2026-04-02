@@ -32,10 +32,6 @@ namespace WellTool.Core.Thread
         /// <summary>
         /// 线程组
         /// </summary>
-        private readonly ThreadGroup _group;
-        /// <summary>
-        /// 线程组
-        /// </summary>
         private int _threadNumber = 1;
         /// <summary>
         /// 是否守护线程
@@ -52,7 +48,7 @@ namespace WellTool.Core.Thread
         /// <param name="prefix">线程名前缀</param>
         /// <param name="isDaemon">是否守护线程</param>
         public NamedThreadFactory(string prefix, bool isDaemon)
-            : this(prefix, null, isDaemon)
+            : this(prefix, isDaemon, null)
         {
         }
 
@@ -60,24 +56,11 @@ namespace WellTool.Core.Thread
         /// 构造
         /// </summary>
         /// <param name="prefix">线程名前缀</param>
-        /// <param name="threadGroup">线程组，可以为null</param>
-        /// <param name="isDaemon">是否守护线程</param>
-        public NamedThreadFactory(string prefix, ThreadGroup threadGroup, bool isDaemon)
-            : this(prefix, threadGroup, isDaemon, null)
-        {
-        }
-
-        /// <summary>
-        /// 构造
-        /// </summary>
-        /// <param name="prefix">线程名前缀</param>
-        /// <param name="threadGroup">线程组，可以为null</param>
         /// <param name="isDaemon">是否守护线程</param>
         /// <param name="handler">未捕获异常处理</param>
-        public NamedThreadFactory(string prefix, ThreadGroup threadGroup, bool isDaemon, UnhandledExceptionEventHandler handler)
+        public NamedThreadFactory(string prefix, bool isDaemon, UnhandledExceptionEventHandler handler)
         {
             _prefix = string.IsNullOrWhiteSpace(prefix) ? "WellTool" : prefix;
-            _group = threadGroup ?? CurrentThreadGroup();
             _isDaemon = isDaemon;
             _handler = handler;
         }
@@ -87,10 +70,11 @@ namespace WellTool.Core.Thread
         /// </summary>
         /// <param name="action">线程执行的操作</param>
         /// <returns>新线程</returns>
-        public Thread NewThread(Action action)
+        public System.Threading.Thread NewThread(Action action)
         {
             var threadName = $"{_prefix}{Interlocked.Increment(ref _threadNumber)}";
-            var thread = new Thread(new ThreadStart(action), 0, threadName);
+            var thread = new System.Threading.Thread(new ThreadStart(action));
+            thread.Name = threadName;
 
             // 守护线程
             if (thread.IsBackground != _isDaemon)
@@ -111,16 +95,6 @@ namespace WellTool.Core.Thread
             }
 
             return thread;
-        }
-
-        /// <summary>
-        /// 获取当前线程组
-        /// </summary>
-        /// <returns>当前线程组</returns>
-        private static ThreadGroup CurrentThreadGroup()
-        {
-            // 在C#中，线程组的概念不那么重要，这里返回null
-            return null;
         }
     }
 }

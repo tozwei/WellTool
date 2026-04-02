@@ -14,35 +14,42 @@
 namespace WellTool.Core.Lang.Ansi
 {
     /// <summary>
-    /// ANSI文本样式风格枚举
+    /// ANSI文本样式风格
     /// <p>来自Spring Boot</p>
     /// </summary>
-    public enum AnsiStyle : int, IAnsiElement
+    public class AnsiStyle : IAnsiElement
     {
         /// <summary>
         /// 重置/正常
         /// </summary>
-        Normal = 0,
+        public static readonly AnsiStyle Normal = new AnsiStyle(0);
 
         /// <summary>
         /// 粗体或增加强度
         /// </summary>
-        Bold = 1,
+        public static readonly AnsiStyle Bold = new AnsiStyle(1);
 
         /// <summary>
         /// 弱化（降低强度）
         /// </summary>
-        Faint = 2,
+        public static readonly AnsiStyle Faint = new AnsiStyle(2);
 
         /// <summary>
         /// 斜体
         /// </summary>
-        Italic = 3,
+        public static readonly AnsiStyle Italic = new AnsiStyle(3);
 
         /// <summary>
         /// 下划线
         /// </summary>
-        Underline = 4;
+        public static readonly AnsiStyle Underline = new AnsiStyle(4);
+
+        private readonly int _code;
+
+        private AnsiStyle(int code)
+        {
+            _code = code;
+        }
 
         /// <summary>
         /// 获取ANSI文本样式风格代码
@@ -50,7 +57,7 @@ namespace WellTool.Core.Lang.Ansi
         /// <returns>文本样式风格代码</returns>
         public int GetCode()
         {
-            return (int)this;
+            return _code;
         }
 
         /// <summary>
@@ -59,7 +66,7 @@ namespace WellTool.Core.Lang.Ansi
         /// <returns>ANSI转义编码</returns>
         public override string ToString()
         {
-            return ((int)this).ToString();
+            return _code.ToString();
         }
     }
 }

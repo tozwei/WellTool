@@ -8,14 +8,17 @@ namespace WellTool.Core.Net.Multipart
     /// <summary>
     /// Http请求解析流，提供了专门针对带文件的form表单的解析
     /// </summary>
-    public class MultipartRequestInputStream : BufferedStream
+    public class MultipartRequestInputStream
     {
+        private readonly BufferedStream _stream;
+
         /// <summary>
         /// 构造
         /// </summary>
         /// <param name="inputStream">输入流</param>
-        public MultipartRequestInputStream(Stream inputStream) : base(inputStream)
+        public MultipartRequestInputStream(Stream inputStream)
         {
+            _stream = new BufferedStream(inputStream);
         }
 
         /// <summary>
@@ -25,7 +28,7 @@ namespace WellTool.Core.Net.Multipart
         /// <exception cref="IOException">读取异常</exception>
         public byte ReadByte()
         {
-            int i = base.ReadByte();
+            int i = _stream.ReadByte();
             if (i == -1)
             {
                 throw new IOException("End of HTTP request stream reached");
@@ -40,11 +43,28 @@ namespace WellTool.Core.Net.Multipart
         /// <exception cref="IOException">IO异常</exception>
         public void SkipBytes(long i)
         {
-            long len = base.Seek(i, SeekOrigin.Current);
+            long len = _stream.Seek(i, SeekOrigin.Current);
             if (len != i)
             {
                 throw new IOException("Unable to skip data in HTTP request");
             }
+        }
+
+        /// <summary>
+        /// 标记当前位置
+        /// </summary>
+        /// <param name="readAheadLimit">读取限制</param>
+        public void Mark(int readAheadLimit)
+        {
+            _stream.Mark(readAheadLimit);
+        }
+
+        /// <summary>
+        /// 重置到标记位置
+        /// </summary>
+        public void Reset()
+        {
+            _stream.Reset();
         }
 
         /// <summary>

@@ -17,92 +17,99 @@ namespace WellTool.Core.Lang.Ansi
     /// ANSI标准颜色
     /// <p>来自Spring Boot</p>
     /// </summary>
-    public enum AnsiColor : int, IAnsiElement
+    public class AnsiColor : IAnsiElement
     {
         /// <summary>
         /// 默认前景色
         /// </summary>
-        Default = 39,
+        public static readonly AnsiColor Default = new AnsiColor(39);
 
         /// <summary>
         /// 黑
         /// </summary>
-        Black = 30,
+        public static readonly AnsiColor Black = new AnsiColor(30);
 
         /// <summary>
         /// 红
         /// </summary>
-        Red = 31,
+        public static readonly AnsiColor Red = new AnsiColor(31);
 
         /// <summary>
         /// 绿
         /// </summary>
-        Green = 32,
+        public static readonly AnsiColor Green = new AnsiColor(32);
 
         /// <summary>
         /// 黄
         /// </summary>
-        Yellow = 33,
+        public static readonly AnsiColor Yellow = new AnsiColor(33);
 
         /// <summary>
         /// 蓝
         /// </summary>
-        Blue = 34,
+        public static readonly AnsiColor Blue = new AnsiColor(34);
 
         /// <summary>
         /// 品红
         /// </summary>
-        Magenta = 35,
+        public static readonly AnsiColor Magenta = new AnsiColor(35);
 
         /// <summary>
         /// 青
         /// </summary>
-        Cyan = 36,
+        public static readonly AnsiColor Cyan = new AnsiColor(36);
 
         /// <summary>
         /// 白
         /// </summary>
-        White = 37,
+        public static readonly AnsiColor White = new AnsiColor(37);
 
         /// <summary>
         /// 亮黑
         /// </summary>
-        BrightBlack = 90,
+        public static readonly AnsiColor BrightBlack = new AnsiColor(90);
 
         /// <summary>
         /// 亮红
         /// </summary>
-        BrightRed = 91,
+        public static readonly AnsiColor BrightRed = new AnsiColor(91);
 
         /// <summary>
         /// 亮绿
         /// </summary>
-        BrightGreen = 92,
+        public static readonly AnsiColor BrightGreen = new AnsiColor(92);
 
         /// <summary>
         /// 亮黄
         /// </summary>
-        BrightYellow = 93,
+        public static readonly AnsiColor BrightYellow = new AnsiColor(93);
 
         /// <summary>
         /// 亮蓝
         /// </summary>
-        BrightBlue = 94,
+        public static readonly AnsiColor BrightBlue = new AnsiColor(94);
 
         /// <summary>
         /// 亮品红
         /// </summary>
-        BrightMagenta = 95,
+        public static readonly AnsiColor BrightMagenta = new AnsiColor(95);
 
         /// <summary>
         /// 亮青
         /// </summary>
-        BrightCyan = 96,
+        public static readonly AnsiColor BrightCyan = new AnsiColor(96);
 
         /// <summary>
         /// 亮白
         /// </summary>
-        BrightWhite = 97;
+        public static readonly AnsiColor BrightWhite = new AnsiColor(97);
+
+        private readonly int _code;
+
+        private AnsiColor(int code)
+        {
+            _code = code;
+        }
 
         /// <summary>
         /// 获取ANSI颜色代码
@@ -110,7 +117,7 @@ namespace WellTool.Core.Lang.Ansi
         /// <returns>颜色代码</returns>
         public int GetCode()
         {
-            return (int)this;
+            return _code;
         }
 
         /// <summary>
@@ -119,7 +126,7 @@ namespace WellTool.Core.Lang.Ansi
         /// <returns>ANSI转义编码</returns>
         public override string ToString()
         {
-            return ((int)this).ToString();
+            return _code.ToString();
         }
     }
 }

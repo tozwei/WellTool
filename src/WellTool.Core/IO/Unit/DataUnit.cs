@@ -24,32 +24,37 @@ namespace WellTool.Core.IO.Unit
     ///     TERABYTES  1TB     2^40    1,099,511,627,776
     /// </pre>
     /// </summary>
-    public enum DataUnit
+    public class DataUnit
     {
         /// <summary>
         /// Bytes, 后缀表示为： {@code B}.
         /// </summary>
-        Bytes("B", DataSize.OfBytes(1)),
+        public static readonly DataUnit Bytes = new DataUnit("B", DataSize.OfBytes(1));
 
         /// <summary>
         /// Kilobytes, 后缀表示为： {@code KB}.
         /// </summary>
-        Kilobytes("KB", DataSize.OfKilobytes(1)),
+        public static readonly DataUnit Kilobytes = new DataUnit("KB", DataSize.OfKilobytes(1));
 
         /// <summary>
         /// Megabytes, 后缀表示为： {@code MB}.
         /// </summary>
-        Megabytes("MB", DataSize.OfMegabytes(1)),
+        public static readonly DataUnit Megabytes = new DataUnit("MB", DataSize.OfMegabytes(1));
 
         /// <summary>
         /// Gigabytes, 后缀表示为： {@code GB}.
         /// </summary>
-        Gigabytes("GB", DataSize.OfGigabytes(1)),
+        public static readonly DataUnit Gigabytes = new DataUnit("GB", DataSize.OfGigabytes(1));
 
         /// <summary>
         /// Terabytes, 后缀表示为： {@code TB}.
         /// </summary>
-        Terabytes("TB", DataSize.OfTerabytes(1));
+        public static readonly DataUnit Terabytes = new DataUnit("TB", DataSize.OfTerabytes(1));
+
+        /// <summary>
+        /// 所有数据单位
+        /// </summary>
+        public static readonly DataUnit[] Values = new DataUnit[] { Bytes, Kilobytes, Megabytes, Gigabytes, Terabytes };
 
         /// <summary>
         /// 单位后缀
@@ -59,7 +64,7 @@ namespace WellTool.Core.IO.Unit
         private readonly string _suffix;
         private readonly DataSize _size;
 
-        DataUnit(string suffix, DataSize size)
+        private DataUnit(string suffix, DataSize size)
         {
             _suffix = suffix;
             _size = size;
@@ -93,9 +98,8 @@ namespace WellTool.Core.IO.Unit
                 suffix = $"{suffix[0]}{suffix[2]}";
             }
 
-            foreach (var candidate in Enum.GetValues(typeof(DataUnit)))
+            foreach (var dataUnit in Values)
             {
-                var dataUnit = (DataUnit)candidate;
                 // 支持类似于 3MB，3M，3m等写法
                 if (dataUnit._suffix.StartsWith(suffix, StringComparison.OrdinalIgnoreCase))
                 {

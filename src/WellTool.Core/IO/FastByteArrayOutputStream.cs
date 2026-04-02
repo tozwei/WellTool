@@ -48,9 +48,9 @@ namespace WellTool.Core.IO
             _buffer.Append(buffer, offset, count);
         }
 
-        public override void Write(int value)
+        public override void WriteByte(byte value)
         {
-            _buffer.Append((byte)value);
+            _buffer.Append(value);
         }
 
         public int Size()

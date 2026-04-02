@@ -51,11 +51,6 @@ namespace WellTool.Core.IO
             _builder.Append(value);
         }
 
-        public override void Write(string value, int index, int count)
-        {
-            _builder.Append(value, index, count);
-        }
-
         public override void Write(char[] buffer)
         {
             _builder.Append(buffer);

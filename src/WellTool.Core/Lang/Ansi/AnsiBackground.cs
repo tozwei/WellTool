@@ -14,95 +14,102 @@
 namespace WellTool.Core.Lang.Ansi
 {
     /// <summary>
-    /// ANSI背景颜色枚举
+    /// ANSI背景颜色
     /// <p>来自Spring Boot</p>
     /// </summary>
-    public enum AnsiBackground : int, IAnsiElement
+    public class AnsiBackground : IAnsiElement
     {
         /// <summary>
         /// 默认背景色
         /// </summary>
-        Default = 49,
+        public static readonly AnsiBackground Default = new AnsiBackground(49);
 
         /// <summary>
         /// 黑色
         /// </summary>
-        Black = 40,
+        public static readonly AnsiBackground Black = new AnsiBackground(40);
 
         /// <summary>
         /// 红
         /// </summary>
-        Red = 41,
+        public static readonly AnsiBackground Red = new AnsiBackground(41);
 
         /// <summary>
         /// 绿
         /// </summary>
-        Green = 42,
+        public static readonly AnsiBackground Green = new AnsiBackground(42);
 
         /// <summary>
         /// 黄
         /// </summary>
-        Yellow = 43,
+        public static readonly AnsiBackground Yellow = new AnsiBackground(43);
 
         /// <summary>
         /// 蓝
         /// </summary>
-        Blue = 44,
+        public static readonly AnsiBackground Blue = new AnsiBackground(44);
 
         /// <summary>
         /// 品红
         /// </summary>
-        Magenta = 45,
+        public static readonly AnsiBackground Magenta = new AnsiBackground(45);
 
         /// <summary>
         /// 青
         /// </summary>
-        Cyan = 46,
+        public static readonly AnsiBackground Cyan = new AnsiBackground(46);
 
         /// <summary>
         /// 白
         /// </summary>
-        White = 47,
+        public static readonly AnsiBackground White = new AnsiBackground(47);
 
         /// <summary>
         /// 亮黑
         /// </summary>
-        BrightBlack = 100,
+        public static readonly AnsiBackground BrightBlack = new AnsiBackground(100);
 
         /// <summary>
         /// 亮红
         /// </summary>
-        BrightRed = 101,
+        public static readonly AnsiBackground BrightRed = new AnsiBackground(101);
 
         /// <summary>
         /// 亮绿
         /// </summary>
-        BrightGreen = 102,
+        public static readonly AnsiBackground BrightGreen = new AnsiBackground(102);
 
         /// <summary>
         /// 亮黄
         /// </summary>
-        BrightYellow = 103,
+        public static readonly AnsiBackground BrightYellow = new AnsiBackground(103);
 
         /// <summary>
         /// 亮蓝
         /// </summary>
-        BrightBlue = 104,
+        public static readonly AnsiBackground BrightBlue = new AnsiBackground(104);
 
         /// <summary>
         /// 亮品红
         /// </summary>
-        BrightMagenta = 105,
+        public static readonly AnsiBackground BrightMagenta = new AnsiBackground(105);
 
         /// <summary>
         /// 亮青
         /// </summary>
-        BrightCyan = 106,
+        public static readonly AnsiBackground BrightCyan = new AnsiBackground(106);
 
         /// <summary>
         /// 亮白
         /// </summary>
-        BrightWhite = 107;
+        public static readonly AnsiBackground BrightWhite = new AnsiBackground(107);
+
+        private readonly int _code;
+
+        private AnsiBackground(int code)
+        {
+            _code = code;
+        }
 
         /// <summary>
         /// 获取ANSI颜色代码
@@ -110,7 +117,7 @@ namespace WellTool.Core.Lang.Ansi
         /// <returns>颜色代码</returns>
         public int GetCode()
         {
-            return (int)this;
+            return _code;
         }
 
         /// <summary>
@@ -119,7 +126,7 @@ namespace WellTool.Core.Lang.Ansi
         /// <returns>ANSI转义编码</returns>
         public override string ToString()
         {
-            return ((int)this).ToString();
+            return _code.ToString();
         }
     }
 }

@@ -22,18 +22,21 @@ namespace WellTool.Core.IO.File
     /// Windows系统换行符："\r\n"
     /// </pre>
     /// </summary>
-    public enum LineSeparator
+    public class LineSeparator
     {
         /// <summary>Mac系统换行符："\r"</summary>
-        MAC("\r"),
+        public static readonly LineSeparator MAC = new LineSeparator("\r");
         /// <summary>Linux系统换行符："\n"</summary>
-        LINUX("\n"),
+        public static readonly LineSeparator LINUX = new LineSeparator("\n");
         /// <summary>Windows系统换行符："\r\n"</summary>
-        WINDOWS("\r\n");
+        public static readonly LineSeparator WINDOWS = new LineSeparator("\r\n");
+
+        /// <summary>所有换行符</summary>
+        public static readonly LineSeparator[] Values = new LineSeparator[] { MAC, LINUX, WINDOWS };
 
         private readonly string _value;
 
-        LineSeparator(string lineSeparator)
+        private LineSeparator(string lineSeparator)
         {
             _value = lineSeparator;
         }

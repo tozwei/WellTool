@@ -21,7 +21,7 @@ namespace WellTool.Core.Net.Url
         /// <param name="pathStr">初始化的路径字符串</param>
         /// <param name="charset">decode用的编码，null表示不做decode</param>
         /// <returns>UrlPath</returns>
-        public static UrlPath Of(CharSequence pathStr, Encoding charset)
+        public static UrlPath Of(string pathStr, Encoding charset)
         {
             var urlPath = new UrlPath();
             urlPath.Parse(pathStr, charset);
@@ -67,7 +67,7 @@ namespace WellTool.Core.Net.Url
         /// </summary>
         /// <param name="segment">Path节点</param>
         /// <returns>this</returns>
-        public UrlPath Add(CharSequence segment)
+        public UrlPath Add(string segment)
         {
             AddInternal(FixPath(segment), false);
             return this;
@@ -78,7 +78,7 @@ namespace WellTool.Core.Net.Url
         /// </summary>
         /// <param name="segment">Path节点</param>
         /// <returns>this</returns>
-        public UrlPath AddBefore(CharSequence segment)
+        public UrlPath AddBefore(string segment)
         {
             AddInternal(FixPath(segment), true);
             return this;
@@ -90,7 +90,7 @@ namespace WellTool.Core.Net.Url
         /// <param name="path">路径，类似于aaa/bb/ccc或/aaa/bbb/ccc</param>
         /// <param name="charset">decode编码，null表示不解码</param>
         /// <returns>this</returns>
-        public UrlPath Parse(CharSequence path, Encoding charset)
+        public UrlPath Parse(string path, Encoding charset)
         {
             if (StrUtil.IsNotEmpty(path))
             {
@@ -180,21 +180,20 @@ namespace WellTool.Core.Net.Url
         /// </summary>
         /// <param name="segment">节点</param>
         /// <param name="before">是否在前面添加</param>
-        private void AddInternal(CharSequence segment, bool before)
+        private void AddInternal(string segment, bool before)
         {
             if (_segments == null)
             {
                 _segments = new List<string>();
             }
 
-            var seg = StrUtil.Str(segment);
             if (before)
             {
-                _segments.Insert(0, seg);
+                _segments.Insert(0, segment);
             }
             else
             {
-                _segments.Add(seg);
+                _segments.Add(segment);
             }
         }
 
@@ -203,10 +202,10 @@ namespace WellTool.Core.Net.Url
         /// </summary>
         /// <param name="path">节点或路径path</param>
         /// <returns>修正后的路径</returns>
-        private static string FixPath(CharSequence path)
+        private static string FixPath(string path)
         {
             Assert.NotNull(path, "Path segment must be not null!");
-            if ("/".Equals(path.ToString()))
+            if ("/".Equals(path))
             {
                 return StrUtil.EMPTY;
             }
