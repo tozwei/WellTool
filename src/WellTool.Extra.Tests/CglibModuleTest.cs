@@ -232,7 +232,7 @@ public class CglibUtilCopierTest
     public void TestCopyBean()
     {
         var source = new SourceClass { Name = "CopyTest", Value = 42 };
-        var target = CglibUtil.CopyBean<SourceClass, TargetClass>(source);
+        var target = CglibUtil.Copy<TargetClass>(source);
         
         Assert.NotNull(target);
         Assert.Equal("CopyTest", target.Name);
@@ -248,7 +248,7 @@ public class CglibUtilCopierTest
         var source = new SourceClass { Name = "Existing", Value = 100 };
         var target = new TargetClass { Name = "Original" };
         
-        CglibUtil.CopyBean(source, target);
+        CglibUtil.Copy(source, target);
         
         Assert.Equal("Existing", target.Name);
         Assert.Equal(100, target.Value);
@@ -261,7 +261,7 @@ public class CglibUtilCopierTest
     public void TestToMap()
     {
         var source = new SourceClass { Name = "MapTest", Value = 50 };
-        var map = CglibUtil.ToMap<SourceClass>(source);
+        var map = CglibUtil.ToMap(source);
         
         Assert.NotNull(map);
         Assert.Equal("MapTest", map["Name"]);
@@ -280,7 +280,7 @@ public class CglibUtilCopierTest
             { "Value", 75 }
         };
         
-        var target = CglibUtil.FromMap<TargetClass>(map);
+        var target = CglibUtil.ToBean<TargetClass>(map);
         
         Assert.NotNull(target);
         Assert.Equal("FromMap", target.Name);
@@ -302,7 +302,7 @@ public class CglibUtilCopierTest
             DoubleProperty = 3.14
         };
         
-        var target = CglibUtil.CopyBean<ComplexSourceClass, ComplexTargetClass>(source);
+        var target = CglibUtil.Copy<ComplexTargetClass>(source);
         
         Assert.NotNull(target);
         Assert.Equal("Complex", target.StringProperty);

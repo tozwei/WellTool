@@ -302,11 +302,13 @@ public class JschRuntimeExceptionTest
     /// 测试异常可抛出和捕获
     /// </summary>
     [Fact]
-    public void TestCanThrowAndCatch()
+    public async Task TestCanThrowAndCatch()
     {
-        Assert.Throws<JschRuntimeException>(() =>
+        await Assert.ThrowsAsync<JschRuntimeException>(async () =>
         {
             throw new JschRuntimeException("JSch error");
         });
     }
+
+
 }

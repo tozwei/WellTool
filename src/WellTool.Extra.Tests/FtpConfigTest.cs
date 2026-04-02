@@ -1,5 +1,6 @@
 using System;
 using WellTool.Extra.Ftp;
+using Xunit;
 
 namespace WellTool.Extra.Tests;
 
@@ -262,9 +263,9 @@ public class FtpExceptionTest
     /// 测试异常可抛出和捕获
     /// </summary>
     [Fact]
-    public void TestCanThrowAndCatch()
+    public async Task TestCanThrowAndCatch()
     {
-        Assert.Throws<FtpException>(() =>
+        await Assert.ThrowsAsync<FtpException>(async () =>
         {
             throw new FtpException("FTP error");
         });

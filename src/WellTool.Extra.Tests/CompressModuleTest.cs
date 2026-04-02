@@ -217,9 +217,9 @@ public class CompressExceptionTest
     /// 测试异常可抛出和捕获
     /// </summary>
     [Fact]
-    public void TestCanThrowAndCatch()
+    public async Task TestCanThrowAndCatch()
     {
-        Assert.Throws<CompressException>(() =>
+        await Assert.ThrowsAsync<CompressException>(async () =>
         {
             throw new CompressException("Test error");
         });

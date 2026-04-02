@@ -95,18 +95,18 @@ public static class ContentType
             return JSON;
         }
 
-        // XML 判断（排除 HTML）
-        if (trimmedBody.StartsWith("<?xml") || (trimmedBody.StartsWith('<') && !trimmedBody.StartsWith("<html")))
-        {
-            return XML;
-        }
-
         // HTML 判断
         if (trimmedBody.StartsWith("<html") || trimmedBody.StartsWith("<!DOCTYPE html") ||
             trimmedBody.StartsWith("<body") || trimmedBody.StartsWith("<div") ||
             trimmedBody.StartsWith("<p") || trimmedBody.StartsWith("<span"))
         {
             return HTML;
+        }
+
+        // XML 判断（排除 HTML）
+        if (trimmedBody.StartsWith("<?xml") || (trimmedBody.StartsWith('<') && !trimmedBody.StartsWith("<html")))
+        {
+            return XML;
         }
 
         return null;
@@ -127,14 +127,14 @@ public static class ContentType
         var charsetIndex = contentType.IndexOf("charset=", StringComparison.OrdinalIgnoreCase);
         if (charsetIndex >= 0)
         {
-            var start = charsetIndex + 10; // "charset=".Length
+            var start = charsetIndex + 8; // "charset=".Length
             var end = contentType.IndexOf(';', start);
             if (end < 0)
             {
                 end = contentType.Length;
             }
 
-            var charsetName = contentType.Substring(start, end - start).Trim().Trim('"');
+            var charsetName = contentType.Substring(start, end - start).Trim().Trim('"').Trim('\'');
 
             try
             {

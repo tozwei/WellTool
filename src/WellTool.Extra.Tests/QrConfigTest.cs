@@ -328,9 +328,9 @@ public class QrCodeExceptionTest
     /// 测试异常可抛出和捕获
     /// </summary>
     [Fact]
-    public void TestCanThrowAndCatch()
+    public async Task TestCanThrowAndCatch()
     {
-        Assert.Throws<QrCodeException>(() =>
+        await Assert.ThrowsAsync<QrCodeException>(async () =>
         {
             throw new QrCodeException("QR error");
         });

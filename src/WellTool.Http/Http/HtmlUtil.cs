@@ -35,7 +35,7 @@ public static class HtmlUtil
         TEXT['&'] = AMP.ToCharArray(); // &符
         TEXT['<'] = LT.ToCharArray(); // 小于号
         TEXT['>'] = GT.ToCharArray(); // 大于号
-        TEXT[' '] = NBSP.ToCharArray(); // 不断开空格
+        TEXT[160] = NBSP.ToCharArray(); // 不间断空格
     }
 
     /// <summary>
