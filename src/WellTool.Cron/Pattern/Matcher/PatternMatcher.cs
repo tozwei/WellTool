@@ -13,7 +13,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.TimeZones;
 
 namespace WellTool.Cron.Pattern.Matcher
 {

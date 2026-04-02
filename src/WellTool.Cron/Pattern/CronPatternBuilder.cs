@@ -26,6 +26,7 @@ namespace WellTool.Cron.Pattern
         private string dayOfWeek = "*";
         private string year = "*";
         private bool matchSecond = false;
+        private bool yearSet = false;
 
         /// <summary>
         /// 创建新的CronPatternBuilder实例
@@ -76,6 +77,7 @@ namespace WellTool.Cron.Pattern
                     break;
                 case Part.YEAR:
                     year = value;
+                    yearSet = true;
                     break;
             }
             return this;
@@ -90,6 +92,12 @@ namespace WellTool.Cron.Pattern
         /// <returns>当前构建器</returns>
         public CronPatternBuilder SetRange(Part part, int start, int end)
         {
+            int min = PartUtil.GetMin(part);
+            int max = PartUtil.GetMax(part);
+            if (start < min || start > max || end < min || end > max || start > end)
+            {
+                throw new CronException($"Invalid range for {part}: {start}-{end} (valid: {min}-{max})");
+            }
             return Set(part, $"{start}-{end}");
         }
 
@@ -166,7 +174,7 @@ namespace WellTool.Cron.Pattern
         /// <returns>Cron表达式字符串</returns>
         public string Build()
         {
-            if (matchSecond && year != "*")
+            if (matchSecond && yearSet)
             {
                 return $"{second} {minute} {hour} {dayOfMonth} {month} {dayOfWeek} {year}";
             }

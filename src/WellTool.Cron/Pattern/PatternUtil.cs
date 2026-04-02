@@ -40,25 +40,6 @@ namespace WellTool.Cron.Pattern
         }
 
         /// <summary>
-        /// 获取处理后的字段列表
-        /// 月份从1开始，周从0开始
-        /// </summary>
-        /// <param name="calendar">日历对象</param>
-        /// <param name="isMatchSecond">是否匹配秒，false则秒返回-1</param>
-        /// <returns>字段值列表 {second, minute, hour, dayOfMonth, month, dayOfWeek, year}</returns>
-        internal static int[] GetFields(Calendar calendar, bool isMatchSecond)
-        {
-            int second = isMatchSecond ? calendar.GetSecond() : -1;
-            int minute = calendar.GetMinute();
-            int hour = calendar.GetHour();
-            int dayOfMonth = calendar.GetDayOfMonth();
-            int month = calendar.GetMonth(); // 月份从1开始
-            int dayOfWeek = (calendar.GetDayOfWeek() == DayOfWeek.Sunday) ? 0 : (int)calendar.GetDayOfWeek() - 1;
-            int year = calendar.GetYear();
-            return new int[] { second, minute, hour, dayOfMonth, month, dayOfWeek, year };
-        }
-
-        /// <summary>
         /// 获取给定年份的最后一天
         /// </summary>
         /// <param name="monthBase1">月份（从1开始）</param>
