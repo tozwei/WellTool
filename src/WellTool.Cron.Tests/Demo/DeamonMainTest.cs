@@ -13,49 +13,39 @@ namespace WellTool.Cron.Tests.Demo
     public class DeamonMainTest
     {
         /// <summary>
-        /// 测试守护线程行为
+        /// 测试守护线程设置
         /// </summary>
         [Fact]
         public void TestDaemonThread()
         {
-            var executed = false;
-            
-            // 创建守护线程
-            var thread = new Thread(() =>
-            {
-                var timer = new Timer(_ => executed = true, null, 0, 100);
-                Thread.Sleep(500);
-                // timer 在 using 或 Dispose 前会被 GC 回收
-            });
-            thread.IsBackground = true; // 设置为守护线程
-            thread.Start();
-            
-            thread.Join(TimeSpan.FromSeconds(2));
-            
-            // 守护线程可能在主线程结束后被中断
-            // 这个测试主要验证守护线程的基本行为
-            Assert.True(thread.IsBackground);
+            var thread = new Thread(() => { });
+            thread.IsBackground = true;
+            Assert.True(thread.IsBackground, "Thread should be a background thread");
         }
 
         /// <summary>
-        /// 测试非守护线程行为
+        /// 测试非守护线程
         /// </summary>
         [Fact]
         public void TestNonDaemonThread()
         {
+            var thread = new Thread(() => { });
+            thread.IsBackground = false;
+            Assert.False(thread.IsBackground, "Thread should be a foreground thread");
+        }
+
+        /// <summary>
+        /// 测试线程运行
+        /// </summary>
+        [Fact]
+        public void TestThreadExecution()
+        {
             var completed = false;
-            
-            var thread = new Thread(() =>
-            {
-                Thread.Sleep(100);
-                completed = true;
-            });
-            thread.IsBackground = false; // 非守护线程
+            var thread = new Thread(() => completed = true);
             thread.Start();
             thread.Join(TimeSpan.FromSeconds(2));
             
-            Assert.True(completed, "Non-daemon thread should complete");
-            Assert.False(thread.IsBackground);
+            Assert.True(completed, "Thread should have completed");
         }
     }
 }

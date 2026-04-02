@@ -14,3 +14,57 @@ namespace WellTool.Core.Thread
     {
         /// <summary>
         /// 实际执行的逻辑
+        /// </summary>
+        private readonly Action _action;
+        /// <summary>
+        /// 信号量
+        /// </summary>
+        private readonly SemaphoreSlim _semaphore;
+
+        /// <summary>
+        /// 构造
+        /// </summary>
+        /// <param name="action">实际执行的线程逻辑</param>
+        /// <param name="semaphore">信号量，多个线程必须共享同一信号量</param>
+        public SemaphoreRunnable(Action action, SemaphoreSlim semaphore)
+        {
+            _action = action;
+            _semaphore = semaphore;
+        }
+
+        /// <summary>
+        /// 获得信号量
+        /// </summary>
+        /// <returns><see cref="SemaphoreSlim"/></returns>
+        public SemaphoreSlim GetSemaphore()
+        {
+            return _semaphore;
+        }
+
+        /// <summary>
+        /// 执行线程逻辑
+        /// </summary>
+        public override void Run()
+        {
+            if (_semaphore != null)
+            {
+                try
+                {
+                    _semaphore.Wait();
+                    try
+                    {
+                        _action();
+                    }
+                    finally
+                    {
+                        _semaphore.Release();
+                    }
+                }
+                catch (System.Threading.ThreadInterruptedException ex)
+                {
+                    Thread.CurrentThread.Interrupt();
+                }
+            }
+        }
+    }
+}

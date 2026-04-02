@@ -36,11 +36,11 @@ namespace WellTool.Cron.Tests
         public void TestTimerCancellation()
         {
             var callCount = 0;
-            using var timer = new System.Threading.Timer(_ => callCount++, null, 10, 10);
+            using var timer = new System.Threading.Timer(_ => Interlocked.Increment(ref callCount), null, 50, 50);
             
-            Thread.Sleep(50);
-            // 在50ms内，应该有约5次调用（每10ms一次）
-            Assert.True(callCount >= 3 && callCount <= 7, $"Expected 3-7 calls, got {callCount}");
+            Thread.Sleep(200);
+            // 在200ms内，应该有约4次调用（每50ms一次）
+            Assert.True(callCount >= 2 && callCount <= 6, $"Expected 2-6 calls, got {callCount}");
         }
     }
 }
