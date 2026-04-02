@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+	  <ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0;net6.0;netstandard2.1</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<Version>1.0.1</Version>
+		<PackageId>WellTool.Log</PackageId>
+		<PackageVersion>1.0.1</PackageVersion>
+		<Title>WellTool Log</Title>
+		<Description>Log facade that automatically recognizes log implementation</Description>
+		<Authors>WellTool Team</Authors>
+		<Company>WellTool</Company>
+		<Copyright>© 2026 WellTool</Copyright>
+		<PackageTags>log;logging</PackageTags>
+	</PropertyGroup>
+
+</Project>
