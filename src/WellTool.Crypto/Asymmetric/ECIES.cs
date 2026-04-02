@@ -1,3 +1,4 @@
+using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Generators;
@@ -18,7 +19,7 @@ namespace WellTool.Crypto.Asymmetric
         {
             _curveName = curveName;
             _keyGenerator = new ECKeyPairGenerator();
-            var ecParams = SecNamedCurves.GetByName(curveName);
+            var ecParams = Org.BouncyCastle.Asn1.X9.X962NamedCurves.GetByName(curveName);
             var parameters = new ECKeyGenerationParameters(new ECDomainParameters(ecParams), new SecureRandom());
             _keyGenerator.Init(parameters);
         }

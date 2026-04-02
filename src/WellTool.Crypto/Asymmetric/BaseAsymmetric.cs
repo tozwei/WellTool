@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using RSACrypto = System.Security.Cryptography.RSA;
 
 namespace WellTool.Crypto.Asymmetric
 {
@@ -19,7 +20,7 @@ namespace WellTool.Crypto.Asymmetric
 
         protected override byte[] EncryptWithPublicKey(byte[] data, AsymmetricAlgorithm algorithm)
         {
-            if (algorithm is RSA rsa)
+            if (algorithm is RSACrypto rsa)
             {
                 return rsa.Encrypt(data, RSAEncryptionPadding.OaepSHA256);
             }
@@ -28,7 +29,7 @@ namespace WellTool.Crypto.Asymmetric
 
         protected override byte[] EncryptWithPrivateKey(byte[] data, AsymmetricAlgorithm algorithm)
         {
-            if (algorithm is RSA rsa)
+            if (algorithm is RSACrypto rsa)
             {
                 return rsa.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
             }
@@ -37,7 +38,7 @@ namespace WellTool.Crypto.Asymmetric
 
         protected override byte[] DecryptWithPrivateKey(byte[] data, AsymmetricAlgorithm algorithm)
         {
-            if (algorithm is RSA rsa)
+            if (algorithm is RSACrypto rsa)
             {
                 return rsa.Decrypt(data, RSAEncryptionPadding.OaepSHA256);
             }

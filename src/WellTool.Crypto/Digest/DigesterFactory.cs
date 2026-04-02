@@ -8,11 +8,11 @@ namespace WellTool.Crypto.Digest
         {
             return algorithm switch
             {
-                DigestAlgorithm.MD5 => MD5.Create(),
-                DigestAlgorithm.SHA1 => SHA1.Create(),
-                DigestAlgorithm.SHA256 => SHA256.Create(),
-                DigestAlgorithm.SHA384 => SHA384.Create(),
-                DigestAlgorithm.SHA512 => SHA512.Create(),
+                DigestAlgorithm.MD5 => System.Security.Cryptography.MD5.Create(),
+                DigestAlgorithm.SHA1 => System.Security.Cryptography.SHA1.Create(),
+                DigestAlgorithm.SHA256 => System.Security.Cryptography.SHA256.Create(),
+                DigestAlgorithm.SHA384 => System.Security.Cryptography.SHA384.Create(),
+                DigestAlgorithm.SHA512 => System.Security.Cryptography.SHA512.Create(),
                 _ => throw new System.ArgumentException("Invalid digest algorithm")
             };
         }

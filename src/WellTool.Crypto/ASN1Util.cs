@@ -12,7 +12,7 @@ namespace WellTool.Crypto
         public static T Decode<T>(byte[] data) where T : Asn1Encodable
         {
             var asn1Object = Asn1Object.FromByteArray(data);
-            return (T)asn1Object.ToAsn1Object();
+            return asn1Object.ToAsn1Object() as T;
         }
 
         public static Asn1Object Parse(byte[] data)
