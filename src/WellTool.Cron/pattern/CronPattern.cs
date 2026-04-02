@@ -126,6 +126,12 @@ namespace WellTool.Cron.Pattern
             int dayOfWeek = (int)dateTime.DayOfWeek;
             // 直接使用 0-6 的范围，与 .NET 的 DayOfWeek 枚举保持一致
 
+            // 检查 DAY_OF_MONTH 是否为 AlwaysTrueMatcher (即 ? 字符)
+            bool dayOfMonthIsAlwaysTrue = matchers[(int)Part.DAY_OF_MONTH] is AlwaysTrueMatcher;
+
+            // 检查 DAY_OF_WEEK 是否为 AlwaysTrueMatcher (即 ? 字符)
+            bool dayOfWeekIsAlwaysTrue = matchers[(int)Part.DAY_OF_WEEK] is AlwaysTrueMatcher;
+
             // 处理 DAY_OF_MONTH 部分，考虑 L 字符的特殊含义
             bool dayOfMonthMatch = false;
             if (matchers[(int)Part.DAY_OF_MONTH] is BoolArrayMatcher dayOfMonthMatcher)
@@ -150,12 +156,52 @@ namespace WellTool.Cron.Pattern
                 dayOfMonthMatch = matchers[(int)Part.DAY_OF_MONTH].Match(dateTime.Day - 1);
             }
 
-            return matchers[(int)Part.SECOND].Match(dateTime.Second) &&
+            // DAY_OF_WEEK 匹配
+            bool dayOfWeekMatch = matchers[(int)Part.DAY_OF_WEEK].Match(dayOfWeek);
+
+            // 如果日和周都没有被忽略，则两者都需要匹配
+            // 如果其中一个被忽略（?），则只检查另一个
+            // 如果两者都被指定，则两者都需要匹配（Quartz标准）
+            bool dayMatch;
+            if (dayOfMonthIsAlwaysTrue && dayOfWeekIsAlwaysTrue)
+            {
+                // 两者都被忽略
+                dayMatch = true;
+            }
+            else if (dayOfMonthIsAlwaysTrue)
+            {
+                // 日被忽略，只检查周
+                dayMatch = dayOfWeekMatch;
+            }
+            else if (dayOfWeekIsAlwaysTrue)
+            {
+                // 周被忽略，只检查日
+                dayMatch = dayOfMonthMatch;
+            }
+            else
+            {
+                // 两者都被指定，两者都需要匹配
+                dayMatch = dayOfMonthMatch && dayOfWeekMatch;
+            }
+
+            // 对于没有指定秒的表达式（5字段），秒必须为0才算匹配
+            bool secondMatch;
+            if (!matchSecond)
+            {
+                // 5字段表达式，秒隐式为0
+                secondMatch = dateTime.Second == 0;
+            }
+            else
+            {
+                // 6/7字段表达式，使用实际的秒匹配器
+                secondMatch = matchers[(int)Part.SECOND].Match(dateTime.Second);
+            }
+
+            return secondMatch &&
                    matchers[(int)Part.MINUTE].Match(dateTime.Minute) &&
                    matchers[(int)Part.HOUR].Match(dateTime.Hour) &&
-                   dayOfMonthMatch &&
-                   matchers[(int)Part.MONTH].Match(dateTime.Month - 1) &&
-                   matchers[(int)Part.DAY_OF_WEEK].Match(dayOfWeek);
+                   dayMatch &&
+                   matchers[(int)Part.MONTH].Match(dateTime.Month - 1);
         }
 
         /// <summary>
