@@ -1,9 +1,10 @@
 using System;
 using System.Text;
+using BCrypt.Net;
 
 namespace WellTool.Crypto.Digest
 {
-    public class BCrypt
+    public class BCryptUtil
     {
         public static string Hash(string password, int workFactor = 12)
         {

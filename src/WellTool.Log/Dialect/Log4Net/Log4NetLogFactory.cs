@@ -8,12 +8,35 @@ namespace WellTool.Log.Dialect.Log4Net;
 /// </summary>
 public class Log4NetLogFactory : LogFactory
 {
+    private static readonly Type LoggerType;
+
+    static Log4NetLogFactory()
+    {
+        try
+        {
+            var assembly = Assembly.Load("log4net");
+            if (assembly != null)
+            {
+                LoggerType = assembly.GetType("log4net.ILog");
+            }
+        }
+        catch
+        {
+            // 忽略异常
+        }
+    }
+
     /// <summary>
     /// 构造函数
     /// </summary>
     public Log4NetLogFactory() : base("Log4Net")
     {
     }
+
+    /// <summary>
+    /// 是否可用
+    /// </summary>
+    public static bool IsAvailable => LoggerType != null;
 
     /// <summary>
     /// 创建日志对象

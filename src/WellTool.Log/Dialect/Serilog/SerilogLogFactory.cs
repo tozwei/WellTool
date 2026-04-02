@@ -1,3 +1,4 @@
+using System.Reflection;
 using WellTool.Log.Dialect.Console;
 
 namespace WellTool.Log.Dialect.Serilog;
@@ -7,12 +8,35 @@ namespace WellTool.Log.Dialect.Serilog;
 /// </summary>
 public class SerilogLogFactory : LogFactory
 {
+    private static readonly Type LoggerType;
+
+    static SerilogLogFactory()
+    {
+        try
+        {
+            var assembly = Assembly.Load("Serilog");
+            if (assembly != null)
+            {
+                LoggerType = assembly.GetType("Serilog.ILogger");
+            }
+        }
+        catch
+        {
+            // 忽略异常
+        }
+    }
+
     /// <summary>
     /// 构造函数
     /// </summary>
     public SerilogLogFactory() : base("Serilog")
     {
     }
+
+    /// <summary>
+    /// 是否可用
+    /// </summary>
+    public static bool IsAvailable => LoggerType != null;
 
     /// <summary>
     /// 创建日志对象

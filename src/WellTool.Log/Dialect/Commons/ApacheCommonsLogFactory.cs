@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 namespace WellTool.Log.Dialect.Commons
 {
@@ -7,14 +8,31 @@ namespace WellTool.Log.Dialect.Commons
     /// </summary>
     public class ApacheCommonsLogFactory : LogFactory
     {
+        private static readonly Type LoggerType;
+
+        static ApacheCommonsLogFactory()
+        {
+            try
+            {
+                LoggerType = Type.GetType("Apache.Common.Logging.ILog, Apache.Common.Logging");
+            }
+            catch
+            {
+                // 忽略异常
+            }
+        }
+
         /// <summary>
         /// 构造函数
         /// </summary>
         public ApacheCommonsLogFactory() : base("Apache Common Logging")
         {
-            // 暂时注释掉，因为Apache Common Logging库不存在
-            // CheckLogExist(typeof(Apache.Common.Logging.LogManager));
         }
+
+        /// <summary>
+        /// 是否可用
+        /// </summary>
+        public static bool IsAvailable => LoggerType != null;
 
         /// <summary>
         /// 创建日志对象

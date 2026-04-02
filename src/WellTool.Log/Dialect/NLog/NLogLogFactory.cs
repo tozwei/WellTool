@@ -1,3 +1,4 @@
+using System.Reflection;
 using WellTool.Log.Dialect.Console;
 
 namespace WellTool.Log.Dialect.NLog;
@@ -7,12 +8,35 @@ namespace WellTool.Log.Dialect.NLog;
 /// </summary>
 public class NLogLogFactory : LogFactory
 {
+    private static readonly Type LoggerType;
+
+    static NLogLogFactory()
+    {
+        try
+        {
+            var assembly = Assembly.Load("NLog");
+            if (assembly != null)
+            {
+                LoggerType = assembly.GetType("NLog.Logger");
+            }
+        }
+        catch
+        {
+            // 忽略异常
+        }
+    }
+
     /// <summary>
     /// 构造函数
     /// </summary>
     public NLogLogFactory() : base("NLog")
     {
     }
+
+    /// <summary>
+    /// 是否可用
+    /// </summary>
+    public static bool IsAvailable => LoggerType != null;
 
     /// <summary>
     /// 创建日志对象

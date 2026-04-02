@@ -6,7 +6,7 @@ namespace WellTool.Log.Dialect.LogTube
     /// <summary>
     /// LogTube日志工厂
     /// </summary>
-    internal class LogTubeLogFactory : LogFactory
+    public class LogTubeLogFactory : LogFactory
     {
         private static readonly Type _logTubeType;
         private static readonly MethodInfo _getLoggerMethod;
@@ -30,6 +30,11 @@ namespace WellTool.Log.Dialect.LogTube
         public LogTubeLogFactory() : base("LogTube")
         {
         }
+
+        /// <summary>
+        /// 是否可用
+        /// </summary>
+        public static bool IsAvailable => _logTubeType != null && _getLoggerMethod != null;
 
         public override ILog CreateLog(string name)
         {
