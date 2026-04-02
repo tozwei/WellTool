@@ -180,4 +180,92 @@ namespace WellTool.Core.Net.Multipart
         /// </summary>
         /// <param name="output">输出流</param>
         /// <returns>复制的字节数</returns>
-        ///
+        /// <exception cref="IOException">读取异常</exception>
+        public long Copy(Stream output)
+        {
+            long count = 0;
+            while (true)
+            {
+                byte b = ReadByte();
+                if (IsBoundary(b))
+                {
+                    break;
+                }
+                output.WriteByte(b);
+                count++;
+            }
+            return count;
+        }
+
+        /// <summary>
+        /// 复制字节流到out， 大于maxBytes或者文件末尾停止
+        /// </summary>
+        /// <param name="output">输出流</param>
+        /// <param name="limit">最大字节数</param>
+        /// <returns>复制的字节数</returns>
+        /// <exception cref="IOException">读取异常</exception>
+        public long Copy(Stream output, long limit)
+        {
+            long count = 0;
+            while (true)
+            {
+                byte b = ReadByte();
+                if (IsBoundary(b))
+                {
+                    break;
+                }
+                output.WriteByte(b);
+                count++;
+                if (count > limit)
+                {
+                    break;
+                }
+            }
+            return count;
+        }
+
+        /// <summary>
+        /// 跳过边界表示
+        /// </summary>
+        /// <returns>跳过的字节数</returns>
+        /// <exception cref="IOException">读取异常</exception>
+        public long SkipToBoundary()
+        {
+            long count = 0;
+            while (true)
+            {
+                byte b = ReadByte();
+                count++;
+                if (IsBoundary(b))
+                {
+                    break;
+                }
+            }
+            return count;
+        }
+
+        /// <summary>
+        /// 检查是否为边界的标志
+        /// </summary>
+        /// <param name="b">byte</param>
+        /// <returns>是否为边界的标志</returns>
+        /// <exception cref="IOException">读取异常</exception>
+        public bool IsBoundary(byte b)
+        {
+            int boundaryLen = Boundary.Length;
+            Mark(boundaryLen + 1);
+            int bpos = 0;
+            while (b == Boundary[bpos])
+            {
+                b = ReadByte();
+                bpos++;
+                if (bpos == boundaryLen)
+                {
+                    return true; // boundary found!
+                }
+            }
+            Reset();
+            return false;
+        }
+    }
+}
