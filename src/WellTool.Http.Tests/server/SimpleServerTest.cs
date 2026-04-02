@@ -9,7 +9,8 @@ namespace WellTool.Http.Tests.Server;
 /// </summary>
 public class SimpleServerTest
 {
-    [Fact(Skip = "需要管理员权限才能运行 HttpListener")]
+    [Fact]
+    //需要管理员权限才能运行 HttpListener
     public void StartServerTest()
     {
         // 测试启动 HTTP 服务器
@@ -33,7 +34,8 @@ public class SimpleServerTest
         Assert.True(true);
     }
 
-    [Fact(Skip = "需要管理员权限才能运行 HttpListener")]
+    [Fact]
+    ///需要管理员权限才能运行 HttpListener
     public void RedirectServerTest()
     {
         // 测试 HTTP 重定向
@@ -79,7 +81,8 @@ public class SimpleServerTest
         Assert.True(true);
     }
 
-    [Fact(Skip = "需要管理员权限才能运行 HttpListener")]
+    [Fact]
+    //需要管理员权限才能运行 HttpListener
     public void ExceptionServerTest()
     {
         // 测试服务器异常处理
