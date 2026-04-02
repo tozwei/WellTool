@@ -61,8 +61,8 @@ namespace WellTool.Cache.Tests
             cache.Put("c", 3);
             Assert.Equal(2, cache.Size());
             
-            // "a"应该被移除
-            Assert.Null(cache.Get("a"));
+            // "a"应该被移除（它是第一个添加的）
+            Assert.Equal(0, cache.Get("a")); // 改为0而不是null，因为int是值类型
             Assert.Equal(2, cache.Get("b"));
             Assert.Equal(3, cache.Get("c"));
         }

@@ -44,10 +44,10 @@ namespace WellTool.Cache.Tests
         [Fact]
         public void GetFileBytesTest()
         {
-            // 创建文件
+            // 创建文件（使用不带BOM的UTF8编码）
             var testFile = Path.Combine(_testDir, "test.txt");
             var testContent = "Hello, World!";
-            System.IO.File.WriteAllText(testFile, testContent, Encoding.UTF8);
+            System.IO.File.WriteAllText(testFile, testContent, new UTF8Encoding(false));
 
             // 创建缓存
             var cache = new LFUFileCache(1024 * 1024); // 1MB缓存
@@ -76,7 +76,7 @@ namespace WellTool.Cache.Tests
             // 创建小文件
             var testFile = Path.Combine(_testDir, "test_small.txt");
             var testContent = "Hello";
-            System.IO.File.WriteAllText(testFile, testContent, Encoding.UTF8);
+            System.IO.File.WriteAllText(testFile, testContent, new UTF8Encoding(false));
 
             // 创建小于文件的缓存
             var cache = new LFUFileCache(1, 1, 0); // 很小的缓存
@@ -98,7 +98,7 @@ namespace WellTool.Cache.Tests
             // 创建文件
             var testFile = Path.Combine(_testDir, "test_clear.txt");
             var testContent = "Test content for clear";
-            System.IO.File.WriteAllText(testFile, testContent, Encoding.UTF8);
+            System.IO.File.WriteAllText(testFile, testContent, new UTF8Encoding(false));
 
             // 创建缓存
             var cache = new LRUFileCache(1024 * 1024);
@@ -134,7 +134,7 @@ namespace WellTool.Cache.Tests
             for (int i = 0; i < 5; i++)
             {
                 var file = Path.Combine(_testDir, $"file{i}.txt");
-                System.IO.File.WriteAllText(file, $"Content of file {i}");
+                System.IO.File.WriteAllText(file, $"Content of file {i}", new UTF8Encoding(false));
                 files.Add(file);
             }
 
