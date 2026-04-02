@@ -1,5 +1,6 @@
 using System.Data;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace WellTool.DB.Sql
 {
@@ -131,6 +132,92 @@ namespace WellTool.DB.Sql
         public static bool IsDelete(string sql)
         {
             return StartsWithKeywords(sql, "DELETE");
+        }
+
+        /// <summary>
+        /// 移除SQL外层的ORDER BY子句
+        /// 用于分页查询时去除不必要的排序
+        /// </summary>
+        /// <param name="sql">原始SQL</param>
+        /// <returns>移除ORDER BY后的SQL</returns>
+        public static string RemoveOuterOrderBy(string sql)
+        {
+            if (string.IsNullOrWhiteSpace(sql))
+            {
+                return sql;
+            }
+
+            var pattern = @"\s+ORDER\s+BY\s+[\w\s,\.\-\(\)]+(\s+(ASC|DESC))?(\s+(NULLS\s+(FIRST|LAST)))?";
+            return Regex.Replace(sql, pattern, "", RegexOptions.IgnoreCase);
+        }
+
+        /// <summary>
+        /// 检查SQL片段是否在IN子句中
+        /// </summary>
+        /// <param name="sql">SQL片段</param>
+        /// <returns>是否在IN子句中</returns>
+        public static bool IsInClause(string sql)
+        {
+            if (string.IsNullOrWhiteSpace(sql))
+            {
+                return false;
+            }
+
+            var trimmed = sql.TrimEnd();
+            var upper = trimmed.ToUpperInvariant();
+
+            if (!upper.EndsWith("IN ("))
+            {
+                return false;
+            }
+
+            int paramCount = 0;
+            int parenCount = 1;
+            for (int i = trimmed.Length - 1; i >= 0; i--)
+            {
+                char c = trimmed[i];
+                if (c == '(')
+                {
+                    parenCount--;
+                    if (parenCount == 0)
+                    {
+                        return paramCount > 0;
+                    }
+                }
+                else if (c == ')')
+                {
+                    parenCount++;
+                }
+                else if (c == '?' && parenCount == 1)
+                {
+                    paramCount++;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 构建LIKE值
+        /// </summary>
+        /// <param name="value">值</param>
+        /// <param name="likeType">LIKE类型</param>
+        /// <param name="isNot">是否取反</param>
+        /// <returns>LIKE值</returns>
+        public static string BuildLikeValue(string value, Condition.LikeType likeType, bool isNot = false)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+
+            return likeType switch
+            {
+                Condition.LikeType.StartWith => value + "%",
+                Condition.LikeType.EndWith => "%" + value,
+                Condition.LikeType.Contains => "%" + value + "%",
+                _ => value
+            };
         }
     }
 }

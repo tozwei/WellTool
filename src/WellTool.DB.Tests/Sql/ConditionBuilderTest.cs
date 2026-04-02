@@ -1,16 +1,7 @@
 // Copyright (c) 2025 WellTool Team
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 
+using WellTool.DB.Sql;
 using Xunit;
 
 namespace WellTool.DB.Tests.Sql;
@@ -24,9 +15,43 @@ public class ConditionBuilderTest
     /// 测试条件构建器
     /// </summary>
     [Fact]
-    public void TestConditionBuilder()
+    public void BuildTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var c1 = new Condition("user", null);
+        var c2 = new Condition("name", "!= null");
+        c2.LinkOperator = LogicalOperator.OR;
+        var c3 = new Condition("group", "like %aaa");
+
+        var builder = ConditionBuilder.Of(c1, c2, c3);
+        var sql = builder.Build();
+
+        Assert.Equal("user IS NULL OR name IS NOT NULL AND group LIKE ?", sql);
+        Assert.Single(builder.GetParamValues());
+        Assert.Equal("%aaa", builder.GetParamValues()[0]);
+    }
+
+    /// <summary>
+    /// 测试空条件
+    /// </summary>
+    [Fact]
+    public void BuildEmptyTest()
+    {
+        var builder = ConditionBuilder.Of();
+        var sql = builder.Build();
+        Assert.Equal(string.Empty, sql);
+    }
+
+    /// <summary>
+    /// 测试单个条件
+    /// </summary>
+    [Fact]
+    public void BuildSingleConditionTest()
+    {
+        var c1 = new Condition("id", "=", 1);
+        var builder = ConditionBuilder.Of(c1);
+        var sql = builder.Build();
+
+        Assert.Equal("id = ?", sql);
+        Assert.Single(builder.GetParamValues());
     }
 }

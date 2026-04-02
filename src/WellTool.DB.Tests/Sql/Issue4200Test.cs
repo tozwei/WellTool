@@ -1,32 +1,59 @@
 // Copyright (c) 2025 WellTool Team
 // Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 
+using WellTool.DB.Sql;
 using Xunit;
 
 namespace WellTool.DB.Tests.Sql;
 
 /// <summary>
-/// Issue 4200 测试
+/// Issue 4200 测试 - IN子句检测
 /// </summary>
 public class Issue4200Test
 {
     /// <summary>
-    /// 测试 Issue 4200
+    /// 测试IN子句检测
     /// </summary>
     [Fact]
-    public void TestIssue4200()
+    public void IsInClauseTest0()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        // 简化的测试
+        Assert.False(SqlUtil.IsInClause(""));
+    }
+
+    /// <summary>
+    /// 测试IN子句检测
+    /// </summary>
+    [Fact]
+    public void IsInClauseTest1()
+    {
+        Assert.False(SqlUtil.IsInClause(null));
+    }
+
+    /// <summary>
+    /// 测试非IN子句
+    /// </summary>
+    [Fact]
+    public void IsInClauseTest2()
+    {
+        Assert.False(SqlUtil.IsInClause("select * from table"));
+    }
+
+    /// <summary>
+    /// 测试包含IN但非param对应的IN子句
+    /// </summary>
+    [Fact]
+    public void IsInClauseTest3()
+    {
+        Assert.False(SqlUtil.IsInClause("in (1,2,3)"));
+    }
+
+    /// <summary>
+    /// 测试包含IN但非param对应的IN子句
+    /// </summary>
+    [Fact]
+    public void IsInClauseTest4()
+    {
+        Assert.False(SqlUtil.IsInClause("where id in"));
     }
 }
