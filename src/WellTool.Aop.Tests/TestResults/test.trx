@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="228771b1-98b0-484c-8a40-25e3ec266da2" name="zw@DESKTOP-CQ5TKEK 2026-04-02 17:13:10" runUser="DESKTOP-CQ5TKEK\zw" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-04-02T17:13:10.1912189+08:00" queuing="2026-04-02T17:13:10.1912195+08:00" start="2026-04-02T17:13:09.3683720+08:00" finish="2026-04-02T17:13:10.2282168+08:00" />
+  <TestSettings name="default" id="d7db5fc2-b614-462a-af95-3b2e5d84f00c">
+    <Deployment runDeploymentRoot="zw_DESKTOP-CQ5TKEK_2026-04-02_17_13_10" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="4b229b07-92b8-4d2f-a761-a70f2b9efdfb" testId="cc5ca478-0f0a-0513-9dfa-d43f2bc9c204" testName="WellTool.Aop.Tests.WellToolAopTests.TestLoadFirstAvailableConcurrent" computerName="DESKTOP-CQ5TKEK" duration="00:00:00.0084203" startTime="2026-04-02T17:13:10.1576312+08:00" endTime="2026-04-02T17:13:10.1576862+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4b229b07-92b8-4d2f-a761-a70f2b9efdfb" />
+    <UnitTestResult executionId="05c76ae5-5fdc-44ca-8f39-ac27d2e78757" testId="e8280ad2-b1a8-08d8-fa4b-1ece08396863" testName="WellTool.Aop.Tests.AopCglibTest.AopByAutoCglibTest" computerName="DESKTOP-CQ5TKEK" duration="00:00:00.0043399" startTime="2026-04-02T17:13:10.0858026+08:00" endTime="2026-04-02T17:13:10.1500928+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="05c76ae5-5fdc-44ca-8f39-ac27d2e78757">
+      <Output>
+        <ErrorInfo>
+          <Message>System.ArgumentException : 被代理对象必须实现至少一个接口</Message>
+          <StackTrace>   at WellTool.Aop.Proxy.JdkProxyFactory.Proxy[T](T target, Aspect aspect) in D:\Work\WellTool\src\WellTool.Aop\Proxy\JdkProxyFactory.cs:line 45&#xD;
+   at WellTool.Aop.Proxy.ProxyFactory.CreateProxy[T](T target, Aspect aspect) in D:\Work\WellTool\src\WellTool.Aop\Proxy\ProxyFactory.cs:line 94&#xD;
+   at WellTool.Aop.Proxy.ProxyFactory.CreateProxy[T](T target, Type aspectClass) in D:\Work\WellTool\src\WellTool.Aop\Proxy\ProxyFactory.cs:line 76&#xD;
+   at WellTool.Aop.ProxyUtil.Proxy[T](T target, Type aspectClass) in D:\Work\WellTool\src\WellTool.Aop\ProxyUtil.cs:line 35&#xD;
+   at WellTool.Aop.Tests.AopCglibTest.AopByAutoCglibTest() in D:\Work\WellTool\src\WellTool.Aop.Tests\AopCglibTest.cs:line 29&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="3613a11f-79e0-45c1-8674-fb266494bef5" testId="a08c5f53-cd79-a90b-70a6-4c51ec550d30" testName="WellTool.Aop.Tests.IssueI74EX7Test.SpringCglibProxyTest" computerName="DESKTOP-CQ5TKEK" duration="00:00:00.0002210" startTime="2026-04-02T17:13:10.1141937+08:00" endTime="2026-04-02T17:13:10.1142625+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3613a11f-79e0-45c1-8674-fb266494bef5" />
+    <UnitTestResult executionId="0c564e46-1fd0-4754-9879-8b6ba5545c62" testId="be05b6b4-7259-daf0-857c-18fd66cbeb97" testName="WellTool.Aop.Tests.IssueI74EX7Test.ProxyTest" computerName="DESKTOP-CQ5TKEK" duration="00:00:00.0006826" startTime="2026-04-02T17:13:10.1139303+08:00" endTime="2026-04-02T17:13:10.1139933+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0c564e46-1fd0-4754-9879-8b6ba5545c62" />
+    <UnitTestResult executionId="bc7cf4d4-d4bb-4a13-9261-f1f4024e428b" testId="9c8e3fb9-5455-3ab7-ff5e-db65f2c1d852" testName="WellTool.Aop.Tests.IssueI74EX7Test.SpringCglibProxyWithoutConstructorTest" computerName="DESKTOP-CQ5TKEK" duration="00:00:00.0037324" startTime="2026-04-02T17:13:10.0858594+08:00" endTime="2026-04-02T17:13:10.1024619+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bc7cf4d4-d4bb-4a13-9261-f1f4024e428b" />
+    <UnitTestResult executionId="f92be7d4-33b4-4658-988b-67f60f0e7889" testId="30c96219-96e5-f15a-a4bc-27ed7e281387" testName="WellTool.Aop.Tests.WellToolAopTests.TestTagObjProxy" computerName="DESKTOP-CQ5TKEK" duration="00:00:00.0048147" startTime="2026-04-02T17:13:10.1137369+08:00" endTime="2026-04-02T17:13:10.1165908+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f92be7d4-33b4-4658-988b-67f60f0e7889" />
+    <UnitTestResult executionId="60739364-b45e-49ad-b464-8c5334062d23" testId="6d25b922-9250-ad9c-866f-2180878be8af" testName="WellTool.Aop.Tests.IssueI74EX7Test.CglibProxyTest" computerName="DESKTOP-CQ5TKEK" duration="00:00:00.0006322" startTime="2026-04-02T17:13:10.1137138+08:00" endTime="2026-04-02T17:13:10.1138026+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="60739364-b45e-49ad-b464-8c5334062d23" />
+    <UnitTestResult executionId="04f20259-27c6-4f7d-bc03-b70fde131c57" testId="989cd54d-5457-006b-0b00-a273a878942b" testName="WellTool.Aop.Tests.UnitTest1.Test1" computerName="DESKTOP-CQ5TKEK" duration="00:00:00.0033244" startTime="2026-04-02T17:13:10.0858325+08:00" endTime="2026-04-02T17:13:10.0966250+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="04f20259-27c6-4f7d-bc03-b70fde131c57" />
+    <UnitTestResult executionId="39000e1f-ef71-41bd-9134-a0caaa95be0a" testId="5e4a9bbb-aa9c-6c8e-a69b-c29197895514" testName="WellTool.Aop.Tests.AopTests.TestAopBasicFunctionality" computerName="DESKTOP-CQ5TKEK" duration="00:00:00.0020881" startTime="2026-04-02T17:13:10.1495487+08:00" endTime="2026-04-02T17:13:10.1568864+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="39000e1f-ef71-41bd-9134-a0caaa95be0a" />
+    <UnitTestResult executionId="be98ada1-b266-49be-81c1-7a194bb36ae5" testId="53fb1da0-08c9-fb92-30e1-92ea23e8c57e" testName="WellTool.Aop.Tests.AopTests.TestAopExceptionHandling" computerName="DESKTOP-CQ5TKEK" duration="00:00:00.0129325" startTime="2026-04-02T17:13:10.0835201+08:00" endTime="2026-04-02T17:13:10.1166999+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="be98ada1-b266-49be-81c1-7a194bb36ae5" />
+    <UnitTestResult executionId="27124535-d960-4dcf-ae34-78f6b2a5ad92" testId="8b51a965-55e4-e160-d0f8-bbb90a8b7f24" testName="WellTool.Aop.Tests.WellToolAopTests.TestProxyFactoryWithConstructor" computerName="DESKTOP-CQ5TKEK" duration="00:00:00.0076568" startTime="2026-04-02T17:13:10.0857521+08:00" endTime="2026-04-02T17:13:10.1119313+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="27124535-d960-4dcf-ae34-78f6b2a5ad92" />
+    <UnitTestResult executionId="2f906817-903d-4672-83b1-7399c470121f" testId="6593db5a-a906-2e1f-6a8c-92a246cd5d20" testName="WellTool.Aop.Tests.AopTests.TestAopWithAspectClass" computerName="DESKTOP-CQ5TKEK" duration="00:00:00.0018676" startTime="2026-04-02T17:13:10.1571363+08:00" endTime="2026-04-02T17:13:10.1574157+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2f906817-903d-4672-83b1-7399c470121f" />
+    <UnitTestResult executionId="384525bf-9351-48d4-9180-f84c6774f082" testId="5d09e78c-1e4c-fbac-0435-d8fe68f7ce62" testName="WellTool.Aop.Tests.WellToolAopTests.TestJdkProxyFactory" computerName="DESKTOP-CQ5TKEK" duration="00:00:00.0029286" startTime="2026-04-02T17:13:10.1495277+08:00" endTime="2026-04-02T17:13:10.1572048+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="384525bf-9351-48d4-9180-f84c6774f082" />
+    <UnitTestResult executionId="05bb0884-776a-4dde-9dc8-da558dd91136" testId="c2aca478-b963-7a36-905d-45ed40417311" testName="WellTool.Aop.Tests.WellToolAopTests.AopTest" computerName="DESKTOP-CQ5TKEK" duration="00:00:00.0024110" startTime="2026-04-02T17:13:10.1573504+08:00" endTime="2026-04-02T17:13:10.1575200+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="05bb0884-776a-4dde-9dc8-da558dd91136" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="WellTool.Aop.Tests.WellToolAopTests.AopTest" storage="d:\work\welltool\src\welltool.aop.tests\bin\debug\net10.0\welltool.aop.tests.dll" id="c2aca478-b963-7a36-905d-45ed40417311">
+      <Execution id="05bb0884-776a-4dde-9dc8-da558dd91136" />
+      <TestMethod codeBase="D:\Work\WellTool\src\WellTool.Aop.Tests\bin\Debug\net10.0\WellTool.Aop.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="WellTool.Aop.Tests.WellToolAopTests" name="AopTest" />
+    </UnitTest>
+    <UnitTest name="WellTool.Aop.Tests.AopTests.TestAopWithAspectClass" storage="d:\work\welltool\src\welltool.aop.tests\bin\debug\net10.0\welltool.aop.tests.dll" id="6593db5a-a906-2e1f-6a8c-92a246cd5d20">
+      <Execution id="2f906817-903d-4672-83b1-7399c470121f" />
+      <TestMethod codeBase="D:\Work\WellTool\src\WellTool.Aop.Tests\bin\Debug\net10.0\WellTool.Aop.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="WellTool.Aop.Tests.AopTests" name="TestAopWithAspectClass" />
+    </UnitTest>
+    <UnitTest name="WellTool.Aop.Tests.WellToolAopTests.TestLoadFirstAvailableConcurrent" storage="d:\work\welltool\src\welltool.aop.tests\bin\debug\net10.0\welltool.aop.tests.dll" id="cc5ca478-0f0a-0513-9dfa-d43f2bc9c204">
+      <Execution id="4b229b07-92b8-4d2f-a761-a70f2b9efdfb" />
+      <TestMethod codeBase="D:\Work\WellTool\src\WellTool.Aop.Tests\bin\Debug\net10.0\WellTool.Aop.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="WellTool.Aop.Tests.WellToolAopTests" name="TestLoadFirstAvailableConcurrent" />
+    </UnitTest>
+    <UnitTest name="WellTool.Aop.Tests.WellToolAopTests.TestTagObjProxy" storage="d:\work\welltool\src\welltool.aop.tests\bin\debug\net10.0\welltool.aop.tests.dll" id="30c96219-96e5-f15a-a4bc-27ed7e281387">
+      <Execution id="f92be7d4-33b4-4658-988b-67f60f0e7889" />
+      <TestMethod codeBase="D:\Work\WellTool\src\WellTool.Aop.Tests\bin\Debug\net10.0\WellTool.Aop.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="WellTool.Aop.Tests.WellToolAopTests" name="TestTagObjProxy" />
+    </UnitTest>
+    <UnitTest name="WellTool.Aop.Tests.AopCglibTest.AopByAutoCglibTest" storage="d:\work\welltool\src\welltool.aop.tests\bin\debug\net10.0\welltool.aop.tests.dll" id="e8280ad2-b1a8-08d8-fa4b-1ece08396863">
+      <Execution id="05c76ae5-5fdc-44ca-8f39-ac27d2e78757" />
+      <TestMethod codeBase="D:\Work\WellTool\src\WellTool.Aop.Tests\bin\Debug\net10.0\WellTool.Aop.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="WellTool.Aop.Tests.AopCglibTest" name="AopByAutoCglibTest" />
+    </UnitTest>
+    <UnitTest name="WellTool.Aop.Tests.UnitTest1.Test1" storage="d:\work\welltool\src\welltool.aop.tests\bin\debug\net10.0\welltool.aop.tests.dll" id="989cd54d-5457-006b-0b00-a273a878942b">
+      <Execution id="04f20259-27c6-4f7d-bc03-b70fde131c57" />
+      <TestMethod codeBase="D:\Work\WellTool\src\WellTool.Aop.Tests\bin\Debug\net10.0\WellTool.Aop.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="WellTool.Aop.Tests.UnitTest1" name="Test1" />
+    </UnitTest>
+    <UnitTest name="WellTool.Aop.Tests.WellToolAopTests.TestProxyFactoryWithConstructor" storage="d:\work\welltool\src\welltool.aop.tests\bin\debug\net10.0\welltool.aop.tests.dll" id="8b51a965-55e4-e160-d0f8-bbb90a8b7f24">
+      <Execution id="27124535-d960-4dcf-ae34-78f6b2a5ad92" />
+      <TestMethod codeBase="D:\Work\WellTool\src\WellTool.Aop.Tests\bin\Debug\net10.0\WellTool.Aop.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="WellTool.Aop.Tests.WellToolAopTests" name="TestProxyFactoryWithConstructor" />
+    </UnitTest>
+    <UnitTest name="WellTool.Aop.Tests.WellToolAopTests.TestJdkProxyFactory" storage="d:\work\welltool\src\welltool.aop.tests\bin\debug\net10.0\welltool.aop.tests.dll" id="5d09e78c-1e4c-fbac-0435-d8fe68f7ce62">
+      <Execution id="384525bf-9351-48d4-9180-f84c6774f082" />
+      <TestMethod codeBase="D:\Work\WellTool\src\WellTool.Aop.Tests\bin\Debug\net10.0\WellTool.Aop.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="WellTool.Aop.Tests.WellToolAopTests" name="TestJdkProxyFactory" />
+    </UnitTest>
+    <UnitTest name="WellTool.Aop.Tests.IssueI74EX7Test.CglibProxyTest" storage="d:\work\welltool\src\welltool.aop.tests\bin\debug\net10.0\welltool.aop.tests.dll" id="6d25b922-9250-ad9c-866f-2180878be8af">
+      <Execution id="60739364-b45e-49ad-b464-8c5334062d23" />
+      <TestMethod codeBase="D:\Work\WellTool\src\WellTool.Aop.Tests\bin\Debug\net10.0\WellTool.Aop.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="WellTool.Aop.Tests.IssueI74EX7Test" name="CglibProxyTest" />
+    </UnitTest>
+    <UnitTest name="WellTool.Aop.Tests.IssueI74EX7Test.ProxyTest" storage="d:\work\welltool\src\welltool.aop.tests\bin\debug\net10.0\welltool.aop.tests.dll" id="be05b6b4-7259-daf0-857c-18fd66cbeb97">
+      <Execution id="0c564e46-1fd0-4754-9879-8b6ba5545c62" />
+      <TestMethod codeBase="D:\Work\WellTool\src\WellTool.Aop.Tests\bin\Debug\net10.0\WellTool.Aop.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="WellTool.Aop.Tests.IssueI74EX7Test" name="ProxyTest" />
+    </UnitTest>
+    <UnitTest name="WellTool.Aop.Tests.IssueI74EX7Test.SpringCglibProxyWithoutConstructorTest" storage="d:\work\welltool\src\welltool.aop.tests\bin\debug\net10.0\welltool.aop.tests.dll" id="9c8e3fb9-5455-3ab7-ff5e-db65f2c1d852">
+      <Execution id="bc7cf4d4-d4bb-4a13-9261-f1f4024e428b" />
+      <TestMethod codeBase="D:\Work\WellTool\src\WellTool.Aop.Tests\bin\Debug\net10.0\WellTool.Aop.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="WellTool.Aop.Tests.IssueI74EX7Test" name="SpringCglibProxyWithoutConstructorTest" />
+    </UnitTest>
+    <UnitTest name="WellTool.Aop.Tests.AopTests.TestAopExceptionHandling" storage="d:\work\welltool\src\welltool.aop.tests\bin\debug\net10.0\welltool.aop.tests.dll" id="53fb1da0-08c9-fb92-30e1-92ea23e8c57e">
+      <Execution id="be98ada1-b266-49be-81c1-7a194bb36ae5" />
+      <TestMethod codeBase="D:\Work\WellTool\src\WellTool.Aop.Tests\bin\Debug\net10.0\WellTool.Aop.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="WellTool.Aop.Tests.AopTests" name="TestAopExceptionHandling" />
+    </UnitTest>
+    <UnitTest name="WellTool.Aop.Tests.IssueI74EX7Test.SpringCglibProxyTest" storage="d:\work\welltool\src\welltool.aop.tests\bin\debug\net10.0\welltool.aop.tests.dll" id="a08c5f53-cd79-a90b-70a6-4c51ec550d30">
+      <Execution id="3613a11f-79e0-45c1-8674-fb266494bef5" />
+      <TestMethod codeBase="D:\Work\WellTool\src\WellTool.Aop.Tests\bin\Debug\net10.0\WellTool.Aop.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="WellTool.Aop.Tests.IssueI74EX7Test" name="SpringCglibProxyTest" />
+    </UnitTest>
+    <UnitTest name="WellTool.Aop.Tests.AopTests.TestAopBasicFunctionality" storage="d:\work\welltool\src\welltool.aop.tests\bin\debug\net10.0\welltool.aop.tests.dll" id="5e4a9bbb-aa9c-6c8e-a69b-c29197895514">
+      <Execution id="39000e1f-ef71-41bd-9134-a0caaa95be0a" />
+      <TestMethod codeBase="D:\Work\WellTool\src\WellTool.Aop.Tests\bin\Debug\net10.0\WellTool.Aop.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="WellTool.Aop.Tests.AopTests" name="TestAopBasicFunctionality" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="cc5ca478-0f0a-0513-9dfa-d43f2bc9c204" executionId="4b229b07-92b8-4d2f-a761-a70f2b9efdfb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e8280ad2-b1a8-08d8-fa4b-1ece08396863" executionId="05c76ae5-5fdc-44ca-8f39-ac27d2e78757" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a08c5f53-cd79-a90b-70a6-4c51ec550d30" executionId="3613a11f-79e0-45c1-8674-fb266494bef5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="be05b6b4-7259-daf0-857c-18fd66cbeb97" executionId="0c564e46-1fd0-4754-9879-8b6ba5545c62" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9c8e3fb9-5455-3ab7-ff5e-db65f2c1d852" executionId="bc7cf4d4-d4bb-4a13-9261-f1f4024e428b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="30c96219-96e5-f15a-a4bc-27ed7e281387" executionId="f92be7d4-33b4-4658-988b-67f60f0e7889" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6d25b922-9250-ad9c-866f-2180878be8af" executionId="60739364-b45e-49ad-b464-8c5334062d23" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="989cd54d-5457-006b-0b00-a273a878942b" executionId="04f20259-27c6-4f7d-bc03-b70fde131c57" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5e4a9bbb-aa9c-6c8e-a69b-c29197895514" executionId="39000e1f-ef71-41bd-9134-a0caaa95be0a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="53fb1da0-08c9-fb92-30e1-92ea23e8c57e" executionId="be98ada1-b266-49be-81c1-7a194bb36ae5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8b51a965-55e4-e160-d0f8-bbb90a8b7f24" executionId="27124535-d960-4dcf-ae34-78f6b2a5ad92" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6593db5a-a906-2e1f-6a8c-92a246cd5d20" executionId="2f906817-903d-4672-83b1-7399c470121f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5d09e78c-1e4c-fbac-0435-d8fe68f7ce62" executionId="384525bf-9351-48d4-9180-f84c6774f082" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c2aca478-b963-7a36-905d-45ed40417311" executionId="05bb0884-776a-4dde-9dc8-da558dd91136" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="列表中未列出的结果" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="所有已加载的结果" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="14" executed="14" passed="13" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.4)&#xD;
+[xUnit.net 00:00:00.10]   Discovering: WellTool.Aop.Tests&#xD;
+[xUnit.net 00:00:00.14]   Discovered:  WellTool.Aop.Tests&#xD;
+[xUnit.net 00:00:00.17]   Starting:    WellTool.Aop.Tests&#xD;
+Before called: True&#xD;
+Before called: True&#xD;
+Method [TagObj.get_Tag] execute spend [1]ms return value [tag]&#xD;
+After called: True&#xD;
+AfterException called: True&#xD;
+Before called: True&#xD;
+Before called: True&#xD;
+Method [Dog.Eat] execute spend [0]ms return value [������]&#xD;
+After called: True&#xD;
+After called: True&#xD;
+Before called: True&#xD;
+ץ��ֻ��&#xD;
+Method [Dog.Seize] execute spend [0]ms return value []&#xD;
+After called: True&#xD;
+Before called: True&#xD;
+After called: True&#xD;
+Before called: True&#xD;
+Method [Cat.Eat] execute spend [0]ms return value [è����]&#xD;
+After called: True&#xD;
+Before called: True&#xD;
+ץ������&#xD;
+Method [Cat.Seize] execute spend [0]ms return value []&#xD;
+After called: True&#xD;
+[xUnit.net 00:00:00.26]       System.ArgumentException : 被代理对象必须实现至少一个接口&#xD;
+[xUnit.net 00:00:00.26]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.26]         D:\Work\WellTool\src\WellTool.Aop\Proxy\JdkProxyFactory.cs(45,0): at WellTool.Aop.Proxy.JdkProxyFactory.Proxy[T](T target, Aspect aspect)&#xD;
+[xUnit.net 00:00:00.26]         D:\Work\WellTool\src\WellTool.Aop\Proxy\ProxyFactory.cs(94,0): at WellTool.Aop.Proxy.ProxyFactory.CreateProxy[T](T target, Aspect aspect)&#xD;
+[xUnit.net 00:00:00.26]         D:\Work\WellTool\src\WellTool.Aop\Proxy\ProxyFactory.cs(76,0): at WellTool.Aop.Proxy.ProxyFactory.CreateProxy[T](T target, Type aspectClass)&#xD;
+[xUnit.net 00:00:00.26]         D:\Work\WellTool\src\WellTool.Aop\ProxyUtil.cs(35,0): at WellTool.Aop.ProxyUtil.Proxy[T](T target, Type aspectClass)&#xD;
+[xUnit.net 00:00:00.26]         D:\Work\WellTool\src\WellTool.Aop.Tests\AopCglibTest.cs(29,0): at WellTool.Aop.Tests.AopCglibTest.AopByAutoCglibTest()&#xD;
+[xUnit.net 00:00:00.26]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.26]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.27]   Finished:    WellTool.Aop.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-CQ5TKEK" outcome="Error" timestamp="2026-04-02T17:13:10.2021370+08:00">
+        <Text>[xUnit.net 00:00:00.26]     WellTool.Aop.Tests.AopCglibTest.AopByAutoCglibTest [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>
