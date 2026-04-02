@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.37027.9
+# Visual Studio Version 18
+VisualStudioVersion = 18.4.11605.240 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Captcha", "WellTool.Captcha\WellTool.Captcha.csproj", "{AA151533-1ABB-4BF8-84A9-CE5CF146F7F6}"
 EndProject
@@ -84,6 +84,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Jwt.Tests", "WellTool.Jwt.Tests\WellTool.Jwt.Tests.csproj", "{3F5CD6F7-0E12-C8FB-CF60-6F61E854D597}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.DB.Tests", "WellTool.DB.Tests\WellTool.DB.Tests.csproj", "{58340EFC-365D-E811-54CC-E9F63C6C2787}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WellTool.Extra.Tests", "WellTool.Extra.Tests\WellTool.Extra.Tests.csproj", "{6AFB56AA-A096-4323-9EF5-840151FFFFFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -575,6 +577,18 @@ Global
 		{58340EFC-365D-E811-54CC-E9F63C6C2787}.Release|x64.Build.0 = Release|Any CPU
 		{58340EFC-365D-E811-54CC-E9F63C6C2787}.Release|x86.ActiveCfg = Release|Any CPU
 		{58340EFC-365D-E811-54CC-E9F63C6C2787}.Release|x86.Build.0 = Release|Any CPU
+		{6AFB56AA-A096-4323-9EF5-840151FFFFFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AFB56AA-A096-4323-9EF5-840151FFFFFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AFB56AA-A096-4323-9EF5-840151FFFFFB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6AFB56AA-A096-4323-9EF5-840151FFFFFB}.Debug|x64.Build.0 = Debug|Any CPU
+		{6AFB56AA-A096-4323-9EF5-840151FFFFFB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6AFB56AA-A096-4323-9EF5-840151FFFFFB}.Debug|x86.Build.0 = Debug|Any CPU
+		{6AFB56AA-A096-4323-9EF5-840151FFFFFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AFB56AA-A096-4323-9EF5-840151FFFFFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AFB56AA-A096-4323-9EF5-840151FFFFFB}.Release|x64.ActiveCfg = Release|Any CPU
+		{6AFB56AA-A096-4323-9EF5-840151FFFFFB}.Release|x64.Build.0 = Release|Any CPU
+		{6AFB56AA-A096-4323-9EF5-840151FFFFFB}.Release|x86.ActiveCfg = Release|Any CPU
+		{6AFB56AA-A096-4323-9EF5-840151FFFFFB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -598,6 +612,7 @@ Global
 		{4D6E7FC8-87FA-A290-AA5A-C990CA061405} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{3F5CD6F7-0E12-C8FB-CF60-6F61E854D597} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{58340EFC-365D-E811-54CC-E9F63C6C2787} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{6AFB56AA-A096-4323-9EF5-840151FFFFFB} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D3DC11E5-00EA-4419-A30F-F9A9F0843104}

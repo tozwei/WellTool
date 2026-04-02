@@ -39,7 +39,7 @@ public class AnnotationForTestAttribute : Attribute
 /// <summary>
 /// 重复注解测试
 /// </summary>
-[AnnotationForTest("repeat-annotation")]
+[AnnotationForTestAttribute("repeat-annotation")]
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
 public class RepeatAnnotationForTestAttribute : Attribute
 {

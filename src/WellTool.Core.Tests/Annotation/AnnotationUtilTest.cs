@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using System;
+using System.Reflection;
 using Xunit;
 using WellTool.Core.Annotation;
 using XAssert = Xunit.Assert;
@@ -23,8 +24,8 @@ namespace WellTool.Core.Tests.Annotation;
 /// </summary>
 public class AnnotationUtilTest
 {
-    [AnnotationForTest(Value = "测试", Names = new[] { "测试1", "测试2" })]
-    [RepeatAnnotationForTest]
+    [AnnotationForTestAttribute(Value = "测试", Names = new[] { "测试1", "测试2" })]
+    [RepeatAnnotationForTestAttribute]
     private class ClassWithAnnotation
     {
         public void Test()
@@ -134,17 +135,17 @@ public class AnnotationUtilTest
     private class RootAnnotation : Attribute
     {}
 
-    [AnnotationForTest("TargetClass")]
+    [AnnotationForTestAttribute("TargetClass")]
     private class TargetClass : TargetSuperClass, TargetSuperInterface
     {
-        [AnnotationForTest("TargetClass")]
+        [AnnotationForTestAttribute("TargetClass")]
         public override object TestMethod() { return new object(); }
     }
 
-    [AnnotationForTest("TargetSuperClass")]
+    [AnnotationForTestAttribute("TargetSuperClass")]
     private class TargetSuperClass : SuperInterface
     {
-        [AnnotationForTest("TargetSuperClass")]
+        [AnnotationForTestAttribute("TargetSuperClass")]
         public virtual object TestMethod() { return new object(); }
     }
 

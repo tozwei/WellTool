@@ -11,14 +11,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
-namespace WellTool.Core.Tests.Annotation;
+namespace WellTool.Core.Text;
 
 /// <summary>
-/// 重复注解测试
+/// 密码强度枚举
 /// </summary>
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
-public class RepeatAnnotationForTestAttribute : Attribute
+public enum PasswdStrength
 {
+    /// <summary>
+    /// 弱密码
+    /// </summary>
+    Weak = 0,
+
+    /// <summary>
+    /// 中强度密码
+    /// </summary>
+    Medium = 1,
+
+    /// <summary>
+    /// 强密码
+    /// </summary>
+    Strong = 2,
+
+    /// <summary>
+    /// 非常强的密码
+    /// </summary>
+    VeryStrong = 3
 }

@@ -21,7 +21,7 @@ namespace WellTool.Core.Tests.Annotation;
 public class TestIssueI8CLBJ
 {
     [Fact]
-    public void TestIssueI8CLBJ()
+    public void TestMethod()
     {
         // TODO: 实现测试方法
         Assert.True(true);

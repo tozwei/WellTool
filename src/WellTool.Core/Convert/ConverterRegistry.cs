@@ -39,6 +39,10 @@ namespace WellTool.Core.Converter
             Register(new CollectionConverter());
             Register(new MapConverter());
             Register(new EnumConverter());
+            Register(new ArrayConverter());
+            Register(new CharacterConverter());
+            Register(new ClassConverter());
+            Register(new UUIDConverter());
         }
 
         /// <summary>
