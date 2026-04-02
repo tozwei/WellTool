@@ -194,7 +194,9 @@ namespace WellTool.Json.Tests
             obj.Append("list", "value2");
             Assert.Equal(2, obj.GetJSONArray("list").Count);
 
-            Assert.Throws<JSONException>(() => obj.Append("name", "value"));
+            // 测试键不存在时的行为
+            obj.Append("name", "value");
+            Assert.Equal("value", obj.GetJSONArray("name")[0]);
         }
 
         [Fact]

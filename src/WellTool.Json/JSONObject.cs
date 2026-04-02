@@ -175,13 +175,10 @@ namespace WellTool.Json
                 case '"':
                     return tokener.NextString();
                 case 't':
-                    tokener.Back();
                     return tokener.NextBoolean();
                 case 'f':
-                    tokener.Back();
                     return tokener.NextBoolean();
                 case 'n':
-                    tokener.Back();
                     return tokener.NextNull();
                 case '-':
                 case '0':
@@ -194,7 +191,6 @@ namespace WellTool.Json
                 case '7':
                 case '8':
                 case '9':
-                    tokener.Back();
                     return tokener.NextNumber();
                 default:
                     throw new JSONException($"Unexpected character at position {tokener.Position}");
@@ -299,7 +295,8 @@ namespace WellTool.Json
             }
 
             if (value is string || value is bool || value is int || value is long ||
-                value is double || value is float || value is decimal || value is JSONNull)
+                value is double || value is float || value is decimal || value is JSONNull ||
+                value is JSONObject || value is JSONArray)
             {
                 return value;
             }

@@ -723,16 +723,26 @@ namespace WellTool.Json
         /// <summary>
         /// 转义字符
         /// </summary>
-        private static char Escape(char c)
+        private static string Escape(char c)
         {
             switch (c)
             {
-                case '\b': return 'b';
-                case '\t': return 't';
-                case '\n': return 'n';
-                case '\f': return 'f';
-                case '\r': return 'r';
-                default: return c;
+                case '\b':
+                    return "\\b";
+                case '\t':
+                    return "\\t";
+                case '\n':
+                    return "\\n";
+                case '\f':
+                    return "\\f";
+                case '\r':
+                    return "\\r";
+                case '"':
+                    return "\\\"";
+                case '\\':
+                    return "\\\\";
+                default:
+                    return c.ToString();
             }
         }
 

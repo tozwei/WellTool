@@ -197,18 +197,16 @@ namespace WellTool.Json
             }
 
             // 处理整数部分
-            while (_position < _length)
+            if (!char.IsDigit(c))
             {
-                if (char.IsDigit(c) || (c == 'e' || c == 'E') || c == '+' || c == '-')
-                {
-                    sb.Append(c);
-                    _position++;
-                    c = NextCharacter();
-                }
-                else
-                {
-                    break;
-                }
+                throw new JSONException($"Invalid number: expected digit at position {_position}");
+            }
+
+            while (_position < _length && char.IsDigit(c))
+            {
+                sb.Append(c);
+                _position++;
+                c = NextCharacter();
             }
 
             // 处理小数部分
@@ -217,7 +215,41 @@ namespace WellTool.Json
                 sb.Append(c);
                 _position++;
                 c = NextCharacter();
-                while (_position < _length && (char.IsDigit(c) || c == 'e' || c == 'E' || c == '+' || c == '-'))
+
+                if (!char.IsDigit(c))
+                {
+                    throw new JSONException($"Invalid number: expected digit after decimal point at position {_position}");
+                }
+
+                while (_position < _length && char.IsDigit(c))
+                {
+                    sb.Append(c);
+                    _position++;
+                    c = NextCharacter();
+                }
+            }
+
+            // 处理指数部分
+            if (c == 'e' || c == 'E')
+            {
+                sb.Append(c);
+                _position++;
+                c = NextCharacter();
+
+                // 处理指数符号
+                if (c == '+' || c == '-')
+                {
+                    sb.Append(c);
+                    _position++;
+                    c = NextCharacter();
+                }
+
+                if (!char.IsDigit(c))
+                {
+                    throw new JSONException($"Invalid number: expected digit in exponent at position {_position}");
+                }
+
+                while (_position < _length && char.IsDigit(c))
                 {
                     sb.Append(c);
                     _position++;

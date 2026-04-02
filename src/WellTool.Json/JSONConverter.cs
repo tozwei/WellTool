@@ -202,7 +202,47 @@ namespace WellTool.Json
         {
             try
             {
-                return jsonObj.ToBean(type);
+                // 处理基本类型
+                if (type.IsPrimitive || type == typeof(string) || type == typeof(DateTime) || type == typeof(DateTimeOffset))
+                {
+                    return GetDefaultValue(type);
+                }
+
+                // 处理字典类型
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+                {
+                    var keyType = type.GetGenericArguments()[0];
+                    var valueType = type.GetGenericArguments()[1];
+                    var dict = Activator.CreateInstance(type) as IDictionary;
+                    if (dict != null)
+                    {
+                        foreach (var kvp in jsonObj)
+                        {
+                            var key = Convert.ChangeType(kvp.Key, keyType);
+                            var value = JsonConvert(valueType, kvp.Value, config);
+                            dict.Add(key, value);
+                        }
+                    }
+                    return dict;
+                }
+
+                // 处理对象类型
+                var instance = Activator.CreateInstance(type);
+                var properties = type.GetProperties();
+                foreach (var property in properties)
+                {
+                    if (property.CanWrite)
+                    {
+                        var value = jsonObj[property.Name];
+                        if (value != null && value != JSONNull.NULL)
+                        {
+                            var propertyType = property.PropertyType;
+                            var convertedValue = JsonConvert(propertyType, value, config);
+                            property.SetValue(instance, convertedValue);
+                        }
+                    }
+                }
+                return instance;
             }
             catch
             {
