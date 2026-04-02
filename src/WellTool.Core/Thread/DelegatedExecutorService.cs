@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WellTool.Core.Lang;
 
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// ExecutorService代理

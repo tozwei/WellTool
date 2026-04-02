@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// 异步工具类

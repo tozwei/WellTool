@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// 线程同步结束器<br>

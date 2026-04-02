@@ -14,7 +14,7 @@
 using System;
 using System.Threading;
 
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// ThreadFactory创建器

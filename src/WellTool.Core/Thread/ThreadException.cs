@@ -14,7 +14,7 @@
 using System;
 using System.Globalization;
 
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// 线程工具异常

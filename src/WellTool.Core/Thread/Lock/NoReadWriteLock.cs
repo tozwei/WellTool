@@ -13,7 +13,7 @@
 
 using System.Threading;
 
-namespace WellTool.Core.Thread.Lock
+namespace WellTool.Core.Threading.Lock
 {
     /// <summary>
     /// 无锁的读写锁实现

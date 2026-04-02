@@ -814,7 +814,7 @@ namespace WellTool.Core.IO.File
         /// 删除文件或空目录，不追踪软链
         /// </summary>
         /// <param name="path">文件对象</param>
-        protected static void DelFile(string path)
+        private static void DelFile(string path)
         {
             try
             {

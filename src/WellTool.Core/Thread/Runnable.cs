@@ -1,4 +1,4 @@
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// 可运行接口

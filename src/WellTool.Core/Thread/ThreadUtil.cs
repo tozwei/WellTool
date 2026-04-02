@@ -17,7 +17,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// 线程工具类

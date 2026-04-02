@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// 线程池构建器

@@ -15,7 +15,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// 当任务队列过长时处于阻塞状态，直到添加到队列中

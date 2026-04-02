@@ -17,7 +17,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// 高并发测试工具类

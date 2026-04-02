@@ -18,7 +18,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// 可召回批处理线程池执行器
@@ -387,9 +387,8 @@ namespace WellTool.Core.Thread
 
             public override int MaximumConcurrencyLevel => _threads.Length;
 
-            protected override void Dispose(bool disposing)
+            protected void Dispose(bool disposing)
             {
-                base.Dispose(disposing);
                 if (disposing)
                 {
                     _taskQueue.CompleteAdding();

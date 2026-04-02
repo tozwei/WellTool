@@ -92,7 +92,7 @@ namespace WellTool.Core.IO.Resource
         /// 获得 {@link Stream}
         /// </summary>
         /// <returns>{@link Stream}</returns>
-        public Stream GetStream()
+        public virtual Stream GetStream()
         {
             if (_uri == null)
             {

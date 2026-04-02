@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// 可终结的执行器服务代理

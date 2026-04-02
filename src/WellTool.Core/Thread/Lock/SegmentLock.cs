@@ -19,7 +19,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WellTool.Core.Thread.Lock
+namespace WellTool.Core.Threading.Lock
 {
     /// <summary>
     /// 分段锁工具类，支持对象锁、信号量的分段实现。

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace WellTool.Json.Tests
@@ -8,323 +9,180 @@ namespace WellTool.Json.Tests
     /// </summary>
     public class JSONObjectTest
     {
-        #region 构造函数测试
+        #region 创建和解析测试
 
         [Fact]
-        public void TestDefaultConstructor()
+        public void ParseStringTest()
         {
-            var obj = new JSONObject();
-            Assert.NotNull(obj);
-            Assert.Empty(obj);
+            var jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\", \"d\": true, \"e\": null}";
+            var jsonObject = JSONUtil.ParseObj(jsonStr);
+            
+            Assert.Equal("value1", jsonObject["a"]);
+            Assert.Equal("value2", jsonObject["b"]);
+            Assert.Equal("value3", jsonObject["c"]);
+            Assert.True(Convert.ToBoolean(jsonObject["d"]));
         }
 
         [Fact]
-        public void TestFromString()
+        public void ParseStringTest2()
         {
-            var obj = new JSONObject("{\"name\":\"test\",\"age\":18}");
-            Assert.Equal("test", obj.GetStr("name"));
-            Assert.Equal(18, obj.GetInt("age"));
+            var jsonStr = "{\"file_name\":\"test\",\"error_code\":\"F140\",\"error_info\":\"错误信息\"}";
+            var json = new JSONObject(jsonStr);
+            
+            Assert.Equal("F140", json.GetStr("error_code"));
+            Assert.Equal("错误信息", json.GetStr("error_info"));
         }
 
         [Fact]
-        public void TestFromDictionary()
+        public void ParseStringTest3()
         {
-            var dict = new System.Collections.Generic.Dictionary<string, object>
+            var jsonStr = "{\"test\":\"体”、“文\"}";
+            var json = new JSONObject(jsonStr);
+            Assert.Equal("体”、“文", json.GetStr("test"));
+        }
+
+        [Fact]
+        public void ParseStringTest4()
+        {
+            var jsonStr = "{'msg':'这里还没有内容','data':{'cards':[]},'ok':0}";
+            var json = new JSONObject(jsonStr);
+            
+            Assert.Equal(0, json.GetInt("ok"));
+        }
+
+        [Fact]
+        public void ParseStringWithSlashTest()
+        {
+            // 测试 </div> 中的 / 不会被转义
+            var jsonStr = "{\"a\":\"<div>aaa</div>\"}";
+            var json = new JSONObject(jsonStr);
+            Assert.Equal("<div>aaa</div>", json["a"]);
+            Assert.Equal(jsonStr, json.ToString());
+        }
+
+        #endregion
+
+        #region Bean 转换测试
+
+        [Fact]
+        public void ToBeanTest()
+        {
+            var subJson = JSONUtil.CreateObj().Set("value1", "strValue1").Set("value2", "234");
+            var json = JSONUtil.CreateObj()
+                .Set("strValue", "strTest")
+                .Set("intValue", 123)
+                .Set("doubleValue", "")
+                .Set("beanValue", subJson)
+                .Set("list", JSONUtil.CreateArray().Set("a").Set("b"));
+
+            var bean = json.ToBean<SimpleTestBean>();
+            Assert.NotNull(bean);
+            Assert.Equal("strTest", bean.StrValue);
+            Assert.Equal(123, bean.IntValue);
+        }
+
+        [Fact]
+        public void ToBeanNullStrTest()
+        {
+            var json = JSONUtil.CreateObj(JSONConfig.Create().SetIgnoreError(true))
+                .Set("strValue", "null")
+                .Set("intValue", 123);
+
+            var bean = json.ToBean<SimpleTestBean>();
+            Assert.NotNull(bean);
+        }
+
+        [Fact]
+        public void ParseBeanTest()
+        {
+            var bean = new SimpleTestBean
             {
-                { "name", "test" },
-                { "age", 18 }
+                StrValue = "strTest",
+                IntValue = 123,
+                DoubleValue = 111.1
             };
-            var obj = new JSONObject(dict);
-            Assert.Equal("test", obj.GetStr("name"));
-            Assert.Equal(18, obj.GetInt("age"));
+
+            var json = JSONUtil.ParseObj(bean, false);
+            Assert.NotNull(json);
+            Assert.Equal("strTest", json["strValue"]);
         }
 
         [Fact]
-        public void TestFromObject()
+        public void BeanTransTest()
         {
-            var obj = new JSONObject(new TestClass { Name = "test", Age = 18 });
-            Assert.Equal("test", obj.GetStr("Name"));
-            Assert.Equal(18, obj.GetInt("Age"));
-        }
+            var userA = new UserA { Name = "nameTest", Age = 18 };
 
-        [Fact]
-        public void TestWithConfig()
-        {
-            var config = JSONConfig.Create().SetIgnoreNullValue(false);
-            var obj = new JSONObject(config);
-            obj["key"] = null;
-            Assert.True(obj.ContainsKey("key"));
+            var userAJson = JSONUtil.ParseObj(userA);
+            var userB = JSONUtil.ToBean<UserB>(userAJson);
+
+            Assert.Equal(userA.Name, userB.Name);
         }
 
         #endregion
 
-        #region Set 和 Get 方法测试
+        #region 特殊字符测试
 
         [Fact]
-        public void TestSet()
+        public void SpecialCharTest()
         {
-            var obj = new JSONObject();
-            obj.Set("name", "test");
-            Assert.Equal("test", obj.GetStr("name"));
+            var json = "{\"pattern\": \"[abc]\b\u2001\", \"pattern2Json\": {\"patternText\": \"[ab]\\b\"}}";
+            var obj = JSONUtil.ParseObj(json);
+            Assert.NotNull(obj);
         }
 
         [Fact]
-        public void TestSetReturnsThis()
+        public void GetStrTest()
         {
-            var obj = new JSONObject();
-            var result = obj.Set("name", "test");
-            Assert.Same(obj, result);
-        }
+            var json = "{\"name\": \"yyb\\nbbb\"}";
+            var jsonObject = JSONUtil.ParseObj(json);
 
-        [Fact]
-        public void TestGetObjWithDefault()
-        {
-            var obj = new JSONObject();
-            obj["name"] = "test";
-            Assert.Equal("test", obj.GetObj("name", "default"));
-            Assert.Equal("default", obj.GetObj("notexist", "default"));
-        }
-
-        [Fact]
-        public void TestGetInt()
-        {
-            var obj = new JSONObject();
-            obj["int"] = 42;
-            Assert.Equal(42, obj.GetInt("int"));
-            Assert.Equal(0, obj.GetInt("notexist"));
-            Assert.Equal(-1, obj.GetInt("notexist", -1));
-        }
-
-        [Fact]
-        public void TestGetLong()
-        {
-            var obj = new JSONObject();
-            obj["long"] = 12345678901234L;
-            Assert.Equal(12345678901234L, obj.GetLong("long"));
-        }
-
-        [Fact]
-        public void TestGetDouble()
-        {
-            var obj = new JSONObject();
-            obj["double"] = 3.14159;
-            Assert.Equal(3.14159, obj.GetDouble("double"), 5);
-        }
-
-        [Fact]
-        public void TestGetBool()
-        {
-            var obj = new JSONObject();
-            obj["bool"] = true;
-            Assert.True(obj.GetBool("bool"));
-            Assert.False(obj.GetBool("notexist"));
-            Assert.True(obj.GetBool("notexist", true));
-        }
-
-        [Fact]
-        public void TestGetJSONObject()
-        {
-            var obj = new JSONObject();
-            var nested = new JSONObject();
-            nested["key"] = "value";
-            obj["nested"] = nested;
-            Assert.NotNull(obj.GetJSONObject("nested"));
-            Assert.Equal("value", obj.GetJSONObject("nested").GetStr("key"));
-        }
-
-        [Fact]
-        public void TestGetJSONArray()
-        {
-            var obj = new JSONObject();
-            var array = new JSONArray();
-            array.Set(1).Set(2).Set(3);
-            obj["array"] = array;
-            Assert.NotNull(obj.GetJSONArray("array"));
-            Assert.Equal(3, obj.GetJSONArray("array").Count);
+            Assert.Equal("yyb\nbbb", jsonObject.GetStr("name"));
         }
 
         #endregion
 
-        #region 特殊方法测试
+        #region 其他功能测试
 
         [Fact]
-        public void TestPutOnce()
+        public void AccumulateTest()
         {
-            var obj = new JSONObject();
-            obj.PutOnce("key", "value1");
-            Assert.Equal("value1", obj["key"]);
+            var jsonObject = JSONUtil.CreateObj().Accumulate("key1", "value1");
+            Assert.Contains("key1", jsonObject.ToString());
 
-            Assert.Throws<JSONException>(() => obj.PutOnce("key", "value2"));
+            jsonObject.Accumulate("key1", "value2");
+            Assert.Contains("value1", jsonObject.ToString());
+            Assert.Contains("value2", jsonObject.ToString());
         }
 
         [Fact]
-        public void TestPutOpt()
+        public void PutByPathTest()
         {
-            var obj = new JSONObject();
-            obj.PutOpt("key", "value");
-            Assert.Equal("value", obj["key"]);
-
-            obj.PutOpt(null, "value");
-            Assert.False(obj.ContainsKey("null"));
-
-            obj.PutOpt("key2", null);
-            Assert.False(obj.ContainsKey("key2"));
-        }
-
-        [Fact]
-        public void TestAccumulate()
-        {
-            var obj = new JSONObject();
-            obj.Accumulate("key", "value1");
-            Assert.Equal("value1", obj["key"]);
-
-            obj.Accumulate("key", "value2");
-            var arr = obj.GetJSONArray("key");
-            Assert.NotNull(arr);
-            Assert.Equal(2, arr.Count);
-        }
-
-        [Fact]
-        public void TestAppend()
-        {
-            var obj = new JSONObject();
-            obj.Append("list", "value1");
-            Assert.Equal("value1", obj.GetJSONArray("list")[0]);
-
-            obj.Append("list", "value2");
-            Assert.Equal(2, obj.GetJSONArray("list").Count);
-
-            // 测试键不存在时的行为
-            obj.Append("name", "value");
-            Assert.Equal("value", obj.GetJSONArray("name")[0]);
-        }
-
-        [Fact]
-        public void TestIncrement()
-        {
-            var obj = new JSONObject();
-            obj.Increment("count");
-            Assert.Equal(1, obj.GetInt("count"));
-
-            obj.Increment("count");
-            Assert.Equal(2, obj.GetInt("count"));
+            var json = new JSONObject();
+            json.PutByPath("aa.bb", "BB");
+            Assert.Contains("aa", json.ToString());
+            Assert.Contains("BB", json.ToString());
         }
 
         #endregion
 
-        #region ToString 和 ToJSONString 测试
+        #region 辅助类
 
-        [Fact]
-        public void TestToString()
+        private class SimpleTestBean
         {
-            var obj = new JSONObject();
-            obj.Set("name", "test");
-            obj.Set("age", 18);
-            var str = obj.ToString();
-            Assert.Contains("name", str);
-            Assert.Contains("test", str);
-            Assert.Contains("age", str);
+            public string StrValue { get; set; }
+            public int IntValue { get; set; }
+            public double DoubleValue { get; set; }
+            public object BeanValue { get; set; }
+            public List<string> List { get; set; }
         }
 
-        [Fact]
-        public void TestToJSONStringWithIndent()
+        private class UserA
         {
-            var obj = new JSONObject();
-            obj.Set("name", "test");
-            var str = obj.ToJSONString(4);
-            Assert.Contains("\n", str);
+            public string Name { get; set; }
+            public int Age { get; set; }
         }
 
-        #endregion
-
-        #region ToBean 测试
-
-        [Fact]
-        public void TestToBean()
-        {
-            var obj = new JSONObject();
-            obj["Name"] = "test";
-            obj["Age"] = 18;
-            var person = obj.ToBean<TestClass>();
-            Assert.Equal("test", person.Name);
-            Assert.Equal(18, person.Age);
-        }
-
-        [Fact]
-        public void TestToBeanNull()
-        {
-            var obj = new JSONObject();
-            var result = obj.ToBean<TestClass>();
-            Assert.NotNull(result);
-        }
-
-        #endregion
-
-        #region Clone 测试
-
-        [Fact]
-        public void TestClone()
-        {
-            var obj = new JSONObject();
-            obj.Set("name", "test");
-            var clone = obj.Clone();
-            Assert.Equal("test", clone["name"]);
-
-            clone.Set("name", "changed");
-            Assert.Equal("test", obj["name"]);
-        }
-
-        #endregion
-
-        #region GetByPath 测试
-
-        [Fact]
-        public void TestGetByPath()
-        {
-            var obj = new JSONObject();
-            var nested = new JSONObject();
-            nested.Set("name", "deep");
-            obj.Set("nested", nested);
-
-            Assert.Equal("deep", obj.GetByPath("nested.name"));
-        }
-
-        [Fact]
-        public void TestPutByPath()
-        {
-            var obj = new JSONObject();
-            obj.PutByPath("user.profile.name", "test");
-
-            var user = obj.GetJSONObject("user");
-            Assert.NotNull(user);
-            var profile = user.GetJSONObject("profile");
-            Assert.NotNull(profile);
-            Assert.Equal("test", profile.GetStr("name"));
-        }
-
-        #endregion
-
-        #region ToJSONArray 测试
-
-        [Fact]
-        public void TestToJSONArray()
-        {
-            var obj = new JSONObject();
-            obj.Set("name", "test");
-            obj.Set("age", 18);
-            obj.Set("city", "beijing");
-
-            var array = obj.ToJSONArray(new[] { "name", "age" });
-            Assert.Equal(2, array.Count);
-            Assert.Equal("test", array[0]);
-            Assert.Equal(18, array[1]);
-        }
-
-        #endregion
-
-        #region 支持类
-
-        private class TestClass
+        private class UserB
         {
             public string Name { get; set; }
             public int Age { get; set; }

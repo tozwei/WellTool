@@ -13,7 +13,7 @@
 
 using System.Threading;
 
-namespace WellTool.Core.Thread.ThreadLocal
+namespace WellTool.Core.Threading.ThreadLocal
 {
     /// <summary>
     /// 带有Name标识的 ThreadLocal，调用ToString返回name

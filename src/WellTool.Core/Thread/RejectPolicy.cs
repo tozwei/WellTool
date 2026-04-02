@@ -14,7 +14,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// 线程拒绝策略枚举

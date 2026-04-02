@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// 带有信号量控制的{@link Action} 接口抽象实现

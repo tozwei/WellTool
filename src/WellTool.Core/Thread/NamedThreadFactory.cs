@@ -14,7 +14,7 @@
 using System;
 using System.Threading;
 
-namespace WellTool.Core.Thread
+namespace WellTool.Core.Threading
 {
     /// <summary>
     /// 线程创建工厂类，此工厂可选配置：
