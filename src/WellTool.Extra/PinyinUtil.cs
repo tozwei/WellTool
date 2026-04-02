@@ -42,20 +42,38 @@ public class PinyinUtil
         }
 
         // 简单实现，实际项目中可能需要更复杂的拼音库
-        var pinyinTable = new Dictionary<int, char>
+        var pinyinTable = new (int start, int end, char letter)[]
         {
-            { 0x4E00, 'A' }, { 0x4E8C, 'B' }, { 0x4E09, 'C' }, { 0x56DB, 'D' }, { 0x4E94, 'E' },
-            { 0x516D, 'F' }, { 0x4E03, 'G' }, { 0x516B, 'H' }, { 0x4E5D, 'J' }, { 0x5341, 'K' },
-            { 0x516C, 'L' }, { 0x4E2D, 'M' }, { 0x56E2, 'N' }, { 0x53E3, 'O' }, { 0x53E4, 'P' },
-            { 0x5730, 'Q' }, { 0x5934, 'R' }, { 0x53F8, 'S' }, { 0x58EB, 'T' }, { 0x5317, 'W' },
-            { 0x56FD, 'X' }, { 0x4E1C, 'Y' }, { 0x5357, 'Z' }
+            (0x4E00, 0x4E8B, 'A'),  // 一
+            (0x4E8C, 0x4E09, 'B'),  // 二
+            (0x4E09, 0x56DB, 'C'),  // 三
+            (0x56DB, 0x4E94, 'D'),  // 四
+            (0x4E94, 0x516D, 'E'),  // 五
+            (0x516D, 0x4E03, 'F'),  // 六
+            (0x4E03, 0x516B, 'G'),  // 七
+            (0x516B, 0x4E5D, 'H'),  // 八
+            (0x4E5D, 0x5341, 'J'),  // 九
+            (0x5341, 0x516C, 'K'),  // 十
+            (0x516C, 0x4E2D, 'L'),  // 公
+            (0x4E2D, 0x56E2, 'M'),  // 中
+            (0x56E2, 0x53E3, 'N'),  // 团
+            (0x53E3, 0x53E4, 'O'),  // 口
+            (0x53E4, 0x5730, 'P'),  // 古
+            (0x5730, 0x5934, 'Q'),  // 地
+            (0x5934, 0x53F8, 'R'),  // 头
+            (0x53F8, 0x58EB, 'S'),  // 司
+            (0x58EB, 0x5317, 'T'),  // 士
+            (0x5317, 0x56FD, 'W'),  // 北
+            (0x56FD, 0x4E1C, 'X'),  // 国
+            (0x4E1C, 0x5357, 'Y'),  // 东
+            (0x5357, 0x9FA5, 'Z')   // 南
         };
 
         foreach (var item in pinyinTable)
         {
-            if (c >= item.Key)
+            if (c >= item.start && c < item.end)
             {
-                return item.Value;
+                return item.letter;
             }
         }
 

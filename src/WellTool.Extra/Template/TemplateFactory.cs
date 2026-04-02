@@ -99,7 +99,7 @@ namespace WellTool.Extra.Template
         public override void Render(System.Collections.Generic.IDictionary<object, object> bindingMap, System.IO.Stream output)
         {
             // 简化实现，实际项目中需要根据模板引擎的语法进行渲染
-            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(output))
+            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(output, System.Text.Encoding.UTF8, bufferSize: 1024, leaveOpen: true))
             {
                 writer.Write(_resource);
             }

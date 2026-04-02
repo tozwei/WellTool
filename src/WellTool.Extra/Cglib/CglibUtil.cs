@@ -21,7 +21,7 @@ namespace WellTool.Extra.Cglib
         public static T Copy<T>(object source, Type targetClass) where T : class
         {
             var target = Activator.CreateInstance(targetClass) as T;
-            Copy(source, target);
+            CopyToObject(source, target);
             return target;
         }
 
@@ -35,8 +35,49 @@ namespace WellTool.Extra.Cglib
         public static T Copy<T>(object source) where T : new()
         {
             var target = new T();
-            Copy(source, target);
+            CopyToObject(source, target);
             return target;
+        }
+        
+        /// <summary>
+        /// 拷贝Bean对象属性（内部使用，直接处理 object 类型）
+        /// </summary>
+        /// <param name="source">源bean对象</param>
+        /// <param name="target">目标bean对象</param>
+        private static void CopyToObject(object source, object target)
+        {
+            if (source == null || target == null)
+            {
+                throw new ArgumentNullException(source == null ? nameof(source) : nameof(target), "Source and target beans must be not null.");
+            }
+
+            var sourceType = source.GetType();
+            var targetType = target.GetType();
+
+            // 直接使用反射进行属性复制
+            var sourceProperties = sourceType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var targetProperties = targetType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var sourceProperty in sourceProperties)
+            {
+                if (!sourceProperty.CanRead)
+                    continue;
+                    
+                var targetProperty = Array.Find(targetProperties, p => 
+                    p.Name == sourceProperty.Name && 
+                    p.PropertyType == sourceProperty.PropertyType && 
+                    p.CanWrite);
+                    
+                if (targetProperty != null)
+                {
+                    try
+                    {
+                        var value = sourceProperty.GetValue(source);
+                        targetProperty.SetValue(target, value);
+                    }
+                    catch { }
+                }
+            }
         }
 
         /// <summary>
@@ -49,8 +90,50 @@ namespace WellTool.Extra.Cglib
         public static TTarget Copy<TSource, TTarget>(TSource source) where TTarget : new()
         {
             var target = new TTarget();
-            Copy(source, target);
+            CopyToGeneric(source, target);
             return target;
+        }
+        
+        /// <summary>
+        /// 拷贝Bean对象属性（泛型版本，内部使用）
+        /// </summary>
+        /// <typeparam name="TSource">源类型</typeparam>
+        /// <typeparam name="TTarget">目标类型</typeparam>
+        /// <param name="source">源bean对象</param>
+        /// <param name="target">目标bean对象</param>
+        private static void CopyToGeneric<TSource, TTarget>(TSource source, TTarget target)
+        {
+            if (source == null || target == null)
+            {
+                throw new ArgumentNullException(source == null ? nameof(source) : nameof(target), "Source and target beans must be not null.");
+            }
+
+            var sourceType = typeof(TSource);
+            var targetType = typeof(TTarget);
+            
+            var sourceProperties = sourceType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var targetProperties = targetType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var sourceProperty in sourceProperties)
+            {
+                if (!sourceProperty.CanRead)
+                    continue;
+                    
+                var targetProperty = Array.Find(targetProperties, p => 
+                    p.Name == sourceProperty.Name && 
+                    p.PropertyType == sourceProperty.PropertyType && 
+                    p.CanWrite);
+                    
+                if (targetProperty != null)
+                {
+                    try
+                    {
+                        var value = sourceProperty.GetValue(source);
+                        targetProperty.SetValue(target, value);
+                    }
+                    catch { }
+                }
+            }
         }
 
         /// <summary>

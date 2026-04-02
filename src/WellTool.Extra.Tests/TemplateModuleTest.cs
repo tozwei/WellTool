@@ -246,11 +246,17 @@ public class AbstractTemplateTest
         var template = engine.GetTemplate("test-content");
         
         var bindingMap = new Dictionary<object, object>();
-        using var stream = new MemoryStream();
-        
-        template.Render(bindingMap, stream);
-        
-        Assert.True(stream.Length > 0);
+        using (var stream = new MemoryStream())
+        {
+            template.Render(bindingMap, stream);
+            
+            // 重置流位置以读取内容
+            stream.Position = 0;
+            using var reader = new StreamReader(stream);
+            var content = reader.ReadToEnd();
+            
+            Assert.NotEmpty(content);
+        }
     }
 
     /// <summary>
