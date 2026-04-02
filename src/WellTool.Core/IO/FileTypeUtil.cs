@@ -1,148 +1,226 @@
-using System;
+// Copyright (c) 2025 WellTool Team
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 using System.Collections.Generic;
 using System.IO;
 
 namespace WellTool.Core.IO
 {
     /// <summary>
-    /// 文件类型工具类
+    /// 文件类型判断工具类
+    /// <p>此工具根据文件的前几位bytes猜测文件类型，对于文本、zip判断不准确，对于视频、图片类型判断准确</p>
+    /// <p>需要注意的是，xlsx、docx等Office2007格式，全部识别为zip，因为新版采用了OpenXML格式，这些格式本质上是XML文件打包为zip</p>
     /// </summary>
     public class FileTypeUtil
     {
-        private static readonly Dictionary<string, byte[]> _fileSignatures = new Dictionary<string, byte[]>
-        {
-            { ".jpg", new byte[] { 0xFF, 0xD8, 0xFF } },
-            { ".jpeg", new byte[] { 0xFF, 0xD8, 0xFF } },
-            { ".png", new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A } },
-            { ".gif", new byte[] { 0x47, 0x49, 0x46, 0x38 } },
-            { ".bmp", new byte[] { 0x42, 0x4D } },
-            { ".pdf", new byte[] { 0x25, 0x50, 0x44, 0x46 } },
-            { ".doc", new byte[] { 0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1 } },
-            { ".docx", new byte[] { 0x50, 0x4B, 0x03, 0x04 } },
-            { ".xls", new byte[] { 0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1 } },
-            { ".xlsx", new byte[] { 0x50, 0x4B, 0x03, 0x04 } },
-            { ".ppt", new byte[] { 0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1 } },
-            { ".pptx", new byte[] { 0x50, 0x4B, 0x03, 0x04 } },
-            { ".zip", new byte[] { 0x50, 0x4B, 0x03, 0x04 } },
-            { ".rar", new byte[] { 0x52, 0x61, 0x72, 0x21 } },
-            { ".7z", new byte[] { 0x37, 0x7A, 0xBC, 0xAF, 0x27, 0x1C } },
-            { ".exe", new byte[] { 0x4D, 0x5A } },
-            { ".dll", new byte[] { 0x4D, 0x5A } },
-            { ".mp3", new byte[] { 0x49, 0x44, 0x33 } },
-            { ".mp4", new byte[] { 0x00, 0x00, 0x00, 0x18, 0x66, 0x74, 0x79, 0x70 } },
-            { ".avi", new byte[] { 0x52, 0x49, 0x46, 0x46 } },
-            { ".wmv", new byte[] { 0x30, 0x26, 0xB2, 0x75, 0x8E, 0x66, 0xCF, 0x11 } },
-            { ".flv", new byte[] { 0x46, 0x4C, 0x56 } },
-            { ".txt", new byte[] { 0xEF, 0xBB, 0xBF } }, // UTF-8 BOM
-            { ".xml", new byte[] { 0x3C, 0x3F, 0x78, 0x6D, 0x6C } },
-            { ".html", new byte[] { 0x3C, 0x21, 0x44, 0x4F, 0x43, 0x54, 0x59, 0x50, 0x45 } },
-            { ".css", new byte[] { 0x2F, 0x2A, 0x2A, 0x2F } },
-            { ".js", new byte[] { 0x2F, 0x2A, 0x2A, 0x2F } },
-            { ".json", new byte[] { 0x7B } },
-            { ".sql", new byte[] { 0x2D, 0x2D } },
-            { ".java", new byte[] { 0x70, 0x61, 0x63, 0x6B, 0x61, 0x67, 0x65 } },
-            { ".cs", new byte[] { 0x75, 0x73, 0x69, 0x6E, 0x67, 0x20, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6D } },
-            { ".c", new byte[] { 0x23, 0x69, 0x6E, 0x63, 0x6C, 0x75, 0x64, 0x65 } },
-            { ".cpp", new byte[] { 0x23, 0x69, 0x6E, 0x63, 0x6C, 0x75, 0x64, 0x65 } },
-            { ".h", new byte[] { 0x23, 0x69, 0x6E, 0x63, 0x6C, 0x75, 0x64, 0x65 } },
-            { ".py", new byte[] { 0x23, 0x21 } },
-            { ".php", new byte[] { 0x3C, 0x3F, 0x70, 0x68, 0x70 } },
-            { ".rb", new byte[] { 0x23, 0x21 } },
-            { ".sh", new byte[] { 0x23, 0x21 } },
-            { ".bat", new byte[] { 0x40 } },
-            { ".ps1", new byte[] { 0x23, 0x21 } },
-        };
+        private static readonly SortedDictionary<string, string> FileTypeMap = new SortedDictionary<string, string>();
 
         /// <summary>
-        /// 根据文件路径检测文件类型
+        /// 增加文件类型映射<br>
+        /// 如果已经存在将覆盖之前的映射
         /// </summary>
-        /// <param name="filePath">文件路径</param>
-        /// <returns>文件扩展名</returns>
-        public static string DetectFileType(string filePath)
+        /// <param name="fileStreamHexHead">文件流头部Hex信息</param>
+        /// <param name="extName">文件扩展名</param>
+        /// <returns>之前已经存在的文件扩展名</returns>
+        public static string PutFileType(string fileStreamHexHead, string extName)
         {
-            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            return DetectFileType(stream);
+            if (FileTypeMap.TryGetValue(fileStreamHexHead, out var oldExtName))
+            {
+                FileTypeMap[fileStreamHexHead] = extName;
+                return oldExtName;
+            }
+            FileTypeMap.Add(fileStreamHexHead, extName);
+            return null;
         }
 
         /// <summary>
-        /// 根据流检测文件类型
+        /// 移除文件类型映射
         /// </summary>
-        /// <param name="stream">流</param>
-        /// <returns>文件扩展名</returns>
-        public static string DetectFileType(Stream stream)
+        /// <param name="fileStreamHexHead">文件流头部Hex信息</param>
+        /// <returns>移除的文件扩展名</returns>
+        public static string RemoveFileType(string fileStreamHexHead)
         {
-            var buffer = new byte[16];
-            var bytesRead = stream.Read(buffer, 0, buffer.Length);
-            stream.Position = 0; // 重置流位置
-
-            foreach (var entry in _fileSignatures)
+            if (FileTypeMap.TryGetValue(fileStreamHexHead, out var extName))
             {
-                var extension = entry.Key;
-                var signature = entry.Value;
+                FileTypeMap.Remove(fileStreamHexHead);
+                return extName;
+            }
+            return null;
+        }
 
-                if (bytesRead >= signature.Length)
+        /// <summary>
+        /// 根据文件流的头部信息获得文件类型
+        /// </summary>
+        /// <param name="fileStreamHexHead">文件流头部16进制字符串</param>
+        /// <returns>文件类型，未找到为{@code null}</returns>
+        public static string GetType(string fileStreamHexHead)
+        {
+            if (string.IsNullOrEmpty(fileStreamHexHead))
+            {
+                return null;
+            }
+            if (FileTypeMap.Count > 0)
+            {
+                foreach (var entry in FileTypeMap)
                 {
-                    bool match = true;
-                    for (int i = 0; i < signature.Length; i++)
+                    if (fileStreamHexHead.StartsWith(entry.Key, System.StringComparison.OrdinalIgnoreCase))
                     {
-                        if (buffer[i] != signature[i])
-                        {
-                            match = false;
-                            break;
-                        }
-                    }
-                    if (match)
-                    {
-                        return extension;
+                        return entry.Value;
                     }
                 }
             }
-
-            return ".unknown";
+            var bytes = HexUtil.DecodeHex(fileStreamHexHead);
+            return FileMagicNumber.GetMagicNumber(bytes).Extension;
         }
 
         /// <summary>
-        /// 根据字节数组检测文件类型
-        /// </summary>
-        /// <param name="bytes">字节数组</param>
-        /// <returns>文件扩展名</returns>
-        public static string DetectFileType(byte[] bytes)
-        {
-            using var stream = new MemoryStream(bytes);
-            return DetectFileType(stream);
-        }
-
-        /// <summary>
-        /// 检查文件是否为指定类型
-        /// </summary>
-        /// <param name="filePath">文件路径</param>
-        /// <param name="extension">文件扩展名</param>
-        /// <returns>是否为指定类型</returns>
-        public static bool IsFileType(string filePath, string extension)
-        {
-            return DetectFileType(filePath).Equals(extension, StringComparison.OrdinalIgnoreCase);
-        }
-
-        /// <summary>
-        /// 检查流是否为指定类型
+        /// 根据文件流的头部信息获得文件类型<br>
+        /// 注意此方法会读取头部64个bytes，造成此流接下来读取时缺少部分bytes<br>
+        /// 因此如果想复用此流，流需支持{@link Stream#Seek(long, SeekOrigin)}方法。
         /// </summary>
         /// <param name="stream">流</param>
-        /// <param name="extension">文件扩展名</param>
-        /// <returns>是否为指定类型</returns>
-        public static bool IsFileType(Stream stream, string extension)
+        /// <param name="isExact">是否精确匹配，如果为false，使用前64个bytes匹配，如果为true，使用前8192bytes匹配</param>
+        /// <returns>类型，文件的扩展名，提供的stream为{@code null}或未找到为{@code null}</returns>
+        /// <exception cref="IORuntimeException">读取流引起的异常</exception>
+        public static string GetType(Stream stream, bool isExact = false)
         {
-            return DetectFileType(stream).Equals(extension, StringComparison.OrdinalIgnoreCase);
+            if (stream == null)
+            {
+                return null;
+            }
+            var hexHead = isExact ? IoUtil.ReadHex8192Upper(stream) : IoUtil.ReadHex64Upper(stream);
+            return GetType(hexHead);
         }
 
         /// <summary>
-        /// 检查字节数组是否为指定类型
+        /// 根据文件流的头部信息获得文件类型
+        /// 注意此方法会读取头部64个bytes，造成此流接下来读取时缺少部分bytes<br>
+        /// 因此如果想复用此流，流需支持{@link Stream#Seek(long, SeekOrigin)}方法。
+        /// <pre>
+        ///     1、无法识别类型默认按照扩展名识别
+        ///     2、xls、doc、msi头信息无法区分，按照扩展名区分
+        ///     3、zip可能为docx、xlsx、pptx、jar、war、ofd头信息无法区分，按照扩展名区分
+        /// </pre>
         /// </summary>
-        /// <param name="bytes">字节数组</param>
-        /// <param name="extension">文件扩展名</param>
-        /// <returns>是否为指定类型</returns>
-        public static bool IsFileType(byte[] bytes, string extension)
+        /// <param name="stream">流</param>
+        /// <param name="filename">文件名</param>
+        /// <param name="isExact">是否精确匹配，如果为false，使用前64个bytes匹配，如果为true，使用前8192bytes匹配</param>
+        /// <returns>类型，文件的扩展名，未找到为{@code null}</returns>
+        /// <exception cref="IORuntimeException">读取流引起的异常</exception>
+        public static string GetType(Stream stream, string filename, bool isExact = false)
         {
-            return DetectFileType(bytes).Equals(extension, StringComparison.OrdinalIgnoreCase);
+            var typeName = GetType(stream, isExact);
+            if (typeName == null)
+            {
+                // 未成功识别类型，扩展名辅助识别
+                typeName = FileUtil.ExtName(filename);
+            }
+            else if (typeName == "zip")
+            {
+                // zip可能为docx、xlsx、pptx、jar、war、ofd等格式，扩展名辅助判断
+                var extName = FileUtil.ExtName(filename);
+                if (string.Equals(extName, "docx", StringComparison.OrdinalIgnoreCase))
+                {
+                    typeName = "docx";
+                }
+                else if (string.Equals(extName, "xlsx", StringComparison.OrdinalIgnoreCase))
+                {
+                    typeName = "xlsx";
+                }
+                else if (string.Equals(extName, "pptx", StringComparison.OrdinalIgnoreCase))
+                {
+                    typeName = "pptx";
+                }
+                else if (string.Equals(extName, "jar", StringComparison.OrdinalIgnoreCase))
+                {
+                    typeName = "jar";
+                }
+                else if (string.Equals(extName, "war", StringComparison.OrdinalIgnoreCase))
+                {
+                    typeName = "war";
+                }
+                else if (string.Equals(extName, "ofd", StringComparison.OrdinalIgnoreCase))
+                {
+                    typeName = "ofd";
+                }
+                else if (string.Equals(extName, "apk", StringComparison.OrdinalIgnoreCase))
+                {
+                    typeName = "apk";
+                }
+            }
+            else if (typeName == "jar")
+            {
+                // wps编辑过的.xlsx文件与.jar的开头相同,通过扩展名判断
+                var extName = FileUtil.ExtName(filename);
+                if (string.Equals(extName, "xlsx", StringComparison.OrdinalIgnoreCase))
+                {
+                    typeName = "xlsx";
+                }
+                else if (string.Equals(extName, "docx", StringComparison.OrdinalIgnoreCase))
+                {
+                    typeName = "docx";
+                }
+                else if (string.Equals(extName, "pptx", StringComparison.OrdinalIgnoreCase))
+                {
+                    typeName = "pptx";
+                }
+                else if (string.Equals(extName, "zip", StringComparison.OrdinalIgnoreCase))
+                {
+                    typeName = "zip";
+                }
+                else if (string.Equals(extName, "apk", StringComparison.OrdinalIgnoreCase))
+                {
+                    typeName = "apk";
+                }
+            }
+            return typeName;
+        }
+
+        /// <summary>
+        /// 根据文件流的头部信息获得文件类型
+        /// <pre>
+        ///     1、无法识别类型默认按照扩展名识别
+        ///     2、xls、doc、msi头信息无法区分，按照扩展名区分
+        ///     3、zip可能为jar、war头信息无法区分，按照扩展名区分
+        /// </pre>
+        /// </summary>
+        /// <param name="file">文件</param>
+        /// <param name="isExact">是否精确匹配，如果为false，使用前64个bytes匹配，如果为true，使用前8192bytes匹配</param>
+        /// <returns>类型，文件的扩展名，未找到为{@code null}</returns>
+        /// <exception cref="IORuntimeException">读取文件引起的异常</exception>
+        public static string GetType(FileInfo file, bool isExact = false)
+        {
+            if (!file.Exists || file.Attributes.HasFlag(FileAttributes.Directory))
+            {
+                throw new ArgumentException("Not a regular file!");
+            }
+            using (var stream = file.OpenRead())
+            {
+                return GetType(stream, file.Name, isExact);
+            }
+        }
+
+        /// <summary>
+        /// 通过路径获得文件类型
+        /// </summary>
+        /// <param name="path">路径，绝对路径或相对路径</param>
+        /// <param name="isExact">是否精确匹配，如果为false，使用前64个bytes匹配，如果为true，使用前8192bytes匹配</param>
+        /// <returns>类型</returns>
+        /// <exception cref="IORuntimeException">读取文件引起的异常</exception>
+        public static string GetTypeByPath(string path, bool isExact = false)
+        {
+            var file = new FileInfo(path);
+            return GetType(file, isExact);
         }
     }
 }
