@@ -19,7 +19,7 @@ namespace WellTool.Extra.Tokenizer
         /// 获取枚举器
         /// </summary>
         /// <returns>枚举器</returns>
-        public IEnumerator<Word> GetEnumerator()
+        public virtual IEnumerator<Word> GetEnumerator()
         {
             Word word;
             while ((word = NextWord()) != null)

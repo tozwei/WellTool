@@ -68,8 +68,30 @@ namespace WellTool.Extra.Cglib
             var sourceType = source.GetType();
             var targetType = target.GetType();
 
-            var copierDelegate = BeanCopierCache.Instance.Get(sourceType, targetType);
-            copierDelegate.DynamicInvoke(source, target);
+            // 直接使用反射进行属性复制
+            var sourceProperties = sourceType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var targetProperties = targetType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var sourceProperty in sourceProperties)
+            {
+                if (!sourceProperty.CanRead)
+                    continue;
+                    
+                var targetProperty = Array.Find(targetProperties, p => 
+                    p.Name == sourceProperty.Name && 
+                    p.PropertyType == sourceProperty.PropertyType && 
+                    p.CanWrite);
+                    
+                if (targetProperty != null)
+                {
+                    try
+                    {
+                        var value = sourceProperty.GetValue(source);
+                        targetProperty.SetValue(target, value);
+                    }
+                    catch { }
+                }
+            }
         }
 
         /// <summary>
@@ -86,8 +108,33 @@ namespace WellTool.Extra.Cglib
                 throw new ArgumentNullException(source == null ? nameof(source) : nameof(target), "Source and target beans must be not null.");
             }
 
-            var copierDelegate = BeanCopierCache.Instance.Get(typeof(TSource), typeof(TTarget));
-            copierDelegate.DynamicInvoke(source, target);
+            // 直接使用反射进行属性复制
+            var sourceType = typeof(TSource);
+            var targetType = typeof(TTarget);
+            
+            var sourceProperties = sourceType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var targetProperties = targetType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var sourceProperty in sourceProperties)
+            {
+                if (!sourceProperty.CanRead)
+                    continue;
+                    
+                var targetProperty = Array.Find(targetProperties, p => 
+                    p.Name == sourceProperty.Name && 
+                    p.PropertyType == sourceProperty.PropertyType && 
+                    p.CanWrite);
+                    
+                if (targetProperty != null)
+                {
+                    try
+                    {
+                        var value = sourceProperty.GetValue(source);
+                        targetProperty.SetValue(target, value);
+                    }
+                    catch { }
+                }
+            }
         }
 
         /// <summary>

@@ -276,6 +276,8 @@ public class SpringUtilTest
                 return "testValue";
             if (key == "test.int.key")
                 return "42";
+            if (key == "spring.application.name")
+                return "test-app";
             return null;
         }
 

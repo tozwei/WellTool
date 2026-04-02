@@ -38,7 +38,6 @@ namespace WellTool.Extra.Tokenizer
     internal class DefaultResult : AbstractResult
     {
         private string[] _words;
-        private int _index;
 
         /// <summary>
         /// 构造
@@ -46,8 +45,31 @@ namespace WellTool.Extra.Tokenizer
         /// <param name="text">文本</param>
         public DefaultResult(string text)
         {
-            _words = text.Split(' ');
-            _index = 0;
+            if (string.IsNullOrEmpty(text))
+            {
+                _words = Array.Empty<string>();
+            }
+            else
+            {
+                _words = text.Split(' ');
+            }
+        }
+
+        /// <summary>
+        /// 获取枚举器
+        /// </summary>
+        /// <returns>枚举器</returns>
+        public override IEnumerator<Word> GetEnumerator()
+        {
+            int index = 0;
+            while (index < _words.Length)
+            {
+                string wordText = _words[index];
+                int startOffset = index;
+                int endOffset = startOffset + wordText.Length;
+                index++;
+                yield return new DefaultWord(wordText, startOffset, endOffset);
+            }
         }
 
         /// <summary>
@@ -56,14 +78,7 @@ namespace WellTool.Extra.Tokenizer
         /// <returns>下一个单词或null</returns>
         protected override Word NextWord()
         {
-            if (_index < _words.Length)
-            {
-                string wordText = _words[_index];
-                int startOffset = _index;
-                int endOffset = startOffset + wordText.Length;
-                _index++;
-                return new DefaultWord(wordText, startOffset, endOffset);
-            }
+            // 此方法不再使用，因为我们重写了GetEnumerator()方法
             return null;
         }
     }

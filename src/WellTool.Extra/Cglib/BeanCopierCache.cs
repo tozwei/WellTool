@@ -48,12 +48,58 @@ namespace WellTool.Extra.Cglib
             if (!cache.TryGetValue(key, out var @delegate))
             {
                 // 动态创建拷贝委托
-                var method = typeof(BeanCopierCache).GetMethod("CreateCopyDelegate", BindingFlags.NonPublic | BindingFlags.Instance);
-                var genericMethod = method.MakeGenericMethod(sourceType, targetType);
-                @delegate = genericMethod.Invoke(this, null) as Delegate;
+                @delegate = CreateCopyDelegateGeneric(sourceType, targetType);
                 cache[key] = @delegate;
             }
             return @delegate;
+        }
+
+        /// <summary>
+        /// 创建属性拷贝委托（用于反射调用）
+        /// </summary>
+        /// <param name="sourceType">源类型</param>
+        /// <param name="targetType">目标类型</param>
+        /// <returns>拷贝委托</returns>
+        private Delegate CreateCopyDelegateGeneric(Type sourceType, Type targetType)
+        {
+            var sourceProperties = sourceType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var targetProperties = targetType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            // 创建动态方法
+            var sourceParam = System.Linq.Expressions.Expression.Parameter(typeof(object), "source");
+            var targetParam = System.Linq.Expressions.Expression.Parameter(typeof(object), "target");
+
+            var sourceCast = System.Linq.Expressions.Expression.Convert(sourceParam, sourceType);
+            var targetCast = System.Linq.Expressions.Expression.Convert(targetParam, targetType);
+
+            var expressions = new List<System.Linq.Expressions.Expression>();
+
+            foreach (var sourceProperty in sourceProperties)
+            {
+                var targetProperty = targetProperties.FirstOrDefault(p => p.Name == sourceProperty.Name && p.PropertyType == sourceProperty.PropertyType);
+                if (targetProperty != null && targetProperty.CanWrite && sourceProperty.CanRead)
+                {
+                    var sourceAccess = System.Linq.Expressions.Expression.Property(sourceCast, sourceProperty);
+                    var targetAccess = System.Linq.Expressions.Expression.Property(targetCast, targetProperty);
+                    var assignment = System.Linq.Expressions.Expression.Assign(targetAccess, sourceAccess);
+                    expressions.Add(assignment);
+                }
+            }
+
+            System.Linq.Expressions.Expression body;
+            if (expressions.Count == 0)
+            {
+                body = System.Linq.Expressions.Expression.Empty();
+            }
+            else
+            {
+                body = System.Linq.Expressions.Expression.Block(expressions);
+            }
+            
+            var lambdaType = typeof(Action<,>).MakeGenericType(sourceType, targetType);
+            var lambda = System.Linq.Expressions.Expression.Lambda(lambdaType, body, sourceParam, targetParam);
+            
+            return lambda.Compile();
         }
 
         /// <summary>

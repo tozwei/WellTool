@@ -116,17 +116,17 @@ public class MailAccountTest
     }
 
     /// <summary>
-    /// 测试设置字符集
-    /// </summary>
-    [Fact]
-    public void TestSetCharset()
-    {
-        var account = new MailAccount();
-        var result = account.SetCharset(Encoding.GetEncoding("GBK"));
-        
-        Assert.Same(account, result);
-        Assert.Equal("GBK", account.Charset.EncodingName);
-    }
+        /// 测试设置字符集
+        /// </summary>
+        [Fact]
+        public void TestSetCharset()
+        {
+            var account = new MailAccount();
+            var result = account.SetCharset(Encoding.UTF8);
+            
+            Assert.Same(account, result);
+            Assert.Equal(Encoding.UTF8.EncodingName, account.Charset.EncodingName);
+        }
 
     /// <summary>
     /// 测试设置超长参数分割
