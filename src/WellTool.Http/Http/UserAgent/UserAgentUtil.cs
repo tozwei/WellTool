@@ -21,10 +21,22 @@ public static partial class UserAgentUtil
     {
         if (string.IsNullOrWhiteSpace(userAgentString))
         {
-            return new UserAgent();
+            return new UserAgent
+            {
+                Browser = new Browser { Name = "Unknown", Type = "Unknown", Vendor = "Unknown" },
+                OS = new OS { Name = "Unknown", Version = string.Empty, Vendor = "Unknown" },
+                Engine = new Engine { Name = "Unknown", Version = string.Empty },
+                Platform = Platform.UNKNOWN
+            };
         }
 
-        var userAgent = new UserAgent();
+        var userAgent = new UserAgent
+        {
+            Browser = new Browser { Name = "Unknown", Type = "Unknown", Vendor = "Unknown" },
+            OS = new OS { Name = "Unknown", Version = string.Empty, Vendor = "Unknown" },
+            Engine = new Engine { Name = "Unknown", Version = string.Empty },
+            Platform = Platform.UNKNOWN
+        };
 
         // 判断是否为移动设备
         userAgent.Mobile = MobilePattern.IsMatch(userAgentString) && !TabletPattern.IsMatch(userAgentString);

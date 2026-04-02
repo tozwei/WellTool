@@ -49,7 +49,7 @@ public class MultipartBody : IRequestBody
     /// <param name="charset">编码</param>
     public MultipartBody(IDictionary<string, object?> form, Encoding? charset = null)
     {
-        _form = new Dictionary<string, object?>(form);
+        _form = new Dictionary<string, object?>(form ?? new Dictionary<string, object?>());
         _charset = charset ?? Encoding.UTF8;
         _boundary = $"----WebKitFormBoundary{Guid.NewGuid():N}";
     }
