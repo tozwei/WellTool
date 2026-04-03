@@ -1,41 +1,66 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using System;
 using System.Collections.Generic;
 
 namespace WellTool.Core.Lang
 {
     /// <summary>
-    /// 字典工具类
+    /// 字典类型，简化字典操作
     /// </summary>
     public class Dict : Dictionary<string, object>
     {
         /// <summary>
-        /// 创建一个新的Dict实例
+        /// 构造函数
         /// </summary>
-        /// <returns>新的Dict实例</returns>
+        public Dict()
+        {
+        }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public Dict(IEnumerable<KeyValuePair<string, object>> collection) : base()
+        {
+            if (collection != null)
+            {
+                foreach (var kvp in collection)
+                {
+                    Add(kvp.Key, kvp.Value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 创建字典
+        /// </summary>
         public static Dict Create()
         {
             return new Dict();
         }
 
         /// <summary>
-        /// 设置键值对
+        /// 创建字典
         /// </summary>
-        /// <param name="key">键</param>
-        /// <param name="value">值</param>
-        /// <returns>当前Dict实例</returns>
+        public static Dict Of(string key, object value)
+        {
+            return new Dict { { key, value } };
+        }
+
+        /// <summary>
+        /// 创建字典
+        /// </summary>
+        public static Dict Of(params object[] keysAndValues)
+        {
+            var dict = new Dict();
+            for (int i = 0; i < keysAndValues.Length - 1; i += 2)
+            {
+                dict[keysAndValues[i].ToString()] = keysAndValues[i + 1];
+            }
+            return dict;
+        }
+
+        /// <summary>
+        /// 设置值
+        /// </summary>
         public Dict Set(string key, object value)
         {
             this[key] = value;
@@ -43,54 +68,102 @@ namespace WellTool.Core.Lang
         }
 
         /// <summary>
-        /// 获取指定键的值
+        /// 获取值
         /// </summary>
-        /// <typeparam name="T">值类型</typeparam>
-        /// <param name="key">键</param>
-        /// <returns>值</returns>
         public T Get<T>(string key)
         {
-            if (TryGetValue(key, out object value))
+            if (TryGetValue(key, out var value) && value != null)
             {
-                return (T)value;
+                if (value is T typedValue)
+                {
+                    return typedValue;
+                }
+                return (T)Convert.ChangeType(value, typeof(T));
             }
             return default;
         }
 
         /// <summary>
-        /// 获取指定键的值，如果不存在则返回默认值
+        /// 获取值，为空时返回默认值
         /// </summary>
-        /// <typeparam name="T">值类型</typeparam>
-        /// <param name="key">键</param>
-        /// <param name="defaultValue">默认值</param>
-        /// <returns>值</returns>
-        public T Get<T>(string key, T defaultValue)
+        public T GetOrDefault<T>(string key, T defaultValue = default)
         {
-            if (TryGetValue(key, out object value))
+            if (TryGetValue(key, out var value) && value != null)
             {
-                return (T)value;
+                if (value is T typedValue)
+                {
+                    return typedValue;
+                }
+                try
+                {
+                    return (T)Convert.ChangeType(value, typeof(T));
+                }
+                catch
+                {
+                    return defaultValue;
+                }
             }
             return defaultValue;
         }
 
         /// <summary>
-        /// 检查字典是否包含指定的键
+        /// 获取字符串值
         /// </summary>
-        /// <param name="key">键</param>
-        /// <returns>如果包含则返回 true，否则返回 false</returns>
-        public bool ContainsKey(string key)
+        public string GetStr(string key, string defaultValue = null)
         {
-            return base.ContainsKey(key);
+            if (TryGetValue(key, out var value) && value != null)
+            {
+                return value.ToString();
+            }
+            return defaultValue;
         }
 
         /// <summary>
-        /// 移除指定的键
+        /// 获取整数值
         /// </summary>
-        /// <param name="key">键</param>
-        /// <returns>如果移除成功则返回 true，否则返回 false</returns>
-        public new bool Remove(string key)
+        public int GetInt(string key, int defaultValue = 0)
         {
-            return base.Remove(key);
+            if (TryGetValue(key, out var value))
+            {
+                if (value is int i) return i;
+                if (int.TryParse(value.ToString(), out int result)) return result;
+            }
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// 获取布尔值
+        /// </summary>
+        public bool GetBool(string key, bool defaultValue = false)
+        {
+            if (TryGetValue(key, out var value))
+            {
+                if (value is bool b) return b;
+                if (bool.TryParse(value.ToString(), out bool result)) return result;
+            }
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// 获取日期值
+        /// </summary>
+        public DateTime? GetDate(string key)
+        {
+            if (TryGetValue(key, out var value))
+            {
+                if (value is DateTime dt) return dt;
+                if (DateTime.TryParse(value.ToString(), out DateTime result)) return result;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 链式调用
+        /// </summary>
+        public Dict Put(string key, object value)
+        {
+            this[key] = value;
+            return this;
         }
     }
 }

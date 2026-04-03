@@ -1,93 +1,87 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WellTool.Core.Collection
 {
     /// <summary>
-    /// 计算型迭代器基类，用于按需计算下一元素的迭代器
+    /// 计算迭代器，用于流式计算
     /// </summary>
-    /// <typeparam name="T">元素类型</typeparam>
-    public abstract class ComputeIter<T> : IEnumerable<T>, IEnumerator<T>
+    public class ComputeIter<T> : IEnumerable<T>
     {
-        private T _current;
-        private bool _finished = false;
-        private bool _started = false;
+        private readonly IEnumerable<T> _source;
+        private readonly Func<T, T> _computer;
 
         /// <summary>
-        /// 获取当前元素
+        /// 构造函数
         /// </summary>
-        public T Current => _current;
-
-        object IEnumerator.Current => Current;
+        public ComputeIter(IEnumerable<T> source, Func<T, T> computer)
+        {
+            _source = source ?? throw new ArgumentNullException(nameof(source));
+            _computer = computer ?? throw new ArgumentNullException(nameof(computer));
+        }
 
         /// <summary>
-        /// 获取迭代器
+        /// 获取枚举器
         /// </summary>
         public IEnumerator<T> GetEnumerator()
         {
-            return this;
+            foreach (var item in _source)
+            {
+                yield return _computer(item);
+            }
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
         /// <summary>
-        /// 移动到下一个元素
+        /// 链式计算
         /// </summary>
-        public bool MoveNext()
+        public ComputeIter<T> Then(Func<T, T> nextComputer)
         {
-            if (_finished)
-            {
-                return false;
-            }
-
-            if (!_started)
-            {
-                _started = true;
-            }
-
-            _current = ComputeNext();
-            if (_current == null)
-            {
-                _finished = true;
-                return false;
-            }
-            return true;
+            var original = _computer;
+            return new ComputeIter<T>(_source, x => nextComputer(original(x)));
         }
 
         /// <summary>
-        /// 计算下一个元素，返回 null 表示迭代结束
+        /// 计算并返回结果列表
         /// </summary>
-        /// <returns>下一个元素，null 表示迭代结束</returns>
-        protected abstract T ComputeNext();
-
-        /// <summary>
-        /// 重置
-        /// </summary>
-        public void Reset()
+        public List<T> ToList()
         {
-            _finished = false;
-            _started = false;
-            _current = default(T);
+            return this.ToList();
         }
 
         /// <summary>
-        /// 标记迭代完成
+        /// 计算并返回结果数组
         /// </summary>
-        protected void Finish()
+        public T[] ToArray()
         {
-            _finished = true;
+            return this.ToArray();
+        }
+    }
+
+    /// <summary>
+    /// 计算迭代器扩展
+    /// </summary>
+    public static class ComputeIterExtensions
+    {
+        /// <summary>
+        /// 创建计算迭代器
+        /// </summary>
+        public static ComputeIter<T> Compute<T>(this IEnumerable<T> source, Func<T, T> computer)
+        {
+            return new ComputeIter<T>(source, computer);
         }
 
         /// <summary>
-        /// 释放资源
+        /// 创建带索引的计算迭代器
         /// </summary>
-        public void Dispose()
+        public static ComputeIter<T> Compute<T>(this IEnumerable<T> source, Func<T, int, T> computer)
         {
-            Finish();
+            return new ComputeIter<T>(source.Select((item, index) => computer(item, index)));
         }
     }
 }

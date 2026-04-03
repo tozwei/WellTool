@@ -5,302 +5,157 @@ using System.Collections.Generic;
 namespace WellTool.Core.Collection
 {
     /// <summary>
-    /// 唯一键集合
+    /// 唯一键集合，用于存储键值对并保证键的唯一性
     /// </summary>
-    /// <typeparam name="T">元素类型</typeparam>
-    public class UniqueKeySet<T> : ICollection<T>, IEnumerable<T>
+    public class UniqueKeySet<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
     {
-        private readonly HashSet<T> _set;
+        private readonly Dictionary<TKey, TValue> _dict;
+        private readonly HashSet<TKey> _keys;
+        private readonly IEqualityComparer<TKey> _keyComparer;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        public UniqueKeySet()
+        public UniqueKeySet() : this(EqualityComparer<TKey>.Default)
         {
-            _set = new HashSet<T>();
         }
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="comparer">比较器</param>
-        public UniqueKeySet(IEqualityComparer<T> comparer)
+        public UniqueKeySet(IEqualityComparer<TKey> keyComparer)
         {
-            _set = new HashSet<T>(comparer);
+            _keyComparer = keyComparer ?? EqualityComparer<TKey>.Default;
+            _dict = new Dictionary<TKey, TValue>(_keyComparer);
+            _keys = new HashSet<TKey>(_keyComparer);
         }
 
         /// <summary>
-        /// 构造函数
+        /// 元素数量
         /// </summary>
-        /// <param name="collection">集合</param>
-        public UniqueKeySet(IEnumerable<T> collection)
-        {
-            _set = new HashSet<T>(collection);
-        }
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="collection">集合</param>
-        /// <param name="comparer">比较器</param>
-        public UniqueKeySet(IEnumerable<T> collection, IEqualityComparer<T> comparer)
-        {
-            _set = new HashSet<T>(collection, comparer);
-        }
+        public int Count => _dict.Count;
 
         /// <summary>
         /// 添加元素
         /// </summary>
-        /// <param name="item">元素</param>
-        /// <returns>是否添加成功</returns>
-        public bool Add(T item)
+        public bool Add(TKey key, TValue value)
         {
-            return _set.Add(item);
-        }
-
-        /// <summary>
-        /// 添加元素（显式实现 ICollection<T> 接口）
-        /// </summary>
-        /// <param name="item">元素</param>
-        void ICollection<T>.Add(T item)
-        {
-            _set.Add(item);
-        }
-
-        /// <summary>
-        /// 批量添加元素
-        /// </summary>
-        /// <param name="collection">集合</param>
-        /// <returns>添加的元素数量</returns>
-        public int AddRange(IEnumerable<T> collection)
-        {
-            int count = 0;
-            foreach (var item in collection)
+            if (_keys.Contains(key))
             {
-                if (_set.Add(item))
-                {
-                    count++;
-                }
+                return false;
             }
-            return count;
+
+            _dict.Add(key, value);
+            _keys.Add(key);
+            return true;
+        }
+
+        /// <summary>
+        /// 添加或更新元素
+        /// </summary>
+        public void AddOrUpdate(TKey key, TValue value)
+        {
+            if (_keys.Contains(key))
+            {
+                _dict[key] = value;
+            }
+            else
+            {
+                _dict.Add(key, value);
+                _keys.Add(key);
+            }
+        }
+
+        /// <summary>
+        /// 是否包含键
+        /// </summary>
+        public bool ContainsKey(TKey key)
+        {
+            return _keys.Contains(key);
+        }
+
+        /// <summary>
+        /// 获取值
+        /// </summary>
+        public bool TryGetValue(TKey key, out TValue value)
+        {
+            return _dict.TryGetValue(key, out value);
         }
 
         /// <summary>
         /// 移除元素
         /// </summary>
-        /// <param name="item">元素</param>
-        /// <returns>是否移除成功</returns>
-        public bool Remove(T item)
+        public bool Remove(TKey key)
         {
-            return _set.Remove(item);
-        }
-
-        /// <summary>
-        /// 批量移除元素
-        /// </summary>
-        /// <param name="collection">集合</param>
-        /// <returns>移除的元素数量</returns>
-        public int RemoveRange(IEnumerable<T> collection)
-        {
-            int count = 0;
-            foreach (var item in collection)
+            if (_keys.Contains(key))
             {
-                if (_set.Remove(item))
-                {
-                    count++;
-                }
+                _keys.Remove(key);
+                return _dict.Remove(key);
             }
-            return count;
+            return false;
         }
 
         /// <summary>
-        /// 清空集合
+        /// 清空
         /// </summary>
         public void Clear()
         {
-            _set.Clear();
+            _dict.Clear();
+            _keys.Clear();
         }
 
         /// <summary>
-        /// 检查是否包含元素
+        /// 获取所有键
         /// </summary>
-        /// <param name="item">元素</param>
-        /// <returns>是否包含</returns>
-        public bool Contains(T item)
-        {
-            return _set.Contains(item);
-        }
+        public IEnumerable<TKey> Keys => _keys;
 
         /// <summary>
-        /// 检查是否包含所有元素
+        /// 获取所有值
         /// </summary>
-        /// <param name="collection">集合</param>
-        /// <returns>是否包含所有元素</returns>
-        public bool ContainsAll(IEnumerable<T> collection)
-        {
-            foreach (var item in collection)
-            {
-                if (!_set.Contains(item))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// 复制到数组
-        /// </summary>
-        /// <param name="array">数组</param>
-        /// <param name="arrayIndex">数组索引</param>
-        public void CopyTo(T[] array, int arrayIndex)
-        {
-            _set.CopyTo(array, arrayIndex);
-        }
-
-        /// <summary>
-        /// 获取元素数量
-        /// </summary>
-        public int Count => _set.Count;
-
-        /// <summary>
-        /// 是否为只读
-        /// </summary>
-        public bool IsReadOnly => false;
+        public IEnumerable<TValue> Values => _dict.Values;
 
         /// <summary>
         /// 获取枚举器
         /// </summary>
-        /// <returns>枚举器</returns>
-        public IEnumerator<T> GetEnumerator()
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            return _set.GetEnumerator();
+            return _dict.GetEnumerator();
         }
 
-        /// <summary>
-        /// 获取枚举器
-        /// </summary>
-        /// <returns>枚举器</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
         /// <summary>
-        /// 转换为数组
+        /// 获取或添加值
         /// </summary>
-        /// <returns>数组</returns>
-        public T[] ToArray()
+        public TValue GetOrAdd(TKey key, TValue value)
         {
-            var array = new T[_set.Count];
-            _set.CopyTo(array);
-            return array;
-        }
-
-        /// <summary>
-        /// 转换为列表
-        /// </summary>
-        /// <returns>列表</returns>
-        public List<T> ToList()
-        {
-            return new List<T>(_set);
-        }
-
-        /// <summary>
-        /// 转换为哈希集合
-        /// </summary>
-        /// <returns>哈希集合</returns>
-        public HashSet<T> ToHashSet()
-        {
-            return new HashSet<T>(_set);
-        }
-
-        /// <summary>
-        /// 交集
-        /// </summary>
-        /// <param name="other">另一个集合</param>
-        /// <returns>交集</returns>
-        public UniqueKeySet<T> Intersect(IEnumerable<T> other)
-        {
-            var result = new UniqueKeySet<T>();
-            foreach (var item in other)
+            if (_dict.TryGetValue(key, out var existing))
             {
-                if (_set.Contains(item))
-                {
-                    result.Add(item);
-                }
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// 并集
-        /// </summary>
-        /// <param name="other">另一个集合</param>
-        /// <returns>并集</returns>
-        public UniqueKeySet<T> Union(IEnumerable<T> other)
-        {
-            var result = new UniqueKeySet<T>(_set);
-            result.AddRange(other);
-            return result;
-        }
-
-        /// <summary>
-        /// 差集
-        /// </summary>
-        /// <param name="other">另一个集合</param>
-        /// <returns>差集</returns>
-        public UniqueKeySet<T> Except(IEnumerable<T> other)
-        {
-            var result = new UniqueKeySet<T>(_set);
-            result.RemoveRange(other);
-            return result;
-        }
-
-        /// <summary>
-        /// 对称差集
-        /// </summary>
-        /// <param name="other">另一个集合</param>
-        /// <returns>对称差集</returns>
-        public UniqueKeySet<T> SymmetricExcept(IEnumerable<T> other)
-        {
-            var result = new UniqueKeySet<T>();
-            var otherSet = new HashSet<T>(other);
-
-            foreach (var item in _set)
-            {
-                if (!otherSet.Contains(item))
-                {
-                    result.Add(item);
-                }
+                return existing;
             }
 
-            foreach (var item in otherSet)
+            _dict.Add(key, value);
+            _keys.Add(key);
+            return value;
+        }
+
+        /// <summary>
+        /// 获取或添加值（使用工厂方法）
+        /// </summary>
+        public TValue GetOrAdd(TKey key, Func<TValue> factory)
+        {
+            if (_dict.TryGetValue(key, out var existing))
             {
-                if (!_set.Contains(item))
-                {
-                    result.Add(item);
-                }
+                return existing;
             }
 
-            return result;
-        }
-    }
-
-    /// <summary>
-    /// UniqueKeySet 扩展方法
-    /// </summary>
-    public static class UniqueKeySetExtensions
-    {
-        /// <summary>
-        /// 创建 UniqueKeySet
-        /// </summary>
-        /// <typeparam name="T">元素类型</typeparam>
-        /// <param name="collection">源集合</param>
-        /// <returns>UniqueKeySet</returns>
-        public static UniqueKeySet<T> AsUniqueKeySet<T>(this IEnumerable<T> collection)
-        {
-            return new UniqueKeySet<T>(collection);
+            var value = factory();
+            _dict.Add(key, value);
+            _keys.Add(key);
+            return value;
         }
     }
 }
