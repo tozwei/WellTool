@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Text;
 using WellTool.Core.lang;
 using WellTool.Core.util;
+using WellTool.Core.Converter;
 
 /// <summary>
 /// 类型转换器
@@ -356,9 +357,9 @@ public class Convert
 	/// </summary>
 	/// <param name="clazz">原始类</param>
 	/// <returns>包装类</returns>
-	public static Type Wrap(Class clazz)
+	public static Type Wrap(Type clazz)
 	{
-		return BasicType.Wrap(clazz);
+		return BasicTypeUtil.Wrap(clazz);
 	}
 
 	/// <summary>
@@ -366,9 +367,9 @@ public class Convert
 	/// </summary>
 	/// <param name="clazz">包装类</param>
 	/// <returns>原始类</returns>
-	public static Type Unwrap(Class clazz)
+	public static Type Unwrap(Type clazz)
 	{
-		return BasicType.Unwrap(clazz);
+		return BasicTypeUtil.Unwrap(clazz);
 	}
 
 	/// <summary>
@@ -388,7 +389,7 @@ public class Convert
 	/// <typeparam name="T">目标类型</typeparam>
 	/// <param name="value">被转换的值</param>
 	/// <returns>转换后的值</returns>
-	public static T Convert<T>(object value)
+	public static T ConvertTo<T>(object value)
 	{
 		return To<T>(value);
 	}

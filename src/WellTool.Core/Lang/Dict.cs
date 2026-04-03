@@ -194,7 +194,7 @@ public class Dict : Dictionary<string, object>
 	/// <returns>对象</returns>
 	public T GetByPath<T>(string expression, Type resultType)
 	{
-		return Convert.Convert<T>(GetByPath<object>(expression));
+		return Convert.ConvertTo<T>(GetByPath<object>(expression));
 	}
 
 	/// <summary>

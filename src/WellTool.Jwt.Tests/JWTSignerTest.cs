@@ -1,7 +1,5 @@
 namespace WellTool.Jwt.Tests;
 
-using Well.Jwt;
-using Well.Jwt.Signers;
 
 public class JWTSignerTest
 {

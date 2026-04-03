@@ -1,6 +1,5 @@
 namespace WellTool.Jwt.Tests;
 
-using Well.Jwt;
 
 public class JWTUtilTest
 {
