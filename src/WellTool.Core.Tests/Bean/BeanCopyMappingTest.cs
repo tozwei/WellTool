@@ -1,29 +1,39 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+using WellTool.Core.Bean;
+using WellTool.Core.Map;
 using Xunit;
 
-namespace WellTool.Core.Tests.Bean;
+namespace WellTool.Core.Tests;
 
-/// <summary>
-/// Bean 拷贝映射测试
-/// </summary>
 public class BeanCopyMappingTest
 {
     [Fact]
-    public void TestBeanCopyMapping()
+    public void CopyPropertiesTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var copyOptions = CopyOptions.Create()
+            .SetFieldMapping(MapUtil.Of("car", "carNo"));
+
+        var b = new B { Car = "12312312" };
+        var a = new A();
+        var c = new C();
+
+        BeanUtil.CopyProperties(b, a, copyOptions);
+        BeanUtil.CopyProperties(a, c);
+
+        Assert.Equal("12312312", c.CarNo);
+    }
+
+    private class A
+    {
+        public string? CarNo { get; set; }
+    }
+
+    private class B
+    {
+        public string? Car { get; set; }
+    }
+
+    private class C
+    {
+        public string? CarNo { get; set; }
     }
 }
