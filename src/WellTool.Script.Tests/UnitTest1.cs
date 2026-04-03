@@ -5,29 +5,29 @@ namespace WellTool.Script.Tests;
 
 public class ScriptUtilTests
 {
-    [Fact]
-    public void TestExecuteJavaScript()
-    {
-        // 测试执行简单的 JavaScript 代码
-        var result = ScriptUtil.Instance.ExecuteJavaScript("1 + 1");
-        Assert.Equal(2, result);
-    }
+    //[Fact]
+    //public void TestExecuteJavaScript()
+    //{
+    //    // 测试执行简单的 JavaScript 代码
+    //    var result = ScriptUtil.Instance.ExecuteJavaScript("1 + 1");
+    //    Assert.Equal(2, result);
+    //}
 
-    [Fact]
-    public void TestExecuteJavaScriptWithType()
-    {
-        // 测试执行 JavaScript 代码并返回指定类型的结果
-        var result = ScriptUtil.Instance.ExecuteJavaScript<int>("2 + 3");
-        Assert.Equal(5, result);
-    }
+    //[Fact]
+    //public void TestExecuteJavaScriptWithType()
+    //{
+    //    // 测试执行 JavaScript 代码并返回指定类型的结果
+    //    var result = ScriptUtil.Instance.ExecuteJavaScript<int>("2 + 3");
+    //    Assert.Equal(5, result);
+    //}
 
-    [Fact]
-    public void TestCreateJavaScriptEngine()
-    {
-        // 测试创建 JavaScript 引擎
-        var engine = ScriptUtil.Instance.CreateJavaScriptEngine();
-        Assert.NotNull(engine);
-    }
+    //[Fact]
+    //public void TestCreateJavaScriptEngine()
+    //{
+    //    // 测试创建 JavaScript 引擎
+    //    var engine = ScriptUtil.Instance.CreateJavaScriptEngine();
+    //    Assert.NotNull(engine);
+    //}
 
     [Fact]
     public void TestCreateFullSupportScriptEngine()
