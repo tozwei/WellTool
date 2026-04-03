@@ -1,135 +1,103 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace WellTool.Core.Util
+namespace WellDone.Core.Util;
+
+/// <summary>
+/// RandomUtil随机工具类
+/// </summary>
+public static class RandomUtil
 {
-    /// <summary>
-    /// 随机工具类
-    /// </summary>
-    public static class RandomUtil
-    {
+	private static readonly Random _random = new Random();
 
+	/// <summary>
+	/// 获取随机数生成器
+	/// </summary>
+	public static Random GetRandom() => _random;
 
-        private static readonly Random Random = new Random();
+	/// <summary>
+	/// 随机整数
+	/// </summary>
+	public static int NextInt() => _random.Next();
 
-        /// <summary>
-        /// 生成指定长度的随机字符串
-        /// </summary>
-        /// <param name="length">字符串长度</param>
-        /// <returns>随机字符串</returns>
-        public static string RandomString(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var stringBuilder = new StringBuilder(length);
-            for (int i = 0; i < length; i++)
-            {
-                stringBuilder.Append(chars[Random.Next(chars.Length)]);
-            }
-            return stringBuilder.ToString();
-        }
+	/// <summary>
+	/// 随机整数（0到max之间）
+	/// </summary>
+	public static int NextInt(int max) => _random.Next(max);
 
-        /// <summary>
-        /// 生成指定范围内的随机整数
-        /// </summary>
-        /// <param name="min">最小值（包含）</param>
-        /// <param name="max">最大值（包含）</param>
-        /// <returns>随机整数</returns>
-        public static int RandomInt(int min, int max)
-        {
-            return Random.Next(min, max + 1);
-        }
+	/// <summary>
+	/// 随机整数（min到max之间）
+	/// </summary>
+	public static int NextInt(int min, int max) => _random.Next(min, max);
 
-        /// <summary>
-        /// 生成指定范围内的随机长整数
-        /// </summary>
-        /// <param name="min">最小值（包含）</param>
-        /// <param name="max">最大值（包含）</param>
-        /// <returns>随机长整数</returns>
-        public static long RandomLong(long min, long max)
-        {
-            // 生成0到(max-min)之间的随机数，然后加上min
-            return min + (long)(Random.NextDouble() * (max - min + 1));
-        }
+	/// <summary>
+	/// 随机long
+	/// </summary>
+	public static long NextLong()
+	{
+		var bytes = new byte[8];
+		_random.NextBytes(bytes);
+		return BitConverter.ToInt64(bytes, 0);
+	}
 
-        /// <summary>
-        /// 生成随机布尔值
-        /// </summary>
-        /// <returns>随机布尔值</returns>
-        public static bool RandomBoolean()
-        {
-            return Random.Next(2) == 0;
-        }
+	/// <summary>
+	/// 随机double
+	/// </summary>
+	public static double NextDouble() => _random.NextDouble();
 
-        /// <summary>
-        /// 生成随机浮点数
-        /// </summary>
-        /// <returns>随机浮点数</returns>
-        public static float RandomFloat()
-        {
-            return (float)Random.NextDouble();
-        }
+	/// <summary>
+	/// 随机bool
+	/// </summary>
+	public static bool NextBoolean() => _random.Next(2) == 1;
 
-        /// <summary>
-        /// 生成随机双精度浮点数
-        /// </summary>
-        /// <returns>随机双精度浮点数</returns>
-        public static double RandomDouble()
-        {
-            return Random.NextDouble();
-        }
+	/// <summary>
+	/// 随机字节数组
+	/// </summary>
+	public static byte[] NextBytes(int length)
+	{
+		var bytes = new byte[length];
+		_random.NextBytes(bytes);
+		return bytes;
+	}
 
-        /// <summary>
-        /// 从集合中随机选择一个元素
-        /// </summary>
-        /// <typeparam name="T">元素类型</typeparam>
-        /// <param name="collection">集合</param>
-        /// <returns>随机选择的元素</returns>
-        public static T RandomEle<T>(IEnumerable<T> collection)
-        {
-            if (collection == null || !collection.Any())
-            {
-                throw new ArgumentException("Collection cannot be null or empty");
-            }
+	/// <summary>
+	/// 随机字母数字
+	/// </summary>
+	public static string RandomString(int length)
+	{
+		const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		var result = new char[length];
+		for (int i = 0; i < length; i++)
+		{
+			result[i] = chars[_random.Next(chars.Length)];
+		}
+		return new string(result);
+	}
 
-            var list = collection.ToList();
-            return list[Random.Next(list.Count)];
-        }
+	/// <summary>
+	/// 随机数字
+	/// </summary>
+	public static string RandomNumbers(int length)
+	{
+		const string chars = "0123456789";
+		var result = new char[length];
+		for (int i = 0; i < length; i++)
+		{
+			result[i] = chars[_random.Next(chars.Length)];
+		}
+		return new string(result);
+	}
 
-        /// <summary>
-        /// 随机打乱集合中的元素
-        /// </summary>
-        /// <typeparam name="T">元素类型</typeparam>
-        /// <param name="list">列表</param>
-        /// <returns>打乱后的列表</returns>
-        public static List<T> Shuffle<T>(List<T> list)
-        {
-            if (list == null)
-            {
-                throw new ArgumentNullException(nameof(list));
-            }
-
-            var result = new List<T>(list);
-            for (int i = result.Count - 1; i > 0; i--)
-            {
-                int j = Random.Next(i + 1);
-                (result[i], result[j]) = (result[j], result[i]);
-            }
-            return result;
-        }
-    }
+	/// <summary>
+	/// 随机字母
+	/// </summary>
+	public static string RandomLetters(int length)
+	{
+		const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+		var result = new char[length];
+		for (int i = 0; i < length; i++)
+		{
+			result[i] = chars[_random.Next(chars.Length)];
+		}
+		return new string(result);
+	}
 }
