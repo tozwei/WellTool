@@ -100,7 +100,7 @@ namespace WellTool.Core.IO.Watch
 
             // 确保目录存在
             string directoryPath = path;
-            if (File.Exists(path))
+            if (System.IO.File.Exists(path))
             {
                 var fileInfo = new FileInfo(path);
                 this._filePath = fileInfo.FullName;

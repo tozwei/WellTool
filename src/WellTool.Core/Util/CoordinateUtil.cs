@@ -88,10 +88,10 @@ public static class CoordinateUtil
 		double lat1 = ToRadians(lat);
 		double lon1 = ToRadians(lon);
 
-		double lat2 = Math.Asin(Math.Sin(lat1) * Math.Cos(d) +
-							   Math.Cos(lat1) * Math.Sin(d) * Math.Cos(brng));
-		double lon2 = lon1 + Math.Atan2(Math.Sin(brng) * Math.Sin(d) * Math.Cos(lat1),
-										Math.Cos(d) - Math.Sin(lat1) * Math.Sin(lat2));
+		double lat2 = System.Math.Asin(System.Math.Sin(lat1) * System.Math.Cos(d) +
+						   System.Math.Cos(lat1) * System.Math.Sin(d) * System.Math.Cos(brng));
+		double lon2 = lon1 + System.Math.Atan2(System.Math.Sin(brng) * System.Math.Sin(d) * System.Math.Cos(lat1),
+								System.Math.Cos(d) - System.Math.Sin(lat1) * System.Math.Sin(lat2));
 
 		return (ToDegree(lat2), ToDegree(lon2));
 	}

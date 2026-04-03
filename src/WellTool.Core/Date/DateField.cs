@@ -10,42 +10,77 @@ namespace WellTool.Core.Date
         /// <summary>
         /// 年
         /// </summary>
-        Year = 0,
+        Year = 1,
 
         /// <summary>
         /// 月
         /// </summary>
-        Month = 1,
+        Month = 2,
 
         /// <summary>
         /// 日
         /// </summary>
-        Day = 2,
+        Day = 5,
 
         /// <summary>
         /// 小时
         /// </summary>
-        Hour = 3,
+        Hour = 10,
 
         /// <summary>
         /// 分钟
         /// </summary>
-        Minute = 4,
+        Minute = 12,
 
         /// <summary>
         /// 秒
         /// </summary>
-        Second = 5,
+        Second = 13,
 
         /// <summary>
         /// 毫秒
         /// </summary>
-        Millisecond = 6,
+        Millisecond = 14,
 
         /// <summary>
         /// 星期
         /// </summary>
-        DayOfWeek = 7
+        DayOfWeek = 7,
+
+        /// <summary>
+        /// 一年中的第几周
+        /// </summary>
+        WeekOfYear = 3,
+
+        /// <summary>
+        /// 一个月中的第几周
+        /// </summary>
+        WeekOfMonth = 4,
+
+        /// <summary>
+        /// 一个月中的第几天
+        /// </summary>
+        DayOfMonth = 5,
+
+        /// <summary>
+        /// 一年中的第几天
+        /// </summary>
+        DayOfYear = 6,
+
+        /// <summary>
+        /// 一个月中的第几个星期几
+        /// </summary>
+        DayOfWeekInMonth = 8,
+
+        /// <summary>
+        /// 上午/下午
+        /// </summary>
+        AmPm = 9,
+
+        /// <summary>
+        /// 一天中的第几小时（24小时制）
+        /// </summary>
+        HourOfDay = 11
     }
 
     /// <summary>

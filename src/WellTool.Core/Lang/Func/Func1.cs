@@ -29,7 +29,7 @@ namespace WellTool.Core.Lang.Func
             {
                 return func(parameter);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new SystemException("Function execution failed", e);
             }

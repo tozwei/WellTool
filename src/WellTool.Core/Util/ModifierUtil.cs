@@ -88,7 +88,7 @@ public static class ModifierUtil
 	public static bool IsInternal(Type type)
 	{
 		if (type == null) return false;
-		return !type.IsPublic && !type.IsPrivate && !type.IsNested;
+		return !type.IsPublic && !type.IsNested;
 	}
 
 	/// <summary>

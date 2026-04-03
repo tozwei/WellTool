@@ -374,7 +374,7 @@ namespace WellTool.Core.IO
             }
             var lastBackslash = path.LastIndexOf('\\');
             var lastSlash = path.LastIndexOf('/');
-            return Math.Max(lastBackslash, lastSlash);
+            return System.Math.Max(lastBackslash, lastSlash);
         }
 
         /// <summary>

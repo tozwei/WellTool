@@ -65,7 +65,7 @@ namespace WellTool.Core.IO.Copy
         /// <returns>缓存大小</returns>
         protected int BufferSizeValue(long count)
         {
-            return (int)Math.Min(BufferSize, count);
+            return (int)System.Math.Min(BufferSize, count);
         }
 
         /// <summary>

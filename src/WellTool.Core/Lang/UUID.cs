@@ -109,15 +109,15 @@ public sealed class UUID : IComparable<UUID>
 			throw new FormatException("Invalid UUID string: " + name);
 		}
 
-		long mostSigBits = Convert.ToInt64(components[0], 16);
+		long mostSigBits = System.Convert.ToInt64(components[0], 16);
 		mostSigBits <<= 16;
-		mostSigBits |= Convert.ToInt64(components[1], 16);
+		mostSigBits |= System.Convert.ToInt64(components[1], 16);
 		mostSigBits <<= 16;
-		mostSigBits |= Convert.ToInt64(components[2], 16);
+		mostSigBits |= System.Convert.ToInt64(components[2], 16);
 
-		long leastSigBits = Convert.ToInt64(components[3], 16);
+		long leastSigBits = System.Convert.ToInt64(components[3], 16);
 		leastSigBits <<= 48;
-		leastSigBits |= Convert.ToInt64(components[4], 16);
+		leastSigBits |= System.Convert.ToInt64(components[4], 16);
 
 		return new UUID(mostSigBits, leastSigBits);
 	}

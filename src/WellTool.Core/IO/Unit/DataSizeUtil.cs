@@ -40,8 +40,8 @@ namespace WellTool.Core.IO.Unit
             {
                 return "0";
             }
-            var digitGroups = Math.Min(DataUnit.UnitNames.Length - 1, (int)(Math.Log10(size) / Math.Log10(1024)));
-            return $"{Math.Round(size / Math.Pow(1024, digitGroups), 2):#,##0.##} {DataUnit.UnitNames[digitGroups]}";
+            var digitGroups = System.Math.Min(DataUnit.UnitNames.Length - 1, (int)(System.Math.Log10(size) / System.Math.Log10(1024)));
+            return $"{System.Math.Round(size / System.Math.Pow(1024, digitGroups), 2):#,##0.##} {DataUnit.UnitNames[digitGroups]}";
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace WellTool.Core.IO.Unit
                 return "0";
             }
             var digitGroups = Array.IndexOf(DataUnit.UnitNames, fileDataUnit.GetSuffix());
-            return $"{Math.Round(size / Math.Pow(1024, digitGroups), 2):##0.##} {DataUnit.UnitNames[digitGroups]}";
+            return $"{System.Math.Round(size / System.Math.Pow(1024, digitGroups), 2):##0.##} {DataUnit.UnitNames[digitGroups]}";
         }
     }
 }

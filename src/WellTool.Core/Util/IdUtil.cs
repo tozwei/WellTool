@@ -113,7 +113,7 @@ public class Snowflake
 
 			if (timestamp < _lastId)
 			{
-				throw new Exception($"Clock moved backwards. Refusing to generate id for {_lastId - timestamp} milliseconds");
+				throw new System.Exception($"Clock moved backwards. Refusing to generate id for {_lastId - timestamp} milliseconds");
 			}
 
 			if (_lastId == timestamp)

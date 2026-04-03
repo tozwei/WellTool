@@ -31,7 +31,7 @@ public static class RadixUtil
 		}
 
 		var isNegative = value < 0;
-		var absValue = Math.Abs(value);
+		var absValue = System.Math.Abs(value);
 		var result = new char[32];
 		var index = 32;
 
@@ -87,7 +87,7 @@ public static class RadixUtil
 	/// <returns>二进制字符串</returns>
 	public static string ToBinary(long value)
 	{
-		return Convert.ToString(value, 2);
+		return System.Convert.ToString(value, 2);
 	}
 
 	/// <summary>
@@ -97,7 +97,7 @@ public static class RadixUtil
 	/// <returns>十进制数字</returns>
 	public static long BinaryToInt64(string value)
 	{
-		return Convert.ToInt64(value, 2);
+		return System.Convert.ToInt64(value, 2);
 	}
 
 	/// <summary>
@@ -107,7 +107,7 @@ public static class RadixUtil
 	/// <returns>十六进制字符串</returns>
 	public static string ToHex(long value)
 	{
-		return Convert.ToString(value, 16).ToUpperInvariant();
+		return System.Convert.ToString(value, 16).ToUpperInvariant();
 	}
 
 	/// <summary>
@@ -117,7 +117,7 @@ public static class RadixUtil
 	/// <returns>十进制数字</returns>
 	public static long HexToInt64(string value)
 	{
-		return Convert.ToInt64(value, 16);
+		return System.Convert.ToInt64(value, 16);
 	}
 
 	/// <summary>
