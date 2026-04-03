@@ -1,165 +1,180 @@
-namespace WellTool.Core.Lang.Tree;
+using System;
+using System.Collections.Generic;
 
-/// <summary>
-/// 树节点接口
-/// </summary>
-/// <typeparam name="T">节点数据ID类型</typeparam>
-/// <typeparam name="V">节点值类型</typeparam>
-public interface ITreeNode<T, V>
+namespace WellTool.Core.Lang.Tree
 {
-	/// <summary>
-	/// 获取节点ID
-	/// </summary>
-	T Id { get; }
+    /// <summary>
+    /// 树节点
+    /// </summary>
+    public class TreeNode<T>
+    {
+        /// <summary>
+        /// 节点数据
+        /// </summary>
+        public T Data { get; set; }
 
-	/// <summary>
-	/// 获取父节点ID
-	/// </summary>
-	T? ParentId { get; }
+        /// <summary>
+        /// 父节点
+        /// </summary>
+        public TreeNode<T> Parent { get; set; }
 
-	/// <summary>
-	/// 获取节点值
-	/// </summary>
-	V Value { get; }
+        /// <summary>
+        /// 子节点
+        /// </summary>
+        public List<TreeNode<T>> Children { get; set; } = new List<TreeNode<T>>();
 
-	/// <summary>
-	/// 获取子节点列表
-	/// </summary>
-	IList<ITreeNode<T, V>> Children { get; }
-}
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public TreeNode(T data)
+        {
+            Data = data;
+        }
 
-/// <summary>
-/// 树节点实现
-/// </summary>
-/// <typeparam name="T">节点数据ID类型</typeparam>
-/// <typeparam name="V">节点值类型</typeparam>
-public class TreeNode<T, V> : ITreeNode<T, V>
-{
-	/// <inheritdoc />
-	public T Id { get; set; } = default!;
+        /// <summary>
+        /// 是否为根节点
+        /// </summary>
+        public bool IsRoot => Parent == null;
 
-	/// <inheritdoc />
-	public T? ParentId { get; set; }
+        /// <summary>
+        /// 是否为叶子节点
+        /// </summary>
+        public bool IsLeaf => Children.Count == 0;
 
-	/// <inheritdoc />
-	public V Value { get; set; } = default!;
+        /// <summary>
+        /// 深度
+        /// </summary>
+        public int Depth
+        {
+            get
+            {
+                int depth = 0;
+                var node = Parent;
+                while (node != null)
+                {
+                    depth++;
+                    node = node.Parent;
+                }
+                return depth;
+            }
+        }
 
-	/// <inheritdoc />
-	public IList<ITreeNode<T, V>> Children { get; set; } = new List<ITreeNode<T, V>>();
+        /// <summary>
+        /// 添加子节点
+        /// </summary>
+        public TreeNode<T> AddChild(T data)
+        {
+            var child = new TreeNode<T>(data) { Parent = this };
+            Children.Add(child);
+            return child;
+        }
 
-	/// <summary>
-	/// 构造
-	/// </summary>
-	public TreeNode() { }
+        /// <summary>
+        /// 添加子节点
+        /// </summary>
+        public void AddChild(TreeNode<T> child)
+        {
+            child.Parent = this;
+            Children.Add(child);
+        }
 
-	/// <summary>
-	/// 构造
-	/// </summary>
-	/// <param name="id">节点ID</param>
-	/// <param name="parentId">父节点ID</param>
-	/// <param name="value">节点值</param>
-	public TreeNode(T id, T? parentId, V value)
-	{
-		Id = id;
-		ParentId = parentId;
-		Value = value;
-	}
-}
+        /// <summary>
+        /// 移除子节点
+        /// </summary>
+        public bool RemoveChild(TreeNode<T> child)
+        {
+            child.Parent = null;
+            return Children.Remove(child);
+        }
 
-/// <summary>
-/// 树结构工具类
-/// </summary>
-public static class TreeUtil
-{
-	/// <summary>
-	/// 将扁平结构转换为树结构
-	/// </summary>
-	/// <typeparam name="T">节点ID类型</typeparam>
-	/// <typeparam name="V">节点值类型</typeparam>
-	/// <param name="nodes">扁平节点列表</param>
-	/// <param name="rootId">根节点ID（null表示没有父节点的为根节点）</param>
-	/// <returns>树结构的根节点列表</returns>
-	public static IList<ITreeNode<T, V>> BuildTree<T, V>(IEnumerable<ITreeNode<T, V>> nodes, T? rootId = default)
-	{
-		var nodeList = nodes.ToList();
-		var lookup = nodeList.ToLookup(n => n.ParentId);
+        /// <summary>
+        /// 获取所有祖先
+        /// </summary>
+        public IEnumerable<TreeNode<T>> GetAncestors()
+        {
+            var node = Parent;
+            while (node != null)
+            {
+                yield return node;
+                node = node.Parent;
+            }
+        }
 
-		IList<ITreeNode<T, V>> BuildChildren(T? parentId)
-		{
-			return lookup[parentId]
-				.Select(n =>
-				{
-					if (n is TreeNode<T, V> treeNode)
-						treeNode.Children = BuildChildren(n.Id);
-					return n;
-				})
-				.ToList();
-		}
+        /// <summary>
+        /// 获取所有后代
+        /// </summary>
+        public IEnumerable<TreeNode<T>> GetDescendants()
+        {
+            var stack = new Stack<TreeNode<T>>();
+            stack.Push(this);
 
-		return BuildChildren(rootId);
-	}
+            while (stack.Count > 0)
+            {
+                var node = stack.Pop();
+                foreach (var child in node.Children)
+                {
+                    yield return child;
+                    stack.Push(child);
+                }
+            }
+        }
 
-	/// <summary>
-	/// 获取所有叶子节点
-	/// </summary>
-	/// <typeparam name="T">节点ID类型</typeparam>
-	/// <typeparam name="V">节点值类型</typeparam>
-	/// <param name="roots">根节点列表</param>
-	/// <returns>叶子节点列表</returns>
-	public static IList<ITreeNode<T, V>> GetLeaves<T, V>(IEnumerable<ITreeNode<T, V>> roots)
-	{
-		var leaves = new List<ITreeNode<T, V>>();
-		void CollectLeaves(ITreeNode<T, V> node)
-		{
-			if (node.Children.Count == 0)
-				leaves.Add(node);
-			else
-				foreach (var child in node.Children)
-					CollectLeaves(child);
-		}
+        /// <summary>
+        /// 遍历所有节点
+        /// </summary>
+        public IEnumerable<TreeNode<T>> Traverse()
+        {
+            yield return this;
+            foreach (var child in Children)
+            {
+                foreach (var descendant in child.Traverse())
+                {
+                    yield return descendant;
+                }
+            }
+        }
+    }
 
-		foreach (var root in roots)
-			CollectLeaves(root);
+    /// <summary>
+    /// 树
+    /// </summary>
+    public class Tree<T>
+    {
+        /// <summary>
+        /// 根节点
+        /// </summary>
+        public TreeNode<T> Root { get; }
 
-		return leaves;
-	}
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public Tree(T rootData)
+        {
+            Root = new TreeNode<T>(rootData);
+        }
 
-	/// <summary>
-	/// 获取树的深度
-	/// </summary>
-	/// <typeparam name="T">节点ID类型</typeparam>
-	/// <typeparam name="V">节点值类型</typeparam>
-	/// <param name="root">根节点</param>
-	/// <returns>深度</returns>
-	public static int GetDepth<T, V>(ITreeNode<T, V> root)
-	{
-		int GetDepthInternal(ITreeNode<T, V> node, int currentDepth)
-		{
-			if (node.Children.Count == 0)
-				return currentDepth;
+        /// <summary>
+        /// 获取所有节点
+        /// </summary>
+        public IEnumerable<TreeNode<T>> GetAllNodes()
+        {
+            return Root.Traverse();
+        }
 
-			return node.Children.Max(c => GetDepthInternal(c, currentDepth + 1));
-		}
-
-		return GetDepthInternal(root, 1);
-	}
-
-	/// <summary>
-	/// 遍历树（前序遍历）
-	/// </summary>
-	/// <typeparam name="T">节点ID类型</typeparam>
-	/// <typeparam name="V">节点值类型</typeparam>
-	/// <param name="root">根节点</param>
-	/// <param name="action">遍历动作</param>
-	public static void Traverse<T, V>(ITreeNode<T, V> root, Action<ITreeNode<T, V>, int> action)
-	{
-		void TraverseInternal(ITreeNode<T, V> node, int depth)
-		{
-			action(node, depth);
-			foreach (var child in node.Children)
-				TraverseInternal(child, depth + 1);
-		}
-
-		TraverseInternal(root, 0);
-	}
+        /// <summary>
+        /// 获取节点数量
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                int count = 0;
+                foreach (var _ in GetAllNodes())
+                {
+                    count++;
+                }
+                return count;
+            }
+        }
+    }
 }

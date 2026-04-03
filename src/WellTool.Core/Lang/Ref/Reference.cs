@@ -1,130 +1,67 @@
-using System.Runtime.CompilerServices;
+using System;
 
-namespace WellTool.Core.Lang.Ref;
-
-/// <summary>
-/// 引用类型接口
-/// </summary>
-/// <typeparam name="T">引用对象类型</typeparam>
-public interface IReference<T>
+namespace WellTool.Core.Lang.Ref
 {
-	/// <summary>
-	/// 获取引用对象
-	/// </summary>
-	T? Get();
+    /// <summary>
+    /// 引用类型，用于包装对象但不影响GC
+    /// </summary>
+    public class Reference<T> where T : class
+    {
+        private WeakReference<T> _weakRef;
 
-	/// <summary>
-	/// 设置引用对象
-	/// </summary>
-	/// <param name="value">值</param>
-	void Set(T? value);
-}
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public Reference(T value)
+        {
+            _weakRef = new WeakReference<T>(value);
+        }
 
-/// <summary>
-/// 强引用包装
-/// </summary>
-/// <typeparam name="T">对象类型</typeparam>
-public class StrongReference<T> : IReference<T> where T : class
-{
-	private T? _value;
+        /// <summary>
+        /// 获取引用对象
+        /// </summary>
+        public T Get()
+        {
+            if (_weakRef.TryGetTarget(out var target))
+            {
+                return target;
+            }
+            return null;
+        }
 
-	/// <inheritdoc />
-	public T? Get() => _value;
+        /// <summary>
+        /// 是否仍被引用
+        /// </summary>
+        public bool IsAlive => _weakRef.TryGetTarget(out _);
 
-	/// <inheritdoc />
-	public void Set(T? value) => _value = value;
+        /// <summary>
+        /// 清空引用
+        /// </summary>
+        public void Clear()
+        {
+            _weakRef = null;
+        }
+    }
 
-	/// <summary>
-	/// 构造
-	/// </summary>
-	/// <param name="value">初始值</param>
-	public StrongReference(T? value = null)
-	{
-		_value = value;
-	}
-}
+    /// <summary>
+    /// 引用扩展
+    /// </summary>
+    public static class ReferenceExtensions
+    {
+        /// <summary>
+        /// 创建引用
+        /// </summary>
+        public static Reference<T> AsRef<T>(this T value) where T : class
+        {
+            return new Reference<T>(value);
+        }
 
-/// <summary>
-/// 弱引用包装
-/// </summary>
-/// <typeparam name="T">对象类型</typeparam>
-public class WeakReference<T> : IReference<T> where T : class
-{
-	private readonly System.WeakReference<T> _weakReference;
-
-	/// <inheritdoc />
-	public T? Get()
-	{
-		_weakReference.TryGetTarget(out var value);
-		return value;
-	}
-
-	/// <inheritdoc />
-	public void Set(T? value)
-	{
-		_weakReference.SetTarget(value!);
-	}
-
-	/// <summary>
-	/// 构造
-	/// </summary>
-	/// <param name="value">初始值</param>
-	public WeakReference(T? value = null)
-	{
-		_weakReference = new System.WeakReference<T>(value!);
-	}
-
-	/// <summary>
-	/// 是否被回收
-	/// </summary>
-	public bool IsAlive => _weakReference.TryGetTarget(out _);
-}
-
-/// <summary>
-/// 软引用包装（.NET中WeakReference可近似替代）
-/// </summary>
-/// <typeparam name="T">对象类型</typeparam>
-public class SoftReference<T> : IReference<T> where T : class
-{
-	private System.WeakReference<T> _softReference;
-
-	/// <inheritdoc />
-	public T? Get()
-	{
-		_softReference.TryGetTarget(out var value);
-		return value;
-	}
-
-	/// <inheritdoc />
-	public void Set(T? value)
-	{
-		_softReference = new System.WeakReference<T>(value!);
-	}
-
-	/// <summary>
-	/// 构造
-	/// </summary>
-	/// <param name="value">初始值</param>
-	public SoftReference(T? value = null)
-	{
-		_softReference = new System.WeakReference<T>(value!);
-	}
-
-	/// <summary>
-	/// 是否被回收
-	/// </summary>
-	public bool IsAlive => _softReference.TryGetTarget(out _);
-}
-
-/// <summary>
-/// 幻影引用（仅用于追踪对象回收）
-/// </summary>
-/// <typeparam name="T">对象类型</typeparam>
-public class PhantomReference<T> : IReference<T> where T : class
-{
-	/// <inheritdoc />
-	public T? Get() => null; // PhantomReference永远返回null
-
-	/// <inheritdoc />
-	public void Set(T? value) { /* 幻影引用不能设置值 */ }
+        /// <summary>
+        /// 获取值，为null时返回默认值
+        /// </summary>
+        public static T GetValueOrDefault<T>(this Reference<T> reference, T defaultValue = null) where T : class
+        {
+            return reference?.Get() ?? defaultValue;
+        }
+    }
 }

@@ -1,45 +1,90 @@
-namespace WellTool.Core.Lang.Func;
+using System;
 
-/// <summary>
-/// 无返回值函数对象接口
-/// </summary>
-/// <typeparam name="P">参数类型</typeparam>
-public interface IVoidFunc<P>
+namespace WellTool.Core.Lang.Func
 {
-	/// <summary>
-	/// 执行函数
-	/// </summary>
-	/// <param name="parameters">参数列表</param>
-	void Call(params P[] parameters);
+    /// <summary>
+    /// 无参无返回值委托
+    /// </summary>
+    public delegate void VoidFunc();
 
-	/// <summary>
-	/// 执行函数，异常包装为RuntimeException
-	/// </summary>
-	/// <param name="parameters">参数列表</param>
-	void CallWithRuntimeException(params P[] parameters);
-}
+    /// <summary>
+    /// 单参数无返回值委托
+    /// </summary>
+    public delegate void VoidFunc<T>(T arg);
 
-/// <summary>
-/// 三参数无返回值函数对象接口
-/// </summary>
-/// <typeparam name="P1">参数1类型</typeparam>
-/// <typeparam name="P2">参数2类型</typeparam>
-/// <typeparam name="P3">参数3类型</typeparam>
-public interface IVoidFunc3<P1, P2, P3>
-{
-	/// <summary>
-	/// 执行函数
-	/// </summary>
-	/// <param name="p1">参数1</param>
-	/// <param name="p2">参数2</param>
-	/// <param name="p3">参数3</param>
-	void Call(P1 p1, P2 p2, P3 p3);
+    /// <summary>
+    /// 双参数无返回值委托
+    /// </summary>
+    public delegate void VoidFunc<T1, T2>(T1 arg1, T2 arg2);
 
-	/// <summary>
-	/// 执行函数，异常包装为RuntimeException
-	/// </summary>
-	/// <param name="p1">参数1</param>
-	/// <param name="p2">参数2</param>
-	/// <param name="p3">参数3</param>
-	void CallWithRuntimeException(P1 p1, P2 p2, P3 p3);
+    /// <summary>
+    /// Lambda表达式工具
+    /// </summary>
+    public static class LambdaUtil
+    {
+        /// <summary>
+        /// 将值类型的工厂方法转换为引用类型
+        /// </summary>
+        public static Func<T> BoxValue<T>(Func<T> factory) where T : struct
+        {
+            return () => factory();
+        }
+
+        /// <summary>
+        /// 安全调用
+        /// </summary>
+        public static void SafeCall(Action action)
+        {
+            try
+            {
+                action?.Invoke();
+            }
+            catch
+            {
+                // 忽略异常
+            }
+        }
+
+        /// <summary>
+        /// 安全调用
+        /// </summary>
+        public static TResult SafeCall<TResult>(Func<TResult> func, TResult defaultValue = default)
+        {
+            try
+            {
+                return func?.Invoke() ?? defaultValue;
+            }
+            catch
+            {
+                return defaultValue;
+            }
+        }
+
+        /// <summary>
+        /// 延迟执行
+        /// </summary>
+        public static IDisposable Delay(Action action, TimeSpan delay)
+        {
+            var timer = new System.Timers.Timer(delay.TotalMilliseconds);
+            timer.Elapsed += (s, e) =>
+            {
+                action?.Invoke();
+                timer.Stop();
+                timer.Dispose();
+            };
+            timer.Start();
+            return timer;
+        }
+
+        /// <summary>
+        /// 执行并计时
+        /// </summary>
+        public static TimeSpan Execute(Action action)
+        {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            action?.Invoke();
+            sw.Stop();
+            return sw.Elapsed;
+        }
+    }
 }

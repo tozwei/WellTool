@@ -1,24 +1,45 @@
-namespace WellTool.Core.Lang.Func;
+using System;
 
-/// <summary>
-/// 带两个参数的Supplier实现
-/// </summary>
-/// <typeparam name="T">目标类型</typeparam>
-/// <typeparam name="P1">参数1类型</typeparam>
-/// <typeparam name="P2">参数2类型</typeparam>
-public class Supplier2<T, P1, P2> : ISupplier2<T, P1, P2>
+namespace WellTool.Core.Lang.Func
 {
-	private readonly Func<P1, P2, T> _func;
+    /// <summary>
+    /// 2参数提供者
+    /// </summary>
+    public delegate T2 Supplier2<T1, T2>(T1 arg1);
 
-	/// <summary>
-	/// 构造
-	/// </summary>
-	/// <param name="func">工厂函数</param>
-	public Supplier2(Func<P1, P2, T> func)
-	{
-		_func = func ?? throw new ArgumentNullException(nameof(func));
-	}
+    /// <summary>
+    /// 2参数提供者
+    /// </summary>
+    public delegate T3 Supplier3<T1, T2, T3>(T1 arg1, T2 arg2);
 
-	/// <inheritdoc />
-	public T Get(P1 p1, P2 p2) => _func(p1, p2);
+    /// <summary>
+    /// 4参数提供者
+    /// </summary>
+    public delegate T4 Supplier4<T1, T2, T3, T4>(T1 arg1, T2 arg2, T3 arg3);
+
+    /// <summary>
+    /// 5参数提供者
+    /// </summary>
+    public delegate T5 Supplier5<T1, T2, T3, T4, T5>(T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+
+    /// <summary>
+    /// 消费者接口
+    /// </summary>
+    public interface IConsumer<in T>
+    {
+        /// <summary>
+        /// 消费值
+        /// </summary>
+        void Accept(T value);
+    }
+
+    /// <summary>
+    /// 2参数消费者
+    /// </summary>
+    public delegate void Consumer2<T1, T2>(T1 arg1, T2 arg2);
+
+    /// <summary>
+    /// 3参数消费者
+    /// </summary>
+    public delegate void Consumer3<T1, T2, T3>(T1 arg1, T2 arg2, T3 arg3);
 }

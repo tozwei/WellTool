@@ -2,11 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
-#if WINDOWS
 using System.CodeDom.Compiler;
 using System.Reflection;
-#endif
 
 namespace WellTool.Core.Compiler
 {
@@ -14,7 +11,6 @@ namespace WellTool.Core.Compiler
     /// Java 源码编译器
     /// 支持动态编译 Java 源码并加载到 ClassLoader，从而获取动态加载的类
     /// </summary>
-#if WINDOWS
     public class JavaSourceCompiler
     {
         private readonly List<string> _sourceFiles = new List<string>();
@@ -248,21 +244,4 @@ namespace WellTool.Core.Compiler
             return _assembly.GetType(className);
         }
     }
-#else
-    public class JavaSourceCompiler
-    {
-        public static JavaSourceCompiler Create(ClassLoader parent) => new JavaSourceCompiler();
-        public JavaSourceCompiler AddSource(params object[] resources) => this;
-        public JavaSourceCompiler AddSource(params FileInfo[] files) => this;
-        public JavaSourceCompiler AddSource(Dictionary<string, string> sourceCodeMap) => this;
-        public JavaSourceCompiler AddSource(string className, string sourceCode) => this;
-        public JavaSourceCompiler AddLibrary(params FileInfo[] files) => this;
-        public ClassLoader Compile() => null;
-        public ClassLoader Compile(List<string> options) => null;
-    }
-
-    public interface Resource { }
-    public class FileResource : Resource { public FileInfo File { get; } public FileResource(FileInfo file) { File = file; } }
-    public class ClassLoader { public ClassLoader(object assembly) { } public Type LoadClass(string className) => null; }
-#endif
 }

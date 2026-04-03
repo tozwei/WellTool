@@ -1,9 +1,5 @@
 using System;
 
-#if WINDOWS
-using System.Drawing;
-#endif
-
 namespace WellTool.Core.Img
 {
     /// <summary>

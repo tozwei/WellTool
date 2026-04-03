@@ -1,207 +1,142 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace WellTool.Core.Lang;
-
-/// <summary>
-/// 范围生成器。根据给定的初始值、结束值和步进生成一个步进列表生成器
-/// </summary>
-/// <typeparam name="T">生成范围对象的类型</typeparam>
-public class Range<T> : IEnumerable<T>, IEnumerator<T>
+namespace WellTool.Core.Lang
 {
-	private readonly T _start;
-	private readonly T _end;
-	private T? _next;
-	private readonly IStepper<T> _stepper;
-	private int _index;
-	private readonly bool _includeStart;
-	private readonly bool _includeEnd;
+    /// <summary>
+    /// 范围，用于表示一个起始值到结束值的范围
+    /// </summary>
+    public class Range<T> : IEnumerable<T> where T : IComparable<T>
+    {
+        /// <summary>
+        /// 起始值
+        /// </summary>
+        public T Start { get; }
 
-	/// <summary>
-	/// 构造
-	/// </summary>
-	/// <param name="start">起始对象（包括）</param>
-	/// <param name="stepper">步进</param>
-	public Range(T start, IStepper<T> stepper)
-		: this(start, default!, stepper, true, true)
-	{
-	}
+        /// <summary>
+        /// 结束值
+        /// </summary>
+        public T End { get; }
 
-	/// <summary>
-	/// 构造
-	/// </summary>
-	/// <param name="start">起始对象（包含）</param>
-	/// <param name="end">结束对象（包含）</param>
-	/// <param name="stepper">步进</param>
-	public Range(T start, T end, IStepper<T> stepper)
-		: this(start, end, stepper, true, true)
-	{
-	}
+        /// <summary>
+        /// 步长
+        /// </summary>
+        public T Step { get; set; }
 
-	/// <summary>
-	/// 构造
-	/// </summary>
-	/// <param name="start">起始对象</param>
-	/// <param name="end">结束对象</param>
-	/// <param name="stepper">步进</param>
-	/// <param name="isIncludeStart">是否包含第一个元素</param>
-	/// <param name="isIncludeEnd">是否包含最后一个元素</param>
-	public Range(T start, T end, IStepper<T> stepper, bool isIncludeStart, bool isIncludeEnd)
-	{
-		_start = start!;
-		_end = end!;
-		_stepper = stepper;
-		_next = SafeStep(_start);
-		_includeStart = isIncludeStart;
-		_includeEnd = isIncludeEnd;
-		_index = 0;
-	}
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public Range(T start, T end, T step = default)
+        {
+            Start = start;
+            End = end;
+            Step = step;
+        }
 
-	/// <summary>
-	/// 重置Range
-	/// </summary>
-	/// <returns>this</returns>
-	public Range<T> Reset()
-	{
-		_index = 0;
-		_next = SafeStep(_start);
-		return this;
-	}
+        /// <summary>
+        /// 检查值是否在范围内
+        /// </summary>
+        public bool Contains(T value)
+        {
+            return value.CompareTo(Start) >= 0 && value.CompareTo(End) <= 0;
+        }
 
-	/// <summary>
-	/// 步进接口，此接口用于实现如何对一个对象按照指定步进增加步进
-	/// </summary>
-	public interface IStepper<TR>
-	{
-		/// <summary>
-		/// 增加步进
-		/// </summary>
-		/// <param name="current">上一次增加步进后的基础对象</param>
-		/// <param name="end">结束对象</param>
-		/// <param name="index">当前索引</param>
-		/// <returns>增加步进后的对象</returns>
-		TR Step(TR current, TR end, int index);
-	}
+        /// <summary>
+        /// 获取枚举器
+        /// </summary>
+        public IEnumerator<T> GetEnumerator()
+        {
+            if (typeof(T) == typeof(int))
+            {
+                return (IEnumerator<T>)new IntRangeIterator(Convert.ToInt32(Start), Convert.ToInt32(End));
+            }
+            if (typeof(T) == typeof(long))
+            {
+                return (IEnumerator<T>)new LongRangeIterator(Convert.ToInt64(Start), Convert.ToInt64(End));
+            }
+            throw new NotSupportedException($"Range of {typeof(T).Name} is not supported");
+        }
 
-	/// <summary>
-	/// 获取当前元素
-	/// </summary>
-	public T Current
-	{
-		get
-		{
-			if (_index == 0)
-				return _start;
-			return _next!;
-		}
-	}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
-	object? IEnumerator.Current => Current;
+        private class IntRangeIterator : IEnumerator<T>
+        {
+            private int _current;
+            private readonly int _end;
+            private readonly int _step;
 
-	/// <summary>
-	/// 移动到下一个元素
-	/// </summary>
-	public bool MoveNext()
-	{
-		if (_index == 0)
-		{
-			if (!_includeStart)
-			{
-				_index++;
-				return MoveNext();
-			}
-			_index++;
-			return true;
-		}
+            public IntRangeIterator(int start, int end, int step = 1)
+            {
+                _current = start - step;
+                _end = end;
+                _step = step;
+            }
 
-		try
-		{
-			_next = SafeStep(_next!);
-		}
-		catch
-		{
-			return false;
-		}
+            public T Current => (T)(object)_current;
+            object IEnumerator.Current => Current;
 
-		if (!_includeEnd && EqualityComparer<T>.Default.Equals(_next, _end))
-			return false;
+            public bool MoveNext()
+            {
+                _current += _step;
+                return _current <= _end;
+            }
 
-		_index++;
-		return true;
-	}
+            public void Reset()
+            {
+                throw new NotImplementedException();
+            }
 
-	/// <summary>
-	/// 不抛异常的获取下一步进的元素
-	/// </summary>
-	private T SafeStep(T baseObj)
-	{
-		try
-		{
-			return _stepper.Step(baseObj, _end, _index);
-		}
-		catch
-		{
-			return default!;
-		}
-	}
+            public void Dispose() { }
+        }
 
-	void IEnumerator.Reset()
-	{
-		Reset();
-	}
+        private class LongRangeIterator : IEnumerator<T>
+        {
+            private long _current;
+            private readonly long _end;
+            private readonly long _step;
 
-	void IDisposable.Dispose()
-	{
-	}
+            public LongRangeIterator(long start, long end, long step = 1)
+            {
+                _current = start - step;
+                _end = end;
+                _step = step;
+            }
 
-	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-	public IEnumerator<T> GetEnumerator() => this;
-}
+            public T Current => (T)(object)_current;
+            object IEnumerator.Current => Current;
 
-/// <summary>
-/// Range的静态工厂方法
-/// </summary>
-public static class Range
-{
-	/// <summary>
-	/// 创建整数范围
-	/// </summary>
-	/// <param name="start">起始值（包含）</param>
-	/// <param name="end">结束值（包含）</param>
-	/// <param name="step">步进</param>
-	/// <returns>Range</returns>
-	public static Range<int> OfInt(int start, int end, int step = 1)
-	{
-		return new Range<int>(start, end, new IntStepper(step), true, true);
-	}
+            public bool MoveNext()
+            {
+                _current += _step;
+                return _current <= _end;
+            }
 
-	/// <summary>
-	/// 创建整数范围
-	/// </summary>
-	/// <param name="start">起始值（包含）</param>
-	/// <param name="end">结束值（包含）</param>
-	/// <param name="includeEnd">是否包含结束值</param>
-	/// <returns>Range</returns>
-	public static Range<int> OfInt(int start, int end, bool includeEnd)
-	{
-		return new Range<int>(start, end, new IntStepper(1), true, includeEnd);
-	}
+            public void Reset()
+            {
+                throw new NotImplementedException();
+            }
 
-	private class IntStepper : Range<int>.IStepper<int>
-	{
-		private readonly int _step;
+            public void Dispose() { }
+        }
 
-		public IntStepper(int step)
-		{
-			_step = step;
-		}
+        /// <summary>
+        /// 创建整数范围
+        /// </summary>
+        public static Range<int> Of(int start, int end, int step = 1)
+        {
+            return new Range<int>(start, end, step);
+        }
 
-		int Range<int>.IStepper<int>.Step(int current, int end, int index)
-		{
-			var next = current + _step;
-			if ((_step > 0 && next > end) || (_step < 0 && next < end))
-				throw new InvalidOperationException("Step out of range");
-			return next;
-		}
-	}
+        /// <summary>
+        /// 创建长整数范围
+        /// </summary>
+        public static Range<long> Of(long start, long end, long step = 1)
+        {
+            return new Range<long>(start, end, step);
+        }
+    }
 }

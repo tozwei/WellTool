@@ -3,33 +3,57 @@ using System;
 namespace WellTool.Core.Lang.Func
 {
     /// <summary>
-    /// 无参数的函数对象
-    /// 一个函数接口代表一个函数，用于包装一个函数为对象
+    /// 0参数函数
     /// </summary>
-    /// <typeparam name="R">返回值类型</typeparam>
-    public delegate R Func0<out R>();
+    /// <typeparam name="T">返回值类型</typeparam>
+    public delegate T Func0<T>();
 
     /// <summary>
-    /// Func0 扩展方法
+    /// 1参数函数
     /// </summary>
-    public static class Func0Extensions
+    /// <typeparam name="T1">参数1类型</typeparam>
+    /// <typeparam name="T">返回值类型</typeparam>
+    public delegate T Func1<T1, T>(T1 arg1);
+
+    /// <summary>
+    /// 函数扩展
+    /// </summary>
+    public static class FuncExtensions
     {
         /// <summary>
-        /// 执行函数，异常包装为RuntimeException
+        /// 组合函数
         /// </summary>
-        /// <typeparam name="R">返回值类型</typeparam>
-        /// <param name="func">函数</param>
-        /// <returns>函数执行结果</returns>
-        public static R CallWithRuntimeException<R>(this Func0<R> func)
+        public static Func<T1, R> Compose<T1, T2, R>(this Func1<T2, R> func, Func<T1, T2> before)
         {
-            try
+            return arg => func(before(arg));
+        }
+
+        /// <summary>
+        /// 先执行
+        /// </summary>
+        public static Action<T1> Before<T1, T2>(this Action<T2> action, Func<T1, T2> before)
+        {
+            return arg => action(before(arg));
+        }
+
+        /// <summary>
+        /// 链式执行
+        /// </summary>
+        public static Action<T1> AndThen<T1>(this Action<T1> first, Action<T1> second)
+        {
+            return arg =>
             {
-                return func();
-            }
-            catch (Exception e)
-            {
-                throw new SystemException("Function execution failed", e);
-            }
+                first(arg);
+                second(arg);
+            };
+        }
+
+        /// <summary>
+        /// 链式执行
+        /// </summary>
+        public static Func<T1, R> AndThen<T1, T2, R>(this Func<T1, T2> first, Func<T2, R> second)
+        {
+            return arg => second(first(arg));
         }
     }
 }

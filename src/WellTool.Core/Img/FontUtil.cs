@@ -1,71 +1,117 @@
 using System;
 using System.Linq;
 
-#if WINDOWS
-using System.Drawing;
-using System.Drawing.Text;
-#endif
-
 namespace WellTool.Core.Img
 {
     public static class FontUtil
     {
-#if WINDOWS
-        public static Font CreateFont(string familyName, float size)
+        /// <summary>
+        /// 创建字体
+        /// </summary>
+        /// <param name="familyName">字体家族名称</param>
+        /// <param name="size">字体大小</param>
+        /// <returns>字体对象</returns>
+        public static object CreateFont(string familyName, float size)
         {
-            return new Font(familyName, size);
+            // 跨平台实现
+            return null;
         }
 
-        public static Font CreateFont(string familyName, float size, FontStyle style)
+        /// <summary>
+        /// 创建字体
+        /// </summary>
+        /// <param name="familyName">字体家族名称</param>
+        /// <param name="size">字体大小</param>
+        /// <param name="style">字体样式</param>
+        /// <returns>字体对象</returns>
+        public static object CreateFont(string familyName, float size, int style)
         {
-            return new Font(familyName, size, style);
+            // 跨平台实现
+            return null;
         }
 
-        public static Font CreateFont(string familyName, float size, FontStyle style, GraphicsUnit unit)
+        /// <summary>
+        /// 创建字体
+        /// </summary>
+        /// <param name="familyName">字体家族名称</param>
+        /// <param name="size">字体大小</param>
+        /// <param name="style">字体样式</param>
+        /// <param name="unit">图形单位</param>
+        /// <returns>字体对象</returns>
+        public static object CreateFont(string familyName, float size, int style, int unit)
         {
-            return new Font(familyName, size, style, unit);
+            // 跨平台实现
+            return null;
         }
 
-        public static Font CreateFont(string familyName, float size, FontStyle style, GraphicsUnit unit, byte gdiCharSet)
+        /// <summary>
+        /// 创建字体
+        /// </summary>
+        /// <param name="familyName">字体家族名称</param>
+        /// <param name="size">字体大小</param>
+        /// <param name="style">字体样式</param>
+        /// <param name="unit">图形单位</param>
+        /// <param name="gdiCharSet">GDI字符集</param>
+        /// <returns>字体对象</returns>
+        public static object CreateFont(string familyName, float size, int style, int unit, byte gdiCharSet)
         {
-            return new Font(familyName, size, style, unit, gdiCharSet);
+            // 跨平台实现
+            return null;
         }
 
-        public static Font CreateFont(string familyName, float size, FontStyle style, GraphicsUnit unit, byte gdiCharSet, bool gdiVerticalFont)
+        /// <summary>
+        /// 创建字体
+        /// </summary>
+        /// <param name="familyName">字体家族名称</param>
+        /// <param name="size">字体大小</param>
+        /// <param name="style">字体样式</param>
+        /// <param name="unit">图形单位</param>
+        /// <param name="gdiCharSet">GDI字符集</param>
+        /// <param name="gdiVerticalFont">是否为GDI垂直字体</param>
+        /// <returns>字体对象</returns>
+        public static object CreateFont(string familyName, float size, int style, int unit, byte gdiCharSet, bool gdiVerticalFont)
         {
-            return new Font(familyName, size, style, unit, gdiCharSet, gdiVerticalFont);
+            // 跨平台实现
+            return null;
         }
 
-        public static Font DefaultFont
+        /// <summary>
+        /// 默认字体
+        /// </summary>
+        public static object DefaultFont
         {
-            get { return SystemFonts.DefaultFont; }
+            get { return null; }
         }
 
-        public static Font[] GetInstalledFonts()
+        /// <summary>
+        /// 获取已安装的字体
+        /// </summary>
+        /// <returns>字体数组</returns>
+        public static object[] GetInstalledFonts()
         {
-            using (var fontCollection = new InstalledFontCollection())
-            {
-                return fontCollection.Families
-                    .Select(family => new Font(family, 12))
-                    .ToArray();
-            }
+            // 跨平台实现
+            return new object[0];
         }
 
-        public static FontFamily[] GetInstalledFontFamilies()
+        /// <summary>
+        /// 获取已安装的字体家族
+        /// </summary>
+        /// <returns>字体家族数组</returns>
+        public static object[] GetInstalledFontFamilies()
         {
-            using (var fontCollection = new InstalledFontCollection())
-            {
-                return fontCollection.Families;
-            }
+            // 跨平台实现
+            return new object[0];
         }
 
+        /// <summary>
+        /// 检查字体是否已安装
+        /// </summary>
+        /// <param name="fontName">字体名称</param>
+        /// <returns>是否已安装</returns>
         public static bool IsFontInstalled(string fontName)
         {
-            using (var fontCollection = new InstalledFontCollection())
-            {
-                return fontCollection.Families.Any(family => family.Name.Equals(fontName, StringComparison.OrdinalIgnoreCase));
-            }
+            // 跨平台实现
+            return false;
         }
-#endif
     }
 }

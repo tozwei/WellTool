@@ -9,7 +9,7 @@ namespace WellTool.Core.Util
     public static class RadixUtil
     {
         private const string Digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        private const int MaxRadix = Digits.Length;
+        private static readonly int MaxRadix = Digits.Length;
         private const int MinRadix = 2;
 
         /// <summary>

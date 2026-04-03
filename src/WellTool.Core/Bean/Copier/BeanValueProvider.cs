@@ -25,8 +25,17 @@ namespace WellTool.Core.Bean.Copier
         /// <summary>
         /// 获取值
         /// </summary>
-        public object GetValue(string name)
+        /// <param name="key">Bean对象中参数名</param>
+        /// <param name="valueType">被注入的值的类型</param>
+        /// <returns>对应参数名的值</returns>
+        public object Value(object key, Type valueType)
         {
+            var name = key as string;
+            if (name == null)
+            {
+                return null;
+            }
+            
             var prop = _beanDesc.GetProp(name);
             if (prop != null)
             {
@@ -38,8 +47,16 @@ namespace WellTool.Core.Bean.Copier
         /// <summary>
         /// 是否包含指定属性
         /// </summary>
-        public bool ContainsKey(string name)
+        /// <param name="key">Bean对象中参数名</param>
+        /// <returns>是否包含指定KEY</returns>
+        public bool ContainsKey(object key)
         {
+            var name = key as string;
+            if (name == null)
+            {
+                return false;
+            }
+            
             return _beanDesc.GetProp(name) != null;
         }
     }

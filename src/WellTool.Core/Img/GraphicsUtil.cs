@@ -1,86 +1,181 @@
 using System;
 
-#if WINDOWS
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Drawing.Text;
-#endif
-
 namespace WellTool.Core.Img
 {
     public static class GraphicsUtil
     {
-#if WINDOWS
-        public static Graphics CreateGraphics(Image image)
+        /// <summary>
+        /// 创建图形对象
+        /// </summary>
+        /// <param name="image">图像对象</param>
+        /// <returns>图形对象</returns>
+        public static object CreateGraphics(object image)
         {
-            return image != null ? Graphics.FromImage(image) : null;
+            // 跨平台实现
+            return null;
         }
 
-        public static void DrawString(Graphics g, string text, Font font, Brush brush, int x, int y)
+        /// <summary>
+        /// 绘制字符串
+        /// </summary>
+        /// <param name="g">图形对象</param>
+        /// <param name="text">文本</param>
+        /// <param name="font">字体</param>
+        /// <param name="brush">画笔</param>
+        /// <param name="x">X坐标</param>
+        /// <param name="y">Y坐标</param>
+        public static void DrawString(object g, string text, object font, object brush, int x, int y)
         {
-            g?.DrawString(text, font, brush, x, y);
+            // 跨平台实现
         }
 
-        public static void DrawString(Graphics g, string text, Font font, Brush brush, Rectangle rect)
+        /// <summary>
+        /// 绘制字符串
+        /// </summary>
+        /// <param name="g">图形对象</param>
+        /// <param name="text">文本</param>
+        /// <param name="font">字体</param>
+        /// <param name="brush">画笔</param>
+        /// <param name="rect">矩形区域</param>
+        public static void DrawString(object g, string text, object font, object brush, object rect)
         {
-            g?.DrawString(text, font, brush, rect);
+            // 跨平台实现
         }
 
-        public static void DrawLine(Graphics g, Pen pen, int x1, int y1, int x2, int y2)
+        /// <summary>
+        /// 绘制直线
+        /// </summary>
+        /// <param name="g">图形对象</param>
+        /// <param name="pen">钢笔</param>
+        /// <param name="x1">起点X坐标</param>
+        /// <param name="y1">起点Y坐标</param>
+        /// <param name="x2">终点X坐标</param>
+        /// <param name="y2">终点Y坐标</param>
+        public static void DrawLine(object g, object pen, int x1, int y1, int x2, int y2)
         {
-            g?.DrawLine(pen, x1, y1, x2, y2);
+            // 跨平台实现
         }
 
-        public static void DrawRectangle(Graphics g, Pen pen, int x, int y, int width, int height)
+        /// <summary>
+        /// 绘制矩形
+        /// </summary>
+        /// <param name="g">图形对象</param>
+        /// <param name="pen">钢笔</param>
+        /// <param name="x">X坐标</param>
+        /// <param name="y">Y坐标</param>
+        /// <param name="width">宽度</param>
+        /// <param name="height">高度</param>
+        public static void DrawRectangle(object g, object pen, int x, int y, int width, int height)
         {
-            g?.DrawRectangle(pen, x, y, width, height);
+            // 跨平台实现
         }
 
-        public static void FillRectangle(Graphics g, Brush brush, int x, int y, int width, int height)
+        /// <summary>
+        /// 填充矩形
+        /// </summary>
+        /// <param name="g">图形对象</param>
+        /// <param name="brush">画笔</param>
+        /// <param name="x">X坐标</param>
+        /// <param name="y">Y坐标</param>
+        /// <param name="width">宽度</param>
+        /// <param name="height">高度</param>
+        public static void FillRectangle(object g, object brush, int x, int y, int width, int height)
         {
-            g?.FillRectangle(brush, x, y, width, height);
+            // 跨平台实现
         }
 
-        public static void DrawEllipse(Graphics g, Pen pen, int x, int y, int width, int height)
+        /// <summary>
+        /// 绘制椭圆
+        /// </summary>
+        /// <param name="g">图形对象</param>
+        /// <param name="pen">钢笔</param>
+        /// <param name="x">X坐标</param>
+        /// <param name="y">Y坐标</param>
+        /// <param name="width">宽度</param>
+        /// <param name="height">高度</param>
+        public static void DrawEllipse(object g, object pen, int x, int y, int width, int height)
         {
-            g?.DrawEllipse(pen, x, y, width, height);
+            // 跨平台实现
         }
 
-        public static void FillEllipse(Graphics g, Brush brush, int x, int y, int width, int height)
+        /// <summary>
+        /// 填充椭圆
+        /// </summary>
+        /// <param name="g">图形对象</param>
+        /// <param name="brush">画笔</param>
+        /// <param name="x">X坐标</param>
+        /// <param name="y">Y坐标</param>
+        /// <param name="width">宽度</param>
+        /// <param name="height">高度</param>
+        public static void FillEllipse(object g, object brush, int x, int y, int width, int height)
         {
-            g?.FillEllipse(brush, x, y, width, height);
+            // 跨平台实现
         }
 
-        public static void DrawImage(Graphics g, Image image, int x, int y)
+        /// <summary>
+        /// 绘制图像
+        /// </summary>
+        /// <param name="g">图形对象</param>
+        /// <param name="image">图像对象</param>
+        /// <param name="x">X坐标</param>
+        /// <param name="y">Y坐标</param>
+        public static void DrawImage(object g, object image, int x, int y)
         {
-            g?.DrawImage(image, x, y);
+            // 跨平台实现
         }
 
-        public static void DrawImage(Graphics g, Image image, int x, int y, int width, int height)
+        /// <summary>
+        /// 绘制图像
+        /// </summary>
+        /// <param name="g">图形对象</param>
+        /// <param name="image">图像对象</param>
+        /// <param name="x">X坐标</param>
+        /// <param name="y">Y坐标</param>
+        /// <param name="width">宽度</param>
+        /// <param name="height">高度</param>
+        public static void DrawImage(object g, object image, int x, int y, int width, int height)
         {
-            g?.DrawImage(image, x, y, width, height);
+            // 跨平台实现
         }
 
-        public static void SetSmoothingMode(Graphics g, SmoothingMode mode)
+        /// <summary>
+        /// 设置平滑模式
+        /// </summary>
+        /// <param name="g">图形对象</param>
+        /// <param name="mode">平滑模式</param>
+        public static void SetSmoothingMode(object g, int mode)
         {
-            g?.SmoothingMode = mode;
+            // 跨平台实现
         }
 
-        public static void SetTextRenderingHint(Graphics g, TextRenderingHint hint)
+        /// <summary>
+        /// 设置文本渲染提示
+        /// </summary>
+        /// <param name="g">图形对象</param>
+        /// <param name="hint">文本渲染提示</param>
+        public static void SetTextRenderingHint(object g, int hint)
         {
-            g?.TextRenderingHint = hint;
+            // 跨平台实现
         }
 
-        public static void SetCompositingQuality(Graphics g, CompositingQuality quality)
+        /// <summary>
+        /// 设置合成质量
+        /// </summary>
+        /// <param name="g">图形对象</param>
+        /// <param name="quality">合成质量</param>
+        public static void SetCompositingQuality(object g, int quality)
         {
-            g?.CompositingQuality = quality;
+            // 跨平台实现
         }
 
-        public static void SetInterpolationMode(Graphics g, InterpolationMode mode)
+        /// <summary>
+        /// 设置插值模式
+        /// </summary>
+        /// <param name="g">图形对象</param>
+        /// <param name="mode">插值模式</param>
+        public static void SetInterpolationMode(object g, int mode)
         {
-            g?.InterpolationMode = mode;
+            // 跨平台实现
         }
-#endif
     }
 }

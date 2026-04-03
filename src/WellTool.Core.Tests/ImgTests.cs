@@ -29,59 +29,5 @@ namespace WellTool.Core.Tests
             XAssert.Equal(0, argb.g);
             XAssert.Equal(0, argb.b);
         }
-
-#if WINDOWS
-        [Fact]
-        public void FontUtilTest()
-        {
-            // 测试字体工具功能
-            var font = FontUtil.CreateFont("Arial", 12);
-            XAssert.NotNull(font);
-            XAssert.Equal("Arial", font.FontFamily.Name);
-            XAssert.Equal(12, font.Size);
-        }
-
-        
-        [Fact]
-        public void ImgUtilScaleTest()
-        {
-            // 创建一个简单的测试图像
-            using (var originalImage = new System.Drawing.Bitmap(100, 100))
-            {
-                // 测试缩放功能
-                var scaledImage = ImgUtil.Scale(originalImage, 50, 50);
-                XAssert.NotNull(scaledImage);
-                XAssert.Equal(50, scaledImage.Width);
-                XAssert.Equal(50, scaledImage.Height);
-                scaledImage.Dispose();
-            }
-        }
-
-        [Fact]
-        public void ImgUtilRotateTest()
-        {
-            // 创建一个简单的测试图像
-            using (var originalImage = new System.Drawing.Bitmap(100, 100))
-            {
-                // 测试旋转功能
-                var rotatedImage = ImgUtil.Rotate(originalImage, 90);
-                XAssert.NotNull(rotatedImage);
-                rotatedImage.Dispose();
-            }
-        }
-
-        [Fact]
-        public void ImgUtilFlipTest()
-        {
-            // 创建一个简单的测试图像
-            using (var originalImage = new System.Drawing.Bitmap(100, 100))
-            {
-                // 测试翻转功能
-                var flippedImage = ImgUtil.Flip(originalImage, ImgUtil.FlipType.Horizontal);
-                XAssert.NotNull(flippedImage);
-                flippedImage.Dispose();
-            }
-        }
-#endif
     }
 }

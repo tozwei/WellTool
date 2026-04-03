@@ -1,37 +1,46 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
 
 namespace WellTool.Core.Collection
 {
     /// <summary>
-    /// XML 节点列表迭代器
+    /// 节点列表迭代器
     /// </summary>
-    public class NodeListIter : IEnumerable<XmlNode>, IDisposable
+    public class NodeListIter<T> : IEnumerable<T>, IEnumerator<T>
     {
-        private readonly XmlNodeList _nodeList;
+        private readonly List<T> _nodes;
         private int _index = -1;
-        private bool _disposed = false;
 
         /// <summary>
-        /// 构造
+        /// 构造函数
         /// </summary>
-        /// <param name="nodeList">XML 节点列表</param>
-        public NodeListIter(XmlNodeList nodeList)
+        public NodeListIter(params T[] nodes)
         {
-            _nodeList = nodeList ?? throw new ArgumentNullException(nameof(nodeList));
+            _nodes = new List<T>(nodes);
         }
 
         /// <summary>
-        /// 获取迭代器
+        /// 构造函数
         /// </summary>
-        public IEnumerator<XmlNode> GetEnumerator()
+        public NodeListIter(IEnumerable<T> nodes)
         {
-            foreach (XmlNode node in _nodeList)
-            {
-                yield return node;
-            }
+            _nodes = new List<T>(nodes);
+        }
+
+        /// <summary>
+        /// 当前元素
+        /// </summary>
+        public T Current => _index >= 0 && _index < _nodes.Count ? _nodes[_index] : default;
+
+        object IEnumerator.Current => Current;
+
+        /// <summary>
+        /// 获取枚举器
+        /// </summary>
+        public IEnumerator<T> GetEnumerator()
+        {
+            return this;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -40,29 +49,63 @@ namespace WellTool.Core.Collection
         }
 
         /// <summary>
-        /// 获取当前索引
+        /// 移动到下一个元素
         /// </summary>
-        public int CurrentIndex => _index;
+        public bool MoveNext()
+        {
+            if (_index < _nodes.Count)
+            {
+                _index++;
+            }
+            return _index < _nodes.Count;
+        }
 
         /// <summary>
-        /// 获取节点数量
+        /// 重置
         /// </summary>
-        public int Count => _nodeList.Count;
-
-        /// <summary>
-        /// 获取指定索引的节点
-        /// </summary>
-        public XmlNode this[int index] => _nodeList[index];
+        public void Reset()
+        {
+            _index = -1;
+        }
 
         /// <summary>
         /// 释放资源
         /// </summary>
         public void Dispose()
         {
-            if (!_disposed)
-            {
-                _disposed = true;
-            }
+            _nodes.Clear();
+        }
+
+        /// <summary>
+        /// 获取节点数量
+        /// </summary>
+        public int Count => _nodes.Count;
+
+        /// <summary>
+        /// 获取指定索引的节点
+        /// </summary>
+        public T this[int index] => _nodes[index];
+    }
+
+    /// <summary>
+    /// 节点列表迭代器扩展
+    /// </summary>
+    public static class NodeListIterExtensions
+    {
+        /// <summary>
+        /// 创建节点列表迭代器
+        /// </summary>
+        public static NodeListIter<T> ToNodeList<T>(params T[] nodes)
+        {
+            return new NodeListIter<T>(nodes);
+        }
+
+        /// <summary>
+        /// 创建节点列表迭代器
+        /// </summary>
+        public static NodeListIter<T> ToNodeList<T>(this IEnumerable<T> source)
+        {
+            return new NodeListIter<T>(source);
         }
     }
 }

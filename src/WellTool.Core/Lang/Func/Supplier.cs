@@ -1,96 +1,106 @@
-namespace WellTool.Core.Lang.Func;
+using System;
 
-/// <summary>
-/// 带参数的Supplier接口
-/// </summary>
-/// <typeparam name="T">目标类型</typeparam>
-/// <typeparam name="P1">参数1类型</typeparam>
-public interface ISupplier1<T, P1>
+namespace WellTool.Core.Lang.Func
 {
-	/// <summary>
-	/// 生成实例
-	/// </summary>
-	/// <param name="p1">参数1</param>
-	/// <returns>目标对象</returns>
-	T Get(P1 p1);
-}
+    /// <summary>
+    /// 提供者接口
+    /// </summary>
+    public interface ISupplier<T>
+    {
+        /// <summary>
+        /// 获取值
+        /// </summary>
+        T Get();
+    }
 
-/// <summary>
-/// 带两个参数的Supplier接口
-/// </summary>
-/// <typeparam name="T">目标类型</typeparam>
-/// <typeparam name="P1">参数1类型</typeparam>
-/// <typeparam name="P2">参数2类型</typeparam>
-public interface ISupplier2<T, P1, P2>
-{
-	/// <summary>
-	/// 生成实例
-	/// </summary>
-	/// <param name="p1">参数1</param>
-	/// <param name="p2">参数2</param>
-	/// <returns>目标对象</returns>
-	T Get(P1 p1, P2 p2);
-}
+    /// <summary>
+    /// 提供者接口（无参数）
+    /// </summary>
+    public interface ISupplier
+    {
+        /// <summary>
+        /// 获取值
+        /// </summary>
+        object Get();
+    }
 
-/// <summary>
-/// 带三个参数的Supplier接口
-/// </summary>
-/// <typeparam name="T">目标类型</typeparam>
-/// <typeparam name="P1">参数1类型</typeparam>
-/// <typeparam name="P2">参数2类型</typeparam>
-/// <typeparam name="P3">参数3类型</typeparam>
-public interface ISupplier3<T, P1, P2, P3>
-{
-	/// <summary>
-	/// 生成实例
-	/// </summary>
-	/// <param name="p1">参数1</param>
-	/// <param name="p2">参数2</param>
-	/// <param name="p3">参数3</param>
-	/// <returns>目标对象</returns>
-	T Get(P1 p1, P2 p2, P3 p3);
-}
+    /// <summary>
+    /// 提供者
+    /// </summary>
+    /// <typeparam name="T">值类型</typeparam>
+    public class Supplier<T> : ISupplier<T>
+    {
+        private readonly Func<T> _func;
 
-/// <summary>
-/// 带四个参数的Supplier接口
-/// </summary>
-/// <typeparam name="T">目标类型</typeparam>
-/// <typeparam name="P1">参数1类型</typeparam>
-/// <typeparam name="P2">参数2类型</typeparam>
-/// <typeparam name="P3">参数3类型</typeparam>
-/// <typeparam name="P4">参数4类型</typeparam>
-public interface ISupplier4<T, P1, P2, P3, P4>
-{
-	/// <summary>
-	/// 生成实例
-	/// </summary>
-	/// <param name="p1">参数1</param>
-	/// <param name="p2">参数2</param>
-	/// <param name="p3">参数3</param>
-	/// <param name="p4">参数4</param>
-	/// <returns>目标对象</returns>
-	T Get(P1 p1, P2 p2, P3 p3, P4 p4);
-}
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public Supplier(Func<T> func)
+        {
+            _func = func ?? throw new ArgumentNullException(nameof(func));
+        }
 
-/// <summary>
-/// 带五个参数的Supplier接口
-/// </summary>
-/// <typeparam name="T">目标类型</typeparam>
-/// <typeparam name="P1">参数1类型</typeparam>
-/// <typeparam name="P2">参数2类型</typeparam>
-/// <typeparam name="P3">参数3类型</typeparam>
-/// <typeparam name="P4">参数4类型</typeparam>
-/// <typeparam name="P5">参数5类型</typeparam>
-public interface ISupplier5<T, P1, P2, P3, P4, P5>
-{
-	/// <summary>
-	/// 生成实例
-	/// </summary>
-	/// <param name="p1">参数1</param>
-	/// <param name="p2">参数2</param>
-	/// <param name="p3">参数3</param>
-	/// <param name="p4">参数4</param>
-	/// <param name="p5">参数5</param>
-	/// <returns>目标对象</returns>
-	T Get(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5);
+        /// <summary>
+        /// 获取值
+        /// </summary>
+        public T Get()
+        {
+            return _func();
+        }
+
+        /// <summary>
+        /// 转换
+        /// </summary>
+        public R Map<R>(Func<T, R> mapper)
+        {
+            return mapper(_func());
+        }
+    }
+
+    /// <summary>
+    /// 提供者扩展
+    /// </summary>
+    public static class SupplierExtensions
+    {
+        /// <summary>
+        /// 创建提供者
+        /// </summary>
+        public static Supplier<T> ToSupplier<T>(this Func<T> func)
+        {
+            return new Supplier<T>(func);
+        }
+
+        /// <summary>
+        /// 获取值，如果为null则返回默认值
+        /// </summary>
+        public static T GetOrDefault<T>(this Supplier<T> supplier, T defaultValue = default)
+        {
+            return supplier?.Get() ?? defaultValue;
+        }
+
+        /// <summary>
+        /// 获取值，如果为null则使用工厂方法
+        /// </summary>
+        public static T GetOrDefault<T>(this Supplier<T> supplier, Func<T> factory)
+        {
+            return supplier?.Get() ?? factory();
+        }
+    }
+
+    /// <summary>
+    /// 空提供者
+    /// </summary>
+    public class NullSupplier<T> : ISupplier<T>
+    {
+        private static readonly NullSupplier<T> _instance = new NullSupplier<T>();
+
+        public static NullSupplier<T> Instance => _instance;
+
+        private NullSupplier() { }
+
+        public T Get()
+        {
+            return default;
+        }
+    }
 }

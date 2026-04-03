@@ -1,93 +1,148 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+namespace WellTool.Core.IO;
 
+using System;
+using System.Collections.Generic;
 using System.Text;
 
-namespace WellTool.Core.IO
+/// <summary>
+/// 基于 StringBuilder 的快速字符串写入器
+/// 
+/// @author looly
+/// </summary>
+public class FastStringWriter
 {
+    private readonly List<char[]> _buffers = new List<char[]>();
+    private readonly int _bufferSize;
+    private char[]? _currentBuffer;
+    private int _position;
+
     /// <summary>
-    /// 借助{@link StringBuilder} 提供快读的字符串写出，相比.NET的StringWriter非线程安全，速度更快。
+    /// 构造一个默认大小（1024）的写入器
     /// </summary>
-    public class FastStringWriter : TextWriter
+    public FastStringWriter() : this(1024)
     {
-        private readonly StringBuilder _builder;
+    }
 
-        /// <summary>
-        /// 构造
-        /// </summary>
-        public FastStringWriter() : this(16)
-        { }
+    /// <summary>
+    /// 构造一个指定缓冲区大小的写入器
+    /// </summary>
+    /// <param name="bufferSize">缓冲区大小</param>
+    public FastStringWriter(int bufferSize)
+    {
+        _bufferSize = bufferSize > 0 ? bufferSize : 1024;
+        _currentBuffer = new char[_bufferSize];
+        _buffers.Add(_currentBuffer);
+    }
 
-        /// <summary>
-        /// 构造
-        /// </summary>
-        /// <param name="initialSize">初始容量</param>
-        public FastStringWriter(int initialSize)
+    /// <summary>
+    /// 写入字符
+    /// </summary>
+    public void Write(char c)
+    {
+        if (_position >= _currentBuffer!.Length)
         {
-            if (initialSize < 0)
-            {
-                initialSize = 16;
-            }
-            _builder = new StringBuilder(initialSize);
+            NewBuffer();
         }
+        _currentBuffer[_position++] = c;
+    }
 
-        public override void Write(int value)
-        {
-            _builder.Append((char)value);
-        }
+    /// <summary>
+    /// 写入字符串
+    /// </summary>
+    public void Write(string str)
+    {
+        if (string.IsNullOrEmpty(str)) return;
 
-        public override void Write(string value)
+        for (int i = 0; i < str.Length; i++)
         {
-            _builder.Append(value);
+            Write(str[i]);
         }
+    }
 
-        public override void Write(char[] buffer)
-        {
-            _builder.Append(buffer);
-        }
+    /// <summary>
+    /// 写入字符数组
+    /// </summary>
+    public void Write(char[] chars)
+    {
+        if (chars == null || chars.Length == 0) return;
 
-        public override void Write(char[] buffer, int index, int count)
+        for (int i = 0; i < chars.Length; i++)
         {
-            if ((index < 0) || (index > buffer.Length) || (count < 0) ||
-                ((index + count) > buffer.Length) || ((index + count) < 0))
-            {
-                throw new IndexOutOfRangeException();
-            }
-            else if (count == 0)
-            {
-                return;
-            }
-            _builder.Append(buffer, index, count);
+            Write(chars[i]);
         }
+    }
 
-        public override void Flush()
+    /// <summary>
+    /// 写入字符数组的一部分
+    /// </summary>
+    public void Write(char[] chars, int offset, int count)
+    {
+        for (int i = offset; i < offset + count && i < chars.Length; i++)
         {
-            // Nothing to be flushed
+            Write(chars[i]);
         }
+    }
 
-        public override void Close()
-        {
-            // Nothing to be closed
-        }
+    /// <summary>
+    /// 写入换行符
+    /// </summary>
+    public void WriteLine()
+    {
+        Write('\n');
+    }
 
-        public override string ToString()
-        {
-            return _builder.ToString();
-        }
+    /// <summary>
+    /// 写入一行字符串
+    /// </summary>
+    public void WriteLine(string str)
+    {
+        Write(str);
+        WriteLine();
+    }
 
-        public override Encoding Encoding
+    private void NewBuffer()
+    {
+        _currentBuffer = new char[_bufferSize];
+        _buffers.Add(_currentBuffer);
+        _position = 0;
+    }
+
+    /// <summary>
+    /// 获取写入的字符串
+    /// </summary>
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+        foreach (var buffer in _buffers)
         {
-            get { return Encoding.UTF8; }
+            int len = buffer == _currentBuffer ? _position : buffer.Length;
+            sb.Append(buffer, 0, len);
         }
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// 重置写入器
+    /// </summary>
+    public void Reset()
+    {
+        _buffers.Clear();
+        _currentBuffer = new char[_bufferSize];
+        _buffers.Add(_currentBuffer);
+        _position = 0;
+    }
+
+    /// <summary>
+    /// 获取 StringBuilder
+    /// </summary>
+    public StringBuilder ToStringBuilder()
+    {
+        var sb = new StringBuilder();
+        foreach (var buffer in _buffers)
+        {
+            int len = buffer == _currentBuffer ? _position : buffer.Length;
+            sb.Append(buffer, 0, len);
+        }
+        return sb;
     }
 }

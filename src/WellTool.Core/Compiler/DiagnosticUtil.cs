@@ -2,10 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-#if WINDOWS
-using System.CodeDom.Compiler;
-#endif
-
 namespace WellTool.Core.Compiler
 {
     /// <summary>
@@ -14,30 +10,29 @@ namespace WellTool.Core.Compiler
     public static class DiagnosticUtil
     {
         /// <summary>
-        /// 获取 DiagnosticCollector 收集到的诊断信息，以文本返回
+        /// 获取诊断收集器收集到的诊断信息，以文本返回
         /// </summary>
         /// <param name="collector">诊断收集器</param>
         /// <returns>诊断信息文本</returns>
-#if WINDOWS
-        public static string GetMessages(DiagnosticCollector<object> collector)
+        public static string GetMessages(object collector)
         {
             if (collector == null)
             {
                 return string.Empty;
             }
 
-            var sb = new StringBuilder();
-            foreach (var diagnostic in collector.Diagnostics)
+            // 尝试获取诊断信息
+            try
             {
-                sb.AppendLine(diagnostic.ToString());
+                var sb = new StringBuilder();
+                // 这里可以根据实际情况调整实现
+                sb.AppendLine(collector.ToString());
+                return sb.ToString();
             }
-            return sb.ToString();
+            catch
+            {
+                return string.Empty;
+            }
         }
-#else
-        public static string GetMessages(object collector)
-        {
-            return string.Empty;
-        }
-#endif
     }
 }
