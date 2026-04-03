@@ -15,16 +15,16 @@ public interface IAction<T>
 /// </summary>
 public class Action<T> : IAction<T>
 {
-	private readonly Action<T> _action;
+	private readonly System.Action<T> _action;
 
-	public Action(Action<T> action)
+	public Action(System.Action<T> action)
 	{
 		_action = action;
 	}
 
 	public void Invoke(T t) => _action(t);
 
-	public static implicit operator Action<T>(Action<T> action) => new Action<T>(action);
+	public static implicit operator Action<T>(System.Action<T> action) => new Action<T>(action);
 }
 
 /// <summary>
@@ -40,14 +40,14 @@ public interface IAction
 /// </summary>
 public class Action : IAction
 {
-	private readonly Action _action;
+	private readonly System.Action _action;
 
-	public Action(Action action)
+	public Action(System.Action action)
 	{
 		_action = action;
 	}
 
 	public void Invoke() => _action();
 
-	public static implicit operator Action(Action action) => new Action(action);
+	public static implicit operator Action(System.Action action) => new Action(action);
 }
