@@ -1,29 +1,62 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+using WellTool.Core.Collection;
 using Xunit;
 
-namespace WellTool.Core.Tests.Collection;
+namespace WellTool.Core.Tests;
 
-/// <summary>
-/// 分区迭代器测试
-/// </summary>
 public class PartitionIterTest
 {
     [Fact]
-    public void TestPartitionIter()
+    public void IterTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var list = CollUtil.NewArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+        var iter = new PartitionIter<int>(() => list.GetEnumerator(), 3);
+
+        var partitions = new List<List<int>>();
+        while (iter.MoveNext())
+        {
+            partitions.Add(new List<int>(iter.Current));
+        }
+
+        Assert.Equal(3, partitions.Count);
+        Assert.Equal(3, partitions[0].Count);
+        Assert.Equal(3, partitions[1].Count);
+        Assert.Equal(3, partitions[2].Count);
+    }
+
+    [Fact]
+    public void IterMaxTest()
+    {
+        var list = CollUtil.NewArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 0, 12, 45, 12);
+        var iter = new PartitionIter<int>(() => list.GetEnumerator(), 3);
+
+        var max = 0;
+        while (iter.MoveNext())
+        {
+            var partition = iter.Current;
+            foreach (var num in partition)
+            {
+                if (num > max)
+                    max = num;
+            }
+        }
+        Assert.Equal(45, max);
+    }
+
+    [Fact]
+    public void PartitionSizeTest()
+    {
+        var list = CollUtil.NewArrayList(1, 2, 3, 4, 5);
+        var iter = new PartitionIter<int>(() => list.GetEnumerator(), 2);
+
+        var partitions = new List<List<int>>();
+        while (iter.MoveNext())
+        {
+            partitions.Add(new List<int>(iter.Current));
+        }
+
+        Assert.Equal(3, partitions.Count);
+        Assert.Equal(2, partitions[0].Count);
+        Assert.Equal(2, partitions[1].Count);
+        Assert.Equal(1, partitions[2].Count);
     }
 }

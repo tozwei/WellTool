@@ -1,29 +1,47 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+using WellTool.Core.Collection;
 using Xunit;
 
-namespace WellTool.Core.Tests.Collection;
+namespace WellTool.Core.Tests;
 
-/// <summary>
-/// 唯一键集合测试
-/// </summary>
 public class UniqueKeySetTest
 {
     [Fact]
-    public void TestUniqueKeySet()
+    public void AddTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var set = new UniqueKeySet<UniqueTestBean>(x => x.Id);
+        set.Add(new UniqueTestBean("id1", "张三", "地球"));
+        set.Add(new UniqueTestBean("id2", "李四", "火星"));
+        // id重复，替换之前的元素
+        set.Add(new UniqueTestBean("id2", "王五", "木星"));
+
+        // 后两个ID重复
+        Assert.Equal(2, set.Count);
+    }
+
+    [Fact]
+    public void ContainsTest()
+    {
+        var set = new UniqueKeySet<UniqueTestBean>(x => x.Id);
+        var bean1 = new UniqueTestBean("id1", "张三", "地球");
+        set.Add(bean1);
+
+        Assert.True(set.Contains(bean1));
+
+        var bean2 = new UniqueTestBean("id1", "李四", "火星");
+        Assert.True(set.Contains(bean2)); // 因为 ID 相同，所以被认为存在
+    }
+
+    private class UniqueTestBean
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+
+        public UniqueTestBean(string id, string name, string address)
+        {
+            Id = id;
+            Name = name;
+            Address = address;
+        }
     }
 }

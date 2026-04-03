@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace WellDone.Core.Convert;
+namespace WellTool.Core.Convert;
 
 /// <summary>
 /// 数字中文转换工具类

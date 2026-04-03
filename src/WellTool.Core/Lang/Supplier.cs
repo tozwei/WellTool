@@ -1,6 +1,6 @@
 using System;
 
-namespace WellDone.Core.Lang;
+namespace WellTool.Core.Lang;
 
 /// <summary>
 /// Supplier接口

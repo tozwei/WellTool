@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WellDone.Core.Date.Chinese;
+namespace WellTool.Core.Date.Chinese;
 
 /// <summary>
 /// 节假日（农历）封装

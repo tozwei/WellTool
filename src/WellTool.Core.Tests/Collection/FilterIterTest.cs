@@ -1,29 +1,58 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+using WellTool.Core.Collection;
 using Xunit;
 
-namespace WellTool.Core.Tests.Collection;
+namespace WellTool.Core.Tests;
 
-/// <summary>
-/// 过滤迭代器测试
-/// </summary>
 public class FilterIterTest
 {
     [Fact]
-    public void TestFilterIter()
+    public void CheckFilterIterTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var list = CollUtil.NewArrayList("1", "2");
+        var it = list.GetEnumerator();
+
+        // filter 为 null
+        var filterIter = new FilterIter<string>(() => it, null);
+
+        int count = 0;
+        while (filterIter.MoveNext())
+        {
+            if (filterIter.Current != null)
+            {
+                count++;
+            }
+        }
+        Assert.Equal(2, count);
+
+        it = list.GetEnumerator();
+        // filter 不为空
+        filterIter = new FilterIter<string>(() => it, key => key.Equals("1"));
+        count = 0;
+        while (filterIter.MoveNext())
+        {
+            if (filterIter.Current != null)
+            {
+                count++;
+            }
+        }
+        Assert.Equal(1, count);
+    }
+
+    [Fact]
+    public void FilterIterWithPredicateTest()
+    {
+        var list = CollUtil.NewArrayList("a", "b", "c", "d");
+        var it = list.GetEnumerator();
+        var filterIter = new FilterIter<string>(() => it, s => s.CompareTo("b") > 0);
+
+        var result = new List<string>();
+        while (filterIter.MoveNext())
+        {
+            result.Add(filterIter.Current);
+        }
+
+        Assert.Equal(2, result.Count);
+        Assert.Contains("c", result);
+        Assert.Contains("d", result);
     }
 }

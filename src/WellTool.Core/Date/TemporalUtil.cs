@@ -1,6 +1,6 @@
 using System;
 
-namespace WellDone.Core.Date;
+namespace WellTool.Core.Date;
 
 /// <summary>
 /// Temporal 工具类封装

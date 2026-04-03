@@ -1,6 +1,6 @@
 using System;
 
-namespace WellDone.Core.Exception;
+namespace WellTool.Core.Exception;
 
 /// <summary>
 /// UtilException工具异常
