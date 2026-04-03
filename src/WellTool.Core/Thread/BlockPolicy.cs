@@ -60,7 +60,7 @@ namespace WellTool.Core.Threading
                 // 尝试将任务添加到队列中
                 Task.Factory.StartNew(action, CancellationToken.None, TaskCreationOptions.None, taskScheduler);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 // 如果线程池已关闭，并且设置了关闭时的处理策略，则执行该策略
                 if (_handlerWhenShutdown != null)
@@ -91,7 +91,7 @@ namespace WellTool.Core.Threading
     /// <summary>
     /// 拒绝执行异常
     /// </summary>
-    public class RejectedExecutionException : Exception
+    public class RejectedExecutionException : System.Exception
     {
         /// <summary>
         /// 构造
@@ -106,7 +106,7 @@ namespace WellTool.Core.Threading
         /// </summary>
         /// <param name="message">异常消息</param>
         /// <param name="innerException">内部异常</param>
-        public RejectedExecutionException(string message, Exception innerException) : base(message, innerException)
+        public RejectedExecutionException(string message, System.Exception innerException) : base(message, innerException)
         {
         }
     }

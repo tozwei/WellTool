@@ -33,7 +33,7 @@ public class CheckedUtil
     /// <typeparam name="T">参数类型</typeparam>
     /// <typeparam name="R">返回类型</typeparam>
     /// <returns>FuncRt</returns>
-    public static FuncRt<T, R> Uncheck<T, R>(Func<T, R> expression)
+    public static FuncRt<T, R> Uncheck<T, R>(System.Func<T, R> expression)
     {
         return Uncheck(expression, e => new RuntimeException(e));
     }
@@ -56,7 +56,7 @@ public class CheckedUtil
     /// <typeparam name="P">参数类型</typeparam>
     /// <typeparam name="R">返回类型</typeparam>
     /// <returns>Func1Rt</returns>
-    public static Func1Rt<P, R> Uncheck<P, R>(Func<P, R> expression)
+    public static Func1Rt<P, R> Uncheck<P, R>(System.Func<P, R> expression)
     {
         return Uncheck(expression, e => new RuntimeException(e));
     }
@@ -101,16 +101,16 @@ public class CheckedUtil
     /// <typeparam name="T">参数类型</typeparam>
     /// <typeparam name="R">返回类型</typeparam>
     /// <returns>FuncRt</returns>
-    public static FuncRt<T, R> Uncheck<T, R>(Func<T, R> expression, Func<Exception, RuntimeException> rteSupplier)
+    public static FuncRt<T, R> Uncheck<T, R>(System.Func<T, R> expression, System.Func<System.Exception, RuntimeException> rteSupplier)
     {
-        ArgumentNullException.ThrowIfNull(expression);
+        System.ArgumentNullException.ThrowIfNull(expression);
         return t =>
         {
             try
             {
                 return expression(t);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw rteSupplier == null ? new RuntimeException(e) : rteSupplier(e);
             }
@@ -124,16 +124,16 @@ public class CheckedUtil
     /// <param name="rteSupplier">转化运行时异常的表达式</param>
     /// <typeparam name="R">返回类型</typeparam>
     /// <returns>Func0Rt</returns>
-    public static Func0Rt<R> Uncheck<R>(Func0<R> expression, Func<Exception, RuntimeException> rteSupplier)
+    public static Func0Rt<R> Uncheck<R>(Func0<R> expression, System.Func<System.Exception, RuntimeException> rteSupplier)
     {
-        ArgumentNullException.ThrowIfNull(expression);
+        System.ArgumentNullException.ThrowIfNull(expression);
         return () =>
         {
             try
             {
                 return expression();
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw rteSupplier == null ? new RuntimeException(e) : rteSupplier(e);
             }
@@ -148,16 +148,16 @@ public class CheckedUtil
     /// <typeparam name="P">参数类型</typeparam>
     /// <typeparam name="R">返回类型</typeparam>
     /// <returns>Func1Rt</returns>
-    public static Func1Rt<P, R> Uncheck<P, R>(Func<P, R> expression, Func<Exception, RuntimeException> rteSupplier)
+    public static Func1Rt<P, R> Uncheck<P, R>(System.Func<P, R> expression, System.Func<System.Exception, RuntimeException> rteSupplier)
     {
-        ArgumentNullException.ThrowIfNull(expression);
+        System.ArgumentNullException.ThrowIfNull(expression);
         return t =>
         {
             try
             {
                 return expression(t);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw rteSupplier == null ? new RuntimeException(e) : rteSupplier(e);
             }
@@ -171,16 +171,16 @@ public class CheckedUtil
     /// <param name="rteSupplier">转化运行时异常的表达式</param>
     /// <typeparam name="T">参数类型</typeparam>
     /// <returns>VoidFuncRt</returns>
-    public static VoidFuncRt<T> Uncheck<T>(VoidFunc<T> expression, Func<Exception, RuntimeException> rteSupplier)
+    public static VoidFuncRt<T> Uncheck<T>(VoidFunc<T> expression, System.Func<System.Exception, RuntimeException> rteSupplier)
     {
-        ArgumentNullException.ThrowIfNull(expression);
+        System.ArgumentNullException.ThrowIfNull(expression);
         return t =>
         {
             try
             {
                 expression(t);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw rteSupplier == null ? new RuntimeException(e) : rteSupplier(e);
             }
@@ -195,14 +195,14 @@ public class CheckedUtil
     /// <returns>VoidFunc0Rt</returns>
     public static VoidFunc0Rt Uncheck(VoidFunc expression, RuntimeException rte)
     {
-        ArgumentNullException.ThrowIfNull(expression);
+        System.ArgumentNullException.ThrowIfNull(expression);
         return () =>
         {
             try
             {
                 expression();
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 if (rte == null)
                 {
@@ -224,16 +224,16 @@ public class CheckedUtil
     /// <param name="rteSupplier">转化运行时异常的表达式</param>
     /// <typeparam name="P">参数类型</typeparam>
     /// <returns>VoidFunc1Rt</returns>
-    public static VoidFunc1Rt<P> Uncheck<P>(VoidFunc<P> expression, Func<Exception, RuntimeException> rteSupplier)
+    public static VoidFunc1Rt<P> Uncheck<P>(VoidFunc<P> expression, System.Func<System.Exception, RuntimeException> rteSupplier)
     {
-        ArgumentNullException.ThrowIfNull(expression);
+        System.ArgumentNullException.ThrowIfNull(expression);
         return t =>
         {
             try
             {
                 expression(t);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw rteSupplier == null ? new RuntimeException(e) : rteSupplier(e);
             }

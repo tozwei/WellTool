@@ -19,7 +19,7 @@ namespace WellTool.Core.Threading
     /// <summary>
     /// 线程工具异常
     /// </summary>
-    public class ThreadException : Exception
+    public class ThreadException : System.Exception
     {
         /// <summary>
         /// 构造函数
@@ -34,7 +34,7 @@ namespace WellTool.Core.Threading
         /// </summary>
         /// <param name="message">异常消息</param>
         /// <param name="innerException">内部异常</param>
-        public ThreadException(string message, Exception innerException) : base(message, innerException)
+        public ThreadException(string message, System.Exception innerException) : base(message, innerException)
         {
         }
 
@@ -42,7 +42,7 @@ namespace WellTool.Core.Threading
         /// 构造函数
         /// </summary>
         /// <param name="innerException">内部异常</param>
-        public ThreadException(Exception innerException) : base(innerException.Message, innerException)
+        public ThreadException(System.Exception innerException) : base(innerException.Message, innerException)
         {
         }
 
@@ -61,7 +61,7 @@ namespace WellTool.Core.Threading
         /// <param name="innerException">内部异常</param>
         /// <param name="messageTemplate">消息模板</param>
         /// <param name="args">参数</param>
-        public ThreadException(Exception innerException, string messageTemplate, params object[] args) : base(string.Format(CultureInfo.CurrentCulture, messageTemplate, args), innerException)
+        public ThreadException(System.Exception innerException, string messageTemplate, params object[] args) : base(string.Format(CultureInfo.CurrentCulture, messageTemplate, args), innerException)
         {
         }
     }
