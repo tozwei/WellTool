@@ -1,63 +1,92 @@
-using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 
-namespace WellTool.Core.Lang.Intern
+namespace WellTool.Core.Lang.Intern;
+
+/// <summary>
+/// 字符串驻留器
+/// </summary>
+public class StringInterner : IInterner<string>
 {
-    /// <summary>
-    /// 字符串驻留器，用于减少重复字符串的内存占用
-    /// </summary>
-    public class StringInterner
-    {
-        private readonly ConcurrentDictionary<string, string> _interned = new ConcurrentDictionary<string, string>();
+	private readonly Dictionary<string, string> _interned = new();
 
-        /// <summary>
-        /// 获取驻留的字符串
-        /// </summary>
-        public string Intern(string str)
-        {
-            if (string.IsNullOrEmpty(str))
-            {
-                return str;
-            }
+	/// <summary>
+	/// 获取驻留的字符串
+	/// </summary>
+	/// <param name="str">原始字符串</param>
+	/// <returns>驻留后的字符串</returns>
+	public string Intern(string str)
+	{
+		if (str == null)
+		{
+			return null;
+		}
 
-            return _interned.GetOrAdd(str, s => s);
-        }
+		if (_interned.TryGetValue(str, out var interned))
+		{
+			return interned;
+		}
 
-        /// <summary>
-        /// 清除驻留缓存
-        /// </summary>
-        public void Clear()
-        {
-            _interned.Clear();
-        }
+		_interned[str] = str;
+		return str;
+	}
+}
 
-        /// <summary>
-        /// 获取驻留字符串数量
-        /// </summary>
-        public int Count => _interned.Count;
-    }
+/// <summary>
+/// 弱引用字符串驻留器
+/// </summary>
+public class WeakStringInterner
+{
+	private readonly Dictionary<string, WeakReference<string>> _interned = new();
+	private readonly List<string> _pool = new();
+	private const int MaxPoolSize = 1000;
 
-    /// <summary>
-    /// 全局字符串驻留器
-    /// </summary>
-    public static class GlobalStringInterner
-    {
-        private static readonly StringInterner _interner = new StringInterner();
+	/// <summary>
+	/// 获取驻留的字符串
+	/// </summary>
+	/// <param name="str">原始字符串</param>
+	/// <returns>驻留后的字符串</returns>
+	public string Intern(string str)
+	{
+		if (str == null)
+		{
+			return null;
+		}
 
-        /// <summary>
-        /// 获取驻留的字符串
-        /// </summary>
-        public static string Intern(string str)
-        {
-            return _interner.Intern(str);
-        }
+		if (_interned.TryGetValue(str, out var weakRef))
+		{
+			if (weakRef.TryGetTarget(out var existing))
+			{
+				return existing;
+			}
+		}
 
-        /// <summary>
-        /// 清除驻留缓存
-        /// </summary>
-        public static void Clear()
-        {
-            _interner.Clear();
-        }
-    }
+		// 清理过期的引用
+		CleanupExpired();
+
+		// 添加到池
+		if (_pool.Count >= MaxPoolSize)
+		{
+			_pool.RemoveAt(0);
+		}
+		_pool.Add(str);
+		_interned[str] = new WeakReference<string>(str);
+
+		return str;
+	}
+
+	private void CleanupExpired()
+	{
+		var keysToRemove = new List<string>();
+		foreach (var kvp in _interned)
+		{
+			if (!kvp.Value.TryGetTarget(out _))
+			{
+				keysToRemove.Add(kvp.Key);
+			}
+		}
+		foreach (var key in keysToRemove)
+		{
+			_interned.Remove(key);
+		}
+	}
 }

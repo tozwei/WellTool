@@ -1,4 +1,4 @@
-namespace WellTool.Core.lang.loader;
+namespace WellTool.Core.Lang.Loader;
 
 using System;
 using System.Collections.Concurrent;
@@ -9,8 +9,8 @@ using System.Collections.Concurrent;
 public class AtomicLoader<T>
 {
 	private readonly Func<T> _loader;
-	private volatile T? _value;
-	private volatile bool _loaded;
+	private T? _value;
+	private bool _loaded;
 
 	public AtomicLoader(Func<T> loader)
 	{

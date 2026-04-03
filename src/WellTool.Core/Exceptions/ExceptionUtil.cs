@@ -6,7 +6,7 @@ namespace WellTool.Core.Exceptions
 {
     public static class ExceptionUtil
     {
-        public static string GetMessage(Exception e)
+        public static string GetMessage(System.Exception e)
         {
             if (e == null)
             {
@@ -15,7 +15,7 @@ namespace WellTool.Core.Exceptions
             return e.Message;
         }
 
-        public static string GetStacktrace(Exception e)
+        public static string GetStacktrace(System.Exception e)
         {
             if (e == null)
             {
@@ -24,13 +24,13 @@ namespace WellTool.Core.Exceptions
             return e.StackTrace ?? string.Empty;
         }
 
-        public static Exception GetRootCause(Exception e)
+        public static System.Exception GetRootCause(System.Exception e)
         {
             if (e == null)
             {
                 return null;
             }
-            Exception cause = e;
+            System.Exception cause = e;
             while (cause.InnerException != null)
             {
                 cause = cause.InnerException;
@@ -38,19 +38,19 @@ namespace WellTool.Core.Exceptions
             return cause;
         }
 
-        public static string GetRootCauseMessage(Exception e)
+        public static string GetRootCauseMessage(System.Exception e)
         {
-            Exception rootCause = GetRootCause(e);
+            System.Exception rootCause = GetRootCause(e);
             return rootCause == null ? null : rootCause.Message;
         }
 
-        public static bool IsCausedBy(Exception e, params Type[] causeClasses)
+        public static bool IsCausedBy(System.Exception e, params Type[] causeClasses)
         {
             if (e == null || causeClasses == null || causeClasses.Length == 0)
             {
                 return false;
             }
-            Exception cause = e;
+            System.Exception cause = e;
             while (cause != null)
             {
                 foreach (Type causeClass in causeClasses)
@@ -65,7 +65,7 @@ namespace WellTool.Core.Exceptions
             return false;
         }
 
-        public static T WrapRuntime<T>(Exception e) where T : Exception
+        public static T WrapRuntime<T>(System.Exception e) where T : System.Exception
         {
             if (e == null)
             {

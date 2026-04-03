@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using WellTool.Core.Map;
 using WellTool.DB.Dialect;
 using WellTool.DB.Dialect.Factory;

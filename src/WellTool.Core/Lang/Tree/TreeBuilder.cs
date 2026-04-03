@@ -4,6 +4,27 @@ using System;
 using System.Collections.Generic;
 
 /// <summary>
+/// 树形节点接口
+/// </summary>
+public interface ITreeNode<T>
+{
+	/// <summary>
+	/// 获取节点ID
+	/// </summary>
+	object GetId();
+
+	/// <summary>
+	/// 获取父节点ID
+	/// </summary>
+	object? GetParentId();
+
+	/// <summary>
+	/// 获取子节点
+	/// </summary>
+	IList<ITreeNode<T>> Children { get; set; }
+}
+
+/// <summary>
 /// 树形结构构建器
 /// </summary>
 public class TreeBuilder<T> where T : ITreeNode<T>

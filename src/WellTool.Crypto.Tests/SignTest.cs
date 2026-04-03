@@ -19,15 +19,31 @@ using WellTool.Crypto.Asymmetric;
 namespace WellTool.Crypto.Tests
 {
     /// <summary>
-    /// 数字签名测试类
+    /// SignUtil签名工具测试
     /// </summary>
     public class SignTest
     {
         [Fact]
-        public void TestSign()
+        public void CreateSignTest()
         {
-            // 这里只是一个占位符，具体实现需要根据 Sign 类的实际实现来编写
-            Assert.True(true);
+            // 测试Sign实例创建
+            var sign = SignUtil.CreateSign(AsymmetricAlgorithm.RSA);
+            Assert.NotNull(sign);
+        }
+
+        [Fact]
+        public void SignAndVerifyTest()
+        {
+            // 测试签名和验签
+            var (publicKey, privateKey) = KeyUtil.GenerateRsaKeyPair(2048);
+            var sign = new Sign(AsymmetricAlgorithm.RSA, privateKey, publicKey);
+            
+            byte[] data = System.Text.Encoding.UTF8.GetBytes("test data");
+            byte[] signature = sign.Sign(data);
+            Assert.NotNull(signature);
+            
+            bool isValid = sign.Verify(data, signature);
+            Assert.True(isValid);
         }
     }
 }

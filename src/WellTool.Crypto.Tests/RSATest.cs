@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using System;
+using System.Text;
 using Xunit;
 using WellTool.Crypto;
 using WellTool.Crypto.Asymmetric;
@@ -24,10 +25,44 @@ namespace WellTool.Crypto.Tests
     public class RSATest
     {
         [Fact]
-        public void TestRSA()
+        public void GenerateRsaKeyPairTest()
         {
-            // 这里只是一个占位符，具体实现需要根据 RSA 类的实际实现来编写
-            Assert.True(true);
+            // 测试RSA密钥对生成
+            var (publicKey, privateKey) = KeyUtil.GenerateRsaKeyPair(2048);
+            Assert.NotNull(publicKey);
+            Assert.NotNull(privateKey);
+            Assert.True(publicKey.Length > 0);
+            Assert.True(privateKey.Length > 0);
+        }
+
+        [Fact]
+        public void RsaEncryptDecryptTest()
+        {
+            // 测试RSA加密解密
+            var (publicKey, privateKey) = KeyUtil.GenerateRsaKeyPair(2048);
+            var rsa = new RSA(publicKey, privateKey);
+            
+            string plainText = "Hello, RSA encryption!";
+            byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
+            
+            // 加密
+            byte[] encrypted = rsa.Encrypt(plainBytes);
+            Assert.NotNull(encrypted);
+            Assert.True(encrypted.Length > 0);
+            
+            // 解密
+            byte[] decrypted = rsa.Decrypt(encrypted);
+            string result = Encoding.UTF8.GetString(decrypted);
+            Assert.Equal(plainText, result);
+        }
+
+        [Fact]
+        public void SmallKeySizeTest()
+        {
+            // 测试使用较小的密钥大小
+            var (publicKey, privateKey) = KeyUtil.GenerateRsaKeyPair(512);
+            Assert.NotNull(publicKey);
+            Assert.NotNull(privateKey);
         }
     }
 }

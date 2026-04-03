@@ -6,7 +6,7 @@ namespace WellTool.Core.Bean.Copier
     /// <summary>
     /// 字典值提供者
     /// </summary>
-    public class MapValueProvider : IValueProvider
+    public class MapValueProvider : IValueProvider<string>
     {
         private readonly IDictionary _map;
 
@@ -22,11 +22,11 @@ namespace WellTool.Core.Bean.Copier
         /// <summary>
         /// 获取值
         /// </summary>
-        public object GetValue(string name)
+        public object Value(string key, Type valueType)
         {
-            if (_map.Contains(name))
+            if (_map.Contains(key))
             {
-                return _map[name];
+                return _map[key];
             }
             return null;
         }
@@ -34,9 +34,9 @@ namespace WellTool.Core.Bean.Copier
         /// <summary>
         /// 是否包含指定属性
         /// </summary>
-        public bool ContainsKey(string name)
+        public bool ContainsKey(string key)
         {
-            return _map.Contains(name);
+            return _map.Contains(key);
         }
     }
 }

@@ -59,29 +59,4 @@ public abstract class Loader<T> : ILoader<T>
 	protected abstract T Load();
 }
 
-/// <summary>
-/// 惰性函数加载器
-/// </summary>
-/// <typeparam name="T">加载对象类型</typeparam>
-public class LazyFunLoader<T> : Loader<T>
-{
-	private readonly Func<T> _supplier;
 
-	/// <summary>
-	/// 构造
-	/// </summary>
-	/// <param name="supplier">供应函数</param>
-	public LazyFunLoader(Func<T> supplier)
-	{
-		_supplier = supplier;
-	}
-
-	/// <summary>
-	/// 加载方法
-	/// </summary>
-	/// <returns>加载的对象</returns>
-	protected override T Load()
-	{
-		return _supplier?.Invoke();
-	}
-}

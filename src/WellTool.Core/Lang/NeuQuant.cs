@@ -1,4 +1,4 @@
-namespace WellTool.Core.lang;
+namespace WellTool.Core.Lang;
 
 using System;
 
@@ -26,7 +26,7 @@ public class NeuQuant
 	private const int RadiusBias = 1 << RadiusBiasShift;
 	private const int InitRadius = InitRad * RadiusBias;
 	private const int RadiusDec = 30;
-	private const int AlphaRadBiasShift = AlphaRadBiasShift;
+	private const int AlphaRadBiasShift = 8;
 	private const int AlphaRadBias = 1 << AlphaRadBiasShift;
 	private const int AlphaDec = 30;
 

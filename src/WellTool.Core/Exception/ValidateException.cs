@@ -27,7 +27,7 @@ public class ValidateException : UtilException
 	/// </summary>
 	/// <param name="message">消息</param>
 	/// <param name="innerException">内部异常</param>
-	public ValidateException(string message, Exception innerException) : base(message, innerException)
+	public ValidateException(string message, System.Exception innerException) : base(message, innerException)
 	{
 	}
 }

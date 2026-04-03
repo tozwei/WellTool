@@ -359,6 +359,16 @@ public class FastDateFormat : Format, DateParser, DatePrinter
 	/// 解析对象
 	/// </summary>
 	/// <param name="source">日期字符串</param>
+	/// <returns>{DateTime}</returns>
+	public object ParseObject(string source)
+	{
+		return Parser.Parse(source);
+	}
+
+	/// <summary>
+	/// 解析对象
+	/// </summary>
+	/// <param name="source">日期字符串</param>
 	/// <param name="pos">解析位置</param>
 	/// <returns>{DateTime}</returns>
 	public object ParseObject(string source, ref int pos)

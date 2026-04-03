@@ -35,7 +35,7 @@ public abstract class Copier<T> : ICopier<T>
 /// </summary>
 /// <typeparam name="S">源类型</typeparam>
 /// <typeparam name="D">目标类型</typeparam>
-public interface ISrcToDestCopier<S, D> : ICopier<S>
+public interface ISrcToDestCopier<S, D>
 {
 	/// <summary>
 	/// 源对象
@@ -46,6 +46,14 @@ public interface ISrcToDestCopier<S, D> : ICopier<S>
 	/// 目标对象
 	/// </summary>
 	D Dest { get; set; }
+
+	/// <summary>
+	/// 执行拷贝
+	/// </summary>
+	/// <param name="src">源对象</param>
+	/// <param name="dest">目标对象</param>
+	/// <returns>目标对象</returns>
+	D Copy(S src, D dest);
 
 	/// <summary>
 	/// 执行拷贝

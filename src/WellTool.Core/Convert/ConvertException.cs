@@ -5,7 +5,7 @@ namespace WellTool.Core.Converter
     /// <summary>
     /// 转换异常
     /// </summary>
-    public class ConvertException : Exception
+    public class ConvertException : System.Exception
     {
         /// <summary>
         /// 构造函数
@@ -23,6 +23,6 @@ namespace WellTool.Core.Converter
         /// </summary>
         /// <param name="message">异常信息</param>
         /// <param name="innerException">内部异常</param>
-        public ConvertException(string message, Exception innerException) : base(message, innerException) { }
+        public ConvertException(string message, System.Exception innerException) : base(message, innerException) { }
     }
 }

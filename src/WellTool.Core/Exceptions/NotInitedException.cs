@@ -9,7 +9,7 @@ public class NotInitedException : RuntimeException
 {
     private static readonly long SerialVersionUID = 8247610319171014183L;
 
-    public NotInitedException(Exception? e) : base(e)
+    public NotInitedException(System.Exception? e) : base(e)
     {
     }
 
@@ -21,16 +21,16 @@ public class NotInitedException : RuntimeException
     {
     }
 
-    public NotInitedException(string message, Exception? throwable) : base(message, throwable)
+    public NotInitedException(string message, System.Exception? throwable) : base(message, throwable)
     {
     }
 
-    public NotInitedException(string message, Exception? throwable, bool enableSuppression, bool writableStackTrace)
+    public NotInitedException(string message, System.Exception? throwable, bool enableSuppression, bool writableStackTrace)
         : base(message, throwable, enableSuppression, writableStackTrace)
     {
     }
 
-    public NotInitedException(Exception? throwable, string messageTemplate, params object[] @params)
+    public NotInitedException(System.Exception? throwable, string messageTemplate, params object[] @params)
     {
     }
 }

@@ -16,7 +16,7 @@ namespace WellTool.AI
     /// <summary>
     /// AI异常类
     /// </summary>
-    public class AIException : Exception
+    public class AIException : System.Exception
     {
         /// <summary>
         /// 构造

@@ -1,9 +1,11 @@
+using System;
+
 namespace WellTool.Core.Bean.Copier;
 
 /// <summary>
 /// DynaBean值提供者
 /// </summary>
-public class DynaBeanValueProvider : ValueProvider<string>
+public class DynaBeanValueProvider : IValueProvider<string>
 {
     private readonly DynaBean _dynaBean;
     private readonly bool _ignoreError;
@@ -19,7 +21,7 @@ public class DynaBeanValueProvider : ValueProvider<string>
         _ignoreError = ignoreError;
     }
 
-    public object? Value(string key, Type valueType)
+    public object Value(string key, Type valueType)
     {
         var value = _dynaBean.Get(key);
         return ConvertUtil.ConvertWithCheck(valueType, value, null, _ignoreError);

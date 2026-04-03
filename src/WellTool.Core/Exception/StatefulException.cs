@@ -27,7 +27,7 @@ public class StatefulException : UtilException
 	/// </summary>
 	/// <param name="message">消息</param>
 	/// <param name="innerException">内部异常</param>
-	public StatefulException(string message, Exception innerException) : base(message, innerException)
+	public StatefulException(string message, System.Exception innerException) : base(message, innerException)
 	{
 	}
 }

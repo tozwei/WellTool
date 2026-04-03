@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
+
 namespace WellTool.Core.Collection;
 
 /// <summary>
@@ -22,7 +25,7 @@ public class ResettableIter<T> : IEnumerable<T>, IEnumerator<T>
     }
 
     public T Current => _source[_index];
-    object? IEnumerator.Current => Current;
+    object IEnumerator.Current => Current;
 
     public void Dispose()
     {

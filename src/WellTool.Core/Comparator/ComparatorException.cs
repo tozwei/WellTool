@@ -5,7 +5,7 @@ namespace WellTool.Core.Comparator
     /// <summary>
     /// 比较异常
     /// </summary>
-    public class ComparatorException : Exception
+    public class ComparatorException : System.Exception
     {
         /// <summary>
         /// 构造函数
