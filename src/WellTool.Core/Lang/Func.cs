@@ -16,16 +16,16 @@ public interface IFunc<T, R>
 /// </summary>
 public class Func<T, R> : IFunc<T, R>
 {
-	private readonly Func<T, R> _func;
+	private readonly System.Func<T, R> _func;
 
-	public Func(Func<T, R> func)
+	public Func(System.Func<T, R> func)
 	{
 		_func = func;
 	}
 
 	public R Invoke(T t) => _func(t);
 
-	public static implicit operator Func<T, R>(Func<T, R> func) => new Func<T, R>(func);
+	public static implicit operator Func<T, R>(System.Func<T, R> func) => new Func<T, R>(func);
 }
 
 /// <summary>
@@ -41,14 +41,14 @@ public interface IFunc<R>
 /// </summary>
 public class Func<R> : IFunc<R>
 {
-	private readonly Func<R> _func;
+	private readonly System.Func<R> _func;
 
-	public Func(Func<R> func)
+	public Func(System.Func<R> func)
 	{
 		_func = func;
 	}
 
 	public R Invoke() => _func();
 
-	public static implicit operator Func<R>(Func<R> func) => new Func<R>(func);
+	public static implicit operator Func<R>(System.Func<R> func) => new Func<R>(func);
 }

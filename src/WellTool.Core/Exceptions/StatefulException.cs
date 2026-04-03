@@ -26,15 +26,15 @@ public class StatefulException : RuntimeException
     {
     }
 
-    public StatefulException(Exception? throwable) : base(throwable)
+    public StatefulException(System.Exception? throwable) : base(throwable)
     {
     }
 
-    public StatefulException(string msg, Exception? throwable) : base(msg, throwable)
+    public StatefulException(string msg, System.Exception? throwable) : base(msg, throwable)
     {
     }
 
-    public StatefulException(string message, Exception? throwable, bool enableSuppression, bool writableStackTrace)
+    public StatefulException(string message, System.Exception? throwable, bool enableSuppression, bool writableStackTrace)
         : base(message, throwable, enableSuppression, writableStackTrace)
     {
     }
@@ -44,12 +44,12 @@ public class StatefulException : RuntimeException
         _status = status;
     }
 
-    public StatefulException(int status, Exception? throwable) : base(throwable)
+    public StatefulException(int status, System.Exception? throwable) : base(throwable)
     {
         _status = status;
     }
 
-    public StatefulException(int status, string msg, Exception? throwable) : base(msg, throwable)
+    public StatefulException(int status, string msg, System.Exception? throwable) : base(msg, throwable)
     {
         _status = status;
     }

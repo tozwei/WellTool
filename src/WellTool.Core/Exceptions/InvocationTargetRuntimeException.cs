@@ -5,7 +5,7 @@ namespace WellTool.Core.Exceptions;
  */
 public class InvocationTargetRuntimeException : UtilException
 {
-    public InvocationTargetRuntimeException(Exception? e) : base(e)
+    public InvocationTargetRuntimeException(System.Exception? e) : base(e)
     {
     }
 
@@ -17,16 +17,16 @@ public class InvocationTargetRuntimeException : UtilException
     {
     }
 
-    public InvocationTargetRuntimeException(string message, Exception? throwable) : base(message, throwable)
+    public InvocationTargetRuntimeException(string message, System.Exception? throwable) : base(message, throwable)
     {
     }
 
-    public InvocationTargetRuntimeException(string message, Exception? throwable, bool enableSuppression, bool writableStackTrace)
+    public InvocationTargetRuntimeException(string message, System.Exception? throwable, bool enableSuppression, bool writableStackTrace)
         : base(message, throwable, enableSuppression, writableStackTrace)
     {
     }
 
-    public InvocationTargetRuntimeException(Exception? throwable, string messageTemplate, params object[] @params)
+    public InvocationTargetRuntimeException(System.Exception? throwable, string messageTemplate, params object[] @params)
     {
     }
 }

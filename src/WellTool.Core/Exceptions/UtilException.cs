@@ -8,6 +8,6 @@ namespace WellTool.Core.Exceptions
 
         public UtilException(string message) : base(message) { }
 
-        public UtilException(string message, Exception innerException) : base(message, innerException) { }
+        public UtilException(string message, System.Exception innerException) : base(message, innerException) { }
     }
 }
