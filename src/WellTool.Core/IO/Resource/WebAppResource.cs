@@ -27,22 +27,42 @@ public class WebAppResource : IResource
 	public Stream GetStream() => _fileResource.GetStream();
 
 	/// <summary>
-	/// 获取资源内容
+	/// 获取资源名
 	/// </summary>
-	public string GetString() => _fileResource.GetString();
+	public string GetName() => _fileResource.GetName();
 
 	/// <summary>
-	/// 获取资源字节
+	/// 获取Uri
 	/// </summary>
-	public byte[] GetBytes() => _fileResource.GetBytes();
+	public Uri GetUri() => _fileResource.GetUri();
 
 	/// <summary>
-	/// 获取资源名称
+	/// 检查资源是否变更
 	/// </summary>
-	public string Name => _fileResource.Name;
+	public bool IsModified() => _fileResource.IsModified();
 
 	/// <summary>
-	/// 资源是否存在
+	/// 将资源内容写出到流
 	/// </summary>
-	public bool IsExist => _fileResource.IsExist;
+	public void WriteTo(Stream output) => _fileResource.WriteTo(output);
+
+	/// <summary>
+	/// 获得StreamReader
+	/// </summary>
+	public StreamReader GetReader(System.Text.Encoding encoding) => _fileResource.GetReader(encoding);
+
+	/// <summary>
+	/// 读取资源内容
+	/// </summary>
+	public string ReadStr(System.Text.Encoding encoding) => _fileResource.ReadStr(encoding);
+
+	/// <summary>
+	/// 读取资源内容（UTF-8编码）
+	/// </summary>
+	public string ReadUtf8Str() => _fileResource.ReadUtf8Str();
+
+	/// <summary>
+	/// 读取资源内容
+	/// </summary>
+	public byte[] ReadBytes() => _fileResource.ReadBytes();
 }

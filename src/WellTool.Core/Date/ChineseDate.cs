@@ -190,19 +190,17 @@ public class ChineseDate
 	}
 
 	/// <summary>获得农历月份（中文，例如二月，十二月，或者润一月）</summary>
-	public string ChineseMonthName => ChineseMonth.GetChineseMonthName(IsLeapMonth, IsLeapMonth() ? Month - 1 : Month, false);
+	public string ChineseMonthName => ChineseMonth.GetChineseMonthName(IsLeapMonth, IsLeapMonth ? Month - 1 : Month, false);
 
 	/// <summary>获得农历月份（中文，例如二月，十二月，或者润一月）</summary>
 	/// <param name="isTraditional">是否传统表示，例如一月传统表示为正月</param>
-	public string GetChineseMonth(bool isTraditional) => ChineseMonth.GetChineseMonthName(IsLeapMonth, IsLeapMonth() ? Month - 1 : Month, isTraditional);
+	public string GetChineseMonth(bool isTraditional) => ChineseMonth.GetChineseMonthName(IsLeapMonth, IsLeapMonth ? Month - 1 : Month, isTraditional);
 
 	/// <summary>获得农历月份称呼</summary>
-	public string GetChineseMonthName() => ChineseMonth.GetChineseMonthName(IsLeapMonth, IsLeapMonth() ? Month - 1 : Month, false);
-
-	private bool IsLeapMonth() => isLeapMonth;
+	public string GetChineseMonthName() => ChineseMonth.GetChineseMonthName(IsLeapMonth, IsLeapMonth ? Month - 1 : Month, false);
 
 	/// <summary>获取公历的Date</summary>
-	public Date GregorianDate => new Date(gyear, GetGregorianMonth(), gday);
+	public Date GregorianDate => new Date(gyear, gmonthBase1, gday);
 
 	/// <summary>获得年份生肖</summary>
 	public string ChineseZodiac => Zodiac.GetChineseZodiac(year);
@@ -224,7 +222,7 @@ public class ChineseDate
 	public string Term => SolarTerms.GetTerm(gyear, gmonthBase1, gday);
 
 	/// <summary>转换为标准的日期格式来表示农历日期，例如2020-01-13</summary>
-	public string ToStringNormal() => $"{year:0000}-{(IsLeapMonth() ? month - 1 : month):00}-{day:00}";
+	public string ToStringNormal() => $"{year:0000}-{(IsLeapMonth ? month - 1 : month):00}-{day:00}";
 
 	/// <summary>通过农历年月日信息 返回公历信息 提供给构造函数</summary>
 	private DateTime? Lunar2solar(int chineseYear, int chineseMonth, int chineseDay, bool isLeapMonth)
@@ -277,19 +275,15 @@ public class ChineseDate
 		return baseDate.AddDays(offset + chineseDay - 31);
 	}
 
-	private bool IsLeapMonth() => isLeapMonth;
 
 	private string Cyclicalm(int year, int month, int day)
 	{
 		return $"{GanZhi.GetGanzhiOfYear(this.year)}年{GanZhi.GetGanzhiOfMonth(year, month, day)}";
 	}
 
-	private bool IsLeapMonth() => isLeapMonth;
+	
 
-	/// <summary>获得公历月份</summary>
-	private int GetGregorianMonth() => gmonthBase1;
 
-	private bool IsLeapMonth() => isLeapMonth;
 
 	public override string ToString() => $"{Cyclical}{ChineseZodiac}年 {GetChineseMonthName()}{ChineseDay}";
 }

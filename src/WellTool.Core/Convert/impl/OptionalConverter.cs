@@ -5,7 +5,7 @@ using System;
 /// <summary>
 /// {@link Optional}对象转换器
 /// </summary>
-public class OptionalConverter : AbstractConverter<Optional?>
+public class OptionalConverter : AbstractConverter<System.Nullable<object>>
 {
 	private const long SerialVersionUid = 1L;
 
@@ -14,8 +14,8 @@ public class OptionalConverter : AbstractConverter<Optional?>
 	/// </summary>
 	/// <param name="value">值</param>
 	/// <returns>转换后的Optional</returns>
-	protected override Optional<object> ConvertInternal(object value)
+	protected override System.Nullable<object> ConvertInternal(object value)
 	{
-		return Optional<object>.OfNullable(value);
+		return value;
 	}
 }

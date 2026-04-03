@@ -1,89 +1,95 @@
+namespace WellTool.Core.io;
+
 using System;
 using System.IO;
-using System.Reflection;
 
-namespace WellTool.Core.IO
+/// <summary>
+/// 资源接口
+/// </summary>
+public interface IResource
 {
-    public static class ResourceUtil
-    {
-        public static Stream GetResourceStream(string resourceName)
-        {
-            return GetResourceStream(Assembly.GetCallingAssembly(), resourceName);
-        }
+	/// <summary>
+	/// 获取输入流
+	/// </summary>
+	Stream GetStream();
 
-        public static Stream GetResourceStream(Assembly assembly, string resourceName)
-        {
-            if (assembly == null)
-            {
-                throw new ArgumentNullException(nameof(assembly));
-            }
-            if (string.IsNullOrEmpty(resourceName))
-            {
-                throw new ArgumentNullException(nameof(resourceName));
-            }
+	/// <summary>
+	/// 获取描述
+	/// </summary>
+	string GetDescription();
+}
 
-            string fullResourceName = GetFullResourceName(assembly, resourceName);
-            return assembly.GetManifestResourceStream(fullResourceName);
-        }
+/// <summary>
+/// 文件资源
+/// </summary>
+public class FileResource : IResource
+{
+	private readonly string _filePath;
 
-        public static string GetResourceString(string resourceName)
-        {
-            return GetResourceString(Assembly.GetCallingAssembly(), resourceName);
-        }
+	public FileResource(string filePath)
+	{
+		_filePath = filePath;
+	}
 
-        public static string GetResourceString(Assembly assembly, string resourceName)
-        {
-            using (var stream = GetResourceStream(assembly, resourceName))
-            {
-                if (stream == null)
-                {
-                    return null;
-                }
-                using (var reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-        }
+	public Stream GetStream()
+	{
+		return File.OpenRead(_filePath);
+	}
 
-        public static byte[] GetResourceBytes(string resourceName)
-        {
-            return GetResourceBytes(Assembly.GetCallingAssembly(), resourceName);
-        }
+	public string GetDescription()
+	{
+		return _filePath;
+	}
+}
 
-        public static byte[] GetResourceBytes(Assembly assembly, string resourceName)
-        {
-            using (var stream = GetResourceStream(assembly, resourceName))
-            {
-                if (stream == null)
-                {
-                    return null;
-                }
-                using (var memoryStream = new MemoryStream())
-                {
-                    stream.CopyTo(memoryStream);
-                    return memoryStream.ToArray();
-                }
-            }
-        }
+/// <summary>
+/// 字节数组资源
+/// </summary>
+public class ByteArrayResource : IResource
+{
+	private readonly byte[] _data;
 
-        private static string GetFullResourceName(Assembly assembly, string resourceName)
-        {
-            if (resourceName.StartsWith("/"))
-            {
-                resourceName = resourceName.Substring(1);
-            }
+	public ByteArrayResource(byte[] data)
+	{
+		_data = data;
+	}
 
-            string[] resourceNames = assembly.GetManifestResourceNames();
-            foreach (string fullName in resourceNames)
-            {
-                if (fullName.EndsWith(resourceName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return fullName;
-                }
-            }
+	public Stream GetStream()
+	{
+		return new MemoryStream(_data);
+	}
 
-            return resourceName;
-        }
-    }
+	public string GetDescription()
+	{
+		return "ByteArrayResource";
+	}
+}
+
+/// <summary>
+/// 资源工具类
+/// </summary>
+public static class ResourceUtil
+{
+	/// <summary>
+	/// 从路径获取资源
+	/// </summary>
+	/// <param name="path">路径</param>
+	/// <returns>资源</returns>
+	public static IResource GetResource(string path)
+	{
+		if (File.Exists(path))
+			return new FileResource(path);
+		
+		throw new FileNotFoundException($"Resource not found: {path}");
+	}
+
+	/// <summary>
+	/// 获取资源流
+	/// </summary>
+	/// <param name="path">路径</param>
+	/// <returns>流</returns>
+	public static Stream GetStream(string path)
+	{
+		return GetResource(path).GetStream();
+	}
 }

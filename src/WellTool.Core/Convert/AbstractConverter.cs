@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WellTool.Core.Converter
+namespace WellTool.Core.Convert
 {
     /// <summary>
     /// 泛型转换器接口

@@ -57,11 +57,67 @@ public class MultiResource : IResource
     }
 
     /// <summary>
-    /// 获取资源读取器
+    /// 获取资源名
     /// </summary>
-    public StreamReader GetReader(System.Text.Encoding? encoding = null)
+    public string GetName()
+    {
+        throw new NotSupportedException("MultiResource does not support GetName");
+    }
+
+    /// <summary>
+    /// 获取Uri
+    /// </summary>
+    public Uri GetUri()
+    {
+        throw new NotSupportedException("MultiResource does not support GetUri");
+    }
+
+    /// <summary>
+    /// 检查资源是否变更
+    /// </summary>
+    public bool IsModified()
+    {
+        throw new NotSupportedException("MultiResource does not support IsModified");
+    }
+
+    /// <summary>
+    /// 将资源内容写出到流
+    /// </summary>
+    public void WriteTo(Stream output)
+    {
+        throw new NotSupportedException("MultiResource does not support WriteTo");
+    }
+
+    /// <summary>
+    /// 获得StreamReader
+    /// </summary>
+    public StreamReader GetReader(System.Text.Encoding encoding)
     {
         throw new NotSupportedException("MultiResource does not support GetReader");
+    }
+
+    /// <summary>
+    /// 读取资源内容
+    /// </summary>
+    public string ReadStr(System.Text.Encoding encoding)
+    {
+        throw new NotSupportedException("MultiResource does not support ReadStr");
+    }
+
+    /// <summary>
+    /// 读取资源内容（UTF-8编码）
+    /// </summary>
+    public string ReadUtf8Str()
+    {
+        throw new NotSupportedException("MultiResource does not support ReadUtf8Str");
+    }
+
+    /// <summary>
+    /// 读取资源内容
+    /// </summary>
+    public byte[] ReadBytes()
+    {
+        throw new NotSupportedException("MultiResource does not support ReadBytes");
     }
 
     /// <summary>
@@ -80,7 +136,6 @@ public class MultiResource : IResource
         return _resources[index];
     }
 
-    public string Name => throw new NotSupportedException();
     public string FullPath => throw new NotSupportedException();
     public bool IsAbsent => false;
 
@@ -92,8 +147,6 @@ public class MultiResource : IResource
     public long ContentLength => throw new NotSupportedException();
 
     public bool IsOpen => false;
-
-    public Uri Uri => throw new NotSupportedException();
 
     public long LastModified => throw new NotSupportedException();
 }

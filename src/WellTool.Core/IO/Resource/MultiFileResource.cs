@@ -46,59 +46,97 @@ public class MultiFileResource : IResource
 	}
 
 	/// <summary>
-	/// 获取资源内容
+	/// 获取资源名
 	/// </summary>
-	public string GetString()
+	public string GetName()
 	{
 		if (_resources.Count > 0)
 		{
-			return _resources[0].GetString();
+			return _resources[0].GetName();
 		}
 		return null;
 	}
 
 	/// <summary>
-	/// 获取资源字节
+	/// 获取Uri
 	/// </summary>
-	public byte[] GetBytes()
+	public System.Uri GetUri()
 	{
 		if (_resources.Count > 0)
 		{
-			return _resources[0].GetBytes();
+			return _resources[0].GetUri();
 		}
 		return null;
 	}
 
 	/// <summary>
-	/// 获取资源名称
+	/// 检查资源是否变更
 	/// </summary>
-	public string Name
+	public bool IsModified()
 	{
-		get
+		if (_resources.Count > 0)
 		{
-			if (_resources.Count > 0)
-			{
-				return _resources[0].Name;
-			}
-			return null;
+			return _resources[0].IsModified();
+		}
+		return false;
+	}
+
+	/// <summary>
+	/// 将资源内容写出到流
+	/// </summary>
+	public void WriteTo(Stream output)
+	{
+		if (_resources.Count > 0)
+		{
+			_resources[0].WriteTo(output);
 		}
 	}
 
 	/// <summary>
-	/// 资源是否存在
+	/// 获得StreamReader
 	/// </summary>
-	public bool IsExist
+	public System.IO.StreamReader GetReader(System.Text.Encoding encoding)
 	{
-		get
+		if (_resources.Count > 0)
 		{
-			foreach (var resource in _resources)
-			{
-				if (resource.IsExist)
-				{
-					return true;
-				}
-			}
-			return false;
+			return _resources[0].GetReader(encoding);
 		}
+		return null;
+	}
+
+	/// <summary>
+	/// 读取资源内容
+	/// </summary>
+	public string ReadStr(System.Text.Encoding encoding)
+	{
+		if (_resources.Count > 0)
+		{
+			return _resources[0].ReadStr(encoding);
+		}
+		return null;
+	}
+
+	/// <summary>
+	/// 读取资源内容（UTF-8编码）
+	/// </summary>
+	public string ReadUtf8Str()
+	{
+		if (_resources.Count > 0)
+		{
+			return _resources[0].ReadUtf8Str();
+		}
+		return null;
+	}
+
+	/// <summary>
+	/// 读取资源内容
+	/// </summary>
+	public byte[] ReadBytes()
+	{
+		if (_resources.Count > 0)
+		{
+			return _resources[0].ReadBytes();
+		}
+		return null;
 	}
 }
