@@ -9,13 +9,6 @@ namespace WellTool.Core.Lang.Func
     public delegate T Func0<T>();
 
     /// <summary>
-    /// 1参数函数
-    /// </summary>
-    /// <typeparam name="T1">参数1类型</typeparam>
-    /// <typeparam name="T">返回值类型</typeparam>
-    public delegate T Func1<T1, T>(T1 arg1);
-
-    /// <summary>
     /// 函数扩展
     /// </summary>
     public static class FuncExtensions

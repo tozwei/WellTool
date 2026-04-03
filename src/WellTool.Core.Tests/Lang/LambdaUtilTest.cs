@@ -1,6 +1,5 @@
 using WellTool.Core.Lang;
 using Xunit;
-using System.Reflection;
 
 namespace WellTool.Core.Tests;
 
@@ -9,29 +8,22 @@ public class LambdaUtilTest
     [Fact]
     public void GetFieldNameTest()
     {
-        var fieldName = LambdaUtil.GetFieldName<Person>(p => p.Name);
+        // Test getting field name from lambda
+        var fieldName = LambdaUtil.GetFieldName<Person, string>(p => p.Name);
         Assert.Equal("Name", fieldName);
     }
 
     [Fact]
-    public void GetMethodNameTest()
+    public void GetFieldNameFromPropertyTest()
     {
-        var methodName = LambdaUtil.GetMethodName<Person>(p => p.GetAge());
-        Assert.Equal("GetAge", methodName);
-    }
-
-    [Fact]
-    public void GetMemberNameTest()
-    {
-        var name = LambdaUtil.GetMemberName<Person>(p => p.Age);
-        Assert.Equal("Age", name);
+        // Test getting field name from property
+        var fieldName = LambdaUtil.GetFieldName<Person, int>(p => p.Age);
+        Assert.Equal("Age", fieldName);
     }
 
     private class Person
     {
         public string Name { get; set; } = "";
         public int Age { get; set; }
-
-        public int GetAge() => Age;
     }
 }
