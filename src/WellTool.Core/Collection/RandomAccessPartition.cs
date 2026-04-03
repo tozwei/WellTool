@@ -32,4 +32,8 @@ public class RandomAccessPartition<T> : Partition<T>, IList
     public void Insert(int index, object value) => throw new NotSupportedException();
     public void Remove(object value) => throw new NotSupportedException();
     public void RemoveAt(int index) => throw new NotSupportedException();
+
+    // ICollection 实现
+    public bool IsSynchronized => false;
+    public object SyncRoot => this;
 }

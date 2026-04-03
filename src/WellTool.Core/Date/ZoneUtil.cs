@@ -1,7 +1,7 @@
 using System;
 using SystemTimeZone = System.TimeZoneInfo;
 
-namespace WellTool.Core.Date;
+namespace WellDone.Core.Date;
 
 /// <summary>
 /// Zone相关封装

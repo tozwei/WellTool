@@ -1,6 +1,6 @@
 using System;
 
-namespace WellTool.Core.Lang;
+namespace WellDone.Core.Lang;
 
 /// <summary>
 /// 键值对封装

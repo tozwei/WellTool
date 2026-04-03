@@ -1,7 +1,7 @@
 using System;
 using SystemTimeZone = System.TimeZoneInfo;
 
-namespace WellTool.Core.Date;
+namespace WellDone.Core.Date;
 
 /// <summary>
 /// 星座工具类

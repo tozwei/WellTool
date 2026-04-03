@@ -113,7 +113,7 @@ public class Opt<T>
 	/// <param name="action">值存在时的操作</param>
 	/// <param name="emptyAction">值不存在时的操作</param>
 	/// <returns>this</returns>
-	public Opt<T> IfPresentOrElse(Action<T> action, Action emptyAction)
+	public Opt<T> IfPresentOrElse(System.Action<T> action, System.Action emptyAction)
 	{
 		if (IsPresent)
 			action(_value!);
@@ -127,7 +127,7 @@ public class Opt<T>
 	/// </summary>
 	/// <param name="predicate">给定的条件</param>
 	/// <returns>Opt</returns>
-	public Opt<T> Filter(Predicate<T> predicate)
+	public Opt<T> Filter(System.Predicate<T> predicate)
 	{
 		if (IsEmpty)
 			return this;
@@ -140,7 +140,7 @@ public class Opt<T>
 	/// <typeparam name="U">操作返回值的类型</typeparam>
 	/// <param name="mapper">值存在时执行的操作</param>
 	/// <returns>Opt</returns>
-	public Opt<U> Map<U>(Func<T, U> mapper)
+	public Opt<U> Map<U>(System.Func<T, U> mapper)
 	{
 		if (IsEmpty)
 			return Empty<U>();
@@ -152,7 +152,7 @@ public class Opt<T>
 	/// </summary>
 	/// <param name="supplier">不存在时的操作</param>
 	/// <returns>Opt</returns>
-	public Opt<T> Or(Func<Opt<T>> supplier)
+	public Opt<T> Or(System.Func<Opt<T>> supplier)
 	{
 		if (IsPresent)
 			return this;
@@ -178,7 +178,7 @@ public class Opt<T>
 	/// </summary>
 	/// <param name="supplier">值不存在时需要执行的操作</param>
 	/// <returns>值</returns>
-	public T? OrElseGet(Func<T?> supplier) => IsPresent ? _value : supplier();
+	public T? OrElseGet(System.Func<T?> supplier) => IsPresent ? _value : supplier();
 
 	/// <summary>
 	/// 如果包裹里的值存在，则返回该值，否则抛出NoSuchElementException
@@ -192,7 +192,7 @@ public class Opt<T>
 	/// <typeparam name="X">异常类型</typeparam>
 	/// <param name="exceptionSupplier">值不存在时执行的操作</param>
 	/// <returns>值</returns>
-	public T GetOrThrow<X>(Func<X> exceptionSupplier) where X : System.Exception
+	public T GetOrThrow<X>(System.Func<X> exceptionSupplier) where X : System.Exception
 	{
 		if (IsPresent)
 			return _value!;
@@ -245,7 +245,7 @@ public static class Opt
 	/// <summary>
 	/// 尝试执行操作并返回结果
 	/// </summary>
-	public static Opt<T> OfTry<T>(Func<T> supplier)
+	public static Opt<T> OfTry<T>(System.Func<T> supplier)
 	{
 		try
 		{
@@ -262,7 +262,7 @@ public static class Opt
 	/// <summary>
 	/// 如果包裹内容失败了，则执行传入的操作
 	/// </summary>
-	public static Opt<T> IfFail<T>(this Opt<T> opt, Action<System.Exception> action)
+	public static Opt<T> IfFail<T>(this Opt<T> opt, System.Action<System.Exception> action)
 	{
 		if (opt.IsFail && opt.Exception != null)
 			action(opt.Exception);
@@ -272,7 +272,7 @@ public static class Opt
 	/// <summary>
 	/// 如果包裹里元素的值存在，就执行对应的操作，并返回本身
 	/// </summary>
-	public static Opt<T> Peek<T>(this Opt<T> opt, Action<T> action)
+	public static Opt<T> Peek<T>(this Opt<T> opt, System.Action<T> action)
 	{
 		if (opt.IsPresent)
 			action(opt.Get()!);

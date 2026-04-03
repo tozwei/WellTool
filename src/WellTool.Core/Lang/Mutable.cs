@@ -1,6 +1,6 @@
 using System;
 
-namespace WellTool.Core.Lang;
+namespace WellDone.Core.Lang;
 
 /// <summary>
 /// 可变对象封装

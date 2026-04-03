@@ -1,6 +1,6 @@
 using System;
 
-namespace WellTool.Core.Exception;
+namespace WellDone.Core.Exception;
 
 /// <summary>
 /// ValidateException验证异常

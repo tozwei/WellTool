@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WellTool.Core.Lang;
+namespace WellDone.Core.Lang;
 
 /// <summary>
 /// Func相关接口

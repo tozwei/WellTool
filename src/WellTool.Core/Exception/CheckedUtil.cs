@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace WellTool.Core.Exception;
+namespace WellDone.Core.Exception;
 
 /// <summary>
 /// Checked工具类

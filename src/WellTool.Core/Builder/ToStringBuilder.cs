@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace WellTool.Core.Builder;
+namespace WellDone.Core.Builder;
 
 /// <summary>
 /// ToString构建器

@@ -1,6 +1,6 @@
 using System;
 
-namespace WellTool.Core.Exception;
+namespace WellDone.Core.Exception;
 
 /// <summary>
 /// 状态异常

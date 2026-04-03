@@ -18,11 +18,11 @@ namespace WellTool.Core.IO.Watch
     /// <summary>
     /// 监听异常
     /// </summary>
-    public class WatchException : Exception
+    public class WatchException : System.Exception
     {
         private const long SerialVersionUID = 8068509879445395353L;
 
-        public WatchException(Exception innerException)
+        public WatchException(System.Exception innerException)
             : base(innerException?.Message ?? "Unknown error", innerException)
         {
         }
@@ -37,12 +37,12 @@ namespace WellTool.Core.IO.Watch
         {
         }
 
-        public WatchException(string message, Exception innerException)
+        public WatchException(string message, System.Exception innerException)
             : base(message, innerException)
         {
         }
 
-        public WatchException(Exception innerException, string messageTemplate, params object[] parameters)
+        public WatchException(System.Exception innerException, string messageTemplate, params object[] parameters)
             : base(string.Format(messageTemplate, parameters), innerException)
         {
         }
