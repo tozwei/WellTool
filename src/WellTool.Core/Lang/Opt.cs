@@ -10,7 +10,7 @@ public class Opt<T>
 {
 	private static readonly Opt<T?> EmptyInstance = new();
 	private readonly T? _value;
-	private Exception? _exception;
+	private System.Exception? _exception;
 
 	/// <summary>
 	/// 返回一个空的Opt
@@ -65,7 +65,7 @@ public class Opt<T>
 	/// 设置异常
 	/// </summary>
 	/// <param name="exception">异常</param>
-	internal void SetException(Exception exception)
+	internal void SetException(System.Exception exception)
 	{
 		_exception = exception;
 	}
@@ -88,7 +88,7 @@ public class Opt<T>
 	/// <summary>
 	/// 获取异常（当调用OfTry时）
 	/// </summary>
-	public Exception? Exception => _exception;
+	public System.Exception? Exception => _exception;
 
 	/// <summary>
 	/// 是否失败
@@ -251,7 +251,7 @@ public static class Opt
 		{
 			return Opt<T>.OfNullable(supplier());
 		}
-		catch (Exception e)
+		catch (System.Exception e)	
 		{
 			var opt = new Opt<T>(default);
 			opt.SetException(e);
@@ -262,7 +262,7 @@ public static class Opt
 	/// <summary>
 	/// 如果包裹内容失败了，则执行传入的操作
 	/// </summary>
-	public static Opt<T> IfFail<T>(this Opt<T> opt, Action<Exception> action)
+	public static Opt<T> IfFail<T>(this Opt<T> opt, Action<System.Exception> action)
 	{
 		if (opt.IsFail && opt.Exception != null)
 			action(opt.Exception);
