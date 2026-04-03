@@ -52,7 +52,16 @@ namespace WellTool.Extra.Template.Engine.Freemarker
         /// <param name="writer">输出</param>
         public override void Render(IDictionary<object, object> bindingMap, TextWriter writer)
         {
-            _rawTemplate.Process(bindingMap, writer);
+            Process(_rawTemplate, bindingMap, writer);
+        }
+
+        private void Process(dynamic template, IDictionary<object, object> bindingMap, TextWriter writer)
+        {
+            var method = template.GetType().GetMethod("Process", new Type[] { typeof(IDictionary<object, object>), typeof(TextWriter) });
+            if (method != null)
+            {
+                method.Invoke(template, new object[] { bindingMap, writer });
+            }
         }
 
         /// <summary>
