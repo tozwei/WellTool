@@ -90,7 +90,7 @@ namespace WellTool.Core.Net.Multipart
             if (_data != null)
             {
                 // 内存中
-                FileUtil.WriteBytes(_data, destination.FullName);
+                FileUtil.WriteBytes(destination.FullName, _data);
                 _data = null;
             }
             else
@@ -141,11 +141,11 @@ namespace WellTool.Core.Net.Multipart
 
             if (_data != null)
             {
-                return IoUtil.ToBuffered(IoUtil.ToStream(_data));
+                return WellTool.Core.Util.IOUtil.ToBuffered(WellTool.Core.Util.IOUtil.ToStream(_data));
             }
             if (_tempFile != null)
             {
-                return IoUtil.ToBuffered(IoUtil.ToStream(_tempFile.FullName));
+                return WellTool.Core.Util.IOUtil.ToBuffered(WellTool.Core.Util.IOUtil.ToStream(_tempFile.FullName));
             }
             return null;
         }
@@ -181,7 +181,7 @@ namespace WellTool.Core.Net.Multipart
         /// <param name="input">上传表单的流</param>
         /// <returns>是否成功</returns>
         /// <exception cref="IOException">IO异常</exception>
-        protected bool ProcessStream(MultipartRequestInputStream input)
+        public bool ProcessStream(MultipartRequestInputStream input)
         {
             if (!IsAllowedExtension())
             {
@@ -209,8 +209,9 @@ namespace WellTool.Core.Net.Multipart
             }
 
             // 处理硬盘文件
-            var tempDir = FileUtil.Touch(_setting.TmpUploadPath);
-            _tempFile = FileUtil.CreateTempFile(TMP_FILE_PREFIX, TMP_FILE_SUFFIX, tempDir, false);
+            FileUtil.Touch(_setting.TmpUploadPath);
+            var tempDir = _setting.TmpUploadPath;
+            _tempFile = new FileInfo(Path.Combine(tempDir, $"{TMP_FILE_PREFIX}{Guid.NewGuid()}{TMP_FILE_SUFFIX}"));
             using (var output = FileUtil.GetOutputStream(_tempFile.FullName))
             {
                 if (_data != null)

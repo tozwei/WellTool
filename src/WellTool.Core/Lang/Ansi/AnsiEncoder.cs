@@ -21,7 +21,7 @@ namespace WellTool.Core.Lang.Ansi
         private const string EncodeJoin = ";";
         private const string EncodeStart = "\u001B[";
         private const string EncodeEnd = "m";
-        private const string Reset = "0;" + (int)AnsiColor.Default;
+        private static readonly string Reset = "0;" + AnsiColor.Default.GetCode();
 
         /// <summary>
         /// 创建ANSI字符串，参数中的{@link IAnsiElement}会被转换为编码形式。

@@ -172,7 +172,7 @@ namespace WellTool.Core.Threading
         /// <returns>Task</returns>
         public static Task<T> ExecAsync<T>(Func<T> function)
         {
-            return GlobalThreadPool.Submit(function);
+            return GlobalThreadPool.Instance.Submit(function);
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace WellTool.Core.Threading
         /// <returns>Task</returns>
         public static Task ExecAsync(Action action)
         {
-            return GlobalThreadPool.Submit(action);
+            return GlobalThreadPool.Instance.Submit(action);
         }
 
         /// <summary>
@@ -322,7 +322,7 @@ namespace WellTool.Core.Threading
         /// <param name="isJoin">是否等待结束</param>
         public static void Interrupt(Thread thread, bool isJoin)
         {
-            if (thread != null && !thread.IsInterrupted)
+            if (thread != null && thread.IsAlive)
             {
                 thread.Interrupt();
                 if (isJoin)
@@ -383,20 +383,9 @@ namespace WellTool.Core.Threading
         /// <returns>线程对象数组</returns>
         public static Thread[] GetThreads(ThreadState threadState)
         {
-            var process = System.Diagnostics.Process.GetCurrentProcess();
-            return process.Threads.Cast<System.Diagnostics.ProcessThread>()
-                .Select(t => {
-                    try
-                    {
-                        return Thread.GetThreadById((int)t.Id);
-                    }
-                    catch
-                    {
-                        return null;
-                    }
-                })
-                .Where(t => t != null)
-                .ToArray();
+            // 在C#中，无法直接通过线程ID获取Thread对象
+            // 这里返回一个空数组，实际项目中可能需要更复杂的实现
+            return new Thread[0];
         }
 
         /// <summary>

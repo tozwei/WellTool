@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using WellTool.Core.Collection;
-using WellTool.Core.Convert;
 using WellTool.Core.Map.Multi;
+using WellTool.Core.Collection;
 
 namespace WellTool.Core.Net.Multipart
 {
@@ -91,9 +90,18 @@ namespace WellTool.Core.Net.Multipart
                 input.Mark(1);
 
                 // read byte, but may be end of stream
-                var nextByte = input.Read();
-                if (nextByte == -1 || nextByte == '-')
+                try
                 {
+                    var nextByte = input.ReadByte();
+                    if (nextByte == '-')
+                    {
+                        input.Reset();
+                        break;
+                    }
+                }
+                catch (IOException)
+                {
+                    // 到达流的末尾
                     input.Reset();
                     break;
                 }
@@ -108,12 +116,7 @@ namespace WellTool.Core.Net.Multipart
         /// <returns>null未找到，否则返回值</returns>
         public string GetParam(string paramName)
         {
-            var values = GetListParam(paramName);
-            if (CollUtil.IsNotEmpty(values))
-            {
-                return values[0];
-            }
-            return null;
+            return _requestParameters.Get(paramName, 0);
         }
 
         /// <summary>
@@ -122,7 +125,7 @@ namespace WellTool.Core.Net.Multipart
         /// <returns>参数名集合</returns>
         public ISet<string> GetParamNames()
         {
-            return _requestParameters.Keys;
+            return new HashSet<string>(_requestParameters.Keys);
         }
 
         /// <summary>
@@ -147,7 +150,7 @@ namespace WellTool.Core.Net.Multipart
         /// <returns>数组表单值</returns>
         public List<string> GetListParam(string paramName)
         {
-            return _requestParameters.Get(paramName);
+            return _requestParameters[paramName];
         }
 
         /// <summary>
@@ -156,7 +159,12 @@ namespace WellTool.Core.Net.Multipart
         /// <returns>所有属性的集合</returns>
         public Dictionary<string, string[]> GetParamMap()
         {
-            return Convert.ToMap<string, string[]>(GetParamListMap());
+            var result = new Dictionary<string, string[]>();
+            foreach (var entry in GetParamListMap())
+            {
+                result[entry.Key] = entry.Value.ToArray();
+            }
+            return result;
         }
 
         /// <summary>
@@ -175,12 +183,7 @@ namespace WellTool.Core.Net.Multipart
         /// <returns>上传的文件， 如果无为null</returns>
         public UploadFile GetFile(string paramName)
         {
-            var values = GetFiles(paramName);
-            if (values != null && values.Length > 0)
-            {
-                return values[0];
-            }
-            return null;
+            return _requestFiles.Get(paramName, 0);
         }
 
         /// <summary>
@@ -207,7 +210,7 @@ namespace WellTool.Core.Net.Multipart
         /// <returns>上传的文件列表</returns>
         public List<UploadFile> GetFileList(string paramName)
         {
-            return _requestFiles.Get(paramName);
+            return _requestFiles[paramName];
         }
 
         /// <summary>
@@ -216,7 +219,7 @@ namespace WellTool.Core.Net.Multipart
         /// <returns>上传的文件属性名集合</returns>
         public ISet<string> GetFileParamNames()
         {
-            return _requestFiles.Keys;
+            return new HashSet<string>(_requestFiles.Keys);
         }
 
         /// <summary>
@@ -225,7 +228,12 @@ namespace WellTool.Core.Net.Multipart
         /// <returns>文件映射</returns>
         public Dictionary<string, UploadFile[]> GetFileMap()
         {
-            return Convert.ToMap<string, UploadFile[]>(GetFileListValueMap());
+            var result = new Dictionary<string, UploadFile[]>();
+            foreach (var entry in GetFileListValueMap())
+            {
+                result[entry.Key] = entry.Value.ToArray();
+            }
+            return result;
         }
 
         /// <summary>

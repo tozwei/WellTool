@@ -95,13 +95,13 @@ namespace WellTool.Core.Threading
         /// <returns>this</returns>
         public ThreadFactoryBuilder SetPriority(int priority)
         {
-            if (priority < Thread.MinPriority)
+            if (priority < (int)ThreadPriority.Lowest)
             {
-                throw new ArgumentException($"Thread priority ({priority}) must be >= {Thread.MinPriority}");
+                throw new ArgumentException($"Thread priority ({priority}) must be >= {(int)ThreadPriority.Lowest}");
             }
-            if (priority > Thread.MaxPriority)
+            if (priority > (int)ThreadPriority.Highest)
             {
-                throw new ArgumentException($"Thread priority ({priority}) must be <= {Thread.MaxPriority}");
+                throw new ArgumentException($"Thread priority ({priority}) must be <= {(int)ThreadPriority.Highest}");
             }
             _priority = priority;
             return this;
@@ -139,7 +139,6 @@ namespace WellTool.Core.Threading
             var daemon = builder._daemon;
             var priority = builder._priority;
             var handler = builder._uncaughtExceptionHandler;
-            var count = namePrefix != null ? new System.Threading.Interlocked() : null;
             var counter = 0;
 
             return action => {

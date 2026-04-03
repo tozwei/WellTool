@@ -17,7 +17,7 @@ namespace WellTool.Core.IO
         /// <returns>字节数组</returns>
         public static byte[] ReadBytes(string filePath)
         {
-            return File.ReadAllBytes(filePath);
+            return System.IO.File.ReadAllBytes(filePath);
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace WellTool.Core.IO
         public static string ReadString(string filePath, Encoding encoding = null)
         {
             encoding = encoding ?? Encoding.UTF8;
-            return File.ReadAllText(filePath, encoding);
+            return System.IO.File.ReadAllText(filePath, encoding);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace WellTool.Core.IO
         /// <param name="bytes">字节数组</param>
         public static void WriteBytes(string filePath, byte[] bytes)
         {
-            File.WriteAllBytes(filePath, bytes);
+            System.IO.File.WriteAllBytes(filePath, bytes);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace WellTool.Core.IO
         public static void WriteString(string filePath, string str, Encoding encoding = null)
         {
             encoding = encoding ?? Encoding.UTF8;
-            File.WriteAllText(filePath, str, encoding);
+            System.IO.File.WriteAllText(filePath, str, encoding);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace WellTool.Core.IO
         public static void AppendString(string filePath, string str, Encoding encoding = null)
         {
             encoding = encoding ?? Encoding.UTF8;
-            File.AppendAllText(filePath, str, encoding);
+            System.IO.File.AppendAllText(filePath, str, encoding);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace WellTool.Core.IO
         /// <param name="destPath">目标文件路径</param>
         public static void Copy(string sourcePath, string destPath)
         {
-            File.Copy(sourcePath, destPath, true);
+            System.IO.File.Copy(sourcePath, destPath, true);
         }
 
         /// <summary>
@@ -84,14 +84,14 @@ namespace WellTool.Core.IO
         public static void Move(string sourcePath, string destPath)
         {
 #if NET6_0_OR_GREATER
-            File.Move(sourcePath, destPath, true);
+            System.IO.File.Move(sourcePath, destPath, true);
 #else
             // .NET Standard 2.1 实现
-            if (File.Exists(destPath))
+            if (System.IO.File.Exists(destPath))
             {
-                File.Delete(destPath);
+                System.IO.File.Delete(destPath);
             }
-            File.Move(sourcePath, destPath);
+            System.IO.File.Move(sourcePath, destPath);
 #endif
         }
 
@@ -101,9 +101,9 @@ namespace WellTool.Core.IO
         /// <param name="filePath">文件路径</param>
         public static void Delete(string filePath)
         {
-            if (File.Exists(filePath))
+            if (System.IO.File.Exists(filePath))
             {
-                File.Delete(filePath);
+                System.IO.File.Delete(filePath);
             }
         }
 
@@ -114,7 +114,7 @@ namespace WellTool.Core.IO
         /// <returns>是否存在</returns>
         public static bool Exists(string filePath)
         {
-            return File.Exists(filePath);
+            return System.IO.File.Exists(filePath);
         }
 
         /// <summary>
@@ -595,6 +595,73 @@ namespace WellTool.Core.IO
                 fileNames[i] = GetFileName(files[i]);
             }
             return fileNames;
+        }
+
+        /// <summary>
+        /// 创建 FileInfo 对象
+        /// </summary>
+        /// <param name="path">路径</param>
+        /// <returns>FileInfo 对象</returns>
+        public static FileInfo File(string path)
+        {
+            return new FileInfo(path);
+        }
+
+        /// <summary>
+        /// 触摸文件（如果不存在则创建）
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        public static void Touch(string filePath)
+        {
+            if (!System.IO.File.Exists(filePath))
+            {
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                }
+            }
+            else
+            {
+                System.IO.File.SetLastWriteTimeUtc(filePath, DateTime.UtcNow);
+            }
+        }
+
+        /// <summary>
+        /// 创建临时文件
+        /// </summary>
+        /// <returns>临时文件路径</returns>
+        public static string CreateTempFile()
+        {
+            return System.IO.Path.GetTempFileName();
+        }
+
+        /// <summary>
+        /// 获取文件输出流
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        /// <returns>FileStream 对象</returns>
+        public static FileStream GetOutputStream(string filePath)
+        {
+            return new FileStream(filePath, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+        }
+
+        /// <summary>
+        /// 移动文件
+        /// </summary>
+        /// <param name="sourcePath">源文件路径</param>
+        /// <param name="destPath">目标文件路径</param>
+        /// <param name="overwrite">是否覆盖</param>
+        public static void Move(string sourcePath, string destPath, bool overwrite)
+        {
+#if NET6_0_OR_GREATER
+            System.IO.File.Move(sourcePath, destPath, overwrite);
+#else
+            // .NET Standard 2.1 实现
+            if (overwrite && System.IO.File.Exists(destPath))
+            {
+                System.IO.File.Delete(destPath);
+            }
+            System.IO.File.Move(sourcePath, destPath);
+#endif
         }
     }
 }

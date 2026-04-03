@@ -31,5 +31,11 @@ namespace WellTool.Core.IO
         /// </summary>
         /// <param name="innerException">内部异常</param>
         public IORuntimeException(IOException innerException) : base(innerException.Message, innerException) { }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="innerException">内部异常</param>
+        public IORuntimeException(Exception innerException) : base(innerException.Message, innerException) { }
     }
 }

@@ -45,7 +45,7 @@ namespace WellTool.Core.IO.Copy
         /// <param name="progress">进度条</param>
         public IoCopier(int bufferSize, long count, StreamProgress progress)
         {
-            BufferSize = bufferSize > 0 ? bufferSize : IoUtil.DefaultBufferSize;
+            BufferSize = bufferSize > 0 ? bufferSize : WellTool.Core.Util.IOUtil.DEFAULT_BUFFER_SIZE;
             Count = count <= 0 ? long.MaxValue : count;
             Progress = progress;
         }

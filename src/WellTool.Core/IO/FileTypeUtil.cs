@@ -13,6 +13,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using WellTool.Core.Util;
 
 namespace WellTool.Core.IO
 {
@@ -98,7 +99,7 @@ namespace WellTool.Core.IO
             {
                 return null;
             }
-            var hexHead = isExact ? IoUtil.ReadHex8192Upper(stream) : IoUtil.ReadHex64Upper(stream);
+            var hexHead = isExact ? WellTool.Core.Util.IOUtil.ReadHex8192Upper(stream) : WellTool.Core.Util.IOUtil.ReadHex64Upper(stream);
             return GetType(hexHead);
         }
 

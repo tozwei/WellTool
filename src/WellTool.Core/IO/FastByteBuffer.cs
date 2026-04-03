@@ -11,6 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+
 namespace WellTool.Core.IO
 {
     /// <summary>
@@ -210,7 +212,7 @@ namespace WellTool.Core.IO
         /// </summary>
         /// <param name="index">索引位</param>
         /// <returns>缓冲</returns>
-        public byte[] Array(int index)
+        public byte[] GetArray(int index)
         {
             return _buffers[index];
         }

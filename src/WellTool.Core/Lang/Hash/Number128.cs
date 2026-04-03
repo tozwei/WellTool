@@ -1,101 +1,78 @@
-using System;
+namespace WellTool.Core.Lang.Hash;
 
-namespace WellTool.Core.Lang.Hash
+/// <summary>
+/// 128位数字工具类
+/// </summary>
+public static class Number128Util
 {
-    /// <summary>
-    /// 128位数字表示，分高位和低位
-    /// </summary>
-    public class Number128
-    {
-        /// <summary>
-        /// 低位值
-        /// </summary>
-        public long LowValue { get; set; }
+	/// <summary>
+	/// 从字节数组创建128位数字
+	/// </summary>
+	/// <param name="bytes">16字节数组</param>
+	/// <returns>128位数字</returns>
+	public static Number128 FromBytes(byte[] bytes)
+	{
+		if (bytes.Length < 16)
+			throw new ArgumentException("Byte array must be at least 16 bytes", nameof(bytes));
 
-        /// <summary>
-        /// 高位值
-        /// </summary>
-        public long HighValue { get; set; }
+		var high = BitConverter.ToInt64(bytes, 0);
+		var low = BitConverter.ToInt64(bytes, 8);
+		return new Number128(high, low);
+	}
 
-        /// <summary>
-        /// 构造
-        /// </summary>
-        /// <param name="lowValue">低位</param>
-        /// <param name="highValue">高位</param>
-        public Number128(long lowValue, long highValue)
-        {
-            LowValue = lowValue;
-            HighValue = highValue;
-        }
+	/// <summary>
+	/// 转换为字节数组
+	/// </summary>
+	/// <param name="number">128位数字</param>
+	/// <returns>16字节数组</returns>
+	public static byte[] ToBytes(Number128 number)
+	{
+		var bytes = new byte[16];
+		Array.Copy(BitConverter.GetBytes(number.High), 0, bytes, 0, 8);
+		Array.Copy(BitConverter.GetBytes(number.Low), 0, bytes, 8, 8);
+		return bytes;
+	}
 
-        /// <summary>
-        /// 获取高低位数组，long[0]：低位，long[1]：高位
-        /// </summary>
-        /// <returns>高低位数组，long[0]：低位，long[1]：高位</returns>
-        public long[] GetLongArray()
-        {
-            return new long[] { LowValue, HighValue };
-        }
+	/// <summary>
+	/// 转换为十六进制字符串
+	/// </summary>
+	/// <param name="number">128位数字</param>
+	/// <returns>32字符十六进制字符串</returns>
+	public static string ToHexString(Number128 number)
+	{
+		return $"{number.High:x16}{number.Low:x16}";
+	}
 
-        /// <summary>
-        /// 获取int值
-        /// </summary>
-        /// <returns>int值</returns>
-        public int IntValue()
-        {
-            return (int)LongValue();
-        }
+	/// <summary>
+	/// 从十六进制字符串解析
+	/// </summary>
+	/// <param name="hex">32字符十六进制字符串</param>
+	/// <returns>128位数字</returns>
+	public static Number128 FromHexString(string hex)
+	{
+		if (string.IsNullOrEmpty(hex))
+			throw new ArgumentException("Hex string cannot be empty", nameof(hex));
 
-        /// <summary>
-        /// 获取long值
-        /// </summary>
-        /// <returns>long值</returns>
-        public long LongValue()
-        {
-            return LowValue;
-        }
+		hex = hex.Trim().Replace("-", "");
+		if (hex.Length != 32)
+			throw new ArgumentException("Hex string must be 32 characters", nameof(hex));
 
-        /// <summary>
-        /// 获取float值
-        /// </summary>
-        /// <returns>float值</returns>
-        public float FloatValue()
-        {
-            return LongValue();
-        }
+		var high = Convert.ToInt64(hex[..16], 16);
+		var low = Convert.ToInt64(hex[16..], 16);
+		return new Number128(high, low);
+	}
 
-        /// <summary>
-        /// 获取double值
-        /// </summary>
-        /// <returns>double值</returns>
-        public double DoubleValue()
-        {
-            return LongValue();
-        }
+	/// <summary>
+	/// 获取高位64位
+	/// </summary>
+	/// <param name="number">128位数字</param>
+	/// <returns>高位</returns>
+	public static long GetHigh(Number128 number) => number.High;
 
-        /// <summary>
-        /// 比较两个Number128是否相等
-        /// </summary>
-        /// <param name="obj">要比较的对象</param>
-        /// <returns>是否相等</returns>
-        public override bool Equals(object obj)
-        {
-            if (this == obj) return true;
-            if (obj == null || GetType() != obj.GetType())
-            {
-                return false;
-            }
-            var number128 = (Number128)obj;
-            return LowValue == number128.LowValue && HighValue == number128.HighValue;
-        }
-
-        /// <summary>
-        /// 获取哈希码
-        /// </summary>
-        /// <returns>哈希码</returns>
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(LowValue, HighValue);
-        }
-    }
+	/// <summary>
+	/// 获取低位64位
+	/// </summary>
+	/// <param name="number">128位数字</param>
+	/// <returns>低位</returns>
+	public static long GetLow(Number128 number) => number.Low;
 }

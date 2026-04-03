@@ -336,7 +336,7 @@ namespace WellTool.Core.Net
                     {
                         // Converting each byte in the buffer
                         rewrittenPath.Append('%');
-                        rewrittenPath.Append(HexUtil.ToHex(new byte[] { toEncode }, false));
+                        rewrittenPath.Append(toEncode.ToString("X2"));
                     }
                 }
             }

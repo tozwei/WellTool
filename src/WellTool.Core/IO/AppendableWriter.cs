@@ -42,7 +42,7 @@ namespace WellTool.Core.IO
             _appendable.Append((char)value);
         }
 
-        public override void Write(string value, int index, int count)
+        public void Write(string value, int index, int count)
         {
             CheckNotClosed();
             _appendable.Append(value, index, count);

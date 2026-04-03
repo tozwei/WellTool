@@ -38,6 +38,16 @@ namespace WellTool.Core.Util
         public static readonly string Space = " ";
 
         /// <summary>
+        /// 斜杠字符
+        /// </summary>
+        public static readonly string SLASH = "/";
+
+        /// <summary>
+        /// 空字符串（别名）
+        /// </summary>
+        public static readonly string EMPTY = string.Empty;
+
+        /// <summary>
         /// 检查字符串是否为 null 或空字符串
         /// </summary>
         /// <param name="str">要检查的字符串</param>
@@ -287,6 +297,28 @@ namespace WellTool.Core.Util
         }
 
         /// <summary>
+        /// 连接集合中的对象
+        /// </summary>
+        /// <param name="separator">分隔符</param>
+        /// <param name="values">要连接的对象集合</param>
+        /// <returns>连接后的字符串</returns>
+        public static string Join(string separator, System.Collections.IEnumerable values)
+        {
+            if (values == null)
+            {
+                return string.Empty;
+            }
+
+            var stringValues = new List<string>();
+            foreach (var value in values)
+            {
+                stringValues.Add(value?.ToString() ?? string.Empty);
+            }
+
+            return string.Join(separator, stringValues);
+        }
+
+        /// <summary>
         /// 替换字符串中的指定内容
         /// </summary>
         /// <param name="str">要替换的字符串</param>
@@ -437,6 +469,17 @@ namespace WellTool.Core.Util
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// 格式化字符串
+        /// </summary>
+        /// <param name="format">格式字符串</param>
+        /// <param name="args">参数</param>
+        /// <returns>格式化后的字符串</returns>
+        public static string Format(string format, params object[] args)
+        {
+            return string.Format(format, args);
         }
 
         /// <summary>
@@ -955,6 +998,125 @@ namespace WellTool.Core.Util
             }
 
             return double.TryParse(str, out _);
+        }
+
+        /// <summary>
+        /// 去除字符串开头的指定字符
+        /// </summary>
+        /// <param name="str">要处理的字符串</param>
+        /// <param name="trimChars">要去除的字符</param>
+        /// <returns>处理后的字符串</returns>
+        public static string TrimStart(string str, params char[] trimChars)
+        {
+            if (IsEmpty(str))
+            {
+                return str;
+            }
+
+            return str.TrimStart(trimChars);
+        }
+
+        /// <summary>
+        /// 检查字符串是否以指定的任一前缀开头
+        /// </summary>
+        /// <param name="str">要检查的字符串</param>
+        /// <param name="prefixes">前缀数组</param>
+        /// <returns>如果以任一前缀开头则返回true，否则返回false</returns>
+        public static bool StartsWithAny(string str, params string[] prefixes)
+        {
+            if (IsEmpty(str) || prefixes == null || prefixes.Length == 0)
+            {
+                return false;
+            }
+
+            foreach (var prefix in prefixes)
+            {
+                if (str.StartsWith(prefix))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 如果字符串为空则返回默认值
+        /// </summary>
+        /// <param name="str">要检查的字符串</param>
+        /// <param name="defaultValue">默认值</param>
+        /// <returns>如果字符串为空则返回默认值，否则返回原字符串</returns>
+        public static string EmptyToDefault(string str, string defaultValue)
+        {
+            return IsEmpty(str) ? defaultValue : str;
+        }
+
+        /// <summary>
+        /// 如果字符串为null则返回空字符串，否则返回原字符串
+        /// </summary>
+        /// <param name="str">要检查的字符串</param>
+        /// <returns>如果字符串为null则返回空字符串，否则返回原字符串</returns>
+        public static string NullToEmpty(string str)
+        {
+            return str ?? string.Empty;
+        }
+
+        /// <summary>
+        /// 去除字符串开头的指定前缀
+        /// </summary>
+        /// <param name="str">要处理的字符串</param>
+        /// <param name="prefix">要去除的前缀</param>
+        /// <returns>处理后的字符串</returns>
+        public static string RemovePrefix(string str, string prefix)
+        {
+            if (IsEmpty(str) || IsEmpty(prefix))
+            {
+                return str;
+            }
+
+            if (str.StartsWith(prefix))
+            {
+                return str.Substring(prefix.Length);
+            }
+
+            return str;
+        }
+
+        /// <summary>
+        /// 检查字符串是否以指定的后缀结尾
+        /// </summary>
+        /// <param name="str">要检查的字符串</param>
+        /// <param name="suffix">后缀</param>
+        /// <returns>如果以指定后缀结尾则返回true，否则返回false</returns>
+        public static bool EndWith(string str, string suffix)
+        {
+            if (IsEmpty(str) || IsEmpty(suffix))
+            {
+                return false;
+            }
+
+            return str.EndsWith(suffix);
+        }
+
+        /// <summary>
+        /// 去除字符串结尾的指定后缀
+        /// </summary>
+        /// <param name="str">要处理的字符串</param>
+        /// <param name="suffix">要去除的后缀</param>
+        /// <returns>处理后的字符串</returns>
+        public static string RemoveSuffix(string str, string suffix)
+        {
+            if (IsEmpty(str) || IsEmpty(suffix))
+            {
+                return str;
+            }
+
+            if (str.EndsWith(suffix))
+            {
+                return str.Substring(0, str.Length - suffix.Length);
+            }
+
+            return str;
         }
     }
 }

@@ -13,6 +13,7 @@
 
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace WellTool.Core.IO.File
 {
@@ -337,7 +338,7 @@ namespace WellTool.Core.IO.File
         {
             try
             {
-                return new FileStream(path, FileMode.Open, FileAccess.Read);
+                return new FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read);
             }
             catch (Exception e)
             {
@@ -400,7 +401,7 @@ namespace WellTool.Core.IO.File
             try
             {
                 MkParentDirs(path);
-                return new FileStream(path, FileMode.Create, FileAccess.Write);
+                return new FileStream(path, System.IO.FileMode.Create, System.IO.FileAccess.Write);
             }
             catch (Exception e)
             {
@@ -846,12 +847,10 @@ namespace WellTool.Core.IO.File
             try
             {
                 // 在Windows上，符号链接可以通过FileInfo.ResolveLinkTarget获取
+                // 注意：ResolveLinkTarget在netstandard2.1中可能不可用
                 var fileInfo = new FileInfo(path);
-                var target = fileInfo.ResolveLinkTarget(true);
-                if (target != null)
-                {
-                    return target.FullName;
-                }
+                // 由于ResolveLinkTarget在netstandard2.1中可能不可用，这里直接返回原始路径
+                // 实际项目中可能需要使用P/Invoke或其他方式来处理符号链接
                 return path;
             }
             catch

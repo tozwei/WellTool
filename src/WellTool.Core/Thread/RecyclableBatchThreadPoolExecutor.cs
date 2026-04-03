@@ -114,7 +114,7 @@ namespace WellTool.Core.Threading
             int batchCount = batches.Count;
             int minusOne = batchCount - 1;
             var taskQueue = new ConcurrentQueue<IdempotentTask<R>>();
-            var futuresMap = new ConcurrentDictionary<int, Task<TaskResult<R>>>();
+            var futuresMap = new ConcurrentDictionary<int, CancellableTaskWrapper<R>>();
 
             // 提交前 batchCount-1 批任务
             for (int i = 0; i < minusOne; i++)
@@ -122,7 +122,9 @@ namespace WellTool.Core.Threading
                 var batch = batches[i];
                 var task = new IdempotentTask<R>(i, () => ProcessBatch(batch, processor));
                 taskQueue.Enqueue(task);
-                futuresMap.TryAdd(i, _taskFactory.StartNew(() => task.Call()));
+                var cts = new CancellationTokenSource();
+                var future = _taskFactory.StartNew(() => task.Call(), cts.Token);
+                futuresMap.TryAdd(i, new CancellableTaskWrapper<R>(future, cts));
             }
 
             var resultArr = new List<R>[batchCount];
@@ -142,7 +144,7 @@ namespace WellTool.Core.Threading
         /// <param name="taskQueue">任务队列</param>
         /// <param name="futuresMap">异步任务映射</param>
         /// <param name="resultArr">结果存储数组</param>
-        private void ProcessRemainingTasks<R>(ConcurrentQueue<IdempotentTask<R>> taskQueue, ConcurrentDictionary<int, Task<TaskResult<R>>> futuresMap, List<R>[] resultArr)
+        private void ProcessRemainingTasks<R>(ConcurrentQueue<IdempotentTask<R>> taskQueue, ConcurrentDictionary<int, CancellableTaskWrapper<R>> futuresMap, List<R>[] resultArr)
         {
             // 主消费未执行任务
             while (taskQueue.TryDequeue(out var task))
@@ -153,9 +155,10 @@ namespace WellTool.Core.Threading
                     if (call.Effective)
                     {
                         // 取消被主线程执行任务
-                        if (futuresMap.TryRemove(task.Index, out var future))
+                        if (futuresMap.TryRemove(task.Index, out var wrapper))
                         {
-                            future.Cancel();
+                            wrapper.CancellationTokenSource.Cancel();
+                            wrapper.CancellationTokenSource.Dispose();
                         }
                         // 加入结果集
                         resultArr[task.Index] = call.Result;
@@ -172,11 +175,12 @@ namespace WellTool.Core.Threading
             {
                 try
                 {
-                    var taskResult = kvp.Value.Result;
+                    var taskResult = kvp.Value.Task.Result;
                     if (taskResult.Effective)
                     {
                         resultArr[kvp.Key] = taskResult.Result;
                     }
+                    kvp.Value.CancellationTokenSource.Dispose();
                 }
                 catch (Exception e)
                 {
@@ -207,6 +211,21 @@ namespace WellTool.Core.Threading
                     return new TaskResult<R>(_delegate(), true);
                 }
                 return new TaskResult<R>(null, false);
+            }
+        }
+
+        /// <summary>
+        /// 带取消令牌的任务包装类
+        /// </summary>
+        private class CancellableTaskWrapper<R>
+        {
+            public Task<TaskResult<R>> Task { get; }
+            public CancellationTokenSource CancellationTokenSource { get; }
+
+            public CancellableTaskWrapper(Task<TaskResult<R>> task, CancellationTokenSource cts)
+            {
+                Task = task;
+                CancellationTokenSource = cts;
             }
         }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Net.Security;
+using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using WellTool.Core.Builder;
 using WellTool.Core.IO;
@@ -19,7 +20,7 @@ namespace WellTool.Core.Net
     /// </summary>
     public class SSLContextBuilder : Builder<SslStream>
     {
-        private string _protocol = SSLProtocols.TLS;
+        private SslProtocols _protocol = SslProtocols.Tls;
         private X509Certificate2 _certificate;
         private bool _clientCertRequired = false;
         private RemoteCertificateValidationCallback _remoteCertificateValidationCallback = DefaultTrustManager.Instance.ValidateCertificate;
@@ -42,8 +43,22 @@ namespace WellTool.Core.Net
         {
             if (StrUtil.IsNotBlank(protocol))
             {
-                _protocol = protocol;
+                if (Enum.TryParse<SslProtocols>(protocol, true, out var sslProtocol))
+                {
+                    _protocol = sslProtocol;
+                }
             }
+            return this;
+        }
+
+        /// <summary>
+        /// 设置协议
+        /// </summary>
+        /// <param name="protocol">协议</param>
+        /// <returns>自身</returns>
+        public SSLContextBuilder SetProtocol(SslProtocols protocol)
+        {
+            _protocol = protocol;
             return this;
         }
 

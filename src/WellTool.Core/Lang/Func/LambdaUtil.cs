@@ -19,7 +19,7 @@ namespace WellTool.Core.Lang.Func
         /// <typeparam name="R">类型</typeparam>
         /// <param name="func">lambda</param>
         /// <returns>lambda实现类</returns>
-        public static Type GetRealClass<R>(Func0<R> func)
+        public static Type GetRealClass<R>(System.Linq.Expressions.Expression<Func0<R>> func)
         {
             var expression = GetExpression(func);
             return GetRealClassFromExpression(expression);
@@ -32,7 +32,7 @@ namespace WellTool.Core.Lang.Func
         /// <typeparam name="R">返回值类型</typeparam>
         /// <param name="func">lambda</param>
         /// <returns>lambda实现类</returns>
-        public static Type GetRealClass<P, R>(Func1<P, R> func)
+        public static Type GetRealClass<P, R>(System.Linq.Expressions.Expression<Func1<P, R>> func)
         {
             var expression = GetExpression(func);
             return GetRealClassFromExpression(expression);
@@ -44,7 +44,7 @@ namespace WellTool.Core.Lang.Func
         /// <typeparam name="P">Lambda参数类型</typeparam>
         /// <param name="func">函数</param>
         /// <returns>函数名称</returns>
-        public static string GetMethodName<P>(Func1<P, object> func)
+        public static string GetMethodName<P>(System.Linq.Expressions.Expression<Func1<P, object>> func)
         {
             var expression = GetExpression(func);
             return GetMethodNameFromExpression(expression);
@@ -56,7 +56,7 @@ namespace WellTool.Core.Lang.Func
         /// <typeparam name="R">Lambda返回类型</typeparam>
         /// <param name="func">函数</param>
         /// <returns>函数名称</returns>
-        public static string GetMethodName<R>(Func0<R> func)
+        public static string GetMethodName<R>(System.Linq.Expressions.Expression<Func0<R>> func)
         {
             var expression = GetExpression(func);
             return GetMethodNameFromExpression(expression);
@@ -68,7 +68,7 @@ namespace WellTool.Core.Lang.Func
         /// <typeparam name="T">Lambda类型</typeparam>
         /// <param name="func">函数</param>
         /// <returns>字段名称</returns>
-        public static string GetFieldName<T>(Func1<T, object> func)
+        public static string GetFieldName<T>(System.Linq.Expressions.Expression<Func1<T, object>> func)
         {
             var methodName = GetMethodName(func);
             return BeanUtil.GetFieldName(methodName);
@@ -80,7 +80,7 @@ namespace WellTool.Core.Lang.Func
         /// <typeparam name="T">Lambda类型</typeparam>
         /// <param name="func">函数</param>
         /// <returns>字段名称</returns>
-        public static string GetFieldName<T>(Func0<T> func)
+        public static string GetFieldName<T>(System.Linq.Expressions.Expression<Func0<T>> func)
         {
             var methodName = GetMethodName(func);
             return BeanUtil.GetFieldName(methodName);
@@ -93,7 +93,7 @@ namespace WellTool.Core.Lang.Func
         /// <typeparam name="T">Lambda类型</typeparam>
         /// <param name="func">Lambda表达式</param>
         /// <returns>Expression</returns>
-        private static Expression GetExpression<T>(System.Linq.Expressions.Expression<Func<T>> func)
+        private static Expression GetExpression<T>(System.Linq.Expressions.Expression<Func0<T>> func)
         {
             return func.Body;
         }
@@ -105,7 +105,7 @@ namespace WellTool.Core.Lang.Func
         /// <typeparam name="R">返回类型</typeparam>
         /// <param name="func">Lambda表达式</param>
         /// <returns>Expression</returns>
-        private static Expression GetExpression<T, R>(System.Linq.Expressions.Expression<Func<T, R>> func)
+        private static Expression GetExpression<T, R>(System.Linq.Expressions.Expression<Func1<T, R>> func)
         {
             return func.Body;
         }

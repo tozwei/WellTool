@@ -17,36 +17,36 @@ namespace WellTool.Core.Lang.Ansi
     /// ANSI文本样式风格
     /// <p>来自Spring Boot</p>
     /// </summary>
-    public class AnsiStyle : IAnsiElement
+    public class AnsiStyleCodes : IAnsiElement
     {
         /// <summary>
         /// 重置/正常
         /// </summary>
-        public static readonly AnsiStyle Normal = new AnsiStyle(0);
+        public static readonly AnsiStyleCodes Normal = new AnsiStyleCodes(0);
 
         /// <summary>
         /// 粗体或增加强度
         /// </summary>
-        public static readonly AnsiStyle Bold = new AnsiStyle(1);
+        public static readonly AnsiStyleCodes Bold = new AnsiStyleCodes(1);
 
         /// <summary>
         /// 弱化（降低强度）
         /// </summary>
-        public static readonly AnsiStyle Faint = new AnsiStyle(2);
+        public static readonly AnsiStyleCodes Faint = new AnsiStyleCodes(2);
 
         /// <summary>
         /// 斜体
         /// </summary>
-        public static readonly AnsiStyle Italic = new AnsiStyle(3);
+        public static readonly AnsiStyleCodes Italic = new AnsiStyleCodes(3);
 
         /// <summary>
         /// 下划线
         /// </summary>
-        public static readonly AnsiStyle Underline = new AnsiStyle(4);
+        public static readonly AnsiStyleCodes Underline = new AnsiStyleCodes(4);
 
         private readonly int _code;
 
-        private AnsiStyle(int code)
+        private AnsiStyleCodes(int code)
         {
             _code = code;
         }
@@ -67,6 +67,12 @@ namespace WellTool.Core.Lang.Ansi
         public override string ToString()
         {
             return _code.ToString();
+        }
+
+        /// <inheritdoc />
+        public string ToAnsiString()
+        {
+            return $"\x1b[{_code}m";
         }
     }
 }

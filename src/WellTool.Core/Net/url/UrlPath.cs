@@ -45,7 +45,7 @@ namespace WellTool.Core.Net.Url
         /// <returns>节点列表</returns>
         public List<string> GetSegments()
         {
-            return _segments ?? CollUtil.EmptyList<string>();
+            return _segments ?? new List<string>();
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace WellTool.Core.Net.Url
             if (StrUtil.IsNotEmpty(path))
             {
                 // 原URL中以/结尾，则这个规则需保留，issue#I1G44J@Gitee
-                if (StrUtil.EndWith(path, '/'))
+                if (path.EndsWith('/'))
                 {
                     _withEndTag = true;
                 }
@@ -138,7 +138,7 @@ namespace WellTool.Core.Net.Url
         /// <returns>如果没有任何内容，则返回空字符串""</returns>
         public string Build(Encoding charset, bool encodePercent)
         {
-            if (CollUtil.IsEmpty(_segments))
+            if (_segments == null || _segments.Count == 0)
             {
                 // 没有节点的path取决于是否末尾追加/，如果不追加返回空串，否则返回/
                 return _withEndTag ? StrUtil.SLASH : StrUtil.EMPTY;
@@ -155,12 +155,12 @@ namespace WellTool.Core.Net.Url
 
             if (_withEndTag)
             {
-                if (StrUtil.IsEmpty(builder))
+                if (builder.Length == 0)
                 {
                     // 空白追加是保证以/开头
                     builder.Append('/');
                 }
-                else if (!StrUtil.EndWith(builder, '/'))
+                else if (!builder.ToString().EndsWith('/'))
                 {
                     // 尾部没有/则追加，否则不追加
                     builder.Append('/');

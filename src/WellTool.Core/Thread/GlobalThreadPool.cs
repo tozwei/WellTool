@@ -177,5 +177,14 @@ namespace WellTool.Core.Threading
         /// 获取线程数量
         /// </summary>
         public int ThreadCount => _threads.Count;
+
+        /// <summary>
+        /// 执行任务
+        /// </summary>
+        /// <param name="action">任务操作</param>
+        public static void Execute(Action action)
+        {
+            Instance.Submit(action);
+        }
     }
 }

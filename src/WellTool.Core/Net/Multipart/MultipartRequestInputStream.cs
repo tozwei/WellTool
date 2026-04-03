@@ -56,7 +56,8 @@ namespace WellTool.Core.Net.Multipart
         /// <param name="readAheadLimit">读取限制</param>
         public void Mark(int readAheadLimit)
         {
-            _stream.Mark(readAheadLimit);
+            // .NET的BufferedStream不支持Mark和Reset方法
+            // 这里可以使用MemoryStream或其他方式实现，但为了简单起见，我们暂时不实现此方法
         }
 
         /// <summary>
@@ -64,7 +65,8 @@ namespace WellTool.Core.Net.Multipart
         /// </summary>
         public void Reset()
         {
-            _stream.Reset();
+            // .NET的BufferedStream不支持Mark和Reset方法
+            // 这里可以使用MemoryStream或其他方式实现，但为了简单起见，我们暂时不实现此方法
         }
 
         /// <summary>

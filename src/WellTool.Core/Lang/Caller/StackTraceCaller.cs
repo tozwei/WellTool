@@ -1,79 +1,144 @@
-using System;
 using System.Diagnostics;
-using WellTool.Core.Exceptions;
+using System.Runtime.CompilerServices;
 
-namespace WellTool.Core.Lang.Caller
+namespace WellTool.Core.Lang.Caller;
+
+/// <summary>
+/// 基于StackTrace的调用者获取实现
+/// </summary>
+public static class StackTraceCaller
 {
-    /// <summary>
-    /// 通过StackTrace方式获取调用者
-    /// </summary>
-    public class StackTraceCaller : Caller
-    {
-        private const int Offset = 3; // 偏移量，跳过当前类和调用类
+	/// <summary>
+	/// 获取调用者信息
+	/// </summary>
+	/// <param name="depth">深度，0表示直接调用者</param>
+	/// <returns>调用者信息</returns>
+	public static CallerInfo GetCallerInfo(int depth = 0)
+	{
+		var frames = new StackTrace(true).GetFrames();
+		if (frames == null || frames.Length < depth + 2)
+			return new CallerInfo();
 
-        /// <summary>
-        /// 获得调用者
-        /// </summary>
-        /// <returns>调用者</returns>
-        public Type GetCaller()
-        {
-            var stackTrace = new StackTrace();
-            if (Offset + 1 >= stackTrace.FrameCount)
-            {
-                return null;
-            }
-            var stackFrame = stackTrace.GetFrame(Offset + 1);
-            return stackFrame.GetMethod().DeclaringType;
-        }
+		var frame = frames[depth + 2];
+		var method = frame?.GetMethod();
 
-        /// <summary>
-        /// 获得调用者的调用者
-        /// </summary>
-        /// <returns>调用者的调用者</returns>
-        public Type GetCallerCaller()
-        {
-            var stackTrace = new StackTrace();
-            if (Offset + 2 >= stackTrace.FrameCount)
-            {
-                return null;
-            }
-            var stackFrame = stackTrace.GetFrame(Offset + 2);
-            return stackFrame.GetMethod().DeclaringType;
-        }
+		return new CallerInfo
+		{
+			CallerType = method?.DeclaringType,
+			CallerMethod = method?.Name,
+			CallerFilePath = frame?.GetFileName(),
+			CallerLineNumber = frame?.GetFileLineNumber() ?? 0,
+			CallerColumnNumber = frame?.GetFileColumnNumber() ?? 0
+		};
+	}
 
-        /// <summary>
-        /// 获得调用者，指定第几级调用者
-        /// </summary>
-        /// <param name="depth">层级</param>
-        /// <returns>第几级调用者</returns>
-        public Type GetCaller(int depth)
-        {
-            var stackTrace = new StackTrace();
-            if (Offset + depth >= stackTrace.FrameCount)
-            {
-                return null;
-            }
-            var stackFrame = stackTrace.GetFrame(Offset + depth);
-            return stackFrame.GetMethod().DeclaringType;
-        }
+	/// <summary>
+	/// 获取调用者的类
+	/// </summary>
+	/// <param name="depth">深度</param>
+	/// <returns>调用者类</returns>
+	public static Type? GetCallerType(int depth = 0)
+	{
+		var frames = new StackTrace(true).GetFrames();
+		if (frames == null || frames.Length < depth + 2)
+			return null;
 
-        /// <summary>
-        /// 是否被指定类调用
-        /// </summary>
-        /// <param name="clazz">调用者类</param>
-        /// <returns>是否被调用</returns>
-        public bool IsCalledBy(Type clazz)
-        {
-            var stackTrace = new StackTrace();
-            for (int i = 0; i < stackTrace.FrameCount; i++)
-            {
-                var stackFrame = stackTrace.GetFrame(i);
-                if (stackFrame.GetMethod().DeclaringType == clazz)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
+		return frames[depth + 2]?.GetMethod()?.DeclaringType;
+	}
+
+	/// <summary>
+	/// 获取调用者的方法名
+	/// </summary>
+	/// <param name="depth">深度</param>
+	/// <returns>方法名</returns>
+	public static string? GetCallerMethodName(int depth = 0)
+	{
+		var frames = new StackTrace(true).GetFrames();
+		if (frames == null || frames.Length < depth + 2)
+			return null;
+
+		return frames[depth + 2]?.GetMethod()?.Name;
+	}
+
+	/// <summary>
+	/// 获取调用者的文件名
+	/// </summary>
+	/// <param name="depth">深度</param>
+	/// <returns>文件名</returns>
+	public static string? GetCallerFileName(int depth = 0)
+	{
+		var frames = new StackTrace(true).GetFrames();
+		if (frames == null || frames.Length < depth + 2)
+			return null;
+
+		return frames[depth + 2]?.GetFileName();
+	}
+
+	/// <summary>
+	/// 获取调用者的行号
+	/// </summary>
+	/// <param name="depth">深度</param>
+	/// <returns>行号</returns>
+	public static int GetCallerLineNumber(int depth = 0)
+	{
+		var frames = new StackTrace(true).GetFrames();
+		if (frames == null || frames.Length < depth + 2)
+			return 0;
+
+		return frames[depth + 2]?.GetFileLineNumber() ?? 0;
+	}
+}
+
+/// <summary>
+/// 调用者信息
+/// </summary>
+public class CallerInfo
+{
+	/// <summary>
+	/// 调用者的类型
+	/// </summary>
+	public Type? CallerType { get; set; }
+
+	/// <summary>
+	/// 调用者的方法名
+	/// </summary>
+	public string? CallerMethod { get; set; }
+
+	/// <summary>
+	/// 调用者的文件名
+	/// </summary>
+	public string? CallerFilePath { get; set; }
+
+	/// <summary>
+	/// 调用者的行号
+	/// </summary>
+	public int CallerLineNumber { get; set; }
+
+	/// <summary>
+	/// 调用者的列号
+	/// </summary>
+	public int CallerColumnNumber { get; set; }
+
+	/// <summary>
+	/// 获取调用者的类名
+	/// </summary>
+	public string? CallerClassName => CallerType?.Name;
+
+	/// <summary>
+	/// 获取调用者的完整类名
+	/// </summary>
+	public string? CallerClassFullName => CallerType?.FullName;
+
+	/// <inheritdoc />
+	public override string ToString()
+	{
+		if (CallerType == null)
+			return "Unknown";
+
+		var location = CallerFilePath != null
+			? $"{CallerFilePath}({CallerLineNumber},{CallerColumnNumber})"
+			: "Unknown Location";
+
+		return $"{CallerClassFullName}.{CallerMethod} at {location}";
+	}
 }

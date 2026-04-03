@@ -128,5 +128,11 @@ namespace WellTool.Core.Lang.Ansi
         {
             return _code.ToString();
         }
+
+        /// <inheritdoc />
+        public string ToAnsiString()
+        {
+            return $"\x1b[{_code}m";
+        }
     }
 }

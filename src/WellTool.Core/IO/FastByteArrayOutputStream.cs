@@ -89,10 +89,10 @@ namespace WellTool.Core.IO
             {
                 for (int i = 0; i < index; i++)
                 {
-                    buf = _buffer.Array(i);
+                    buf = _buffer.GetArray(i);
                     outputStream.Write(buf, 0, buf.Length);
                 }
-                outputStream.Write(_buffer.Array(index), 0, _buffer.Offset());
+                outputStream.Write(_buffer.GetArray(index), 0, _buffer.Offset());
             }
             catch (IOException e)
             {
@@ -131,7 +131,8 @@ namespace WellTool.Core.IO
         /// <returns>字符串</returns>
         public string ToString(Encoding encoding)
         {
-            return Encoding.GetString(ToByteArray());
+            encoding = encoding ?? Encoding.UTF8;
+            return encoding.GetString(ToByteArray());
         }
 
         public override bool CanRead => false;

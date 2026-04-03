@@ -116,7 +116,11 @@ namespace WellTool.Core.IO.Resource
             Uri uri = null;
             if (_type != null)
             {
-                uri = _type.Assembly.GetManifestResourceStream(_type, _path)?.GetHashCode().ToString() as Uri;
+                var stream = _type.Assembly.GetManifestResourceStream(_type, _path);
+                if (stream != null)
+                {
+                    uri = new Uri($"assembly://{_type.Assembly.GetName().Name}/{_type.Namespace}/{_path}");
+                }
             }
             else if (_assembly != null)
             {

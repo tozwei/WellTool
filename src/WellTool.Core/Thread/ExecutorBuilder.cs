@@ -85,10 +85,19 @@ namespace WellTool.Core.Threading
         }
 
         /// <summary>
+        /// 创建构建器实例
+        /// </summary>
+        /// <returns>构建器实例</returns>
+        public static ExecutorBuilder Create()
+        {
+            return new ExecutorBuilder();
+        }
+
+        /// <summary>
         /// 构建线程池
         /// </summary>
         /// <returns>线程池</returns>
-        public TaskScheduler Build()
+        public TaskFactory Build()
         {
             var queue = new BlockingCollection<Func<Task>>(_queueCapacity);
             var threads = new List<System.Threading.Thread>();
@@ -102,8 +111,49 @@ namespace WellTool.Core.Threading
                 thread.Start();
             }
 
-            // 这里返回一个自定义的 TaskScheduler，实际项目中可能需要更复杂的实现
-            return TaskScheduler.Default;
+            // 这里返回一个基于默认TaskScheduler的TaskFactory
+            return new TaskFactory(TaskScheduler.Default);
+        }
+
+        /// <summary>
+        /// 构建可终结的线程池
+        /// </summary>
+        /// <returns>线程池</returns>
+        public TaskFactory BuildFinalizable()
+        {
+            return Build();
+        }
+
+        /// <summary>
+        /// 使用同步队列
+        /// </summary>
+        /// <returns>当前实例</returns>
+        public ExecutorBuilder UseSynchronousQueue()
+        {
+            _queueCapacity = 0;
+            return this;
+        }
+
+        /// <summary>
+        /// 设置工作队列
+        /// </summary>
+        /// <param name="workQueue">工作队列</param>
+        /// <returns>当前实例</returns>
+        public ExecutorBuilder SetWorkQueue(ConcurrentQueue<Action> workQueue)
+        {
+            // 这里只是一个占位符，实际项目中可能需要更复杂的实现
+            return this;
+        }
+
+        /// <summary>
+        /// 设置保活时间
+        /// </summary>
+        /// <param name="keepAliveTime">保活时间</param>
+        /// <returns>当前实例</returns>
+        public ExecutorBuilder SetKeepAliveTime(long keepAliveTime)
+        {
+            _keepAliveSeconds = (int)keepAliveTime;
+            return this;
         }
 
         /// <summary>

@@ -391,5 +391,76 @@ namespace WellTool.Core.Util
 
             return Directory.GetDirectories(directoryPath, searchPattern, searchOption);
         }
+
+        /// <summary>
+        /// 读取流的前8192个字节并转换为十六进制字符串（大写）
+        /// </summary>
+        /// <param name="stream">流</param>
+        /// <returns>十六进制字符串</returns>
+        public static string ReadHex8192Upper(Stream stream)
+        {
+            return ReadHexUpper(stream, 8192);
+        }
+
+        /// <summary>
+        /// 读取流的前64个字节并转换为十六进制字符串（大写）
+        /// </summary>
+        /// <param name="stream">流</param>
+        /// <returns>十六进制字符串</returns>
+        public static string ReadHex64Upper(Stream stream)
+        {
+            return ReadHexUpper(stream, 64);
+        }
+
+        /// <summary>
+        /// 读取流的前N个字节并转换为十六进制字符串（大写）
+        /// </summary>
+        /// <param name="stream">流</param>
+        /// <param name="length">读取长度</param>
+        /// <returns>十六进制字符串</returns>
+        private static string ReadHexUpper(Stream stream, int length)
+        {
+            var buffer = new byte[length];
+            var read = stream.Read(buffer, 0, buffer.Length);
+            var actualBuffer = new byte[read];
+            Array.Copy(buffer, actualBuffer, read);
+            return BitConverter.ToString(actualBuffer).Replace("-", "").ToUpper();
+        }
+
+        /// <summary>
+        /// 将对象转换为流
+        /// </summary>
+        /// <param name="obj">对象</param>
+        /// <returns>流</returns>
+        public static Stream ToStream(object obj)
+        {
+            if (obj is Stream stream)
+            {
+                return stream;
+            }
+            if (obj is byte[] bytes)
+            {
+                return new MemoryStream(bytes);
+            }
+            if (obj is string str)
+            {
+                return new MemoryStream(System.Text.Encoding.UTF8.GetBytes(str));
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 将流转换为缓冲流
+        /// </summary>
+        /// <param name="stream">流</param>
+        /// <returns>缓冲流</returns>
+        public static Stream ToBuffered(Stream stream)
+        {
+            if (stream is BufferedStream)
+            {
+                return stream;
+            }
+            return new BufferedStream(stream);
+        }
     }
 }

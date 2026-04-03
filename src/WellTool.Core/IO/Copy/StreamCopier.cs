@@ -23,7 +23,7 @@ namespace WellTool.Core.IO.Copy
         /// <summary>
         /// 构造
         /// </summary>
-        public StreamCopier() : this(IoUtil.DefaultBufferSize)
+        public StreamCopier() : this(WellTool.Core.Util.IOUtil.DEFAULT_BUFFER_SIZE)
         {
         }
 

@@ -85,7 +85,7 @@ namespace WellTool.Core.Lang.Caller
         /// <returns>Caller实现</returns>
         private static Caller TryCreateCaller()
         {
-            return new StackTraceCaller();
+            return new StackTraceCallerImpl();
         }
     }
 }

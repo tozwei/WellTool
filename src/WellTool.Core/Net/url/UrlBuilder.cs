@@ -102,7 +102,7 @@ namespace WellTool.Core.Net.Url
             Assert.NotBlank(httpUrl, "Http url must be not blank!");
             httpUrl = StrUtil.TrimStart(httpUrl);
             // issue#I66CIR
-            if (!StrUtil.StartsWithAny(httpUrl, true, "http://", "https://"))
+            if (!httpUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !httpUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             {
                 httpUrl = "http://" + httpUrl;
             }
@@ -361,7 +361,11 @@ namespace WellTool.Core.Net.Url
         /// <returns>this</returns>
         public UrlBuilder AddPath(string path)
         {
-            UrlPath.Of(path, _charset).GetSegments().ForEach(AddPathSegment);
+            var segments = UrlPath.Of(path, _charset).GetSegments();
+            foreach (var segment in segments)
+            {
+                AddPathSegment(segment);
+            }
             return this;
         }
 
