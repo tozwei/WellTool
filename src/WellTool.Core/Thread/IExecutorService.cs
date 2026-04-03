@@ -14,7 +14,7 @@ namespace WellTool.Core.Threading
         /// 执行指定的任务
         /// </summary>
         /// <param name="command">要执行的任务</param>
-        void Execute(Action command);
+        void Execute(System.Action command);
 
         /// <summary>
         /// 关闭执行器
@@ -25,7 +25,7 @@ namespace WellTool.Core.Threading
         /// 立即关闭执行器并返回未执行的任务
         /// </summary>
         /// <returns>未执行的任务列表</returns>
-        List<Action> ShutdownNow();
+        List<System.Action> ShutdownNow();
 
         /// <summary>
         /// 检查执行器是否已关闭
@@ -50,7 +50,7 @@ namespace WellTool.Core.Threading
         /// </summary>
         /// <param name="task">要执行的任务</param>
         /// <returns>表示任务结果的Future</returns>
-        Task Submit(Action task);
+        Task Submit(System.Action task);
 
         /// <summary>
         /// 提交一个任务并返回一个表示该任务的Future
@@ -58,7 +58,7 @@ namespace WellTool.Core.Threading
         /// <typeparam name="T">任务结果类型</typeparam>
         /// <param name="task">要执行的任务</param>
         /// <returns>表示任务结果的Future</returns>
-        Task<T> Submit<T>(Func<T> task);
+        Task<T> Submit<T>(System.Func<T> task);
 
         /// <summary>
         /// 提交一个任务并返回一个表示该任务的Future
@@ -67,7 +67,7 @@ namespace WellTool.Core.Threading
         /// <param name="task">要执行的任务</param>
         /// <param name="result">任务结果</param>
         /// <returns>表示任务结果的Future</returns>
-        Task<T> Submit<T>(Action task, T result);
+        Task<T> Submit<T>(System.Action task, T result);
 
         /// <summary>
         /// 执行所有任务并返回任务结果
@@ -75,7 +75,7 @@ namespace WellTool.Core.Threading
         /// <typeparam name="T">任务结果类型</typeparam>
         /// <param name="tasks">任务集合</param>
         /// <returns>任务结果集合</returns>
-        List<Task<T>> InvokeAll<T>(ICollection<Func<T>> tasks);
+        List<Task<T>> InvokeAll<T>(ICollection<System.Func<T>> tasks);
 
         /// <summary>
         /// 执行所有任务并返回任务结果
@@ -85,7 +85,7 @@ namespace WellTool.Core.Threading
         /// <param name="timeout">超时时间</param>
         /// <param name="unit">时间单位</param>
         /// <returns>任务结果集合</returns>
-        List<Task<T>> InvokeAll<T>(ICollection<Func<T>> tasks, long timeout, TimeUnit unit);
+        List<Task<T>> InvokeAll<T>(ICollection<System.Func<T>> tasks, long timeout, TimeUnit unit);
 
         /// <summary>
         /// 执行所有任务并返回第一个完成的任务结果
@@ -93,7 +93,7 @@ namespace WellTool.Core.Threading
         /// <typeparam name="T">任务结果类型</typeparam>
         /// <param name="tasks">任务集合</param>
         /// <returns>第一个完成的任务结果</returns>
-        T InvokeAny<T>(ICollection<Func<T>> tasks);
+        T InvokeAny<T>(ICollection<System.Func<T>> tasks);
 
         /// <summary>
         /// 执行所有任务并返回第一个完成的任务结果
@@ -103,6 +103,6 @@ namespace WellTool.Core.Threading
         /// <param name="timeout">超时时间</param>
         /// <param name="unit">时间单位</param>
         /// <returns>第一个完成的任务结果</returns>
-        T InvokeAny<T>(ICollection<Func<T>> tasks, long timeout, TimeUnit unit);
+        T InvokeAny<T>(ICollection<System.Func<T>> tasks, long timeout, TimeUnit unit);
     }
 }

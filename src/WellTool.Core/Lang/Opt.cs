@@ -192,7 +192,7 @@ public class Opt<T>
 	/// <typeparam name="X">异常类型</typeparam>
 	/// <param name="exceptionSupplier">值不存在时执行的操作</param>
 	/// <returns>值</returns>
-	public T GetOrThrow<X>(Func<X> exceptionSupplier) where X : Exception
+	public T GetOrThrow<X>(Func<X> exceptionSupplier) where X : System.Exception
 	{
 		if (IsPresent)
 			return _value!;

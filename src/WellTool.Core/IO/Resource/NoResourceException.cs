@@ -22,7 +22,7 @@ namespace WellTool.Core.IO.Resource
         /// 构造函数
         /// </summary>
         /// <param name="e">异常</param>
-        public NoResourceException(Exception e) : base(e.Message, e)
+        public NoResourceException(System.Exception e) : base(e.Message, e)
         {
         }
 
@@ -48,7 +48,7 @@ namespace WellTool.Core.IO.Resource
         /// </summary>
         /// <param name="message">消息</param>
         /// <param name="throwable">异常</param>
-        public NoResourceException(string message, Exception throwable) : base(message, throwable)
+        public NoResourceException(string message, System.Exception throwable) : base(message, throwable)
         {
         }
 
@@ -58,7 +58,7 @@ namespace WellTool.Core.IO.Resource
         /// <param name="throwable">异常</param>
         /// <param name="messageTemplate">消息模板</param>
         /// <param name="args">参数</param>
-        public NoResourceException(Exception throwable, string messageTemplate, params object[] args) : base(string.Format(messageTemplate, args), throwable)
+        public NoResourceException(System.Exception throwable, string messageTemplate, params object[] args) : base(string.Format(messageTemplate, args), throwable)
         {
         }
 

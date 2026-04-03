@@ -6,7 +6,7 @@ namespace WellTool.Core.IO
     /// <summary>
     /// IO运行时异常
     /// </summary>
-    public class IORuntimeException : Exception
+    public class IORuntimeException : System.Exception
     {
         /// <summary>
         /// 构造函数
@@ -24,7 +24,7 @@ namespace WellTool.Core.IO
         /// </summary>
         /// <param name="message">异常信息</param>
         /// <param name="innerException">内部异常</param>
-        public IORuntimeException(string message, Exception innerException) : base(message, innerException) { }
+        public IORuntimeException(string message, System.Exception innerException) : base(message, innerException) { }
 
         /// <summary>
         /// 构造函数
@@ -36,6 +36,6 @@ namespace WellTool.Core.IO
         /// 构造函数
         /// </summary>
         /// <param name="innerException">内部异常</param>
-        public IORuntimeException(Exception innerException) : base(innerException.Message, innerException) { }
+        public IORuntimeException(System.Exception innerException) : base(innerException.Message, innerException) { }
     }
 }
