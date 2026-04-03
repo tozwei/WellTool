@@ -19,11 +19,11 @@ public class ValidateException : StatefulException
     {
     }
 
-    public ValidateException(Exception? throwable) : base(throwable)
+    public ValidateException(System.Exception? throwable) : base(throwable)
     {
     }
 
-    public ValidateException(string msg, Exception? throwable) : base(msg, throwable)
+    public ValidateException(string msg, System.Exception? throwable) : base(msg, throwable)
     {
     }
 
@@ -31,16 +31,16 @@ public class ValidateException : StatefulException
     {
     }
 
-    public ValidateException(int status, Exception? throwable) : base(status, throwable)
+    public ValidateException(int status, System.Exception? throwable) : base(status, throwable)
     {
     }
 
-    public ValidateException(string message, Exception? throwable, bool enableSuppression, bool writableStackTrace)
+    public ValidateException(string message, System.Exception? throwable, bool enableSuppression, bool writableStackTrace)
         : base(message, throwable, enableSuppression, writableStackTrace)
     {
     }
 
-    public ValidateException(int status, string msg, Exception? throwable) : base(status, msg, throwable)
+    public ValidateException(int status, string msg, System.Exception? throwable) : base(status, msg, throwable)
     {
     }
 }

@@ -2,6 +2,7 @@ namespace WellTool.Core.Date.Format;
 
 using System;
 using System.Globalization;
+using System.Text;
 using SystemTimeZone = System.TimeZone;
 
 /// <summary>

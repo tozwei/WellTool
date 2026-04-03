@@ -8,8 +8,8 @@ namespace WellTool.Core.Exceptions
 
         public RuntimeException(string message) : base(message) { }
 
-        public RuntimeException(string message, Exception innerException) : base(message, innerException) { }
+        public RuntimeException(string message, System.Exception innerException) : base(message, innerException) { }
 
-        public RuntimeException(Exception innerException) : base(innerException.Message, innerException) { }
+        public RuntimeException(System.Exception innerException) : base(innerException.Message, innerException) { }
     }
 }
