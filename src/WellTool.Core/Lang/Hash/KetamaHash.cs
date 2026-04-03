@@ -1,3 +1,5 @@
+using System;
+
 namespace WellTool.Core.Lang.Hash;
 
 /// <summary>

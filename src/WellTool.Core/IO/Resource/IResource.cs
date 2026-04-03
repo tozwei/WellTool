@@ -49,7 +49,7 @@ namespace WellTool.Core.IO.Resource
         /// 获得 {@link Stream}
         /// </summary>
         /// <returns>{@link Stream}</returns>
-        Stream GetStream();
+        System.IO.Stream GetStream();
 
         /// <summary>
         /// 检查资源是否变更<br>
@@ -63,7 +63,7 @@ namespace WellTool.Core.IO.Resource
         /// </summary>
         /// <param name="output">输出流</param>
         /// <exception cref="IORuntimeException">IO异常</exception>
-        void WriteTo(Stream output);
+        void WriteTo(System.IO.Stream output);
 
         /// <summary>
         /// 获得StreamReader

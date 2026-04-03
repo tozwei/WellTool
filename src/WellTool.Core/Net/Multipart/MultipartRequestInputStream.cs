@@ -16,7 +16,7 @@ namespace WellTool.Core.Net.Multipart
         /// 构造
         /// </summary>
         /// <param name="inputStream">输入流</param>
-        public MultipartRequestInputStream(Stream inputStream)
+        public MultipartRequestInputStream(System.IO.Stream inputStream)
         {
             _stream = new BufferedStream(inputStream);
         }
@@ -203,7 +203,7 @@ namespace WellTool.Core.Net.Multipart
         /// <param name="output">输出流</param>
         /// <returns>复制的字节数</returns>
         /// <exception cref="IOException">读取异常</exception>
-        public long Copy(Stream output)
+        public long Copy(System.IO.Stream output)
         {
             long count = 0;
             while (true)
@@ -226,7 +226,7 @@ namespace WellTool.Core.Net.Multipart
         /// <param name="limit">最大字节数</param>
         /// <returns>复制的字节数</returns>
         /// <exception cref="IOException">读取异常</exception>
-        public long Copy(Stream output, long limit)
+        public long Copy(System.IO.Stream output, long limit)
         {
             long count = 0;
             while (true)

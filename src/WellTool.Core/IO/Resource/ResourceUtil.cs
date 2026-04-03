@@ -59,7 +59,7 @@ namespace WellTool.Core.IO.Resource
         /// <param name="resource">ClassPath资源</param>
         /// <returns>{@link Stream}</returns>
         /// <exception cref="NoResourceException">资源不存在异常</exception>
-        public static Stream GetStream(string resource)
+        public static System.IO.Stream GetStream(string resource)
         {
             return GetResourceObj(resource).GetStream();
         }
@@ -69,7 +69,7 @@ namespace WellTool.Core.IO.Resource
         /// </summary>
         /// <param name="resource">ClassPath资源</param>
         /// <returns>{@link Stream}</returns>
-        public static Stream GetStreamSafe(string resource)
+        public static System.IO.Stream GetStreamSafe(string resource)
         {
             try
             {

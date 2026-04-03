@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 
 namespace WellTool.Core.Lang.Hash;

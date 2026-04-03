@@ -35,7 +35,7 @@ namespace WellTool.Core.Util
         /// <param name="stream">流</param>
         /// <param name="encoding">编码，默认为 UTF-8</param>
         /// <returns>流中的内容</returns>
-        public static string ReadString(Stream stream, Encoding encoding = null)
+        public static string ReadString(System.IO.Stream stream, Encoding encoding = null)
         {
             if (stream == null)
             {
@@ -52,7 +52,7 @@ namespace WellTool.Core.Util
         /// </summary>
         /// <param name="stream">流</param>
         /// <returns>流中的内容</returns>
-        public static byte[] ReadBytes(Stream stream)
+        public static byte[] ReadBytes(System.IO.Stream stream)
         {
             if (stream == null)
             {
@@ -70,7 +70,7 @@ namespace WellTool.Core.Util
         /// <param name="stream">流</param>
         /// <param name="content">内容</param>
         /// <param name="encoding">编码，默认为 UTF-8</param>
-        public static void WriteString(Stream stream, string content, Encoding encoding = null)
+        public static void WriteString(System.IO.Stream stream, string content, Encoding encoding = null)
         {
             if (stream == null || string.IsNullOrEmpty(content))
             {
@@ -87,7 +87,7 @@ namespace WellTool.Core.Util
         /// </summary>
         /// <param name="stream">流</param>
         /// <param name="bytes">字节数组</param>
-        public static void WriteBytes(Stream stream, byte[] bytes)
+        public static void WriteBytes(System.IO.Stream stream, byte[] bytes)
         {
             if (stream == null || bytes == null || bytes.Length == 0)
             {
@@ -104,7 +104,7 @@ namespace WellTool.Core.Util
         /// <param name="destination">目标流</param>
         /// <param name="bufferSize">缓冲区大小</param>
         /// <returns>复制的字节数</returns>
-        public static long Copy(Stream source, Stream destination, int bufferSize = DEFAULT_BUFFER_SIZE)
+        public static long Copy(System.IO.Stream source, System.IO.Stream destination, int bufferSize = DEFAULT_BUFFER_SIZE)
         {
             if (source == null || destination == null)
             {
@@ -126,7 +126,7 @@ namespace WellTool.Core.Util
         /// 关闭流
         /// </summary>
         /// <param name="stream">流</param>
-        public static void Close(Stream stream)
+        public static void Close(System.IO.Stream stream)
         {
             stream?.Dispose();
         }
@@ -397,7 +397,7 @@ namespace WellTool.Core.Util
         /// </summary>
         /// <param name="stream">流</param>
         /// <returns>十六进制字符串</returns>
-        public static string ReadHex8192Upper(Stream stream)
+        public static string ReadHex8192Upper(System.IO.Stream stream)
         {
             return ReadHexUpper(stream, 8192);
         }
@@ -407,7 +407,7 @@ namespace WellTool.Core.Util
         /// </summary>
         /// <param name="stream">流</param>
         /// <returns>十六进制字符串</returns>
-        public static string ReadHex64Upper(Stream stream)
+        public static string ReadHex64Upper(System.IO.Stream stream)
         {
             return ReadHexUpper(stream, 64);
         }
@@ -418,7 +418,7 @@ namespace WellTool.Core.Util
         /// <param name="stream">流</param>
         /// <param name="length">读取长度</param>
         /// <returns>十六进制字符串</returns>
-        private static string ReadHexUpper(Stream stream, int length)
+        private static string ReadHexUpper(System.IO.Stream stream, int length)
         {
             var buffer = new byte[length];
             var read = stream.Read(buffer, 0, buffer.Length);
@@ -432,9 +432,9 @@ namespace WellTool.Core.Util
         /// </summary>
         /// <param name="obj">对象</param>
         /// <returns>流</returns>
-        public static Stream ToStream(object obj)
+        public static System.IO.Stream ToStream(object obj)
         {
-            if (obj is Stream stream)
+            if (obj is System.IO.Stream stream)
             {
                 return stream;
             }
@@ -454,7 +454,7 @@ namespace WellTool.Core.Util
         /// </summary>
         /// <param name="stream">流</param>
         /// <returns>缓冲流</returns>
-        public static Stream ToBuffered(Stream stream)
+        public static System.IO.Stream ToBuffered(System.IO.Stream stream)
         {
             if (stream is BufferedStream)
             {

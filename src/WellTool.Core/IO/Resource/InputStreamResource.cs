@@ -22,14 +22,14 @@ namespace WellTool.Core.IO.Resource
     /// </summary>
     public class InputStreamResource : IResource
     {
-        private readonly Stream _stream;
+        private readonly System.IO.Stream _stream;
         private readonly string _name;
 
         /// <summary>
         /// 构造
         /// </summary>
         /// <param name="stream">{@link Stream}</param>
-        public InputStreamResource(Stream stream) : this(stream, null)
+        public InputStreamResource(System.IO.Stream stream) : this(stream, null)
         {
         }
 
@@ -38,7 +38,7 @@ namespace WellTool.Core.IO.Resource
         /// </summary>
         /// <param name="stream">{@link Stream}</param>
         /// <param name="name">资源名称</param>
-        public InputStreamResource(Stream stream, string name)
+        public InputStreamResource(System.IO.Stream stream, string name)
         {
             _stream = stream;
             _name = name;
@@ -66,7 +66,7 @@ namespace WellTool.Core.IO.Resource
         /// 获得 {@link Stream}
         /// </summary>
         /// <returns>{@link Stream}</returns>
-        public Stream GetStream()
+        public System.IO.Stream GetStream()
         {
             return _stream;
         }
@@ -86,7 +86,7 @@ namespace WellTool.Core.IO.Resource
         /// </summary>
         /// <param name="output">输出流</param>
         /// <exception cref="IORuntimeException">IO异常</exception>
-        public void WriteTo(Stream output)
+        public void WriteTo(System.IO.Stream output)
         {
             using (_stream)
             {
