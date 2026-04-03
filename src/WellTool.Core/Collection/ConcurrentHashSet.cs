@@ -1,105 +1,84 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
 
 namespace WellTool.Core.Collection
 {
     /// <summary>
-    /// 并发哈希集合
+    /// 线程安全的HashSet
     /// </summary>
-    /// <typeparam name="T">元素类型</typeparam>
-    public class ConcurrentHashSet<T> : ICollection<T>, IReadOnlyCollection<T>
+    public class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T>
     {
-        private readonly HashSet<T> _set;
-        private readonly ReaderWriterLockSlim _lock;
+        private readonly ConcurrentDictionary<T, bool> _dict;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         public ConcurrentHashSet()
         {
-            _set = new HashSet<T>();
-            _lock = new ReaderWriterLockSlim();
+            _dict = new ConcurrentDictionary<T, bool>();
         }
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="comparer">比较器</param>
-        public ConcurrentHashSet(IEqualityComparer<T> comparer)
-        {
-            _set = new HashSet<T>(comparer);
-            _lock = new ReaderWriterLockSlim();
-        }
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="collection">集合</param>
         public ConcurrentHashSet(IEnumerable<T> collection)
         {
-            _set = new HashSet<T>(collection);
-            _lock = new ReaderWriterLockSlim();
-        }
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="collection">集合</param>
-        /// <param name="comparer">比较器</param>
-        public ConcurrentHashSet(IEnumerable<T> collection, IEqualityComparer<T> comparer)
-        {
-            _set = new HashSet<T>(collection, comparer);
-            _lock = new ReaderWriterLockSlim();
-        }
-
-        /// <summary>
-        /// 集合大小
-        /// </summary>
-        public int Count
-        {
-            get
+            _dict = new ConcurrentDictionary<T, bool>();
+            foreach (var item in collection)
             {
-                _lock.EnterReadLock();
-                try
-                {
-                    return _set.Count;
-                }
-                finally
-                {
-                    _lock.ExitReadLock();
-                }
+                _dict.TryAdd(item, true);
             }
         }
 
         /// <summary>
-        /// 是否只读
+        /// 构造函数
+        /// </summary>
+        public ConcurrentHashSet(IEqualityComparer<T> comparer)
+        {
+            _dict = new ConcurrentDictionary<T, bool>(comparer);
+        }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public ConcurrentHashSet(IEnumerable<T> collection, IEqualityComparer<T> comparer)
+        {
+            _dict = new ConcurrentDictionary<T, bool>(comparer);
+            foreach (var item in collection)
+            {
+                _dict.TryAdd(item, true);
+            }
+        }
+
+        /// <summary>
+        /// 元素数量
+        /// </summary>
+        public int Count => _dict.Count;
+
+        /// <summary>
+        /// 是否为空
+        /// </summary>
+        public bool IsEmpty => _dict.IsEmpty;
+
+        /// <summary>
+        /// 是否为只读
         /// </summary>
         public bool IsReadOnly => false;
 
         /// <summary>
         /// 添加元素
         /// </summary>
-        /// <param name="item">元素</param>
-        /// <returns>是否添加成功</returns>
         public bool Add(T item)
         {
-            _lock.EnterWriteLock();
-            try
-            {
-                return _set.Add(item);
-            }
-            finally
-            {
-                _lock.ExitWriteLock();
-            }
+            return _dict.TryAdd(item, true);
         }
 
         /// <summary>
         /// 添加元素
         /// </summary>
-        /// <param name="item">元素</param>
         void ICollection<T>.Add(T item)
         {
             Add(item);
@@ -110,131 +89,62 @@ namespace WellTool.Core.Collection
         /// </summary>
         public void Clear()
         {
-            _lock.EnterWriteLock();
-            try
-            {
-                _set.Clear();
-            }
-            finally
-            {
-                _lock.ExitWriteLock();
-            }
+            _dict.Clear();
         }
 
         /// <summary>
-        /// 检查是否包含元素
+        /// 是否包含元素
         /// </summary>
-        /// <param name="item">元素</param>
-        /// <returns>是否包含</returns>
         public bool Contains(T item)
         {
-            _lock.EnterReadLock();
-            try
-            {
-                return _set.Contains(item);
-            }
-            finally
-            {
-                _lock.ExitReadLock();
-            }
+            return _dict.ContainsKey(item);
         }
 
         /// <summary>
         /// 复制到数组
         /// </summary>
-        /// <param name="array">目标数组</param>
-        /// <param name="arrayIndex">开始索引</param>
         public void CopyTo(T[] array, int arrayIndex)
         {
-            _lock.EnterReadLock();
-            try
+            if (array == null)
             {
-                _set.CopyTo(array, arrayIndex);
+                throw new ArgumentNullException(nameof(array));
             }
-            finally
+
+            if (arrayIndex < 0)
             {
-                _lock.ExitReadLock();
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex));
+            }
+
+            if (array.Length - arrayIndex < Count)
+            {
+                throw new ArgumentException("Array is too small");
+            }
+
+            foreach (var item in this)
+            {
+                array[arrayIndex++] = item;
             }
         }
 
         /// <summary>
         /// 移除元素
         /// </summary>
-        /// <param name="item">元素</param>
-        /// <returns>是否移除成功</returns>
         public bool Remove(T item)
         {
-            _lock.EnterWriteLock();
-            try
-            {
-                return _set.Remove(item);
-            }
-            finally
-            {
-                _lock.ExitWriteLock();
-            }
+            return _dict.TryRemove(item, out _);
         }
 
         /// <summary>
-        /// 获取迭代器
+        /// 获取枚举器
         /// </summary>
-        /// <returns>迭代器</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            _lock.EnterReadLock();
-            try
-            {
-                return new List<T>(_set).GetEnumerator();
-            }
-            finally
-            {
-                _lock.ExitReadLock();
-            }
+            return _dict.Keys.GetEnumerator();
         }
 
-        /// <summary>
-        /// 获取迭代器
-        /// </summary>
-        /// <returns>迭代器</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        /// <summary>
-        /// 转换为数组
-        /// </summary>
-        /// <returns>数组</returns>
-        public T[] ToArray()
-        {
-            _lock.EnterReadLock();
-            try
-            {
-                var array = new T[_set.Count];
-                _set.CopyTo(array);
-                return array;
-            }
-            finally
-            {
-                _lock.ExitReadLock();
-            }
-        }
-
-        /// <summary>
-        /// 转换为列表
-        /// </summary>
-        /// <returns>列表</returns>
-        public List<T> ToList()
-        {
-            _lock.EnterReadLock();
-            try
-            {
-                return new List<T>(_set);
-            }
-            finally
-            {
-                _lock.ExitReadLock();
-            }
         }
     }
 }
