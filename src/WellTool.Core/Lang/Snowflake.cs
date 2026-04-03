@@ -126,7 +126,7 @@ public class Snowflake
 				}
 				else
 				{
-					throw new Exception($"Clock moved backwards. Refusing to generate id for {_lastTimestamp - timestamp}ms");
+					throw new System.Exception($"Clock moved backwards. Refusing to generate id for {_lastTimestamp - timestamp}ms");
 				}
 			}
 
@@ -175,7 +175,7 @@ public class Snowflake
 		}
 		if (timestamp < lastTimestamp)
 		{
-			throw new Exception($"Clock moved backwards. Refusing to generate id for {lastTimestamp - timestamp}ms");
+			throw new System.Exception($"Clock moved backwards. Refusing to generate id for {lastTimestamp - timestamp}ms");
 		}
 		return timestamp;
 	}

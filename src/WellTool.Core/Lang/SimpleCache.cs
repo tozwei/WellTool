@@ -13,7 +13,7 @@ namespace WellTool.Core.Lang;
 /// <typeparam name="V">值类型</typeparam>
 public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 {
-	private readonly Dictionary<MutableObject<K>, V> _rawMap;
+	private readonly Dictionary<MutableObj<K>, V> _rawMap;
 	private readonly object _lock = new();
 	private readonly Dictionary<K, object> _keyLockMap = new();
 
@@ -34,7 +34,7 @@ public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 	{
 		lock (_lock)
 		{
-			return _rawMap.TryGetValue(new MutableObject<K>(key), out var value) ? value : default;
+			return _rawMap.TryGetValue(new MutableObj<K>(key), out var value) ? value : default;
 		}
 	}
 
@@ -103,7 +103,7 @@ public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 	{
 		lock (_lock)
 		{
-			_rawMap[new MutableObject<K>(key)] = value;
+			_rawMap[new MutableObj<K>(key)] = value;
 		}
 		return value;
 	}
@@ -117,7 +117,7 @@ public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 	{
 		lock (_lock)
 		{
-			var mutableKey = new MutableObject<K>(key);
+			var mutableKey = new MutableObj<K>(key);
 			if (_rawMap.TryGetValue(mutableKey, out var value))
 			{
 				_rawMap.Remove(mutableKey);

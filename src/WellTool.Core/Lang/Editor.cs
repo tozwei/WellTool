@@ -52,6 +52,6 @@ public class LambdaEditor<T> : Editor<T>
 	/// <returns>编辑后的对象</returns>
 	public override T Edit(T t)
 	{
-		return _editor?.Invoke(t) ?? t;
+		return _editor.Invoke(t) ?? t;
 	}
 }

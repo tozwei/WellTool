@@ -33,7 +33,7 @@ public class FileResource : IResource
 
 	public Stream GetStream()
 	{
-		return File.OpenRead(_filePath);
+		return System.IO.File.OpenRead(_filePath);
 	}
 
 	public string GetDescription()
@@ -77,7 +77,7 @@ public static class ResourceUtil
 	/// <returns>资源</returns>
 	public static IResource GetResource(string path)
 	{
-		if (File.Exists(path))
+		if (System.IO.File.Exists(path))
 			return new FileResource(path);
 		
 		throw new FileNotFoundException($"Resource not found: {path}");
