@@ -4,8 +4,6 @@ using System;
 
 /// <summary>
 /// 快速字节缓冲区，用于高效拼接字节数组
-/// 
-/// @author looly
 /// </summary>
 public class FastByteBuffer
 {

@@ -6,8 +6,6 @@ using System.Text;
 
 /// <summary>
 /// 文件对象资源
-/// 
-/// @author looly
 /// </summary>
 public class FileObjectResource : IResource
 {

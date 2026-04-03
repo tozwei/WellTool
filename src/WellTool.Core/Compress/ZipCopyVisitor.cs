@@ -8,9 +8,6 @@ using System.IO.Compression;
 /// <summary>
 /// Zip文件拷贝的 FileVisitor 实现，zip中追加文件，此类非线程安全
 /// 此类在遍历源目录并复制过程中会自动创建目标目录中不存在的上级目录。
-/// 
-/// @author looly
-/// @since 5.7.15
 /// </summary>
 public class ZipCopyVisitor
 {

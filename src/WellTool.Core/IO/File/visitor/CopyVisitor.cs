@@ -5,8 +5,6 @@ using System.IO;
 
 /// <summary>
 /// 文件复制访问器
-/// 
-/// @author looly
 /// </summary>
 public class CopyVisitor : SimpleFileVisitor
 {

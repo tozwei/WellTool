@@ -8,9 +8,6 @@ using System.Numerics;
 /// <summary>
 /// 组合，即 C(n, m)
 /// 排列组合相关类
-/// 
-/// @author looly
-/// @since 4.0.6
 /// </summary>
 public class Combination
 {

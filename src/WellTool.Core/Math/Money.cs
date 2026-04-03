@@ -6,9 +6,6 @@ using System.Text;
 
 /// <summary>
 /// 单币种货币类，处理货币算术、币种和取整
-/// 
-/// @author ddatsh
-/// @since 5.0.4
 /// </summary>
 public class Money : IComparable<Money>
 {

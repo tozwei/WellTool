@@ -8,9 +8,6 @@ using System.Linq;
 
 /// <summary>
 /// 动态GIF动画生成器
-/// 
-/// @author Kevin Weiner, FM Software
-/// @since 5.3.8
 /// </summary>
 public class AnimatedGifEncoder
 {

@@ -6,8 +6,6 @@ using System.IO;
 
 /// <summary>
 /// 基于 FastByteBuffer 的字节数组输出流
-/// 
-/// @author looly
 /// </summary>
 public class FastByteArrayOutputStream : Stream
 {

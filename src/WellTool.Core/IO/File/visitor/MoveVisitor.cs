@@ -5,8 +5,6 @@ using System.IO;
 
 /// <summary>
 /// 文件移动访问器
-/// 
-/// @author looly
 /// </summary>
 public class MoveVisitor : SimpleFileVisitor
 {

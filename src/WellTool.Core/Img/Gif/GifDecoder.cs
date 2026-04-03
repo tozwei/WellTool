@@ -8,8 +8,6 @@ using System.Linq;
 
 /// <summary>
 /// GIF 文件解析器
-/// 
-/// @author Kevin Weiner, FM Software
 /// </summary>
 public class GifDecoder
 {

@@ -7,9 +7,6 @@ using System.Linq;
 /// <summary>
 /// 排列 A(n, m)
 /// 排列组合相关类
-/// 
-/// @author looly
-/// @since 4.0.7
 /// </summary>
 public class Arrangement
 {

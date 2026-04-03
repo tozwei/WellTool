@@ -4,14 +4,12 @@ using WellTool.Core.Util;
 
 /*
  * 依赖异常
- * @author xiaoleilu
- * @since 4.0.10
  */
 public class DependencyException : RuntimeException
 {
     private static readonly long SerialVersionUID = 8247610319171014183L;
 
-    public DependencyException(Exception? e)
+    public DependencyException(System.Exception? e)
     {
         ExceptionUtil.GetMessage(e);
     }
@@ -24,16 +22,16 @@ public class DependencyException : RuntimeException
     {
     }
 
-    public DependencyException(string message, Exception? throwable) : base(message, throwable)
+    public DependencyException(string message, System.Exception? throwable) : base(message, throwable)
     {
     }
 
-    public DependencyException(string message, Exception? throwable, bool enableSuppression, bool writableStackTrace)
+    public DependencyException(string message, System.Exception? throwable, bool enableSuppression, bool writableStackTrace)
         : base(message, throwable, enableSuppression, writableStackTrace)
     {
     }
 
-    public DependencyException(Exception? throwable, string messageTemplate, params object[] @params)
+    public DependencyException(System.Exception? throwable, string messageTemplate, params object[] @params)
     {
     }
 }

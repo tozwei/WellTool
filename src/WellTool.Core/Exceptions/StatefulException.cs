@@ -4,7 +4,6 @@ using WellTool.Core.Util;
 
 /*
  * 带有状态码的异常
- * @author xiaoleilu
  */
 public class StatefulException : RuntimeException
 {

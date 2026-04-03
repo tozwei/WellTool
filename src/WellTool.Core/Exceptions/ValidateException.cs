@@ -2,7 +2,6 @@ namespace WellTool.Core.Exceptions;
 
 /*
  * 验证异常
- * @author xiaoleilu
  */
 public class ValidateException : StatefulException
 {

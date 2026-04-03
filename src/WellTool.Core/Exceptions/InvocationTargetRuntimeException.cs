@@ -2,8 +2,6 @@ namespace WellTool.Core.Exceptions;
 
 /*
  * InvocationTargetException的运行时异常
- * @author looly
- * @since 5.8.1
  */
 public class InvocationTargetRuntimeException : UtilException
 {

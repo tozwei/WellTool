@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 /// <summary>
 /// 文件监听服务器
-/// 
-/// @author looly
 /// </summary>
 public class WatchServer : IDisposable
 {

@@ -5,9 +5,6 @@ using System;
 /// <summary>
 /// 通过位运算表示状态的工具类
 /// 参数必须是 `偶数` 且 `大于等于0`！
-/// 
-/// @author huangxingguang，senssic
-/// @since 5.6.6
 /// </summary>
 public class BitStatusUtil
 {

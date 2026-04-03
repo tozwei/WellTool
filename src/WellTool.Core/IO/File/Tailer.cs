@@ -10,9 +10,6 @@ using System.Threading.Tasks;
 
 /// <summary>
 /// 文件内容跟随器，实现类似 Linux 下 "tail -f" 命令功能
-/// 
-/// @author looly
-/// @since 4.5.2
 /// </summary>
 public class Tailer : IDisposable
 {

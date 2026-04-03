@@ -4,7 +4,6 @@ using WellTool.Core.Util;
 
 /*
  * 未初始化异常
- * @author xiaoleilu
  */
 public class NotInitedException : RuntimeException
 {

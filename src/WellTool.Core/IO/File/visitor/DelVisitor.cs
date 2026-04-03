@@ -5,8 +5,6 @@ using System.IO;
 
 /// <summary>
 /// 文件删除访问器
-/// 
-/// @author looly
 /// </summary>
 public class DelVisitor : SimpleFileVisitor
 {

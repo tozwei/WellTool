@@ -6,8 +6,6 @@ using System.Text;
 
 /// <summary>
 /// 虚拟文件系统资源
-/// 
-/// @author looly
 /// </summary>
 public class VfsResource : IResource
 {

@@ -6,9 +6,6 @@ using System.IO;
 
 /// <summary>
 /// 文件移动封装
-/// 
-/// @author looly
-/// @since 5.8.14
 /// </summary>
 public class PathMover
 {

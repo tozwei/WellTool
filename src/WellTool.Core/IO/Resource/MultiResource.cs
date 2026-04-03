@@ -6,8 +6,6 @@ using System.IO;
 
 /// <summary>
 /// 多个资源的组合
-/// 
-/// @author looly
 /// </summary>
 public class MultiResource : IResource
 {

@@ -11,8 +11,6 @@ using MathUtil = WellTool.Core.Math.MathUtils;
 /// <summary>
 /// 数学表达式计算工具类
 /// 
-/// @author trainliang, looly
-/// @since 5.4.3
 /// </summary>
 public class Calculator
 {
