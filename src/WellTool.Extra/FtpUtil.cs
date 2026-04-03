@@ -156,7 +156,7 @@ public class FtpUtil
 /// <summary>
 /// FTP异常
 /// </summary>
-public class FtpException : Exception
+public class FtpException : System.Exception
 {
     /// <summary>
     /// 构造函数

@@ -23,6 +23,6 @@ namespace WellTool.Core.Comparator
         /// </summary>
         /// <param name="message">异常信息</param>
         /// <param name="innerException">内部异常</param>
-        public ComparatorException(string message, Exception innerException) : base(message, innerException) { }
+        public ComparatorException(string message, System.Exception innerException) : base(message, innerException) { }
     }
 }

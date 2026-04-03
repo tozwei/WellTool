@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
+
 namespace WellTool.Core.Collection;
 
 /// <summary>

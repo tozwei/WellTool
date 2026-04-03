@@ -5,7 +5,7 @@ namespace WellTool.Extra.Compress
     /// <summary>
     /// 压缩解压异常语言异常
     /// </summary>
-    public class CompressException : Exception
+    public class CompressException : System.Exception
     {
         /// <summary>
         /// 构造
@@ -20,7 +20,7 @@ namespace WellTool.Extra.Compress
         /// </summary>
         /// <param name="message">异常消息</param>
         /// <param name="innerException">内部异常</param>
-        public CompressException(string message, Exception innerException) : base(message, innerException)
+        public CompressException(string message, System.Exception innerException) : base(message, innerException)
         {
         }
 
@@ -28,7 +28,7 @@ namespace WellTool.Extra.Compress
         /// 构造
         /// </summary>
         /// <param name="innerException">内部异常</param>
-        public CompressException(Exception innerException) : base(innerException.Message, innerException)
+        public CompressException(System.Exception innerException) : base(innerException.Message, innerException)
         {
         }
 

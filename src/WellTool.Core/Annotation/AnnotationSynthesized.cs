@@ -88,10 +88,10 @@ public abstract class AbstractWrappedAnnotationAttribute : IAnnotationAttribute
 	public string GetAttributeName() => _method.Name;
 	public Type GetAttributeType() => _method.ReturnType;
 
-	public object? GetValue()
-	{
-		return _method.Invoke(_annotation, null);
-	}
+	public virtual object? GetValue()
+{
+	return _method.Invoke(_annotation, null);
+}
 
 	public T? GetAnnotation<T>() where T : Attribute
 	{

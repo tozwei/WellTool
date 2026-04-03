@@ -1,6 +1,6 @@
 using System;
 
-namespace WellTool.Core.Converter
+namespace WellTool.Core.Convert
 {
     /// <summary>
     /// 转换异常

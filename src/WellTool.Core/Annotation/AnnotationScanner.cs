@@ -55,9 +55,9 @@ public class AnnotationScanner : IAnnotationScanner
 		_scanInterface = scanInterface;
 	}
 
-	public bool Support(object element) => element != null;
+	public virtual bool Support(object element) => element != null;
 
-	public IList<Attribute> GetAnnotations(object element)
+public virtual IList<Attribute> GetAnnotations(object element)
 	{
 		var annotations = new List<Attribute>();
 		var type = element as Type;
