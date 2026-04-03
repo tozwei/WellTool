@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using WellTool.Core.Lang;
 
 namespace WellTool.Core.Text.Finder
 {
@@ -174,6 +175,57 @@ namespace WellTool.Core.Text.Finder
         public int FindFirst(string text)
         {
             return !string.IsNullOrEmpty(text) && text.Length >= _length ? 0 : -1;
+        }
+
+        public bool Contains(string text)
+        {
+            return FindFirst(text) >= 0;
+        }
+    }
+
+    /// <summary>
+    /// 字符匹配查找器，查找满足指定匹配器匹配的字符所在位置
+    /// </summary>
+    public class CharMatcherFinder : ITextFinder
+    {
+        private readonly Matcher<char> _matcher;
+
+        /// <summary>
+        /// 构造
+        /// </summary>
+        /// <param name="matcher">被查找的字符匹配器</param>
+        public CharMatcherFinder(Matcher<char> matcher)
+        {
+            _matcher = matcher ?? throw new ArgumentNullException(nameof(matcher));
+        }
+
+        public List<int> FindAll(string text)
+        {
+            var result = new List<int>();
+            if (string.IsNullOrEmpty(text)) return result;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (_matcher.Match(text[i]))
+                {
+                    result.Add(i);
+                }
+            }
+            return result;
+        }
+
+        public int FindFirst(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return -1;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (_matcher.Match(text[i]))
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         public bool Contains(string text)

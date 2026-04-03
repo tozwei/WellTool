@@ -40,7 +40,7 @@ public class Opt<T>
 
 	private static T RequireNonNull(T value)
 	{
-		if (value == null) throw new ArgumentNullException(nameof(value));
+		if (value == null) throw new System.ArgumentNullException(nameof(value));
 		return value;
 	}
 

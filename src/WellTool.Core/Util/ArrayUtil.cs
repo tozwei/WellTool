@@ -84,7 +84,7 @@ public static class ArrayUtil
 	/// <summary>
 	/// 创建二维数组
 	/// </summary>
-	public static T[][] NewTwoDimensionalArray(int rows, int cols, T defaultValue = default)
+	public static T[][] NewTwoDimensionalArray<T>(int rows, int cols, T defaultValue = default)
 	{
 		var array = new T[rows][];
 		for (int i = 0; i < rows; i++)

@@ -2,12 +2,12 @@ namespace WellTool.Captcha.Tests;
 
 using Well.Captcha;
 
-public class ShearCaptchaTest
+public class CircleCaptchaTest
 {
     [Fact]
     public void CreateAndVerifyTest()
     {
-        var captcha = new ShearCaptcha(200, 100, 4, 30);
+        var captcha = new CircleCaptcha(200, 100, 4, 15);
         captcha.CreateCode();
         var code = captcha.Code;
         Assert.NotNull(code);
@@ -20,7 +20,7 @@ public class ShearCaptchaTest
     [Fact]
     public void CreateImageTest()
     {
-        var captcha = new ShearCaptcha(200, 100, 4, 30);
+        var captcha = new CircleCaptcha(200, 100, 4, 15);
         captcha.CreateCode();
         var image = captcha.CreateImage();
         Assert.NotNull(image);
@@ -31,7 +31,7 @@ public class ShearCaptchaTest
     [Fact]
     public void ToBase64Test()
     {
-        var captcha = new ShearCaptcha(200, 100, 4, 30);
+        var captcha = new CircleCaptcha(200, 100, 4, 15);
         captcha.CreateCode();
         var base64 = captcha.ToBase64();
         Assert.NotNull(base64);
@@ -39,9 +39,9 @@ public class ShearCaptchaTest
     }
 
     [Fact]
-    public void SetThicknessTest()
+    public void SetCircleCountTest()
     {
-        var captcha = new ShearCaptcha(200, 100, 4, 50);
+        var captcha = new CircleCaptcha(200, 100, 4, 20);
         captcha.CreateCode();
         Assert.NotNull(captcha);
     }
@@ -49,18 +49,9 @@ public class ShearCaptchaTest
     [Fact]
     public void VerifyWrongCodeTest()
     {
-        var captcha = new ShearCaptcha(200, 100, 4, 30);
+        var captcha = new CircleCaptcha(200, 100, 4, 15);
         captcha.CreateCode();
         var verified = captcha.Verify("wrong");
         Assert.False(verified);
-    }
-
-    [Fact]
-    public void SetBackgroundTest()
-    {
-        var captcha = new ShearCaptcha(200, 100, 4, 30);
-        captcha.SetBackground(Color.White);
-        captcha.CreateCode();
-        Assert.NotNull(captcha);
     }
 }

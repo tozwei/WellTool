@@ -153,4 +153,16 @@ public static class StrUtil
 		Array.Reverse(chars);
 		return new string(chars);
 	}
+
+	/// <summary>
+	/// 移除前缀
+	/// </summary>
+	public static string RemovePrefix(string str, string prefix)
+	{
+		if (IsEmpty(str) || IsEmpty(prefix))
+			return str;
+		if (str.StartsWith(prefix))
+			return str.Substring(prefix.Length);
+		return str;
+	}
 }

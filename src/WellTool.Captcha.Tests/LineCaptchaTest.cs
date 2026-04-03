@@ -2,12 +2,12 @@ namespace WellTool.Captcha.Tests;
 
 using Well.Captcha;
 
-public class ShearCaptchaTest
+public class LineCaptchaTest
 {
     [Fact]
     public void CreateAndVerifyTest()
     {
-        var captcha = new ShearCaptcha(200, 100, 4, 30);
+        var captcha = new LineCaptcha(200, 100, 4, 30);
         captcha.CreateCode();
         var code = captcha.Code;
         Assert.NotNull(code);
@@ -20,7 +20,7 @@ public class ShearCaptchaTest
     [Fact]
     public void CreateImageTest()
     {
-        var captcha = new ShearCaptcha(200, 100, 4, 30);
+        var captcha = new LineCaptcha(200, 100, 4, 30);
         captcha.CreateCode();
         var image = captcha.CreateImage();
         Assert.NotNull(image);
@@ -31,7 +31,7 @@ public class ShearCaptchaTest
     [Fact]
     public void ToBase64Test()
     {
-        var captcha = new ShearCaptcha(200, 100, 4, 30);
+        var captcha = new LineCaptcha(200, 100, 4, 30);
         captcha.CreateCode();
         var base64 = captcha.ToBase64();
         Assert.NotNull(base64);
@@ -39,27 +39,42 @@ public class ShearCaptchaTest
     }
 
     [Fact]
-    public void SetThicknessTest()
+    public void SetFontsTest()
     {
-        var captcha = new ShearCaptcha(200, 100, 4, 50);
-        captcha.CreateCode();
+        var captcha = new LineCaptcha(200, 100, 4, 30);
+        captcha.SetFonts(new[] { "Arial" });
+        Assert.NotNull(captcha);
+    }
+
+    [Fact]
+    public void SetBackgroundTest()
+    {
+        var captcha = new LineCaptcha(200, 100, 4, 30);
+        captcha.SetBackground(Color.LightGray);
         Assert.NotNull(captcha);
     }
 
     [Fact]
     public void VerifyWrongCodeTest()
     {
-        var captcha = new ShearCaptcha(200, 100, 4, 30);
+        var captcha = new LineCaptcha(200, 100, 4, 30);
         captcha.CreateCode();
         var verified = captcha.Verify("wrong");
         Assert.False(verified);
     }
 
     [Fact]
-    public void SetBackgroundTest()
+    public void SetLenTest()
     {
-        var captcha = new ShearCaptcha(200, 100, 4, 30);
-        captcha.SetBackground(Color.White);
+        var captcha = new LineCaptcha(200, 100, 6, 30);
+        captcha.CreateCode();
+        Assert.Equal(6, captcha.Code.Length);
+    }
+
+    [Fact]
+    public void SetThicknessTest()
+    {
+        var captcha = new LineCaptcha(200, 100, 4, 50);
         captcha.CreateCode();
         Assert.NotNull(captcha);
     }

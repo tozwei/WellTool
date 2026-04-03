@@ -1,42 +1,51 @@
-using Xunit;
+namespace WellTool.Captcha.Tests;
 
-namespace WellTool.Captcha.Tests
+using Well.Captcha;
+
+public class GeneratorTest
 {
-    /// <summary>
-    /// Generator 测试
-    /// </summary>
-    public class GeneratorTest
+    [Fact]
+    public void GenerateCodeTest()
     {
-        [Fact]
-        public void TestRandomGenerator()
-        {
-            Generator.RandomGenerator randomGenerator = new Generator.RandomGenerator(4);
-            string code = randomGenerator.Generate();
-            
-            Assert.NotNull(code);
-            Assert.Equal(4, code.Length);
-        }
+        var generator = new Generator(4);
+        var code = generator.Generate();
+        Assert.NotNull(code);
+        Assert.Equal(4, code.Length);
+    }
 
-        [Fact]
-        public void TestRandomGeneratorLength()
-        {
-            for (int i = 3; i <= 8; i++)
-            {
-                Generator.RandomGenerator generator = new Generator.RandomGenerator(i);
-                string code = generator.Generate();
-                
-                Assert.Equal(i, code.Length);
-            }
-        }
+    [Fact]
+    public void GenerateNumericTest()
+    {
+        var generator = new NumericGenerator(4);
+        var code = generator.Generate();
+        Assert.NotNull(code);
+        Assert.Equal(4, code.Length);
+        Assert.True(code.All(char.IsDigit));
+    }
 
-        [Fact]
-        public void TestMathGenerator()
-        {
-            Generator.MathGenerator mathGenerator = new Generator.MathGenerator();
-            string question = mathGenerator.Generate();
-            
-            Assert.NotNull(question);
-            Assert.Contains("=", question);
-        }
+    [Fact]
+    public void GenerateAlphaTest()
+    {
+        var generator = new AlphaGenerator(4);
+        var code = generator.Generate();
+        Assert.NotNull(code);
+        Assert.Equal(4, code.Length);
+    }
+
+    [Fact]
+    public void GenerateAlphaNumericTest()
+    {
+        var generator = new AlphaNumericGenerator(4);
+        var code = generator.Generate();
+        Assert.NotNull(code);
+        Assert.Equal(4, code.Length);
+    }
+
+    [Fact]
+    public void GenerateCustomLenTest()
+    {
+        var generator = new Generator(6);
+        var code = generator.Generate();
+        Assert.Equal(6, code.Length);
     }
 }

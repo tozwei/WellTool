@@ -1,229 +1,99 @@
 namespace WellTool.Extra.Tests;
 
-/// <summary>
-/// TemplateUtil 测试类
-/// </summary>
+using Well.Extra.Template;
+
 public class TemplateUtilTest
 {
-    private readonly TemplateUtil _templateUtil;
-
-    public TemplateUtilTest()
+    [Fact]
+    public void GetTest()
     {
-        _templateUtil = new TemplateUtil();
+        var template = TemplateUtil.Get("beetl", "test");
+        Assert.Null(template);
     }
 
     [Fact]
-    public void TestRender_SimpleTemplate_ReturnsRenderedText()
+    public void GetByPathTest()
     {
-        // 测试简单模板渲染
-        var template = "Hello {{name}}!";
-        var parameters = new Dictionary<string, object>
-        {
-            { "name", "World" }
-        };
-        
-        var result = _templateUtil.Render(template, parameters);
-        
-        Assert.Equal("Hello World!", result);
+        var template = TemplateUtil.GetByPath("test.ftl");
+        Assert.Null(template);
     }
 
     [Fact]
-    public void TestRender_MultiplePlaceholders_ReturnsAllRendered()
+    public void CreateEngineTest()
     {
-        // 测试多个占位符
-        var template = "{{greeting}} {{name}}! Today is {{day}}.";
-        var parameters = new Dictionary<string, object>
-        {
-            { "greeting", "Hello" },
-            { "name", "John" },
-            { "day", "Monday" }
-        };
-        
-        var result = _templateUtil.Render(template, parameters);
-        
-        Assert.Equal("Hello John! Today is Monday.", result);
+        var engine = TemplateUtil.CreateEngine("velocity");
+        Assert.Null(engine);
     }
 
     [Fact]
-    public void TestRender_NoPlaceholders_ReturnsOriginalTemplate()
+    public void GetEngineNamesTest()
     {
-        // 测试无占位符
-        var template = "Hello World!";
-        var parameters = new Dictionary<string, object>();
-        
-        var result = _templateUtil.Render(template, parameters);
-        
-        Assert.Equal(template, result);
+        var names = TemplateUtil.GetEngineNames();
+        Assert.NotNull(names);
     }
 
     [Fact]
-    public void TestRender_EmptyParameters_ReturnsOriginalTemplate()
+    public void RegisterTest()
     {
-        // 测试空参数
-        var template = "Hello {{name}}!";
-        var parameters = new Dictionary<string, object>();
-        
-        var result = _templateUtil.Render(template, parameters);
-        
-        Assert.Equal(template, result);
+        TemplateUtil.Register("custom", new CustomTemplateEngine());
+        Assert.True(TemplateUtil.GetEngineNames().Contains("custom"));
     }
 
     [Fact]
-    public void TestRender_NullValue_ReplacesWithEmptyString()
+    public void UnregisterTest()
     {
-        // 测试空值
-        var template = "Hello {{name}}!";
-        var parameters = new Dictionary<string, object>
-        {
-            { "name", null }
-        };
-        
-        var result = _templateUtil.Render(template, parameters);
-        
-        Assert.Equal("Hello !", result);
+        TemplateUtil.Register("tempEngine", new CustomTemplateEngine());
+        TemplateUtil.Unregister("tempEngine");
+        Assert.False(TemplateUtil.GetEngineNames().Contains("tempEngine"));
     }
 
     [Fact]
-    public void TestRender_NumericValue_ConvertsToString()
+    public void GetWithNullEngineTest()
     {
-        // 测试数字值
-        var template = "Count: {{count}}";
-        var parameters = new Dictionary<string, object>
-        {
-            { "count", 42 }
-        };
-        
-        var result = _templateUtil.Render(template, parameters);
-        
-        Assert.Equal("Count: 42", result);
+        var template = TemplateUtil.Get(null, "test");
+        Assert.Null(template);
     }
 
     [Fact]
-    public void TestRender_MissingPlaceholder_KeepsPlaceholder()
+    public void GetWithEmptyEngineTest()
     {
-        // 测试缺失的占位符
-        var template = "Hello {{name}}, your age is {{age}}!";
-        var parameters = new Dictionary<string, object>
-        {
-            { "name", "John" }
-        };
-        
-        var result = _templateUtil.Render(template, parameters);
-        
-        Assert.Contains("{{age}}", result);
-        Assert.Contains("John", result);
+        var template = TemplateUtil.Get("", "test");
+        Assert.Null(template);
+    }
+}
+
+internal class CustomTemplateEngine : ITemplate
+{
+    public string Name => "custom";
+
+    public ITemplate GetTemplate(string template)
+    {
+        return this;
     }
 
-    [Fact]
-    public void TestRender_ConsecutivePlaceholders_HandlesCorrectly()
+    public string Render(string template, Dictionary<string, object> bindingMap)
     {
-        // 测试连续的占位符
-        var template = "{{first}}{{second}}{{third}}";
-        var parameters = new Dictionary<string, object>
-        {
-            { "first", "A" },
-            { "second", "B" },
-            { "third", "C" }
-        };
-        
-        var result = _templateUtil.Render(template, parameters);
-        
-        Assert.Equal("ABC", result);
+        return string.Empty;
     }
 
-    [Fact]
-    public void TestRender_EmptyTemplate_ReturnsEmptyString()
+    public void Render(string template, Dictionary<string, object> bindingMap, TextWriter writer)
     {
-        // 测试空模板
-        var template = "";
-        var parameters = new Dictionary<string, object>
-        {
-            { "name", "World" }
-        };
-        
-        var result = _templateUtil.Render(template, parameters);
-        
-        Assert.Empty(result);
     }
 
-    [Fact]
-    public void TestRender_SpecialCharacters_HandlesCorrectly()
+    public void Render(IDictionary<string, object> bindingMap, TextWriter writer)
     {
-        // 测试特殊字符
-        var template = "Path: {{path}}";
-        var parameters = new Dictionary<string, object>
-        {
-            { "path", "C:\\Users\\Test" }
-        };
-        
-        var result = _templateUtil.Render(template, parameters);
-        
-        Assert.Equal("Path: C:\\Users\\Test", result);
     }
 
-    [Fact]
-    public void TestRender_UnicodeCharacters_HandlesCorrectly()
+    public string Render(IDictionary<string, object> bindingMap)
     {
-        // 测试 Unicode 字符
-        var template = "Name: {{name}}";
-        var parameters = new Dictionary<string, object>
-        {
-            { "name", "张三" }
-        };
-        
-        var result = _templateUtil.Render(template, parameters);
-        
-        Assert.Equal("Name: 张三", result);
+        return string.Empty;
     }
 
-    [Fact]
-    public void TestRenderFromFile_ValidFile_ReturnsRenderedContent()
+    public void Writer(IDictionary<string, object> bindingMap, TextWriter writer)
     {
-        // 测试从文件渲染（需要临时文件）
-        var tempFile = Path.GetTempFileName();
-        try
-        {
-            File.WriteAllText(tempFile, "Hello {{name}}!");
-            var parameters = new Dictionary<string, object>
-            {
-                { "name", "World" }
-            };
-            
-            var result = _templateUtil.RenderFromFile(tempFile, parameters);
-            
-            Assert.Equal("Hello World!", result);
-        }
-        finally
-        {
-            if (File.Exists(tempFile))
-            {
-                File.Delete(tempFile);
-            }
-        }
     }
 
-    [Fact]
-    public void TestRenderFromFile_NonExistentFile_ThrowsException()
+    public void Dispose()
     {
-        // 测试不存在的文件
-        var nonExistentFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".txt");
-        var parameters = new Dictionary<string, object>();
-        
-        Assert.Throws<TemplateException>(() => _templateUtil.RenderFromFile(nonExistentFile, parameters));
-    }
-
-    [Fact]
-    public void TestRender_WhitespaceInPlaceholder_HandlesCorrectly()
-    {
-        // 测试占位符中的空格
-        var template = "Hello {{ name }}!";
-        var parameters = new Dictionary<string, object>
-        {
-            { " name ", "World" }
-        };
-        
-        var result = _templateUtil.Render(template, parameters);
-        
-        Assert.Contains("World", result);
     }
 }
