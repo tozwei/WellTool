@@ -1,21 +1,24 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace WellTool.Core.Text
 {
     /// <summary>
-    /// 字符串构建器工具类
+    /// 字符串构建器，类似Java的StringBuilder但提供更多便捷方法
     /// </summary>
     public class StrBuilder
     {
-        private readonly StringBuilder _builder;
+        private readonly StringBuilder _sb;
+        private readonly int _initialCapacity;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         public StrBuilder()
         {
-            _builder = new StringBuilder();
+            _sb = new StringBuilder();
+            _initialCapacity = 16;
         }
 
         /// <summary>
@@ -24,7 +27,8 @@ namespace WellTool.Core.Text
         /// <param name="capacity">初始容量</param>
         public StrBuilder(int capacity)
         {
-            _builder = new StringBuilder(capacity);
+            _sb = new StringBuilder(capacity);
+            _initialCapacity = capacity;
         }
 
         /// <summary>
@@ -33,183 +37,221 @@ namespace WellTool.Core.Text
         /// <param name="str">初始字符串</param>
         public StrBuilder(string str)
         {
-            _builder = new StringBuilder(str);
+            _sb = new StringBuilder(str ?? "");
+            _initialCapacity = _sb.Capacity;
+        }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="str">初始字符串</param>
+        /// <param name="capacity">初始容量</param>
+        public StrBuilder(string str, int capacity)
+        {
+            _sb = new StringBuilder(str ?? "", capacity);
+            _initialCapacity = capacity;
+        }
+
+        /// <summary>
+        /// 获取长度
+        /// </summary>
+        public int Length => _sb.Length;
+
+        /// <summary>
+        /// 设置长度
+        /// </summary>
+        public int Capacity => _sb.Capacity;
+
+        /// <summary>
+        /// 追加对象
+        /// </summary>
+        public StrBuilder Append(object obj)
+        {
+            _sb.Append(obj?.ToString());
+            return this;
         }
 
         /// <summary>
         /// 追加字符串
         /// </summary>
-        /// <param name="str">字符串</param>
-        /// <returns>当前实例</returns>
         public StrBuilder Append(string str)
         {
-            _builder.Append(str);
+            _sb.Append(str);
             return this;
         }
 
         /// <summary>
         /// 追加字符
         /// </summary>
-        /// <param name="c">字符</param>
-        /// <returns>当前实例</returns>
         public StrBuilder Append(char c)
         {
-            _builder.Append(c);
+            _sb.Append(c);
             return this;
         }
 
         /// <summary>
-        /// 追加整数
+        /// 追加多行文本
         /// </summary>
-        /// <param name="i">整数</param>
-        /// <returns>当前实例</returns>
-        public StrBuilder Append(int i)
+        public StrBuilder AppendLine(string str = null)
         {
-            _builder.Append(i);
+            _sb.AppendLine(str);
             return this;
         }
 
         /// <summary>
-        /// 追加长整数
+        /// 追加指定次数的字符
         /// </summary>
-        /// <param name="l">长整数</param>
-        /// <returns>当前实例</returns>
-        public StrBuilder Append(long l)
+        public StrBuilder Append(char c, int repeatCount)
         {
-            _builder.Append(l);
+            _sb.Append(c, repeatCount);
             return this;
         }
 
         /// <summary>
-        /// 追加浮点数
+        /// 条件追加
         /// </summary>
-        /// <param name="d">浮点数</param>
-        /// <returns>当前实例</returns>
-        public StrBuilder Append(double d)
+        public StrBuilder AppendIf(bool condition, string str)
         {
-            _builder.Append(d);
+            if (condition)
+            {
+                _sb.Append(str);
+            }
             return this;
         }
 
         /// <summary>
-        /// 追加对象
+        /// 格式化追加
         /// </summary>
-        /// <param name="obj">对象</param>
-        /// <returns>当前实例</returns>
-        public StrBuilder Append(object obj)
+        public StrBuilder AppendFormat(string format, params object[] args)
         {
-            _builder.Append(obj);
+            _sb.AppendFormat(format, args);
             return this;
         }
 
         /// <summary>
-        /// 追加换行符
+        /// 在指定位置插入
         /// </summary>
-        /// <returns>当前实例</returns>
-        public StrBuilder AppendLine()
-        {
-            _builder.AppendLine();
-            return this;
-        }
-
-        /// <summary>
-        /// 追加带换行符的字符串
-        /// </summary>
-        /// <param name="str">字符串</param>
-        /// <returns>当前实例</returns>
-        public StrBuilder AppendLine(string str)
-        {
-            _builder.AppendLine(str);
-            return this;
-        }
-
-        /// <summary>
-        /// 插入字符串
-        /// </summary>
-        /// <param name="index">位置</param>
-        /// <param name="str">字符串</param>
-        /// <returns>当前实例</returns>
         public StrBuilder Insert(int index, string str)
         {
-            _builder.Insert(index, str);
+            _sb.Insert(index, str);
             return this;
         }
 
         /// <summary>
-        /// 替换字符串
+        /// 删除指定范围
         /// </summary>
-        /// <param name="oldValue">旧值</param>
-        /// <param name="newValue">新值</param>
-        /// <returns>当前实例</returns>
+        public StrBuilder Delete(int startIndex, int endIndex)
+        {
+            _sb.Remove(startIndex, endIndex - startIndex);
+            return this;
+        }
+
+        /// <summary>
+        /// 替换
+        /// </summary>
         public StrBuilder Replace(string oldValue, string newValue)
         {
-            _builder.Replace(oldValue, newValue);
+            _sb.Replace(oldValue, newValue);
             return this;
         }
 
         /// <summary>
-        /// 删除字符串
+        /// 反转
         /// </summary>
-        /// <param name="startIndex">开始位置</param>
-        /// <param name="length">长度</param>
-        /// <returns>当前实例</returns>
-        public StrBuilder Remove(int startIndex, int length)
+        public StrBuilder Reverse()
         {
-            _builder.Remove(startIndex, length);
+            _sb.Reverse();
             return this;
         }
 
         /// <summary>
-        /// 清空字符串
+        /// 清空
         /// </summary>
-        /// <returns>当前实例</returns>
         public StrBuilder Clear()
         {
-            _builder.Clear();
+            _sb.Clear();
             return this;
         }
 
         /// <summary>
-        /// 获取长度
+        /// 确保容量
         /// </summary>
-        public int Length => _builder.Length;
+        public StrBuilder EnsureCapacity(int capacity)
+        {
+            _sb.EnsureCapacity(capacity);
+            return this;
+        }
 
         /// <summary>
-        /// 设置长度
+        /// 获取子字符串
         /// </summary>
-        /// <param name="length">长度</param>
-        public void SetLength(int length)
+        public string Substring(int startIndex, int length = -1)
         {
-            _builder.Length = length;
+            if (length < 0)
+            {
+                return _sb.ToString(startIndex);
+            }
+            return _sb.ToString(startIndex, length);
         }
 
         /// <summary>
         /// 获取字符
         /// </summary>
-        /// <param name="index">位置</param>
-        /// <returns>字符</returns>
-        public char this[int index]
-        {
-            get => _builder[index];
-            set => _builder[index] = value;
-        }
+        public char this[int index] => _sb[index];
 
         /// <summary>
         /// 转换为字符串
         /// </summary>
-        /// <returns>字符串</returns>
         public override string ToString()
         {
-            return _builder.ToString();
+            return _sb.ToString();
         }
 
         /// <summary>
-        /// 转换为 StringBuilder
+        /// 隐式转换为字符串
         /// </summary>
-        /// <returns>StringBuilder</returns>
+        public static implicit operator string(StrBuilder sb)
+        {
+            return sb?.ToString();
+        }
+
+        /// <summary>
+        /// 重置并复用
+        /// </summary>
+        public StrBuilder Reset()
+        {
+            _sb.Clear();
+            _sb.EnsureCapacity(_initialCapacity);
+            return this;
+        }
+
+        /// <summary>
+        /// 是否为空
+        /// </summary>
+        public bool IsEmpty => _sb.Length == 0;
+
+        /// <summary>
+        /// 是否不为空
+        /// </summary>
+        public bool IsNotEmpty => _sb.Length > 0;
+
+        /// <summary>
+        /// 去除首尾空白
+        /// </summary>
+        public StrBuilder Trim()
+        {
+            var str = _sb.ToString().Trim();
+            _sb.Clear();
+            _sb.Append(str);
+            return this;
+        }
+
+        /// <summary>
+        /// 转为StringBuilder
+        /// </summary>
         public StringBuilder ToStringBuilder()
         {
-            return _builder;
+            return new StringBuilder(_sb.ToString());
         }
     }
 }

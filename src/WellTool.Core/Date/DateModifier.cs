@@ -1,215 +1,193 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace WellTool.Core.Date
 {
     /// <summary>
-    /// 日期修改器，用于实现自定义某个日期字段的调整
+    /// 日期修改器，用于修改日期的各个字段
     /// </summary>
     public class DateModifier
     {
+        private DateTime _date;
+
         /// <summary>
-        /// 修改类型
+        /// 构造函数
         /// </summary>
-        public enum ModifyType
+        /// <param name="date">初始日期</param>
+        public DateModifier(DateTime date)
         {
-            /// <summary>
-            /// 取指定日期短的起始值
-            /// </summary>
-            Truncate,
-            /// <summary>
-            /// 指定日期属性按照四舍五入处理
-            /// </summary>
-            Round,
-            /// <summary>
-            /// 指定日期属性按照进一法处理
-            /// </summary>
-            Ceiling
+            _date = date;
         }
 
         /// <summary>
-        /// 修改日期
+        /// 创建修改器
         /// </summary>
-        /// <param name="dateTime">日期时间</param>
-        /// <param name="dateField">日期字段，即保留到哪个日期字段</param>
-        /// <param name="modifyType">修改类型，包括舍去、四舍五入、进一等</param>
-        /// <returns>修改后的日期时间</returns>
-        public static DateTime Modify(DateTime dateTime, DateField dateField, ModifyType modifyType)
+        public static DateModifier Of(DateTime date)
         {
-            return Modify(dateTime, dateField, modifyType, false);
+            return new DateModifier(date);
         }
 
         /// <summary>
-        /// 修改日期，取起始值或者结束值
+        /// 设置年份
         /// </summary>
-        /// <param name="dateTime">日期时间</param>
-        /// <param name="dateField">日期字段，即保留到哪个日期字段</param>
-        /// <param name="modifyType">修改类型，包括舍去、四舍五入、进一等</param>
-        /// <param name="truncateMillisecond">是否归零毫秒</param>
-        /// <returns>修改后的日期时间</returns>
-        public static DateTime Modify(DateTime dateTime, DateField dateField, ModifyType modifyType, bool truncateMillisecond)
+        public DateModifier SetYear(int year)
         {
-            var result = dateTime;
-
-            // 处理每个更小的字段
-            for (int i = (int)dateField + 1; i <= (int)DateField.Millisecond; i++)
-            {
-                var field = (DateField)i;
-                ModifyField(ref result, field, modifyType);
-            }
-
-            if (truncateMillisecond)
-            {
-                result = new DateTime(result.Year, result.Month, result.Day, result.Hour, result.Minute, result.Second, 0, result.Kind);
-            }
-
-            return result;
+            _date = new DateTime(year, _date.Month, _date.Day, _date.Hour, _date.Minute, _date.Second, _date.Millisecond, _date.Kind);
+            return this;
         }
 
-        private static void ModifyField(ref DateTime dateTime, DateField field, ModifyType modifyType)
+        /// <summary>
+        /// 设置月份
+        /// </summary>
+        public DateModifier SetMonth(int month)
         {
-            switch (field)
-            {
-                case DateField.Year:
-                    dateTime = SetFieldValue(dateTime, field, GetBeginValue(dateTime, field), GetEndValue(dateTime, field), modifyType);
-                    break;
-                case DateField.Month:
-                    dateTime = SetFieldValue(dateTime, field, GetBeginValue(dateTime, field), GetEndValue(dateTime, field), modifyType);
-                    break;
-                case DateField.DayOfMonth:
-                    dateTime = SetFieldValue(dateTime, field, GetBeginValue(dateTime, field), GetEndValue(dateTime, field), modifyType);
-                    break;
-                case DateField.Hour:
-                    dateTime = SetFieldValue(dateTime, field, GetBeginValue(dateTime, field), GetEndValue(dateTime, field), modifyType);
-                    break;
-                case DateField.Minute:
-                    dateTime = SetFieldValue(dateTime, field, GetBeginValue(dateTime, field), GetEndValue(dateTime, field), modifyType);
-                    break;
-                case DateField.Second:
-                    dateTime = SetFieldValue(dateTime, field, GetBeginValue(dateTime, field), GetEndValue(dateTime, field), modifyType);
-                    break;
-                case DateField.Millisecond:
-                    dateTime = SetFieldValue(dateTime, field, GetBeginValue(dateTime, field), GetEndValue(dateTime, field), modifyType);
-                    break;
-            }
+            if (month < 1) month = 1;
+            if (month > 12) month = 12;
+            var maxDay = DateTime.DaysInMonth(_date.Year, month);
+            var day = Math.Min(_date.Day, maxDay);
+            _date = new DateTime(_date.Year, month, day, _date.Hour, _date.Minute, _date.Second, _date.Millisecond, _date.Kind);
+            return this;
         }
 
-        private static DateTime SetFieldValue(DateTime dateTime, DateField field, int min, int max, ModifyType modifyType)
+        /// <summary>
+        /// 设置日期
+        /// </summary>
+        public DateModifier SetDay(int day)
         {
-            int currentValue = GetFieldValue(dateTime, field);
-            int newValue;
-
-            switch (modifyType)
-            {
-                case ModifyType.Truncate:
-                    newValue = min;
-                    break;
-                case ModifyType.Round:
-                    var middle = min + (max - min) / 2;
-                    newValue = currentValue < middle ? min : max;
-                    break;
-                case ModifyType.Ceiling:
-                    newValue = max;
-                    break;
-                default:
-                    newValue = currentValue;
-                    break;
-            }
-
-            return SetField(dateTime, field, newValue);
+            var maxDay = DateTime.DaysInMonth(_date.Year, _date.Month);
+            day = Math.Min(day, maxDay);
+            _date = new DateTime(_date.Year, _date.Month, day, _date.Hour, _date.Minute, _date.Second, _date.Millisecond, _date.Kind);
+            return this;
         }
 
-        private static int GetFieldValue(DateTime dateTime, DateField field)
+        /// <summary>
+        /// 设置小时
+        /// </summary>
+        public DateModifier SetHour(int hour)
         {
-            switch (field)
-            {
-                case DateField.Year:
-                    return dateTime.Year;
-                case DateField.Month:
-                    return dateTime.Month;
-                case DateField.DayOfMonth:
-                    return dateTime.Day;
-                case DateField.Hour:
-                    return dateTime.Hour;
-                case DateField.Minute:
-                    return dateTime.Minute;
-                case DateField.Second:
-                    return dateTime.Second;
-                case DateField.Millisecond:
-                    return dateTime.Millisecond;
-                default:
-                    return 0;
-            }
+            if (hour < 0) hour = 0;
+            if (hour > 23) hour = 23;
+            _date = new DateTime(_date.Year, _date.Month, _date.Day, hour, _date.Minute, _date.Second, _date.Millisecond, _date.Kind);
+            return this;
         }
 
-        private static DateTime SetField(DateTime dateTime, DateField field, int value)
+        /// <summary>
+        /// 设置分钟
+        /// </summary>
+        public DateModifier SetMinute(int minute)
         {
-            switch (field)
-            {
-                case DateField.Year:
-                    return new DateTime(value, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, dateTime.Kind);
-                case DateField.Month:
-                    return new DateTime(dateTime.Year, value, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, dateTime.Kind);
-                case DateField.DayOfMonth:
-                    return new DateTime(dateTime.Year, dateTime.Month, value, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, dateTime.Kind);
-                case DateField.Hour:
-                    return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, value, dateTime.Minute, dateTime.Second, dateTime.Millisecond, dateTime.Kind);
-                case DateField.Minute:
-                    return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, value, dateTime.Second, dateTime.Millisecond, dateTime.Kind);
-                case DateField.Second:
-                    return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, value, dateTime.Millisecond, dateTime.Kind);
-                case DateField.Millisecond:
-                    return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, value, dateTime.Kind);
-                default:
-                    return dateTime;
-            }
+            if (minute < 0) minute = 0;
+            if (minute > 59) minute = 59;
+            _date = new DateTime(_date.Year, _date.Month, _date.Day, _date.Hour, minute, _date.Second, _date.Millisecond, _date.Kind);
+            return this;
         }
 
-        private static int GetBeginValue(DateTime dateTime, DateField field)
+        /// <summary>
+        /// 设置秒
+        /// </summary>
+        public DateModifier SetSecond(int second)
         {
-            switch (field)
-            {
-                case DateField.Year:
-                    return 1;
-                case DateField.Month:
-                    return 1;
-                case DateField.DayOfMonth:
-                    return 1;
-                case DateField.Hour:
-                    return 0;
-                case DateField.Minute:
-                    return 0;
-                case DateField.Second:
-                    return 0;
-                case DateField.Millisecond:
-                    return 0;
-                default:
-                    return 0;
-            }
+            if (second < 0) second = 0;
+            if (second > 59) second = 59;
+            _date = new DateTime(_date.Year, _date.Month, _date.Day, _date.Hour, _date.Minute, second, _date.Millisecond, _date.Kind);
+            return this;
         }
 
-        private static int GetEndValue(DateTime dateTime, DateField field)
+        /// <summary>
+        /// 设置毫秒
+        /// </summary>
+        public DateModifier SetMillisecond(int millisecond)
         {
-            switch (field)
-            {
-                case DateField.Year:
-                    return 9999;
-                case DateField.Month:
-                    return 12;
-                case DateField.DayOfMonth:
-                    return DateTime.DaysInMonth(dateTime.Year, dateTime.Month);
-                case DateField.Hour:
-                    return 23;
-                case DateField.Minute:
-                    return 59;
-                case DateField.Second:
-                    return 59;
-                case DateField.Millisecond:
-                    return 999;
-                default:
-                    return 0;
-            }
+            if (millisecond < 0) millisecond = 0;
+            if (millisecond > 999) millisecond = 999;
+            _date = new DateTime(_date.Year, _date.Month, _date.Day, _date.Hour, _date.Minute, _date.Second, millisecond, _date.Kind);
+            return this;
+        }
+
+        /// <summary>
+        /// 添加年份
+        /// </summary>
+        public DateModifier AddYears(int years)
+        {
+            _date = _date.AddYears(years);
+            return this;
+        }
+
+        /// <summary>
+        /// 添加月份
+        /// </summary>
+        public DateModifier AddMonths(int months)
+        {
+            _date = _date.AddMonths(months);
+            return this;
+        }
+
+        /// <summary>
+        /// 添加天数
+        /// </summary>
+        public DateModifier AddDays(int days)
+        {
+            _date = _date.AddDays(days);
+            return this;
+        }
+
+        /// <summary>
+        /// 添加小时
+        /// </summary>
+        public DateModifier AddHours(int hours)
+        {
+            _date = _date.AddHours(hours);
+            return this;
+        }
+
+        /// <summary>
+        /// 添加分钟
+        /// </summary>
+        public DateModifier AddMinutes(int minutes)
+        {
+            _date = _date.AddMinutes(minutes);
+            return this;
+        }
+
+        /// <summary>
+        /// 添加秒
+        /// </summary>
+        public DateModifier AddSeconds(int seconds)
+        {
+            _date = _date.AddSeconds(seconds);
+            return this;
+        }
+
+        /// <summary>
+        /// 添加毫秒
+        /// </summary>
+        public DateModifier AddMilliseconds(int milliseconds)
+        {
+            _date = _date.AddMilliseconds(milliseconds);
+            return this;
+        }
+
+        /// <summary>
+        /// 获取结果日期
+        /// </summary>
+        public DateTime Get()
+        {
+            return _date;
+        }
+
+        /// <summary>
+        /// 隐式转换为DateTime
+        /// </summary>
+        public static implicit operator DateTime(DateModifier modifier)
+        {
+            return modifier._date;
+        }
+
+        /// <summary>
+        /// 转换为DateTime
+        /// </summary>
+        public DateTime ToDateTime()
+        {
+            return _date;
         }
     }
 }

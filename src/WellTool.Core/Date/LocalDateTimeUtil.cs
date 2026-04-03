@@ -1,218 +1,175 @@
 using System;
+using System.Globalization;
 
 namespace WellTool.Core.Date
 {
     /// <summary>
     /// LocalDateTime工具类
     /// </summary>
-    public class LocalDateTimeUtil
+    public static class LocalDateTimeUtil
     {
         /// <summary>
-        /// 获取当前时间
+        /// 获取指定日期的开始时间（00:00:00）
         /// </summary>
-        public static DateTime Now()
+        public static DateTime StartOfDay(DateTime date)
         {
-            return DateTime.Now;
+            return date.Date;
         }
 
         /// <summary>
-        /// 获取当前UTC时间
+        /// 获取指定日期的结束时间（23:59:59.999）
         /// </summary>
-        public static DateTime UtcNow()
+        public static DateTime EndOfDay(DateTime date)
         {
-            return DateTime.UtcNow;
+            return date.Date.AddDays(1).AddTicks(-1);
         }
 
         /// <summary>
-        /// 从Date转换
+        /// 判断是否是今天
         /// </summary>
-        public static DateTime Of(DateTime date)
+        public static bool IsToday(DateTime date)
         {
-            return date;
+            return date.Date == DateTime.Today;
         }
 
         /// <summary>
-        /// 从时间戳转换（毫秒）
+        /// 判断是否是昨天
         /// </summary>
-        public static DateTime Of(long epochMilli)
+        public static bool IsYesterday(DateTime date)
         {
-            return DateTimeOffset.FromUnixTimeMilliseconds(epochMilli).DateTime;
+            return date.Date == DateTime.Today.AddDays(-1);
         }
 
         /// <summary>
-        /// 从时间戳转换（毫秒），指定时区
+        /// 判断是否是明天
         /// </summary>
-        public static DateTime Of(long epochMilli, TimeZoneInfo timeZone)
+        public static bool IsTomorrow(DateTime date)
         {
-            var utc = DateTimeOffset.FromUnixTimeMilliseconds(epochMilli);
-            return TimeZoneInfo.ConvertTimeFromUtc(utc.DateTime, timeZone);
+            return date.Date == DateTime.Today.AddDays(1);
         }
 
         /// <summary>
-        /// 解析字符串为DateTime
+        /// 判断是否在过去
         /// </summary>
-        public static DateTime Parse(string dateStr)
+        public static bool IsPast(DateTime date)
         {
-            return Parse(dateStr, DatePattern.NORM_DATETIME_PATTERN);
+            return date < DateTime.Now;
         }
 
         /// <summary>
-        /// 使用指定格式解析字符串为DateTime
+        /// 判断是否在未来
         /// </summary>
-        public static DateTime Parse(string dateStr, string format)
+        public static bool IsFuture(DateTime date)
         {
-            if (DateTime.TryParseExact(dateStr, format, null, System.Globalization.DateTimeStyles.None, out var result))
+            return date > DateTime.Now;
+        }
+
+        /// <summary>
+        /// 解析日期字符串
+        /// </summary>
+        public static DateTime? Parse(string dateStr)
+        {
+            if (DateTime.TryParse(dateStr, out DateTime result))
             {
                 return result;
             }
-            // 尝试多种格式
-            string[] formats = {
-                DatePattern.NORM_DATETIME_PATTERN,
-                DatePattern.NORM_DATE_PATTERN,
-                "yyyyMMddHHmmss",
-                "yyyyMMdd",
-                "HH:mm:ss"
-            };
-            foreach (var fmt in formats)
+            return null;
+        }
+
+        /// <summary>
+        /// 解析日期字符串（指定格式）
+        /// </summary>
+        public static DateTime? Parse(string dateStr, string format)
+        {
+            if (DateTime.TryParseExact(dateStr, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
             {
-                if (DateTime.TryParseExact(dateStr, fmt, null, System.Globalization.DateTimeStyles.None, out result))
-                {
-                    return result;
-                }
+                return result;
             }
-            throw new DateException($"无法解析日期字符串: {dateStr}");
+            return null;
         }
 
         /// <summary>
-        /// 格式化日期时间
+        /// 安全解析日期字符串，为空或无效时返回默认值
         /// </summary>
-        public static string Format(DateTime dateTime)
+        public static DateTime ParseSafe(string dateStr, DateTime defaultValue = default)
         {
-            return dateTime.ToString(DatePattern.NORM_DATETIME_PATTERN);
+            return Parse(dateStr) ?? defaultValue;
         }
 
         /// <summary>
-        /// 使用指定格式格式化日期时间
+        /// 格式化日期
         /// </summary>
-        public static string Format(DateTime dateTime, string pattern)
+        public static string Format(DateTime date, string format = "yyyy-MM-dd HH:mm:ss")
         {
-            return dateTime.ToString(pattern);
+            return date.ToString(format);
         }
 
         /// <summary>
-        /// 日期偏移
+        /// 获取相对时间描述
         /// </summary>
-        public static DateTime Offset(DateTime dateTime, DateField dateField, int offset)
+        public static string GetRelativeTime(DateTime date)
         {
-            return dateTime.Add((TimeSpan)dateField.ToTimeSpan() * offset);
-        }
+            var now = DateTime.Now;
+            var diff = now - date;
 
-        /// <summary>
-        /// 计算两个日期的时间差（毫秒）
-        /// </summary>
-        public static long Between(DateTime start, DateTime end)
-        {
-            return (long)(end - start).TotalMilliseconds;
-        }
-
-        /// <summary>
-        /// 计算两个日期的时间差
-        /// </summary>
-        public static long Between(DateTime start, DateTime end, DateUnit unit)
-        {
-            var diff = end - start;
-            switch (unit)
+            if (diff.TotalSeconds < 60)
             {
-                case DateUnit.Millisecond:
-                    return (long)diff.TotalMilliseconds;
-                case DateUnit.Second:
-                    return (long)diff.TotalSeconds;
-                case DateUnit.Minute:
-                    return (long)diff.TotalMinutes;
-                case DateUnit.Hour:
-                    return (long)diff.TotalHours;
-                case DateUnit.Day:
-                    return (long)diff.TotalDays;
-                default:
-                    return (long)diff.TotalMilliseconds;
+                return "刚刚";
             }
-        }
-
-        /// <summary>
-        /// 判断是否为周末
-        /// </summary>
-        public static bool IsWeekend(DateTime dateTime)
-        {
-            return dateTime.DayOfWeek == DayOfWeek.Saturday || dateTime.DayOfWeek == DayOfWeek.Sunday;
-        }
-
-        /// <summary>
-        /// 判断两个日期是否为同一天
-        /// </summary>
-        public static bool IsSameDay(DateTime date1, DateTime date2)
-        {
-            return date1.Year == date2.Year && date1.Month == date2.Month && date1.Day == date2.Day;
-        }
-
-        /// <summary>
-        /// 判断日期是否在指定时间范围内
-        /// </summary>
-        public static bool IsIn(DateTime dateTime, DateTime start, DateTime end)
-        {
-            return dateTime >= start && dateTime <= end;
-        }
-
-        /// <summary>
-        /// 判断日期是否在指定时间范围内（不含结束）
-        /// </summary>
-        public static bool IsIn(DateTime dateTime, DateTime start, DateTime end, bool includeEnd)
-        {
-            if (includeEnd)
+            if (diff.TotalMinutes < 60)
             {
-                return dateTime >= start && dateTime <= end;
+                return $"{(int)diff.TotalMinutes}分钟前";
             }
-            return dateTime >= start && dateTime < end;
+            if (diff.TotalHours < 24)
+            {
+                return $"{(int)diff.TotalHours}小时前";
+            }
+            if (diff.TotalDays < 7)
+            {
+                return $"{(int)diff.TotalDays}天前";
+            }
+            if (diff.TotalDays < 30)
+            {
+                return $"{(int)(diff.TotalDays / 7)}周前";
+            }
+            if (diff.TotalDays < 365)
+            {
+                return $"{(int)(diff.TotalDays / 30)}月前";
+            }
+            return $"{(int)(diff.TotalDays / 365)}年前";
         }
 
         /// <summary>
-        /// 获取一天的开始时间（00:00:00）
+        /// 获取中文星期
         /// </summary>
-        public static DateTime BeginOfDay(DateTime dateTime)
+        public static string GetChineseDayOfWeek(DateTime date)
         {
-            return dateTime.Date;
+            string[] weekdays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+            return weekdays[(int)date.DayOfWeek];
         }
 
         /// <summary>
-        /// 获取一天的结束时间（23:59:59.999）
+        /// 转换为UTC时间
         /// </summary>
-        public static DateTime EndOfDay(DateTime dateTime)
+        public static DateTime ToUniversalTime(DateTime date)
         {
-            return dateTime.Date.AddDays(1).AddTicks(-1);
+            return date.ToUniversalTime();
         }
 
         /// <summary>
-        /// 将DateTime转换为时间戳（毫秒）
+        /// 从UTC时间转换
         /// </summary>
-        public static long ToEpochMilli(DateTime dateTime)
+        public static DateTime FromUniversalTime(DateTime date)
         {
-            return new DateTimeOffset(dateTime).ToUnixTimeMilliseconds();
+            return DateTime.SpecifyKind(date, DateTimeKind.Utc).ToLocalTime();
         }
 
         /// <summary>
-        /// 获取日期在年份中的周数
+        /// 转换为指定时区的时间
         /// </summary>
-        public static int WeekOfYear(DateTime dateTime)
+        public static DateTime ConvertTime(DateTime date, TimeZoneInfo targetZone)
         {
-            var culture = System.Globalization.CultureInfo.CurrentCulture;
-            return culture.Calendar.GetWeekOfYear(dateTime, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-        }
-
-        /// <summary>
-        /// 获取星期枚举值
-        /// </summary>
-        public static DayOfWeek DayOfWeek(DateTime dateTime)
-        {
-            return dateTime.DayOfWeek;
+            return TimeZoneInfo.ConvertTime(date, targetZone);
         }
     }
 }

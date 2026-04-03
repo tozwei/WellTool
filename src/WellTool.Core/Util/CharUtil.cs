@@ -1,17 +1,5 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using System;
+using System.Text;
 
 namespace WellTool.Core.Util
 {
@@ -21,21 +9,117 @@ namespace WellTool.Core.Util
     public static class CharUtil
     {
         /// <summary>
-        /// 检查字符是否为十六进制字符
+        /// 判断是否为字母
         /// </summary>
-        /// <param name="c">要检查的字符</param>
-        /// <returns>如果是十六进制字符则返回true，否则返回false</returns>
-        public static bool IsHexChar(char c)
+        public static bool IsAlpha(char c)
         {
-            return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
         }
 
         /// <summary>
-        /// 将十六进制字符转换为对应的整数
+        /// 判断是否为数字
         /// </summary>
-        /// <param name="c">十六进制字符</param>
-        /// <returns>对应的整数</returns>
-        public static int HexToInt(char c)
+        public static bool IsDigit(char c)
+        {
+            return c >= '0' && c <= '9';
+        }
+
+        /// <summary>
+        /// 判断是否为字母或数字
+        /// </summary>
+        public static bool IsAlphanumeric(char c)
+        {
+            return IsAlpha(c) || IsDigit(c);
+        }
+
+        /// <summary>
+        /// 判断是否为空白字符
+        /// </summary>
+        public static bool IsBlank(char c)
+        {
+            return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\u00A0';
+        }
+
+        /// <summary>
+        /// 判断是否为ASCII字符
+        /// </summary>
+        public static bool IsAscii(char c)
+        {
+            return c < 128;
+        }
+
+        /// <summary>
+        /// 判断是否为可见ASCII字符
+        /// </summary>
+        public static bool IsAsciiPrintable(char c)
+        {
+            return c >= 32 && c < 127;
+        }
+
+        /// <summary>
+        /// 判断是否为控制字符
+        /// </summary>
+        public static bool IsControl(char c)
+        {
+            return !IsAsciiPrintable(c) && c < 256;
+        }
+
+        /// <summary>
+        /// 判断是否为大写字母
+        /// </summary>
+        public static bool IsUpperCase(char c)
+        {
+            return c >= 'A' && c <= 'Z';
+        }
+
+        /// <summary>
+        /// 判断是否为小写字母
+        /// </summary>
+        public static bool IsLowerCase(char c)
+        {
+            return c >= 'a' && c <= 'z';
+        }
+
+        /// <summary>
+        /// 将字符转为小写（支持Unicode）
+        /// </summary>
+        public static char ToLowerCase(char c)
+        {
+            return char.ToLowerInvariant(c);
+        }
+
+        /// <summary>
+        /// 将字符转为大写（支持Unicode）
+        /// </summary>
+        public static char ToUpperCase(char c)
+        {
+            return char.ToUpperInvariant(c);
+        }
+
+        /// <summary>
+        /// 将字符转为标题大小写
+        /// </summary>
+        public static char ToTitleCase(char c)
+        {
+            return char.ToTitleCase(c);
+        }
+
+        /// <summary>
+        /// 将字符转为数字
+        /// </summary>
+        public static int ToInt(char c)
+        {
+            if (IsDigit(c))
+            {
+                return c - '0';
+            }
+            throw new ArgumentException($"Character '{c}' is not a digit");
+        }
+
+        /// <summary>
+        /// 将字符转为十六进制数字
+        /// </summary>
+        public static int ToHexInt(char c)
         {
             if (c >= '0' && c <= '9')
             {
@@ -49,17 +133,61 @@ namespace WellTool.Core.Util
             {
                 return c - 'A' + 10;
             }
-            return 0;
+            throw new ArgumentException($"Character '{c}' is not a hex digit");
         }
 
         /// <summary>
-        /// 将字符转换为十六进制数字
+        /// 判断是否包含在字符数组中
         /// </summary>
-        /// <param name="c">字符</param>
-        /// <returns>十六进制数字</returns>
-        public static int Digit16(char c)
+        public static bool IsIn(char c, params char[] chars)
         {
-            return HexToInt(c);
+            foreach (var ch in chars)
+            {
+                if (c == ch) return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 判断是否包含在字符串中
+        /// </summary>
+        public static bool IsIn(char c, string chars)
+        {
+            return chars?.IndexOf(c) >= 0;
+        }
+
+        /// <summary>
+        /// 获取字符类型
+        /// </summary>
+        public static UnicodeCategory GetUnicodeCategory(char c)
+        {
+            return char.GetUnicodeCategory(c);
+        }
+
+        /// <summary>
+        /// 检查是否为汉字
+        /// </summary>
+        public static bool IsChinese(char c)
+        {
+            return (c >= 0x4E00 && c <= 0x9FFF) ||
+                   (c >= 0x3400 && c <= 0x4DBF); // 扩展A区
+        }
+
+        /// <summary>
+        /// 检查是否为日文
+        /// </summary>
+        public static bool IsJapanese(char c)
+        {
+            return (c >= 0x3040 && c <= 0x309F) ||  // 平假名
+                   (c >= 0x30A0 && c <= 0x30FF);    // 片假名
+        }
+
+        /// <summary>
+        /// 检查是否为韩文
+        /// </summary>
+        public static bool IsKorean(char c)
+        {
+            return c >= 0xAC00 && c <= 0xD7AF;
         }
     }
 }

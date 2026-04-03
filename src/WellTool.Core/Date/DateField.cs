@@ -3,103 +3,117 @@ using System;
 namespace WellTool.Core.Date
 {
     /// <summary>
-    /// 日期各个部分的枚举
-    /// 与Calendar相应值对应
+    /// 日期字段枚举
     /// </summary>
     public enum DateField
     {
         /// <summary>
-        /// 世纪
-        /// </summary>
-        Era = 0,
-        /// <summary>
         /// 年
         /// </summary>
-        Year = 1,
+        Year = 0,
+
         /// <summary>
         /// 月
         /// </summary>
-        Month = 2,
+        Month = 1,
+
         /// <summary>
-        /// 一年中第几周
+        /// 日
         /// </summary>
-        WeekOfYear = 3,
+        Day = 2,
+
         /// <summary>
-        /// 一月中第几周
+        /// 小时
         /// </summary>
-        WeekOfMonth = 4,
-        /// <summary>
-        /// 一月中的第几天
-        /// </summary>
-        DayOfMonth = 5,
-        /// <summary>
-        /// 一年中的第几天
-        /// </summary>
-        DayOfYear = 6,
-        /// <summary>
-        /// 周几，1表示周日，2表示周一
-        /// </summary>
-        DayOfWeek = 7,
-        /// <summary>
-        /// 天所在的周是这个月的第几周
-        /// </summary>
-        DayOfWeekInMonth = 8,
-        /// <summary>
-        /// 上午或者下午
-        /// </summary>
-        AmPm = 9,
-        /// <summary>
-        /// 小时，用于12小时制
-        /// </summary>
-        Hour = 10,
-        /// <summary>
-        /// 小时，用于24小时制
-        /// </summary>
-        HourOfDay = 11,
+        Hour = 3,
+
         /// <summary>
         /// 分钟
         /// </summary>
-        Minute = 12,
+        Minute = 4,
+
         /// <summary>
         /// 秒
         /// </summary>
-        Second = 13,
+        Second = 5,
+
         /// <summary>
         /// 毫秒
         /// </summary>
-        Millisecond = 14
+        Millisecond = 6,
+
+        /// <summary>
+        /// 星期
+        /// </summary>
+        DayOfWeek = 7
     }
 
     /// <summary>
-    /// DateField 扩展方法
+    /// DateField扩展方法
     /// </summary>
     public static class DateFieldExtensions
     {
         /// <summary>
-        /// 转换为 TimeSpan
+        /// 获取字段对应的TimeSpan常量
         /// </summary>
-        public static TimeSpan ToTimeSpan(this DateField field)
+        public static TimeSpan ToTimeSpan(this DateField field, int value = 1)
         {
             switch (field)
             {
                 case DateField.Year:
-                    return TimeSpan.FromDays(365);
+                    return TimeSpan.FromDays(365 * value);
                 case DateField.Month:
-                    return TimeSpan.FromDays(30);
-                case DateField.DayOfMonth:
-                case DateField.DayOfYear:
-                    return TimeSpan.FromDays(1);
+                    return TimeSpan.FromDays(30 * value);
+                case DateField.Day:
+                    return TimeSpan.FromDays(value);
                 case DateField.Hour:
-                case DateField.HourOfDay:
-                    return TimeSpan.FromHours(1);
+                    return TimeSpan.FromHours(value);
                 case DateField.Minute:
-                    return TimeSpan.FromMinutes(1);
+                    return TimeSpan.FromMinutes(value);
                 case DateField.Second:
-                    return TimeSpan.FromSeconds(1);
+                    return TimeSpan.FromSeconds(value);
                 case DateField.Millisecond:
-                    return TimeSpan.FromMilliseconds(1);
+                    return TimeSpan.FromMilliseconds(value);
                 default:
                     return TimeSpan.Zero;
+            }
+        }
+
+        /// <summary>
+        /// 获取日期时间单位名称
+        /// </summary>
+        public static string GetName(this DateField field)
+        {
+            switch (field)
+            {
+                case DateField.Year: return "年";
+                case DateField.Month: return "月";
+                case DateField.Day: return "日";
+                case DateField.Hour: return "小时";
+                case DateField.Minute: return "分钟";
+                case DateField.Second: return "秒";
+                case DateField.Millisecond: return "毫秒";
+                case DateField.DayOfWeek: return "星期";
+                default: return "";
+            }
+        }
+
+        /// <summary>
+        /// 获取DateTime.Kind对应的值
+        /// </summary>
+        public static int GetCalendarField(this DateField field)
+        {
+            switch (field)
+            {
+                case DateField.Year: return 1;
+                case DateField.Month: return 2;
+                case DateField.Day: return 5;
+                case DateField.Hour: return 10;
+                case DateField.Minute: return 12;
+                case DateField.Second: return 13;
+                case DateField.Millisecond: return 14;
+                case DateField.DayOfWeek: return 7;
+                default: return -1;
             }
         }
     }

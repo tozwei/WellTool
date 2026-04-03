@@ -1,146 +1,139 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using WellTool.Core.Lang;
+using System.Text.RegularExpressions;
 
 namespace WellTool.Core.Text
 {
     /// <summary>
-    /// 字符串格式化工具
+    /// 字符串格式化工具类
     /// </summary>
     public static class StrFormatter
     {
+        private static readonly Regex _parameterPattern = new Regex(@"\{(\d+)\}", RegexOptions.Compiled);
+        private static readonly Regex _namedParameterPattern = new Regex(@"\{(\w+)\}", RegexOptions.Compiled);
+
         /// <summary>
-        /// 格式化字符串<br/>
-        /// 此方法只是简单将占位符 {} 按照顺序替换为参数<br/>
-        /// 如果想输出 {} 使用 \转义 { 即可，如果想输出 {} 之前的 \ 使用双转义符 \\ 即可<br/>
-        /// 例：<br/>
-        /// 通常使用：format("this is {} for {}", "a", "b") => this is a for b<br/>
-        /// 转义{}：format("this is \\{} for {}", "a", "b") => this is \{} for a<br/>
-        /// 转义\：format("this is \\\\{} for {}", "a", "b") => this is \a for b<br/>
+        /// 格式化字符串，类似 string.Format
         /// </summary>
-        /// <param name="strPattern">字符串模板</param>
-        /// <param name="argArray">参数列表</param>
+        /// <param name="template">模板字符串</param>
+        /// <param name="args">参数</param>
         /// <returns>格式化后的字符串</returns>
-        public static string Format(string strPattern, params object[] argArray)
+        public static string Format(string template, params object[] args)
         {
-            return FormatWith(strPattern, "{}", argArray);
+            if (string.IsNullOrEmpty(template))
+            {
+                return template;
+            }
+
+            if (args == null || args.Length == 0)
+            {
+                return template;
+            }
+
+            return string.Format(template, args);
         }
 
         /// <summary>
-        /// 格式化字符串<br/>
-        /// 此方法只是简单将指定占位符按照顺序替换为参数<br/>
-        /// 如果想输出占位符使用 \\转义即可，如果想输出占位符之前的 \ 使用双转义符 \\ 即可<br/>
+        /// 格式化字符串，使用命名参数
         /// </summary>
-        /// <param name="strPattern">字符串模板</param>
-        /// <param name="placeHolder">占位符，例如{}</param>
-        /// <param name="argArray">参数列表</param>
+        /// <param name="template">模板字符串</param>
+        /// <param name="args">命名参数</param>
         /// <returns>格式化后的字符串</returns>
-        public static string FormatWith(string strPattern, string placeHolder, params object[] argArray)
+        public static string Format(string template, Dictionary<string, object> args)
         {
-            if (string.IsNullOrEmpty(strPattern) || string.IsNullOrEmpty(placeHolder) || argArray == null || argArray.Length == 0)
+            if (string.IsNullOrEmpty(template))
             {
-                return strPattern;
+                return template;
             }
 
-            var strPatternLength = strPattern.Length;
-            var placeHolderLength = placeHolder.Length;
-
-            // 初始化定义好的长度以获得更好的性能
-            var sbuf = new StringBuilder(strPatternLength + 50);
-
-            var handledPosition = 0; // 记录已经处理到的位置
-            int delimIndex; // 占位符所在位置
-
-            for (var argIndex = 0; argIndex < argArray.Length; argIndex++)
+            if (args == null || args.Count == 0)
             {
-                delimIndex = strPattern.IndexOf(placeHolder, handledPosition, StringComparison.Ordinal);
-                if (delimIndex == -1) // 剩余部分无占位符
-                {
-                    if (handledPosition == 0) // 不带占位符的模板直接返回
-                    {
-                        return strPattern;
-                    }
-
-                    // 字符串模板剩余部分不再包含占位符，加入剩余部分后返回结果
-                    sbuf.Append(strPattern.Substring(handledPosition));
-                    return sbuf.ToString();
-                }
-
-                // 转义符
-                if (delimIndex > 0 && strPattern[delimIndex - 1] == '\\') // 转义符
-                {
-                    if (delimIndex > 1 && strPattern[delimIndex - 2] == '\\') // 双转义符
-                    {
-                        // 转义符之前还有一个转义符，占位符依旧有效
-                        sbuf.Append(strPattern, handledPosition, delimIndex - 1);
-                        sbuf.Append(argArray[argIndex]?.ToString());
-                        handledPosition = delimIndex + placeHolderLength;
-                    }
-                    else
-                    {
-                        // 占位符被转义
-                        argIndex--;
-                        sbuf.Append(strPattern, handledPosition, delimIndex - 1);
-                        sbuf.Append(placeHolder[0]);
-                        handledPosition = delimIndex + 1;
-                    }
-                }
-                else // 正常占位符
-                {
-                    sbuf.Append(strPattern, handledPosition, delimIndex - handledPosition);
-                    sbuf.Append(argArray[argIndex]?.ToString());
-                    handledPosition = delimIndex + placeHolderLength;
-                }
+                return template;
             }
 
-            // 加入最后一个占位符后所有的字符
-            sbuf.Append(strPattern.Substring(handledPosition));
-
-            return sbuf.ToString();
+            return _namedParameterPattern.Replace(template, match =>
+            {
+                var key = match.Groups[1].Value;
+                if (args.TryGetValue(key, out var value))
+                {
+                    return value?.ToString() ?? "";
+                }
+                return match.Value;
+            });
         }
 
         /// <summary>
-        /// 格式化文本，使用 {varName} 占位<br/>
-        /// map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ===> aValue and bValue
+        /// 格式化字符串，使用对象属性
         /// </summary>
-        /// <param name="strPattern">字符串模板</param>
-        /// <param name="valueMap">值 Map</param>
+        /// <param name="template">模板字符串</param>
+        /// <param name="args">参数对象</param>
         /// <returns>格式化后的字符串</returns>
-        public static string Format(string strPattern, IDictionary<string, object> valueMap)
+        public static string Format(string template, object args)
         {
-            if (string.IsNullOrEmpty(strPattern) || valueMap == null || valueMap.Count == 0)
+            if (string.IsNullOrEmpty(template))
             {
-                return strPattern;
+                return template;
             }
 
-            foreach (var entry in valueMap)
+            if (args == null)
             {
-                strPattern = strPattern.Replace("{" + entry.Key + "}", entry.Value?.ToString());
+                return template;
             }
 
-            return strPattern;
+            var type = args.GetType();
+            return _namedParameterPattern.Replace(template, match =>
+            {
+                var key = match.Groups[1].Value;
+                var prop = type.GetProperty(key);
+                if (prop != null)
+                {
+                    var value = prop.GetValue(args);
+                    return value?.ToString() ?? "";
+                }
+                return match.Value;
+            });
         }
 
         /// <summary>
-        /// 格式化文本，使用 {varName} 占位<br/>
+        /// 带默认值的格式化
         /// </summary>
-        /// <param name="strPattern">字符串模板</param>
-        /// <param name="values">值</param>
+        /// <param name="template">模板字符串，格式：{key:defaultValue}</param>
+        /// <param name="args">参数</param>
         /// <returns>格式化后的字符串</returns>
-        public static string FormatDict(string strPattern, params object[] values)
+        public static string FormatWithDefault(string template, Dictionary<string, object> args)
         {
-            if (string.IsNullOrEmpty(strPattern) || values == null || values.Length == 0)
+            if (string.IsNullOrEmpty(template))
             {
-                return strPattern;
+                return template;
             }
 
-            for (var i = 0; i < values.Length; i++)
+            var pattern = new Regex(@"\{(\w+)(?::([^}]*))?\}", RegexOptions.Compiled);
+            return pattern.Replace(template, match =>
             {
-                strPattern = strPattern.Replace("{" + i + "}", values[i]?.ToString());
-            }
+                var key = match.Groups[1].Value;
+                var defaultValue = match.Groups[2].Success ? match.Groups[2].Value : "";
 
-            return strPattern;
+                if (args != null && args.TryGetValue(key, out var value) && value != null)
+                {
+                    return value.ToString();
+                }
+                return defaultValue;
+            });
+        }
+
+        /// <summary>
+        /// 安全格式化，避免参数不匹配时抛出异常
+        /// </summary>
+        public static string FormatSafe(string template, params object[] args)
+        {
+            try
+            {
+                return Format(template, args);
+            }
+            catch
+            {
+                return template;
+            }
         }
     }
 }
