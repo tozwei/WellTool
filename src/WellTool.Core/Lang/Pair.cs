@@ -1,65 +1,81 @@
 using System;
 
-namespace WellTool.Core.Lang
+namespace WellDone.Core.Lang;
+
+/// <summary>
+/// 键值对封装
+/// </summary>
+/// <typeparam name="K">键类型</typeparam>
+/// <typeparam name="V">值类型</typeparam>
+public class Pair<K, V>
 {
-    /// <summary>
-    /// 键值对
-    /// </summary>
-    /// <typeparam name="T">键类型</typeparam>
-    /// <typeparam name="U">值类型</typeparam>
-    public class Pair<T, U>
-    {
-        /// <summary>
-        /// 键
-        /// </summary>
-        public T Key { get; set; }
+	/// <summary>
+	/// 键
+	/// </summary>
+	public K Key { get; set; }
 
-        /// <summary>
-        /// 值
-        /// </summary>
-        public U Value { get; set; }
+	/// <summary>
+	/// 值
+	/// </summary>
+	public V Value { get; set; }
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="key">键</param>
-        /// <param name="value">值</param>
-        public Pair(T key, U value)
-        {
-            Key = key;
-            Value = value;
-        }
+	/// <summary>
+	/// 构造
+	/// </summary>
+	public Pair()
+	{
+	}
 
-        /// <summary>
-        /// 重写 Equals 方法
-        /// </summary>
-        /// <param name="obj">比较对象</param>
-        /// <returns>是否相等</returns>
-        public override bool Equals(object obj)
-        {
-            if (obj is Pair<T, U> other)
-            {
-                return Equals(Key, other.Key) && Equals(Value, other.Value);
-            }
-            return false;
-        }
+	/// <summary>
+	/// 构造
+	/// </summary>
+	/// <param name="key">键</param>
+	/// <param name="value">值</param>
+	public Pair(K key, V value)
+	{
+		Key = key;
+		Value = value;
+	}
 
-        /// <summary>
-        /// 重写 GetHashCode 方法
-        /// </summary>
-        /// <returns>哈希码</returns>
-        public override int GetHashCode()
-        {
-            return (Key?.GetHashCode() ?? 0) ^ (Value?.GetHashCode() ?? 0);
-        }
+	/// <summary>
+	/// 创建键值对
+	/// </summary>
+	/// <param name="key">键</param>
+	/// <param name="value">值</param>
+	/// <returns>键值对</returns>
+	public static Pair<K, V> Of(K key, V value) => new Pair<K, V>(key, value);
 
-        /// <summary>
-        /// 重写 ToString 方法
-        /// </summary>
-        /// <returns>字符串表示</returns>
-        public override string ToString()
-        {
-            return $"({Key}, {Value})";
-        }
-    }
+	/// <summary>
+	/// 转换为元组
+	/// </summary>
+	public (K, V) ToTuple() => (Key, Value);
+
+	/// <summary>
+	/// 获取键，如果值为空返回默认值
+	/// </summary>
+	public K GetKeyOrDefault() => Key;
+
+	/// <summary>
+	/// 获取值，如果值为空返回默认值
+	/// </summary>
+	public V GetValueOrDefault(V defaultValue = default) => Value ?? defaultValue;
+
+	public override bool Equals(object obj)
+	{
+		if (obj is Pair<K, V> other)
+		{
+			return Equals(Key, other.Key) && Equals(Value, other.Value);
+		}
+		return false;
+	}
+
+	public override int GetHashCode()
+	{
+		return HashCode.Combine(Key, Value);
+	}
+
+	public override string ToString()
+	{
+		return $"{Key}={Value}";
+	}
 }
