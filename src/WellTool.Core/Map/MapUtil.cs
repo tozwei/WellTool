@@ -952,7 +952,7 @@ namespace WellTool.Core.Map
             }
             if (map.TryGetValue(key, out var value) && value != null)
             {
-                return Convert.ToInt32(value);
+                return System.Convert.ToInt32(value);
             }
             return 0;
         }
@@ -976,7 +976,7 @@ namespace WellTool.Core.Map
             {
                 try
                 {
-                    return Convert.ToInt32(value);
+                    return System.Convert.ToInt32(value);
                 }
                 catch
                 {
@@ -1195,7 +1195,7 @@ namespace WellTool.Core.Map
             {
                 try
                 {
-                    return (T)Convert.ChangeType(value, typeof(T));
+                    return (T)System.Convert.ChangeType(value, typeof(T));
                 }
                 catch
                 {

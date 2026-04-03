@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using MathUtil = WellTool.Core.MathUtil;
+using MathUtil = WellTool.Core.Math.MathUtil;
 
 /// <summary>
 /// 数学表达式计算工具类

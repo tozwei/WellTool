@@ -135,7 +135,7 @@ public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 
 	public IEnumerator<KeyValuePair<K, V>> GetEnumerator()
 	{
-		return _rawMap.Select(entry => new KeyValuePair<K, V>(entry.Key.Get(), entry.Value)).GetEnumerator();
+		return _rawMap.Select(entry => new KeyValuePair<K, V>(entry.Key.Value, entry.Value)).GetEnumerator();
 	}
 
 	System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

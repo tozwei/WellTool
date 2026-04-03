@@ -49,17 +49,7 @@ public class CheckedUtil
         return Uncheck(expression, e => new RuntimeException(e));
     }
 
-    /// <summary>
-    /// 接收一个可以转化成 Func1 的 Lambda 表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
-    /// </summary>
-    /// <param name="expression">Lambda表达式</param>
-    /// <typeparam name="P">参数类型</typeparam>
-    /// <typeparam name="R">返回类型</typeparam>
-    /// <returns>Func1Rt</returns>
-    public static Func1Rt<P, R> Uncheck<P, R>(System.Func<P, R> expression)
-    {
-        return Uncheck(expression, e => new RuntimeException(e));
-    }
+
 
     /// <summary>
     /// 接收一个可以转化成 VoidFunc 的 Lambda 表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
@@ -82,16 +72,7 @@ public class CheckedUtil
         return Uncheck(expression, e => new RuntimeException(e));
     }
 
-    /// <summary>
-    /// 接收一个可以转化成 VoidFunc 的 Lambda 表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
-    /// </summary>
-    /// <param name="expression">Lambda表达式</param>
-    /// <typeparam name="P">参数类型</typeparam>
-    /// <returns>VoidFunc1Rt</returns>
-    public static VoidFunc1Rt<P> Uncheck<P>(VoidFunc<P> expression)
-    {
-        return Uncheck(expression, e => new RuntimeException(e));
-    }
+
 
     /// <summary>
     /// 接收一个可以转化成 Func 的 Lambda 表达式，和一个可以把 Exception 转化成 RuntimeException 的表达式
@@ -103,7 +84,16 @@ public class CheckedUtil
     /// <returns>FuncRt</returns>
     public static FuncRt<T, R> Uncheck<T, R>(System.Func<T, R> expression, System.Func<System.Exception, RuntimeException> rteSupplier)
     {
-        System.ArgumentNullException.ThrowIfNull(expression);
+       #if NET6_0_OR_GREATER
+    // .NET 6 及以上版本：使用新 API
+    ArgumentNullException.ThrowIfNull(expression);
+#else
+    // 旧版本 (.NET Framework / .NET Core 2.x - 5.x)：使用传统写法
+    if (expression == null)
+    {
+        throw new ArgumentNullException(nameof(expression));
+    }
+#endif
         return t =>
         {
             try
@@ -126,7 +116,16 @@ public class CheckedUtil
     /// <returns>Func0Rt</returns>
     public static Func0Rt<R> Uncheck<R>(Func0<R> expression, System.Func<System.Exception, RuntimeException> rteSupplier)
     {
-        System.ArgumentNullException.ThrowIfNull(expression);
+#if NET6_0_OR_GREATER
+        // .NET 6 及以上版本：使用新 API
+        ArgumentNullException.ThrowIfNull(expression);
+#else
+    // 旧版本 (.NET Framework / .NET Core 2.x - 5.x)：使用传统写法
+    if (expression == null)
+    {
+        throw new ArgumentNullException(nameof(expression));
+    }
+#endif
         return () =>
         {
             try
@@ -140,29 +139,7 @@ public class CheckedUtil
         };
     }
 
-    /// <summary>
-    /// 接收一个可以转化成 Func1 的 Lambda 表达式，和一个可以把 Exception 转化成 RuntimeException 的表达式
-    /// </summary>
-    /// <param name="expression">Lambda表达式</param>
-    /// <param name="rteSupplier">转化运行时异常的表达式</param>
-    /// <typeparam name="P">参数类型</typeparam>
-    /// <typeparam name="R">返回类型</typeparam>
-    /// <returns>Func1Rt</returns>
-    public static Func1Rt<P, R> Uncheck<P, R>(System.Func<P, R> expression, System.Func<System.Exception, RuntimeException> rteSupplier)
-    {
-        System.ArgumentNullException.ThrowIfNull(expression);
-        return t =>
-        {
-            try
-            {
-                return expression(t);
-            }
-            catch (System.Exception e)
-            {
-                throw rteSupplier == null ? new RuntimeException(e) : rteSupplier(e);
-            }
-        };
-    }
+
 
     /// <summary>
     /// 接收一个可以转化成 VoidFunc 的 Lambda 表达式，和一个可以把 Exception 转化成 RuntimeException 的表达式
@@ -173,7 +150,16 @@ public class CheckedUtil
     /// <returns>VoidFuncRt</returns>
     public static VoidFuncRt<T> Uncheck<T>(VoidFunc<T> expression, System.Func<System.Exception, RuntimeException> rteSupplier)
     {
-        System.ArgumentNullException.ThrowIfNull(expression);
+#if NET6_0_OR_GREATER
+        // .NET 6 及以上版本：使用新 API
+        ArgumentNullException.ThrowIfNull(expression);
+#else
+    // 旧版本 (.NET Framework / .NET Core 2.x - 5.x)：使用传统写法
+    if (expression == null)
+    {
+        throw new ArgumentNullException(nameof(expression));
+    }
+#endif
         return t =>
         {
             try
@@ -195,7 +181,16 @@ public class CheckedUtil
     /// <returns>VoidFunc0Rt</returns>
     public static VoidFunc0Rt Uncheck(VoidFunc expression, RuntimeException rte)
     {
-        System.ArgumentNullException.ThrowIfNull(expression);
+#if NET6_0_OR_GREATER
+        // .NET 6 及以上版本：使用新 API
+        ArgumentNullException.ThrowIfNull(expression);
+#else
+    // 旧版本 (.NET Framework / .NET Core 2.x - 5.x)：使用传统写法
+    if (expression == null)
+    {
+        throw new ArgumentNullException(nameof(expression));
+    }
+#endif
         return () =>
         {
             try
@@ -217,28 +212,7 @@ public class CheckedUtil
         };
     }
 
-    /// <summary>
-    /// 接收一个可以转化成 VoidFunc 的 Lambda 表达式，和一个 RuntimeException
-    /// </summary>
-    /// <param name="expression">Lambda表达式</param>
-    /// <param name="rteSupplier">转化运行时异常的表达式</param>
-    /// <typeparam name="P">参数类型</typeparam>
-    /// <returns>VoidFunc1Rt</returns>
-    public static VoidFunc1Rt<P> Uncheck<P>(VoidFunc<P> expression, System.Func<System.Exception, RuntimeException> rteSupplier)
-    {
-        System.ArgumentNullException.ThrowIfNull(expression);
-        return t =>
-        {
-            try
-            {
-                expression(t);
-            }
-            catch (System.Exception e)
-            {
-                throw rteSupplier == null ? new RuntimeException(e) : rteSupplier(e);
-            }
-        };
-    }
+
 }
 
 /// <summary>

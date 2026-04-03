@@ -1,4 +1,4 @@
-namespace WellTool.Core
+namespace WellTool.Core.Math
 {
     public static class MathUtil
     {

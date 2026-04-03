@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using WellTool.Core.Collection;
-using WellTool.Core.Map;
 using WellTool.DB.Dialect;
 using WellTool.DB.Handler;
 using WellTool.DB.Sql;

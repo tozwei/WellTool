@@ -164,10 +164,10 @@ namespace WellTool.Core.Threading
                         resultArr[task.Index] = call.Result;
                     }
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
                     // 不处理异常
-                    throw new Exception(e.Message, e);
+                    throw new System.Exception(e.Message, e);
                 }
             }
 
@@ -182,9 +182,9 @@ namespace WellTool.Core.Threading
                     }
                     kvp.Value.CancellationTokenSource.Dispose();
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
-                    throw new Exception(e.Message, e);
+                    throw new System.Exception(e.Message, e);
                 }
             }
         }
@@ -259,7 +259,7 @@ namespace WellTool.Core.Threading
             for (int i = 0; i < batchCount; i++)
             {
                 int from = i * batchSize;
-                int to = Math.Min((i + 1) * batchSize, data.Count);
+                int to = System.Math.Min((i + 1) * batchSize, data.Count);
                 batches.Add(data.GetRange(from, to - from));
             }
 

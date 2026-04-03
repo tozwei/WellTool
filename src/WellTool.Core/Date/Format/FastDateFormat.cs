@@ -8,7 +8,7 @@ using SystemTimeZone = System.TimeZone;
 /// <summary>
 /// FastDateFormat 是一个线程安全的日期格式化实现
 /// </summary>
-public class FastDateFormat : Format, DateParser, DatePrinter
+public class FastDateFormat : AbstractDateBasic, DateParser, DatePrinter
 {
 	private const long SerialVersionUid = 8097890768636183236L;
 
@@ -235,29 +235,29 @@ public class FastDateFormat : Format, DateParser, DatePrinter
 	}
 
 	/// <summary>
-	/// 构造函数
-	/// </summary>
-	/// <param name="pattern">日期格式</param>
-	/// <param name="timeZone">时区</param>
-	/// <param name="locale">区域</param>
-	protected FastDateFormat(string pattern, SystemTimeZone timeZone, CultureInfo locale)
-	{
-		Printer = new FastDatePrinter(pattern, timeZone, locale);
-		Parser = new FastDateParser(pattern, timeZone, locale);
-	}
+    /// 构造函数
+    /// </summary>
+    /// <param name="pattern">日期格式</param>
+    /// <param name="timeZone">时区</param>
+    /// <param name="locale">区域</param>
+    protected FastDateFormat(string pattern, SystemTimeZone timeZone, CultureInfo locale) : base(pattern, timeZone, locale)
+    {
+        Printer = new FastDatePrinter(pattern, timeZone, locale);
+        Parser = new FastDateParser(pattern, timeZone, locale);
+    }
 
 	/// <summary>
-	/// 格式化
-	/// </summary>
-	/// <param name="obj">对象</param>
-	/// <param name="toAppendTo">缓冲区</param>
-	/// <param name="pos">位置</param>
-	/// <returns>格式化后的字符串</returns>
-	public override StringBuilder Format(object obj, StringBuilder toAppendTo, ref int pos)
-	{
-		toAppendTo.Append(Printer.Format(obj));
-		return toAppendTo;
-	}
+    /// 格式化
+    /// </summary>
+    /// <param name="obj">对象</param>
+    /// <param name="toAppendTo">缓冲区</param>
+    /// <param name="pos">位置</param>
+    /// <returns>格式化后的字符串</returns>
+    public StringBuilder Format(object obj, StringBuilder toAppendTo, ref int pos)
+    {
+        toAppendTo.Append(Printer.Format(obj));
+        return toAppendTo;
+    }
 
 	/// <summary>
 	/// 格式化毫秒

@@ -8,28 +8,33 @@ namespace WellTool.Core.Collection;
 /// 分区是在原List的基础上进行的，返回的分区是不可变的抽象列表，原列表元素变更，分区中元素也会变更。
 /// </summary>
 /// <typeparam name="T">元素类型</typeparam>
-public class RandomAccessAvgPartition<T> : AvgPartition<T>, IList
+public class RandomAccessAvgPartition<T> : Partition<T>, IList
 {
     /// <summary>
     /// 列表分区
     /// </summary>
     /// <param name="list">被分区的列表</param>
     /// <param name="limit">分区个数</param>
-    public RandomAccessAvgPartition(IList<T> list, int limit) : base(list, limit)
+    public RandomAccessAvgPartition(IList<T> list, int limit) : base(list, list.Count / limit + (list.Count % limit > 0 ? 1 : 0))
     {
     }
 
     // IList 实现
     public bool IsFixedSize => true;
     public bool IsReadOnly => true;
-    public object this[int index] { get => ((IList)GetSourceList())[index]; set => throw new NotSupportedException(); }
-    public void CopyTo(Array array, int index) { ((IList)GetSourceList()).CopyTo(array, index); }
+    public object this[int index] { get => ((IList)_list)[index]; set => throw new NotSupportedException(); }
+    public void CopyTo(Array array, int index) { ((IList)_list).CopyTo(array, index); }
     public IEnumerator GetEnumerator() => ((IEnumerable<T>)this).GetEnumerator();
     public int Add(object value) => throw new NotSupportedException();
     public void Clear() => throw new NotSupportedException();
-    public bool Contains(object value) => ((IList)GetSourceList()).Contains(value);
-    public int IndexOf(object value) => ((IList)GetSourceList()).IndexOf(value);
+    public bool Contains(object value) => ((IList)_list).Contains(value);
+    public int IndexOf(object value) => ((IList)_list).IndexOf(value);
     public void Insert(int index, object value) => throw new NotSupportedException();
     public void Remove(object value) => throw new NotSupportedException();
     public void RemoveAt(int index) => throw new NotSupportedException();
+
+    // ICollection 实现
+    public bool IsSynchronized => false;
+    public object SyncRoot => this;
+    public int Count => _list.Count;
 }

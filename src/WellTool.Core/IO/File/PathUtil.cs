@@ -101,7 +101,7 @@ namespace WellTool.Core.IO.File
                     }
                 }
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new IORuntimeException(e);
             }
@@ -135,7 +135,7 @@ namespace WellTool.Core.IO.File
                     DelFile(path);
                 }
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new IORuntimeException(e);
             }
@@ -168,7 +168,7 @@ namespace WellTool.Core.IO.File
             {
                 System.IO.File.Copy(src, targetPath, overwrite);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new IORuntimeException(e);
             }
@@ -239,7 +239,7 @@ namespace WellTool.Core.IO.File
                     System.IO.File.Copy(file, targetFilePath, overwrite);
                 }
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new IORuntimeException(e);
             }
@@ -340,7 +340,7 @@ namespace WellTool.Core.IO.File
             {
                 return new FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new IORuntimeException(e);
             }
@@ -368,7 +368,7 @@ namespace WellTool.Core.IO.File
             {
                 return new StreamReader(path, encoding);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new IORuntimeException(e);
             }
@@ -385,7 +385,7 @@ namespace WellTool.Core.IO.File
             {
                 return System.IO.File.ReadAllBytes(path);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new IORuntimeException(e);
             }
@@ -403,7 +403,7 @@ namespace WellTool.Core.IO.File
                 MkParentDirs(path);
                 return new FileStream(path, System.IO.FileMode.Create, System.IO.FileAccess.Write);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new IORuntimeException(e);
             }
@@ -467,7 +467,7 @@ namespace WellTool.Core.IO.File
                     System.IO.File.Move(src, target);
                 }
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new IORuntimeException(e);
             }
@@ -734,7 +734,7 @@ namespace WellTool.Core.IO.File
                 {
                     Directory.CreateDirectory(dir);
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
                     throw new IORuntimeException(e);
                 }
@@ -801,7 +801,7 @@ namespace WellTool.Core.IO.File
                         return Path.Combine(dir, tempFileName);
                     }
                 }
-                catch (Exception e)
+                catch (System.Exception e)
                 {
                     if (++exceptionsCount >= 50)
                     {
@@ -821,7 +821,7 @@ namespace WellTool.Core.IO.File
             {
                 System.IO.File.Delete(path);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 // 可能遇到只读文件，无法删除
                 var fileInfo = new FileInfo(path);
