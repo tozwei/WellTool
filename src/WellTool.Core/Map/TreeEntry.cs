@@ -5,8 +5,18 @@ namespace WellTool.Core.Map;
 /// </summary>
 /// <typeparam name="K">键类型</typeparam>
 /// <typeparam name="V">值类型</typeparam>
-public class TreeEntry<K, V> : KeyValuePair<K, V>
+public class TreeEntry<K, V>
 {
+    /// <summary>
+    /// 键
+    /// </summary>
+    public K Key { get; set; }
+
+    /// <summary>
+    /// 值
+    /// </summary>
+    public V Value { get; set; }
+
     /// <summary>
     /// 颜色，红色或黑色
     /// </summary>
@@ -41,12 +51,9 @@ public class TreeEntry<K, V> : KeyValuePair<K, V>
     /// <param name="value">值</param>
     public TreeEntry(K key, V value)
     {
-        base.Key = key;
-        base.Value = value;
+        Key = key;
+        Value = value;
     }
-
-    public new K Key => base.Key;
-    public new V Value { get => base.Value; set => base.Value = value; }
 
     /// <summary>
     /// 获取祖父节点

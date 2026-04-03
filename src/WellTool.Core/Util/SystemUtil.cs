@@ -1,6 +1,6 @@
 using System;
 
-namespace WellDone.Core.Util;
+namespace WellTool.Core.Util;
 
 /// <summary>
 /// SystemUtil系统工具类

@@ -1,6 +1,6 @@
 using System;
 
-namespace WellDone.Core.Util;
+namespace WellTool.Core.Util;
 
 /// <summary>
 /// DateUtil日期工具类

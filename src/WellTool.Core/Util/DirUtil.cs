@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace WellDone.Core.Util;
+namespace WellTool.Core.Util;
 
 /// <summary>
 /// DirUtil目录工具类

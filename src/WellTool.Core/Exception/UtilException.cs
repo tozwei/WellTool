@@ -1,11 +1,11 @@
 using System;
 
-namespace WellDone.Core.Exception;
+namespace WellTool.Core.Exception;
 
 /// <summary>
 /// UtilException工具异常
 /// </summary>
-public class UtilException : Exception
+public class UtilException : System.Exception
 {
 	/// <summary>
 	/// 构造
@@ -27,7 +27,7 @@ public class UtilException : Exception
 	/// </summary>
 	/// <param name="message">消息</param>
 	/// <param name="innerException">内部异常</param>
-	public UtilException(string message, Exception innerException) : base(message, innerException)
+	public UtilException(string message, System.Exception innerException) : base(message, innerException)
 	{
 	}
 
@@ -35,7 +35,7 @@ public class UtilException : Exception
 	/// 构造
 	/// </summary>
 	/// <param name="innerException">内部异常</param>
-	public UtilException(Exception innerException) : base(innerException.Message, innerException)
+	public UtilException(System.Exception innerException) : base(innerException.Message, innerException)
 	{
 	}
 }

@@ -1,6 +1,6 @@
 using System;
 
-namespace WellDone.Core.Lang;
+namespace WellTool.Core.Lang;
 
 /// <summary>
 /// 可变Long封装

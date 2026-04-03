@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace WellDone.Core.Util;
+namespace WellTool.Core.Util;
 
 /// <summary>
 /// XmlUtil工具类

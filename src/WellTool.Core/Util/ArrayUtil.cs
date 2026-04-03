@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WellDone.Core.Util;
+namespace WellTool.Core.Util;
 
 /// <summary>
 /// ArrayUtil数组工具类

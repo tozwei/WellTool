@@ -1,6 +1,6 @@
 using System;
 
-namespace WellDone.Core.Util;
+namespace WellTool.Core.Util;
 
 /// <summary>
 /// Hex工具类（别名）

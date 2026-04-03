@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace WellDone.Core.Exception;
+namespace WellTool.Core.Exception;
 
 /// <summary>
 /// 异常工具类

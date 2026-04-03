@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace WellDone.Core.Util;
+namespace WellTool.Core.Util;
 
 /// <summary>
 /// ClassUtil类型工具类
@@ -68,15 +68,10 @@ public static class ClassUtil
 		return type.IsArray ? type.GetElementType() : null;
 	}
 
-	/// <summary>
-	/// 是否为包装类型
-	/// </summary>
-	public static bool IsPrimitiveWrapper(Type type)
-	{
-		return type != null && IsPrimitiveWrapper(type);
-	}
-
-	private static bool IsPrimitiveWrapper(Type type)
+    /// <summary>
+    /// 是否为包装类型
+    /// </summary>
+    public static bool IsPrimitiveWrapper(Type type)
 	{
 		return type == typeof(Boolean) ||
 			   type == typeof(Byte) ||

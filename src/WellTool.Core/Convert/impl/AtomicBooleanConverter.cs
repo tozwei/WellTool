@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace WellDone.Core.Convert.Impl;
+namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
 /// AtomicBoolean转换器

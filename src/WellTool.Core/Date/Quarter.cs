@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using SystemTimeZone = System.TimeZoneInfo;
 
-namespace WellDone.Core.Date;
+namespace WellTool.Core.Date;
 
 /// <summary>
 /// 季度
