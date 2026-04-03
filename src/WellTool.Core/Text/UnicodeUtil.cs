@@ -1,101 +1,99 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+using WellTool.Core.Util;
 
 namespace WellTool.Core.Text;
 
 /// <summary>
-/// Unicode工具类<br>
-/// 提供Unicode相关的工具方法
+/// 提供Unicode字符串和普通字符串之间的转换
 /// </summary>
 public static class UnicodeUtil
 {
     /// <summary>
-    /// 将字符串转换为Unicode编码
+    /// Unicode字符串转为普通字符串
+    /// Unicode字符串的表现方式为：\\uXXXX
     /// </summary>
-    /// <param name="text">要转换的字符串</param>
-    /// <returns>Unicode编码的字符串</returns>
-    public static string Encode(string text)
+    /// <param name="unicode">Unicode字符串</param>
+    /// <returns>普通字符串</returns>
+    public static string ToString(string? unicode)
     {
-        if (string.IsNullOrEmpty(text))
+        if (string.IsNullOrWhiteSpace(unicode))
         {
-            return text;
+            return unicode ?? "";
         }
 
-        var builder = new System.Text.StringBuilder();
-        foreach (var c in text)
+        int len = unicode.Length;
+        var sb = new System.Text.StringBuilder(len);
+        int pos = 0;
+        while ((pos = StrUtil.IndexOfIgnoreCase(unicode, "\\u", pos)) != -1)
         {
-            if (c > 127)
+            sb.Append(unicode.AsSpan(0, pos));
+            if (pos + 5 < len)
             {
-                builder.Append($"\\u{(int)c:X4}");
+                try
+                {
+                    char c = (char)int.Parse(unicode.Substring(pos + 2, 4), System.Globalization.NumberStyles.HexNumber);
+                    sb.Append(c);
+                    pos += 6;
+                }
+                catch (FormatException)
+                {
+                    sb.Append(unicode.AsSpan(pos, 2));
+                    pos += 2;
+                }
             }
             else
             {
-                builder.Append(c);
+                break;
             }
         }
 
-        return builder.ToString();
+        if (pos < len)
+        {
+            sb.Append(unicode.AsSpan(pos));
+        }
+        return sb.ToString();
     }
 
     /// <summary>
-    /// 将Unicode编码的字符串转换为普通字符串
+    /// 字符编码为Unicode形式
     /// </summary>
-    /// <param name="text">Unicode编码的字符串</param>
-    /// <returns>普通字符串</returns>
-    public static string Decode(string text)
+    /// <param name="c">被编码的字符</param>
+    /// <returns>Unicode字符串</returns>
+    public static string ToUnicode(char c) => HexUtil.ToUnicodeHex(c);
+
+    /// <summary>
+    /// 字符串编码为Unicode形式
+    /// </summary>
+    /// <param name="str">被编码的字符串</param>
+    /// <returns>Unicode字符串</returns>
+    public static string ToUnicode(string str) => ToUnicode(str, true);
+
+    /// <summary>
+    /// 字符串编码为Unicode形式
+    /// </summary>
+    /// <param name="str">被编码的字符串</param>
+    /// <param name="isSkipAscii">是否跳过ASCII字符（只跳过可见字符）</param>
+    /// <returns>Unicode字符串</returns>
+    public static string ToUnicode(string str, bool isSkipAscii)
     {
-        if (string.IsNullOrEmpty(text))
+        if (string.IsNullOrEmpty(str))
         {
-            return text;
+            return str;
         }
 
-        return System.Text.RegularExpressions.Regex.Replace(
-            text,
-            @"\u([0-9a-fA-F]{4})",
-            match => ((char)int.Parse(match.Groups[1].Value, System.Globalization.NumberStyles.HexNumber)).ToString()
-        );
-    }
-
-    /// <summary>
-    /// 判断字符是否为中文字符
-    /// </summary>
-    /// <param name="c">要判断的字符</param>
-    /// <returns>是否为中文字符</returns>
-    public static bool IsChinese(char c)
-    {
-        return c >= 0x4E00 && c <= 0x9FFF;
-    }
-
-    /// <summary>
-    /// 判断字符串是否包含中文字符
-    /// </summary>
-    /// <param name="text">要判断的字符串</param>
-    /// <returns>是否包含中文字符</returns>
-    public static bool ContainsChinese(string text)
-    {
-        if (string.IsNullOrEmpty(text))
+        int len = str.Length;
+        var unicode = new System.Text.StringBuilder(str.Length * 6);
+        for (int i = 0; i < len; i++)
         {
-            return false;
-        }
-
-        foreach (var c in text)
-        {
-            if (IsChinese(c))
+            char c = str[i];
+            if (isSkipAscii && CharUtil.IsAsciiPrintable(c))
             {
-                return true;
+                unicode.Append(c);
+            }
+            else
+            {
+                unicode.Append(HexUtil.ToUnicodeHex(c));
             }
         }
-
-        return false;
+        return unicode.ToString();
     }
 }

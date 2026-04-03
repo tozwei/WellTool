@@ -119,7 +119,7 @@ public abstract class AbsSetting : ISettingGetter, IDisposable
     public virtual string[] GetStringsWithDefault(string key, string[] defaultValue)
     {
         var value = GetStrings(key, null);
-        return value ?? defaultValue;
+        return value.Length == 0 ? defaultValue : value;
     }
 
     /// <summary>

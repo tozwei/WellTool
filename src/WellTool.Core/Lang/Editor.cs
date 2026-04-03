@@ -1,18 +1,57 @@
 namespace WellTool.Core.Lang;
 
 /// <summary>
-/// 编辑器接口，常用于对于集合中的元素做统一编辑
-/// 此编辑器两个作用：
-/// 1、如果返回值为 null，表示此值被抛弃
-/// 2、对对象做修改
+/// 编辑器接口，用于转换对象
 /// </summary>
-/// <typeparam name="T">被编辑对象类型</typeparam>
-public interface IEditor<T>
+/// <typeparam name="T">被编辑的对象类型</typeparam>
+public interface Editor<T>
 {
-	/// <summary>
-	/// 修改过滤后的结果
-	/// </summary>
-	/// <param name="t">被过滤的对象</param>
-	/// <returns>修改后的对象，如果被过滤返回 null</returns>
-	T? Edit(T t);
+    /// <summary>
+    /// 编辑方法
+    /// </summary>
+    /// <param name="t">要编辑的对象</param>
+    /// <returns>编辑后的对象</returns>
+    T Edit(T t);
+}
+
+/// <summary>
+/// 编辑器接口（无返回值）
+/// </summary>
+/// <typeparam name="T">被编辑的对象类型</typeparam>
+public interface VoidEditor<T>
+{
+    /// <summary>
+    /// 编辑方法
+    /// </summary>
+    /// <param name="t">要编辑的对象</param>
+    void Edit(T t);
+}
+
+/// <summary>
+/// 链式编辑器
+/// </summary>
+public class ChainEditor<T> : Editor<T>
+{
+    private readonly System.Collections.Generic.List<Editor<T>> _editors = new System.Collections.Generic.List<Editor<T>>();
+
+    /// <summary>
+    /// 添加编辑器
+    /// </summary>
+    public ChainEditor<T> Add(Editor<T> editor)
+    {
+        _editors.Add(editor);
+        return this;
+    }
+
+    /// <summary>
+    /// 执行编辑
+    /// </summary>
+    public T Edit(T t)
+    {
+        foreach (var editor in _editors)
+        {
+            t = editor.Edit(t);
+        }
+        return t;
+    }
 }

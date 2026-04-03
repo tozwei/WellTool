@@ -1,145 +1,259 @@
-using System;
-using System.Collections.Generic;
 using System.Text;
+using WellTool.Core.Collection;
+using WellTool.Core.Io;
 
-namespace WellTool.Core.Text
+namespace WellTool.Core.Text;
+
+/// <summary>
+/// 字符串连接器（拼接器），通过给定的字符串和多个元素，拼接为一个字符串
+/// 相较于StringBuilder提供更加灵活的配置
+/// </summary>
+public class StrJoiner
 {
+    private StringBuilder? _sb;
+    private string? _delimiter;
+    private string? _prefix;
+    private string? _suffix;
+    private bool _wrapElement;
+    private NullMode _nullMode = NullMode.NULL_STRING;
+    private string _emptyResult = "";
+    private bool _hasContent;
+
     /// <summary>
-    /// 字符串连接器
+    /// 使用指定分隔符创建StrJoiner
     /// </summary>
-    public class StrJoiner
+    /// <param name="delimiter">分隔符</param>
+    /// <returns>StrJoiner</returns>
+    public static StrJoiner Of(string delimiter) => new StrJoiner(delimiter);
+
+    /// <summary>
+    /// 使用指定分隔符创建StrJoiner
+    /// </summary>
+    /// <param name="delimiter">分隔符</param>
+    /// <param name="prefix">前缀</param>
+    /// <param name="suffix">后缀</param>
+    /// <returns>StrJoiner</returns>
+    public static StrJoiner Of(string delimiter, string prefix, string suffix) => new StrJoiner(delimiter, prefix, suffix);
+
+    /// <summary>
+    /// 构造
+    /// </summary>
+    /// <param name="delimiter">分隔符，null表示无连接符，直接拼接</param>
+    public StrJoiner(string? delimiter)
     {
-        private readonly string _delimiter;
-        private readonly string _prefix;
-        private readonly string _suffix;
-        private readonly StringBuilder _sb = new StringBuilder();
-        private bool _first = true;
+        _delimiter = delimiter;
+    }
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="delimiter">分隔符</param>
-        public StrJoiner(string delimiter) : this(delimiter, "", "")
+    /// <summary>
+    /// 构造
+    /// </summary>
+    /// <param name="delimiter">分隔符，null表示无连接符，直接拼接</param>
+    /// <param name="prefix">前缀</param>
+    /// <param name="suffix">后缀</param>
+    public StrJoiner(string? delimiter, string? prefix, string? suffix)
+    {
+        _delimiter = delimiter;
+        _prefix = prefix;
+        _suffix = suffix;
+    }
+
+    /// <summary>
+    /// 设置分隔符
+    /// </summary>
+    /// <param name="delimiter">分隔符</param>
+    /// <returns>this</returns>
+    public StrJoiner SetDelimiter(string? delimiter)
+    {
+        _delimiter = delimiter;
+        return this;
+    }
+
+    /// <summary>
+    /// 设置前缀
+    /// </summary>
+    /// <param name="prefix">前缀</param>
+    /// <returns>this</returns>
+    public StrJoiner SetPrefix(string? prefix)
+    {
+        _prefix = prefix;
+        return this;
+    }
+
+    /// <summary>
+    /// 设置后缀
+    /// </summary>
+    /// <param name="suffix">后缀</param>
+    /// <returns>this</returns>
+    public StrJoiner SetSuffix(string? suffix)
+    {
+        _suffix = suffix;
+        return this;
+    }
+
+    /// <summary>
+    /// 设置前缀和后缀是否包装每个元素
+    /// </summary>
+    /// <param name="wrapElement">true表示包装每个元素，false包装整个字符串</param>
+    /// <returns>this</returns>
+    public StrJoiner SetWrapElement(bool wrapElement)
+    {
+        _wrapElement = wrapElement;
+        return this;
+    }
+
+    /// <summary>
+    /// 设置null元素处理逻辑
+    /// </summary>
+    /// <param name="nullMode">逻辑枚举</param>
+    /// <returns>this</returns>
+    public StrJoiner SetNullMode(NullMode nullMode)
+    {
+        _nullMode = nullMode;
+        return this;
+    }
+
+    /// <summary>
+    /// 追加对象到拼接器中
+    /// </summary>
+    /// <param name="obj">对象</param>
+    /// <returns>this</returns>
+    public StrJoiner Append(object? obj)
+    {
+        if (obj == null)
         {
+            return Append((string?)null);
         }
+        return Append(obj.ToString());
+    }
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="delimiter">分隔符</param>
-        /// <param name="prefix">前缀</param>
-        /// <param name="suffix">后缀</param>
-        public StrJoiner(string delimiter, string prefix, string suffix)
+    /// <summary>
+    /// 追加字符串到拼接器中
+    /// </summary>
+    /// <param name="str">字符串</param>
+    /// <returns>this</returns>
+    public StrJoiner Append(string? str)
+    {
+        if (str == null)
         {
-            _delimiter = delimiter ?? "";
-            _prefix = prefix ?? "";
-            _suffix = suffix ?? "";
-        }
-
-        /// <summary>
-        /// 添加元素
-        /// </summary>
-        /// <param name="element">元素</param>
-        /// <returns>this</returns>
-        public StrJoiner Add(object element)
-        {
-            if (!_first)
+            switch (_nullMode)
             {
-                _sb.Append(_delimiter);
+                case NullMode.IGNORE:
+                    return this;
+                case NullMode.TO_EMPTY:
+                    str = "";
+                    break;
+                case NullMode.NULL_STRING:
+                    str = "null";
+                    break;
+            }
+        }
+
+        Prepare();
+        if (_wrapElement && !string.IsNullOrEmpty(_prefix))
+        {
+            _sb!.Append(_prefix);
+        }
+        _sb!.Append(str);
+        if (_wrapElement && !string.IsNullOrEmpty(_suffix))
+        {
+            _sb.Append(_suffix);
+        }
+        return this;
+    }
+
+    /// <summary>
+    /// 追加字符到拼接器中
+    /// </summary>
+    /// <param name="c">字符</param>
+    /// <returns>this</returns>
+    public StrJoiner Append(char c) => Append(c.ToString());
+
+    /// <summary>
+    /// 合并一个StrJoiner到当前的StrJoiner
+    /// </summary>
+    /// <param name="strJoiner">其他的StrJoiner</param>
+    /// <returns>this</returns>
+    public StrJoiner Merge(StrJoiner strJoiner)
+    {
+        if (strJoiner != null && strJoiner._sb != null)
+        {
+            var otherStr = strJoiner.ToString();
+            if (strJoiner._wrapElement)
+            {
+                Append(otherStr);
             }
             else
             {
+                Append(otherStr);
+            }
+        }
+        return this;
+    }
+
+    /// <summary>
+    /// 长度
+    /// </summary>
+    /// <returns>长度</returns>
+    public int Length()
+    {
+        return _sb != null ? _sb.Length : 0;
+    }
+
+    /// <summary>
+    /// 转为字符串
+    /// </summary>
+    /// <returns>字符串</returns>
+    public override string ToString()
+    {
+        if (_sb == null)
+        {
+            return _emptyResult;
+        }
+
+        string result = _sb.ToString();
+        if (!_wrapElement && !string.IsNullOrEmpty(_suffix))
+        {
+            result += _suffix;
+        }
+        return result;
+    }
+
+    private void Prepare()
+    {
+        if (_hasContent)
+        {
+            if (_delimiter != null)
+            {
+                _sb!.Append(_delimiter);
+            }
+        }
+        else
+        {
+            _sb ??= new StringBuilder();
+            if (!_wrapElement && !string.IsNullOrEmpty(_prefix))
+            {
                 _sb.Append(_prefix);
-                _first = false;
             }
-            _sb.Append(element?.ToString() ?? "");
-            return this;
+            _hasContent = true;
         }
+    }
 
+    /// <summary>
+    /// null处理的模式
+    /// </summary>
+    public enum NullMode
+    {
         /// <summary>
-        /// 添加多个元素
+        /// 忽略null，即null元素不加入拼接的字符串
         /// </summary>
-        /// <param name="elements">元素集合</param>
-        /// <returns>this</returns>
-        public StrJoiner Add(params object[] elements)
-        {
-            foreach (var element in elements)
-            {
-                Add(element);
-            }
-            return this;
-        }
-
+        IGNORE,
         /// <summary>
-        /// 添加多个元素
+        /// null转为""
         /// </summary>
-        /// <param name="elements">元素集合</param>
-        /// <returns>this</returns>
-        public StrJoiner Add(IEnumerable<object> elements)
-        {
-            foreach (var element in elements)
-            {
-                Add(element);
-            }
-            return this;
-        }
-
+        TO_EMPTY,
         /// <summary>
-        /// 获取字符串表示
+        /// null转为null字符串
         /// </summary>
-        public override string ToString()
-        {
-            if (_first)
-            {
-                // 没有添加任何元素
-                if (_prefix.Length > 0 || _suffix.Length > 0)
-                {
-                    return _prefix + _suffix;
-                }
-                return "";
-            }
-            return _sb.Append(_suffix).ToString();
-        }
-
-        /// <summary>
-        /// 获取长度
-        /// </summary>
-        public int Length => ToString().Length;
-
-        /// <summary>
-        /// 清空
-        /// </summary>
-        public void Clear()
-        {
-            _sb.Clear();
-            _first = true;
-        }
-
-        /// <summary>
-        /// 连接数组元素
-        /// </summary>
-        public static string Join(string delimiter, params object[] elements)
-        {
-            var joiner = new StrJoiner(delimiter);
-            return joiner.Add(elements).ToString();
-        }
-
-        /// <summary>
-        /// 连接集合元素
-        /// </summary>
-        public static string Join(string delimiter, IEnumerable<object> elements)
-        {
-            var joiner = new StrJoiner(delimiter);
-            return joiner.Add(elements).ToString();
-        }
-
-        /// <summary>
-        /// 连接数组元素，带前缀后缀
-        /// </summary>
-        public static string Join(string delimiter, string prefix, string suffix, params object[] elements)
-        {
-            var joiner = new StrJoiner(delimiter, prefix, suffix);
-            return joiner.Add(elements).ToString();
-        }
+        NULL_STRING
     }
 }

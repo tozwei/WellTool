@@ -1,104 +1,96 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
+namespace WellTool.Core.Lang;
 
-namespace WellTool.Core.Lang
+/// <summary>
+/// 一致性哈希算法实现
+/// </summary>
+/// <typeparam name="T">节点类型</typeparam>
+public class ConsistentHash<T>
 {
+    private readonly System.Collections.Generic.SortedDictionary<int, T> _circle = new System.Collections.Generic.SortedDictionary<int, T>();
+    private readonly int _virtualNodes;
+    private readonly System.Func<T, string> _keyExtractor;
+
     /// <summary>
-    /// 一致性哈希
+    /// 构造
     /// </summary>
-    /// <typeparam name="T">节点类型</typeparam>
-    public class ConsistentHash<T>
+    /// <param name="keyExtractor">节点键提取器</param>
+    /// <param name="virtualNodes">虚拟节点数量</param>
+    public ConsistentHash(System.Func<T, string> keyExtractor, int virtualNodes = 100)
     {
-        private readonly SortedDictionary<long, T> _hashRing = new SortedDictionary<long, T>();
-        private readonly int _virtualNodes;
-        private readonly Func<string, long> _hashFunction;
+        _keyExtractor = keyExtractor ?? throw new System.ArgumentNullException(nameof(keyExtractor));
+        _virtualNodes = virtualNodes;
+    }
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="virtualNodes">虚拟节点数</param>
-        public ConsistentHash(int virtualNodes = 100)
-            : this(virtualNodes, DefaultHashFunction)
+    /// <summary>
+    /// 添加节点
+    /// </summary>
+    public void Add(T node)
+    {
+        string key = _keyExtractor(node);
+        for (int i = 0; i < _virtualNodes; i++)
         {
+            int hash = GetHash(key + "#" + i);
+            _circle[hash] = node;
+        }
+    }
+
+    /// <summary>
+    /// 移除节点
+    /// </summary>
+    public void Remove(T node)
+    {
+        string key = _keyExtractor(node);
+        for (int i = 0; i < _virtualNodes; i++)
+        {
+            int hash = GetHash(key + "#" + i);
+            _circle.Remove(hash);
+        }
+    }
+
+    /// <summary>
+    /// 获取键对应的节点
+    /// </summary>
+    public T? Get(string key)
+    {
+        if (_circle.Count == 0)
+        {
+            return default;
         }
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="virtualNodes">虚拟节点数</param>
-        /// <param name="hashFunction">哈希函数</param>
-        public ConsistentHash(int virtualNodes, Func<string, long> hashFunction)
-        {
-            _virtualNodes = virtualNodes;
-            _hashFunction = hashFunction;
-        }
+        int hash = GetHash(key);
+        int first = FirstNode(hash);
+        return _circle.TryGetValue(first, out var node) ? node : default;
+    }
 
-        /// <summary>
-        /// 添加节点
-        /// </summary>
-        /// <param name="node">节点</param>
-        public void Add(T node)
+    private int FirstNode(int hash)
+    {
+        // 顺时针找到第一个节点
+        foreach (var kvp in _circle)
         {
-            for (int i = 0; i < _virtualNodes; i++)
+            if (kvp.Key >= hash)
             {
-                var key = _hashFunction($"{node.ToString()}_{i}");
-                _hashRing[key] = node;
+                return kvp.Key;
             }
         }
 
-        /// <summary>
-        /// 移除节点
-        /// </summary>
-        /// <param name="node">节点</param>
-        public void Remove(T node)
+        // 回到第一个节点
+        foreach (var kvp in _circle)
         {
-            for (int i = 0; i < _virtualNodes; i++)
-            {
-                var key = _hashFunction($"{node.ToString()}_{i}");
-                _hashRing.Remove(key);
-            }
+            return kvp.Key;
         }
 
-        /// <summary>
-        /// 获取对应键的节点
-        /// </summary>
-        /// <param name="key">键</param>
-        /// <returns>节点</returns>
-        public T Get(string key)
+        return 0;
+    }
+
+    private static int GetHash(string key)
+    {
+        // 使用 FNV-1a 算法
+        int hash = 2166136261;
+        foreach (char c in key)
         {
-            if (_hashRing.Count == 0)
-            {
-                throw new InvalidOperationException("No nodes added to consistent hash");
-            }
-
-            var hash = _hashFunction(key);
-            var keys = _hashRing.Keys;
-
-            foreach (var ringKey in keys)
-            {
-                if (ringKey >= hash)
-                {
-                    return _hashRing[ringKey];
-                }
-            }
-
-            // 如果没有找到比当前哈希值大的节点，返回第一个节点
-            return _hashRing[keys.First()];
+            hash ^= c;
+            hash *= 16777619;
         }
-
-        /// <summary>
-        /// 默认哈希函数
-        /// </summary>
-        /// <param name="input">输入字符串</param>
-        /// <returns>哈希值</returns>
-        private static long DefaultHashFunction(string input)
-        {
-            using var md5 = MD5.Create();
-            var bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
-            return BitConverter.ToInt64(bytes, 0);
-        }
+        return hash;
     }
 }

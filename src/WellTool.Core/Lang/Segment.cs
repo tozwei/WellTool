@@ -1,112 +1,45 @@
+namespace WellTool.Core.Lang;
+
 using System;
 
-namespace WellTool.Core.Lang
+/// <summary>
+/// 片段接口，表示一个区间或范围
+/// </summary>
+public interface Segment
 {
     /// <summary>
-    /// 分段接口
+    /// 获取起始位置
     /// </summary>
-    public interface ISegment<T>
-    {
-        /// <summary>
-        /// 起始位置
-        /// </summary>
-        int Start { get; }
-
-        /// <summary>
-        /// 结束位置
-        /// </summary>
-        int End { get; }
-
-        /// <summary>
-        /// 值
-        /// </summary>
-        T Value { get; }
-    }
+    object? StartIndex { get; }
 
     /// <summary>
-    /// 分段
+    /// 获取结束位置
     /// </summary>
-    public class Segment<T> : ISegment<T>
-    {
-        /// <summary>
-        /// 起始位置
-        /// </summary>
-        public int Start { get; }
+    object? EndIndex { get; }
+}
 
-        /// <summary>
-        /// 结束位置
-        /// </summary>
-        public int End { get; }
-
-        /// <summary>
-        /// 值
-        /// </summary>
-        public T Value { get; }
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public Segment(int start, int end, T value)
-        {
-            if (start > end)
-            {
-                throw new ArgumentException("Start cannot be greater than End");
-            }
-            Start = start;
-            End = end;
-            Value = value;
-        }
-
-        /// <summary>
-        /// 长度
-        /// </summary>
-        public int Length => End - Start + 1;
-
-        /// <summary>
-        /// 检查位置是否在分段内
-        /// </summary>
-        public bool Contains(int index)
-        {
-            return index >= Start && index <= End;
-        }
-
-        /// <summary>
-        /// 检查是否与另一个分段重叠
-        /// </summary>
-        public bool Overlaps(Segment<T> other)
-        {
-            return Start <= other.End && End >= other.Start;
-        }
-    }
-
+/// <summary>
+/// Int 类型的片段
+/// </summary>
+public class IntSegment : DefaultSegment<int>
+{
     /// <summary>
-    /// 默认分段
+    /// 构造
     /// </summary>
-    public class DefaultSegment : ISegment<string>
+    public IntSegment(int startIndex, int endIndex) : base(startIndex, endIndex)
     {
-        public int Start { get; }
-        public int End { get; }
-        public string Value { get; }
+    }
+}
 
-        public DefaultSegment(int start, int end)
-        {
-            Start = start;
-            End = end;
-            Value = null;
-        }
-
-        public DefaultSegment(int start, int end, string value)
-        {
-            Start = start;
-            End = end;
-            Value = value;
-        }
-
-        public int Length => End - Start + 1;
-
-        public bool Contains(int index)
-        {
-            return index >= Start && index <= End;
-        }
+/// <summary>
+/// Long 类型的片段
+/// </summary>
+public class LongSegment : DefaultSegment<long>
+{
+    /// <summary>
+    /// 构造
+    /// </summary>
+    public LongSegment(long startIndex, long endIndex) : base(startIndex, endIndex)
+    {
     }
 }

@@ -1,5 +1,6 @@
 using WellTool.Setting;
 using Xunit;
+using System.IO;
 
 namespace WellTool.Setting.Tests;
 
@@ -130,4 +131,153 @@ public class SettingTest
         setting.Remove("key1", "Group1");
         Assert.False(setting.ContainsKey("key1", "Group1"));
     }
+
+    /// <summary>
+    /// 测试 GetStrNotEmpty 方法
+    /// </summary>
+    [Fact]
+    public void GetStrNotEmptyTest()
+    {
+        var setting = new Setting();
+
+        // 测试空值情况
+        var emptyValue = setting.GetStrNotEmpty("keyNotExist", "group", "defaultValue");
+        Assert.Equal("defaultValue", emptyValue);
+
+        // 测试非空值情况
+        setting.Put("keyExist", "valueExist", "group");
+        var existValue = setting.GetStrNotEmpty("keyExist", "group", "defaultValue");
+        Assert.Equal("valueExist", existValue);
+    }
+
+    /// <summary>
+    /// 测试不同分隔符的数组获取
+    /// </summary>
+    [Fact]
+    public void GetStringsWithCustomSeparatorTest()
+    {
+        var setting = new Setting();
+
+        // 使用分号作为分隔符
+        setting.Put("items", "item1;item2;item3");
+
+        var items = setting.GetStrings("items", null, ";");
+        Assert.Equal(3, items.Length);
+        Assert.Contains("item1", items);
+        Assert.Contains("item2", items);
+        Assert.Contains("item3", items);
+    }
+
+    /// <summary>
+    /// 测试 GetStringsWithDefault 方法
+    /// </summary>
+    [Fact]
+    public void GetStringsWithDefaultTest()
+    {
+        var setting = new Setting();
+
+        // 测试默认值
+        var defaultItems = new string[] { "default1", "default2" };
+        var items = setting.GetStringsWithDefault("keyNotExist", defaultItems);
+        Assert.Equal(defaultItems, items);
+
+        // 测试非默认值
+        setting.Put("items", "item1,item2");
+        items = setting.GetStringsWithDefault("items", defaultItems);
+        Assert.Equal(2, items.Length);
+        Assert.Contains("item1", items);
+        Assert.Contains("item2", items);
+    }
+
+    /// <summary>
+    /// 测试 Clear 方法
+    /// </summary>
+    [Fact]
+    public void ClearTest()
+    {
+        var setting = new Setting();
+
+        // 添加一些配置
+        setting.Put("key1", "value1");
+        setting.Put("key2", "value2", "group");
+
+        // 验证配置存在
+        Assert.True(setting.ContainsKey("key1"));
+        Assert.True(setting.ContainsKey("key2", "group"));
+
+        // 清空配置
+        setting.Clear();
+
+        // 验证配置已清空
+        Assert.False(setting.ContainsKey("key1"));
+        Assert.False(setting.ContainsKey("key2", "group"));
+    }
+
+    /// <summary>
+    /// 测试异常处理 - 文件不存在
+    /// </summary>
+    [Fact]
+    public void FileNotFoundTest()
+    {
+        Assert.Throws<FileNotFoundException>(() => new Setting("non_existent_file.setting"));
+    }
+
+    /// <summary>
+    /// 测试 Dispose 方法
+    /// </summary>
+    [Fact]
+    public void DisposeTest()
+    {
+        var setting = new Setting();
+        setting.Put("key", "value");
+        
+        // 验证配置存在
+        Assert.True(setting.ContainsKey("key"));
+        
+        // 释放资源
+        setting.Dispose();
+        
+        // 验证仍然可以访问（Dispose 应该是安全的）
+        Assert.False(setting.ContainsKey("key"));
+    }
+
+    /// <summary>
+    /// 测试分组内变量替换
+    /// </summary>
+    [Fact]
+    public void GroupVariableReplacementTest()
+    {
+        var setting = new Setting().SetUseVariable(true);
+
+        // 在同一分组内设置变量
+        setting.Put("db.url", "jdbc:mysql://localhost:3306", "database");
+        setting.Put("db.username", "root", "database");
+        setting.Put("db.password", "password", "database");
+        setting.Put("db.connection", "${db.url}/${db.username}/${db.password}", "database");
+
+        // 测试分组内变量替换
+        var connection = setting.GetStr("db.connection", "database");
+        Assert.Equal("jdbc:mysql://localhost:3306/root/password", connection);
+    }
+
+    /// <summary>
+    /// 测试跨分组变量替换
+    /// </summary>
+    [Fact]
+    public void CrossGroupVariableReplacementTest()
+    {
+        var setting = new Setting().SetUseVariable(true);
+
+        // 在默认分组设置变量
+        setting.Put("global.base_url", "https://example.com");
+        
+        // 在其他分组使用默认分组的变量
+        setting.Put("api.url", "${global.base_url}/api", "api");
+        setting.Put("auth.url", "${global.base_url}/auth", "auth");
+
+        // 测试跨分组变量替换
+        Assert.Equal("https://example.com/api", setting.GetStr("api.url", "api"));
+        Assert.Equal("https://example.com/auth", setting.GetStr("auth.url", "auth"));
+    }
 }
+

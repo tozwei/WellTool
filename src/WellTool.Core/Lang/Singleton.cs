@@ -1,74 +1,62 @@
-using System;
-using System.Collections.Generic;
-using System.Reflection;
+namespace WellTool.Core.Lang;
 
-namespace WellTool.Core.Lang
+/// <summary>
+/// 单例模式工具类
+/// </summary>
+public class Singleton
 {
-    public static class Singleton
+    /// <summary>
+    /// 获取指定类型的单例实例
+    /// </summary>
+    public static T GetInstance<T>() where T : class, new()
     {
-        private static readonly Dictionary<Type, object> instances = new Dictionary<Type, object>();
-        private static readonly object lockObj = new object();
+        return Nested<T>.Instance;
+    }
 
-        public static T Get<T>() where T : class
+    /// <summary>
+    /// 获取指定类型的单例实例，支持工厂方法
+    /// </summary>
+    public static T GetInstance<T>(System.Func<T> factory) where T : class
+    {
+        return Nested<T>.GetInstance(factory);
+    }
+
+    private static class Nested<T> where T : class, new()
+    {
+        internal static readonly T Instance = new T();
+        private static T? _customInstance;
+        private static readonly object Lock = new object();
+
+        internal static T GetInstance(System.Func<T> factory)
         {
-            var type = typeof(T);
-            if (!instances.TryGetValue(type, out var instance))
+            if (_customInstance == null)
             {
-                lock (lockObj)
+                lock (Lock)
                 {
-                    if (!instances.TryGetValue(type, out instance))
+                    if (_customInstance == null)
                     {
-                        instance = CreateInstance<T>();
-                        instances[type] = instance;
+                        _customInstance = factory();
                     }
                 }
             }
-            return (T)instance;
+            return _customInstance;
         }
+    }
+}
 
-        public static T Get<T>(Func<T> creator) where T : class
-        {
-            var type = typeof(T);
-            if (!instances.TryGetValue(type, out var instance))
-            {
-                lock (lockObj)
-                {
-                    if (!instances.TryGetValue(type, out instance))
-                    {
-                        instance = creator();
-                        instances[type] = instance;
-                    }
-                }
-            }
-            return (T)instance;
-        }
+/// <summary>
+/// 单例类基类
+/// </summary>
+/// <typeparam name="T">单例类型</typeparam>
+public abstract class SingletonClass<T> where T : class, new()
+{
+    /// <summary>
+    /// 获取实例
+    /// </summary>
+    public static T Instance => Nested.Instance;
 
-        public static void Remove<T>() where T : class
-        {
-            var type = typeof(T);
-            lock (lockObj)
-            {
-                instances.Remove(type);
-            }
-        }
-
-        public static void Clear()
-        {
-            lock (lockObj)
-            {
-                instances.Clear();
-            }
-        }
-
-        private static T CreateInstance<T>() where T : class
-        {
-            var type = typeof(T);
-            var constructor = type.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
-            if (constructor == null)
-            {
-                throw new InvalidOperationException($"Type {type.Name} does not have a private parameterless constructor");
-            }
-            return (T)constructor.Invoke(null);
-        }
+    private static class Nested
+    {
+        internal static readonly T Instance = new T();
     }
 }
