@@ -7,7 +7,6 @@ using System.Text;
 using WellTool.Core.lang;
 using WellTool.Core.util;
 
-/*
 /// <summary>
 /// 类型转换器
 /// </summary>
@@ -371,6 +370,28 @@ public class Convert
 	{
 		return BasicType.Unwrap(clazz);
 	}
+
+	/// <summary>
+	/// 转换为指定类型
+	/// </summary>
+	/// <typeparam name="T">目标类型</typeparam>
+	/// <param name="value">被转换的值</param>
+	/// <returns>转换后的值</returns>
+	public static T To<T>(object value)
+	{
+		return (T)System.Convert.ChangeType(value, typeof(T));
+	}
+
+	/// <summary>
+	/// 转换为指定类型
+	/// </summary>
+	/// <typeparam name="T">目标类型</typeparam>
+	/// <param name="value">被转换的值</param>
+	/// <returns>转换后的值</returns>
+	public static T Convert<T>(object value)
+	{
+		return To<T>(value);
+	}
 }
 
 /// <summary>
@@ -400,4 +421,3 @@ public static class TimeUnitExtensions
 		}
 	}
 }
-*/

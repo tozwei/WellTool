@@ -56,18 +56,18 @@ namespace WellTool.Core.Img
         // See https://en.wikipedia.org/wiki/Color_difference#CIE94
         public double GetDistance(LabColor other)
         {
-            double c1 = Math.Sqrt(_a * _a + _b * _b);
-            double deltaC = c1 - Math.Sqrt(other._a * other._a + other._b * other._b);
+            double c1 = System.Math.Sqrt(_a * _a + _b * _b);
+            double deltaC = c1 - System.Math.Sqrt(other._a * other._a + other._b * other._b);
             double deltaA = _a - other._a;
             double deltaB = _b - other._b;
-            double deltaH = Math.Sqrt(Math.Max(0.0, deltaA * deltaA + deltaB * deltaB - deltaC * deltaC));
-            return Math.Sqrt(Math.Max(0.0, Math.Pow((_l - other._l), 2)
-                    + Math.Pow(deltaC / (1 + 0.045 * c1), 2) + Math.Pow(deltaH / (1 + 0.015 * c1), 2.0)));
+            double deltaH = System.Math.Sqrt(System.Math.Max(0.0, deltaA * deltaA + deltaB * deltaB - deltaC * deltaC));
+            return System.Math.Sqrt(System.Math.Max(0.0, System.Math.Pow((_l - other._l), 2)
+                    + System.Math.Pow(deltaC / (1 + 0.045 * c1), 2) + System.Math.Pow(deltaH / (1 + 0.015 * c1), 2.0)));
         }
 
         private static double F(double t)
         {
-            return (t > (216.0 / 24389.0)) ? Math.Cbrt(t) : (1.0 / 3.0) * Math.Pow(29.0 / 6.0, 2) * t + (4.0 / 29.0);
+            return (t > (216.0 / 24389.0)) ? System.Math.Cbrt(t) : (1.0 / 3.0) * System.Math.Pow(29.0 / 6.0, 2) * t + (4.0 / 29.0);
         }
     }
 }

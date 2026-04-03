@@ -141,7 +141,7 @@ namespace WellTool.Core.Util
         /// <returns>整数值</returns>
         public static int GetIntValue<T>(T enumValue) where T : Enum
         {
-            return Convert.ToInt32(enumValue);
+            return System.Convert.ToInt32(enumValue);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace WellTool.Core.Util
         /// <returns>长整数值</returns>
         public static long GetLongValue<T>(T enumValue) where T : Enum
         {
-            return Convert.ToInt64(enumValue);
+            return System.Convert.ToInt64(enumValue);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace WellTool.Core.Lang.Func
         /// <summary>
         /// 组合函数
         /// </summary>
-        public static Func<T1, R> Compose<T1, T2, R>(this Func1<T2, R> func, Func<T1, T2> before)
+        public static System.Func<T1, R> Compose<T1, T2, R>(this Func1<T2, R> func, System.Func<T1, T2> before)
         {
             return arg => func(before(arg));
         }
@@ -24,7 +24,7 @@ namespace WellTool.Core.Lang.Func
         /// <summary>
         /// 先执行
         /// </summary>
-        public static Action<T1> Before<T1, T2>(this Action<T2> action, Func<T1, T2> before)
+        public static System.Action<T1> Before<T1, T2>(this System.Action<T2> action, System.Func<T1, T2> before)
         {
             return arg => action(before(arg));
         }
@@ -32,7 +32,7 @@ namespace WellTool.Core.Lang.Func
         /// <summary>
         /// 链式执行
         /// </summary>
-        public static Action<T1> AndThen<T1>(this Action<T1> first, Action<T1> second)
+        public static System.Action<T1> AndThen<T1>(this System.Action<T1> first, System.Action<T1> second)
         {
             return arg =>
             {
@@ -44,7 +44,7 @@ namespace WellTool.Core.Lang.Func
         /// <summary>
         /// 链式执行
         /// </summary>
-        public static Func<T1, R> AndThen<T1, T2, R>(this Func<T1, T2> first, Func<T2, R> second)
+        public static System.Func<T1, R> AndThen<T1, T2, R>(this System.Func<T1, T2> first, System.Func<T2, R> second)
         {
             return arg => second(first(arg));
         }

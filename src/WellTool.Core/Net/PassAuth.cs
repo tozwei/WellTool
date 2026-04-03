@@ -47,7 +47,7 @@ namespace WellTool.Core.Net
 
             try
             {
-                var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(base64Auth));
+                var decoded = Encoding.UTF8.GetString(System.Convert.FromBase64String(base64Auth));
                 var parts = decoded.Split(':');
                 if (parts.Length >= 2)
                 {

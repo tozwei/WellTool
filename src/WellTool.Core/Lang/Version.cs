@@ -230,7 +230,7 @@ public class Version : IComparable<Version>
 	/// </summary>
 	private static int CompareTokens(List<object> ts1, List<object> ts2)
 	{
-		int n = Math.Min(ts1.Count, ts2.Count);
+		int n = System.Math.Min(ts1.Count, ts2.Count);
 		for (int i = 0; i < n; i++)
 		{
 			object o1 = ts1[i];

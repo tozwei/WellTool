@@ -21,19 +21,19 @@ public interface IObjectGenerator<T>
 /// <typeparam name="T">生成对象类型</typeparam>
 public class ObjectGenerator<T> : IObjectGenerator<T>
 {
-	private readonly Func<T> _generator;
+	private readonly System.Func<T> _generator;
 
-	/// <summary>
-	/// 构造
-	/// </summary>
-	/// <param name="generator">生成函数</param>
-	public ObjectGenerator(Func<T> generator)
-	{
-		_generator = generator ?? throw new ArgumentNullException(nameof(generator));
-	}
+    /// <summary>
+    /// 构造
+    /// </summary>
+    /// <param name="generator">生成函数</param>
+    public ObjectGenerator(System.Func<T> generator)
+    {
+        _generator = generator ?? throw new ArgumentNullException(nameof(generator));
+    }
 
-	/// <inheritdoc />
-	public T Generate() => _generator();
+    /// <inheritdoc />
+    public T Generate() => _generator();
 }
 
 /// <summary>
@@ -42,12 +42,12 @@ public class ObjectGenerator<T> : IObjectGenerator<T>
 public static class ObjectGenerators
 {
 	/// <summary>
-	/// 创建对象生成器
-	/// </summary>
-	/// <typeparam name="T">生成对象类型</typeparam>
-	/// <param name="generator">生成函数</param>
-	/// <returns>生成器</returns>
-	public static IObjectGenerator<T> Create<T>(Func<T> generator) => new ObjectGenerator<T>(generator);
+        /// 创建对象生成器
+        /// </summary>
+        /// <typeparam name="T">生成对象类型</typeparam>
+        /// <param name="generator">生成函数</param>
+        /// <returns>生成器</returns>
+        public static IObjectGenerator<T> Create<T>(System.Func<T> generator) => new ObjectGenerator<T>(generator);
 
 	/// <summary>
 	/// 创建基于类型的生成器

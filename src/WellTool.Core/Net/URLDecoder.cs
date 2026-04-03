@@ -73,7 +73,7 @@ namespace WellTool.Core.Net
             int length = str.Length;
             if (length == 0)
             {
-                return StrUtil.Empty;
+                return string.Empty;
             }
 
             StringBuilder result = new StringBuilder(length / 3);

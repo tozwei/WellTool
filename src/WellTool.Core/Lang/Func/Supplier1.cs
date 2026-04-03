@@ -22,9 +22,9 @@ namespace WellTool.Core.Lang.Func
         /// <param name="supplier">带参数的供应者</param>
         /// <param name="p1">参数1</param>
         /// <returns>无参Func</returns>
-        public static Func<T> ToSupplier<T, P1>(this Supplier1<T, P1> supplier, P1 p1)
-        {
-            return () => supplier(p1);
-        }
+		public static System.Func<T> ToSupplier<T, P1>(this Supplier1<T, P1> supplier, P1 p1)
+		{
+			return () => supplier(p1);
+		}
     }
 }

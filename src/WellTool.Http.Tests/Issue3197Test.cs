@@ -1,3 +1,5 @@
+using Xunit;
+
 namespace WellTool.Http.Tests;
 
 public class Issue3197Test

@@ -30,12 +30,12 @@ namespace WellTool.Core.Lang.Func
     /// <typeparam name="T">值类型</typeparam>
     public class Supplier<T> : ISupplier<T>
     {
-        private readonly Func<T> _func;
+        private readonly System.Func<T> _func;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        public Supplier(Func<T> func)
+        public Supplier(System.Func<T> func)
         {
             _func = func ?? throw new ArgumentNullException(nameof(func));
         }
@@ -51,7 +51,7 @@ namespace WellTool.Core.Lang.Func
         /// <summary>
         /// 转换
         /// </summary>
-        public R Map<R>(Func<T, R> mapper)
+        public R Map<R>(System.Func<T, R> mapper)
         {
             return mapper(_func());
         }
@@ -65,7 +65,7 @@ namespace WellTool.Core.Lang.Func
         /// <summary>
         /// 创建提供者
         /// </summary>
-        public static Supplier<T> ToSupplier<T>(this Func<T> func)
+        public static Supplier<T> ToSupplier<T>(this System.Func<T> func)
         {
             return new Supplier<T>(func);
         }
@@ -81,7 +81,7 @@ namespace WellTool.Core.Lang.Func
         /// <summary>
         /// 获取值，如果为null则使用工厂方法
         /// </summary>
-        public static T GetOrDefault<T>(this Supplier<T> supplier, Func<T> factory)
+        public static T GetOrDefault<T>(this Supplier<T> supplier, System.Func<T> factory)
         {
             return supplier?.Get() ?? factory();
         }

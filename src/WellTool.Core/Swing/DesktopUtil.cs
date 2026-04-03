@@ -36,7 +36,7 @@ namespace WellTool.Core.Swing
                     UseShellExecute = true
                 });
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new WellToolException(e);
             }
