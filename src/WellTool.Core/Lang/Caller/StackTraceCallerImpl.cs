@@ -8,7 +8,17 @@ namespace WellTool.Core.Lang.Caller;
 public class StackTraceCallerImpl : Caller
 {
 	/// <inheritdoc />
-	public override Type GetCaller(int depth)
+	public override System.Type GetCaller()
+	{
+		return GetCaller(0);
+	}
+
+	/// <summary>
+	/// 获取指定深度的调用者的类
+	/// </summary>
+	/// <param name="depth">深度</param>
+	/// <returns>调用者的类</returns>
+	public System.Type GetCaller(int depth)
 	{
 		var frames = new StackTrace(true).GetFrames();
 		if (frames == null || frames.Length < depth + 3) // +3 because of the additional stack frames

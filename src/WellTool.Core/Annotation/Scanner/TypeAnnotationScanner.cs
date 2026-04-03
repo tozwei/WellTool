@@ -73,7 +73,7 @@ namespace WellTool.Core.Annotation.Scanner
         /// <param name="consumer">对获取到的注解和注解对应的层级索引的处理</param>
         /// <param name="annotatedEle">可注解元素，可以是Type、Method、Field、Constructor等</param>
         /// <param name="filter">注解过滤器，无法通过过滤器的注解不会被处理。该参数允许为空。</param>
-        public void ScanIfSupport(Action<int, Attribute> consumer, object annotatedEle, Func<Attribute, bool> filter)
+        public void ScanIfSupport(Action<int, Attribute> consumer, object annotatedEle, System.Func<Attribute, bool> filter)
         {
             if (Support(annotatedEle))
             {
