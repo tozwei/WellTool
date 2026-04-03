@@ -3,55 +3,55 @@ namespace WellTool.Core.Lang;
 /// <summary>
 /// 匹配器接口
 /// </summary>
-/// <typeparam name="T">要匹配的对象类型</typeparam>
-public interface Matcher<T>
+/// <typeparam name="T">匹配对象类型</typeparam>
+public interface IMatcher<T>
 {
-    /// <summary>
-    /// 判断对象是否匹配
-    /// </summary>
-    bool Match(T t);
+	/// <summary>
+	/// 匹配方法
+	/// </summary>
+	/// <param name="t">待匹配对象</param>
+	/// <returns>是否匹配</returns>
+	bool Match(T t);
 }
 
 /// <summary>
-/// 匹配器接口（带索引）
+/// 匹配器抽象类
 /// </summary>
-/// <typeparam name="T">要匹配的对象类型</typeparam>
-public interface IndexedMatcher<T>
+/// <typeparam name="T">匹配对象类型</typeparam>
+public abstract class Matcher<T> : IMatcher<T>
 {
-    /// <summary>
-    /// 判断对象是否匹配
-    /// </summary>
-    bool Match(T t, int index);
+	/// <summary>
+	/// 匹配方法
+	/// </summary>
+	/// <param name="t">待匹配对象</param>
+	/// <returns>是否匹配</returns>
+	public abstract bool Match(T t);
 }
 
 /// <summary>
-/// 匹配器辅助类
+/// Lambda匹配器
 /// </summary>
-public static class MatcherUtil
+/// <typeparam name="T">匹配对象类型</typeparam>
+public class LambdaMatcher<T> : Matcher<T>
 {
-    /// <summary>
-    /// 创建匹配器
-    /// </summary>
-    public static Matcher<T> Of<T>(System.Func<T, bool> predicate)
-    {
-        return new PredicateMatcher<T>(predicate);
-    }
-}
+	private readonly System.Func<T, bool> _matcher;
 
-/// <summary>
-/// 基于委托的匹配器
-/// </summary>
-public class PredicateMatcher<T> : Matcher<T>
-{
-    private readonly System.Func<T, bool> _predicate;
+	/// <summary>
+	/// 构造
+	/// </summary>
+	/// <param name="matcher">匹配函数</param>
+	public LambdaMatcher(System.Func<T, bool> matcher)
+	{
+		_matcher = matcher;
+	}
 
-    public PredicateMatcher(System.Func<T, bool> predicate)
-    {
-        _predicate = predicate ?? throw new System.ArgumentNullException(nameof(predicate));
-    }
-
-    public bool Match(T t)
-    {
-        return _predicate(t);
-    }
+	/// <summary>
+	/// 匹配方法
+	/// </summary>
+	/// <param name="t">待匹配对象</param>
+	/// <returns>是否匹配</returns>
+	public override bool Match(T t)
+	{
+		return _matcher?.Invoke(t) ?? false;
+	}
 }

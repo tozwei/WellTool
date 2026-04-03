@@ -1,159 +1,67 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
-namespace WellTool.Core.Map
+namespace WellTool.Core.Map;
+
+/// <summary>
+/// Map包装类，通过包装一个已有Map实现特定功能
+/// </summary>
+/// <typeparam name="K">键类型</typeparam>
+/// <typeparam name="V">值类型</typeparam>
+public class MapWrapper<K, V> : IDictionary<K, V>, IEnumerable<KeyValuePair<K, V>>, ISerializable
 {
-	/// <summary>
-	/// Map包装类，通过包装一个已有Map实现特定功能。例如自定义Key的规则或Value规则
-	/// </summary>
-	/// <typeparam name="K">键类型</typeparam>
-	/// <typeparam name="V">值类型</typeparam>
-	public class MapWrapper<K, V> : IDictionary<K, V>, IEnumerable<KeyValuePair<K, V>>, ICloneable
-	{
-		/// <summary>
-		/// 默认增长因子
-		/// </summary>
-		protected static readonly float DEFAULT_LOAD_FACTOR = 0.75f;
-		/// <summary>
-		/// 默认初始大小
-		/// </summary>
-		protected static readonly int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
+    protected IDictionary<K, V> _raw;
 
-		private IDictionary<K, V> raw;
+    /// <summary>
+    /// 构造
+    /// </summary>
+    /// <param name="raw">被包装的Map</param>
+    public MapWrapper(IDictionary<K, V> raw)
+    {
+        _raw = raw;
+    }
 
-		/// <summary>
-		/// 构造
-		/// </summary>
-		/// <param name="raw">被包装的Map</param>
-		public MapWrapper(IDictionary<K, V> raw)
-		{
-			this.raw = raw;
-		}
+    /// <summary>
+    /// 获取原始的Map
+    /// </summary>
+    public IDictionary<K, V> Raw => _raw;
 
-		/// <summary>
-		/// 获取原始的Map
-		/// </summary>
-		/// <returns>Map</returns>
-		public IDictionary<K, V> GetRaw()
-		{
-			return this.raw;
-		}
+    public int Count => _raw.Count;
+    public bool IsReadOnly => _raw.IsReadOnly;
 
-		public int Count => raw.Count;
+    public V this[K key] { get => _raw[key]; set => _raw[key] = value; }
+    public ICollection<K> Keys => _raw.Keys;
+    public ICollection<V> Values => _raw.Values;
 
-		public bool IsReadOnly => raw.IsReadOnly;
+    public void Add(K key, V value) => _raw.Add(key, value);
+    public void Add(KeyValuePair<K, V> item) => _raw.Add(item);
+    public void Clear() => _raw.Clear();
+    public bool Contains(KeyValuePair<K, V> item) => _raw.Contains(item);
+    public bool ContainsKey(K key) => _raw.ContainsKey(key);
+    public void CopyTo(KeyValuePair<K, V>[] array, int arrayIndex) => _raw.CopyTo(array, arrayIndex);
+    public IEnumerator<KeyValuePair<K, V>> GetEnumerator() => _raw.GetEnumerator();
+    public bool Remove(K key) => _raw.Remove(key);
+    public bool Remove(KeyValuePair<K, V> item) => _raw.Remove(item);
+    public bool TryGetValue(K key, out V value) => _raw.TryGetValue(key, out value!);
 
-		public ICollection<K> Keys => raw.Keys;
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-		public ICollection<V> Values => raw.Values;
+    public override bool Equals(object? obj)
+    {
+        if (obj is MapWrapper<K, V> other)
+        {
+            return Equals(_raw, other._raw);
+        }
+        return false;
+    }
 
-		public V this[K key]
-		{
-			get => raw[key];
-			set => raw[key] = value;
-		}
+    public override int GetHashCode() => _raw.GetHashCode();
+    public override string ToString() => _raw.ToString() ?? "";
 
-		public void Add(K key, V value)
-		{
-			raw.Add(key, value);
-		}
-
-		public void Add(KeyValuePair<K, V> item)
-		{
-			raw.Add(item);
-		}
-
-		public void Clear()
-		{
-			raw.Clear();
-		}
-
-		public bool Contains(KeyValuePair<K, V> item)
-		{
-			return raw.Contains(item);
-		}
-
-		public bool ContainsKey(K key)
-		{
-			return raw.ContainsKey(key);
-		}
-
-		public void CopyTo(KeyValuePair<K, V>[] array, int arrayIndex)
-		{
-			raw.CopyTo(array, arrayIndex);
-		}
-
-		public IEnumerator<KeyValuePair<K, V>> GetEnumerator()
-		{
-			return raw.GetEnumerator();
-		}
-
-		public bool Remove(K key)
-		{
-			return raw.Remove(key);
-		}
-
-		public bool Remove(KeyValuePair<K, V> item)
-		{
-			return raw.Remove(item);
-		}
-
-		public bool TryGetValue(K key, out V value)
-		{
-			return raw.TryGetValue(key, out value);
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return raw.GetEnumerator();
-		}
-
-		public override bool Equals(object obj)
-		{
-			if (this == obj)
-			{
-				return true;
-			}
-			if (obj == null || GetType() != obj.GetType())
-			{
-				return false;
-			}
-			MapWrapper<K, V> that = (MapWrapper<K, V>)obj;
-			return raw.SequenceEqual(that.raw);
-		}
-
-		public override int GetHashCode()
-		{
-			return raw.GetHashCode();
-		}
-
-		public override string ToString()
-		{
-			return raw.ToString();
-		}
-
-		public object Clone()
-		{
-			MapWrapper<K, V> clone = new MapWrapper<K, V>(new Dictionary<K, V>(raw));
-			return clone;
-		}
-
-		/// <summary>
-		/// 添加多个键值对
-		/// </summary>
-		/// <param name="items">键值对集合</param>
-		public void AddRange(IDictionary<K, V> items)
-		{
-			if (items != null)
-			{
-				foreach (var item in items)
-				{
-					raw.Add(item);
-				}
-			}
-		}
-	}
+    public void ForEach(Action<K, V> action)
+    {
+        foreach (var kvp in _raw)
+        {
+            action(kvp.Key, kvp.Value);
+        }
+    }
 }

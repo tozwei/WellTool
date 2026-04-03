@@ -1,99 +1,145 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using WellTool.Core.Lang.Mutable;
+using WellTool.Core.Lang.Ref;
+
 namespace WellTool.Core.Lang;
 
 /// <summary>
-/// 简单缓存实现
+/// 简单缓存，无超时实现，默认使用弱引用实现缓存自动清理
 /// </summary>
 /// <typeparam name="K">键类型</typeparam>
 /// <typeparam name="V">值类型</typeparam>
-public class SimpleCache<K, V>
+public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 {
-    private readonly System.Collections.Generic.Dictionary<K, V> _cache = new System.Collections.Generic.Dictionary<K, V>();
-    private readonly object _lock = new object();
+	private readonly Dictionary<Mutable<K>, V> _rawMap;
+	private readonly object _lock = new();
+	private readonly Dictionary<K, object> _keyLockMap = new();
 
-    /// <summary>
-    /// 获取缓存值
-    /// </summary>
-    public V? Get(K key)
-    {
-        lock (_lock)
-        {
-            return _cache.TryGetValue(key, out var value) ? value : default;
-        }
-    }
+	/// <summary>
+	/// 构造，默认使用弱引用实现缓存自动清理
+	/// </summary>
+	public SimpleCache()
+	{
+		_rawMap = new Dictionary<Mutable<K>, V>();
+	}
 
-    /// <summary>
-    /// 获取缓存值，如果不存在则调用工厂方法创建
-    /// </summary>
-    public V GetOrCreate(K key, System.Func<V> factory)
-    {
-        lock (_lock)
-        {
-            if (_cache.TryGetValue(key, out var value))
-            {
-                return value;
-            }
+	/// <summary>
+	/// 从缓存池中查找值
+	/// </summary>
+	/// <param name="key">键</param>
+	/// <returns>值</returns>
+	public V Get(K key)
+	{
+		lock (_lock)
+		{
+			return _rawMap.TryGetValue(MutableObj<K>.Of(key), out var value) ? value : default;
+		}
+	}
 
-            V newValue = factory();
-            _cache[key] = newValue;
-            return newValue;
-        }
-    }
+	/// <summary>
+	/// 从缓存中获得对象，当对象不在缓存中或已经过期返回supplier产生的对象
+	/// </summary>
+	/// <param name="key">键</param>
+	/// <param name="supplier">如果不存在回调方法，用于生产值对象</param>
+	/// <returns>值对象</returns>
+	public V Get(K key, Func0<V> supplier)
+	{
+		return Get(key, null, supplier);
+	}
 
-    /// <summary>
-    /// 设置缓存值
-    /// </summary>
-    public void Put(K key, V value)
-    {
-        lock (_lock)
-        {
-            _cache[key] = value;
-        }
-    }
+	/// <summary>
+	/// 从缓存中获得对象，当对象不在缓存中或已经过期返回supplier产生的对象
+	/// </summary>
+	/// <param name="key">键</param>
+	/// <param name="validPredicate">检查结果对象是否可用</param>
+	/// <param name="supplier">如果不存在回调方法或结果不可用，用于生产值对象</param>
+	/// <returns>值对象</returns>
+	public V Get(K key, Func<bool, V> validPredicate, Func0<V> supplier)
+	{
+		V v = Get(key);
+		if (validPredicate != null && v != null && !validPredicate(v))
+		{
+			v = default;
+		}
+		if (v == null && supplier != null)
+		{
+			object keyLock = _keyLockMap.GetOrAdd(key, _ => new object());
+			lock (keyLock)
+			{
+				// 双重检查
+				v = Get(key);
+				if (v == null || (validPredicate != null && !validPredicate(v)))
+				{
+					try
+					{
+						v = supplier.Call();
+					}
+					catch (Exception e)
+					{
+						throw new Exception("Supplier execution failed", e);
+					}
+					Put(key, v);
+				}
+			}
+			_keyLockMap.Remove(key);
+		}
+		return v;
+	}
 
-    /// <summary>
-    /// 移除缓存值
-    /// </summary>
-    public bool Remove(K key)
-    {
-        lock (_lock)
-        {
-            return _cache.Remove(key);
-        }
-    }
+	/// <summary>
+	/// 放入缓存
+	/// </summary>
+	/// <param name="key">键</param>
+	/// <param name="value">值</param>
+	/// <returns>值</returns>
+	public V Put(K key, V value)
+	{
+		lock (_lock)
+		{
+			_rawMap[MutableObj<K>.Of(key)] = value;
+		}
+		return value;
+	}
 
-    /// <summary>
-    /// 清空缓存
-    /// </summary>
-    public void Clear()
-    {
-        lock (_lock)
-        {
-            _cache.Clear();
-        }
-    }
+	/// <summary>
+	/// 移除缓存
+	/// </summary>
+	/// <param name="key">键</param>
+	/// <returns>移除的值</returns>
+	public V Remove(K key)
+	{
+		lock (_lock)
+		{
+			var mutableKey = MutableObj<K>.Of(key);
+			if (_rawMap.TryGetValue(mutableKey, out var value))
+			{
+				_rawMap.Remove(mutableKey);
+				return value;
+			}
+			return default;
+		}
+	}
 
-    /// <summary>
-    /// 获取缓存数量
-    /// </summary>
-    public int Count
-    {
-        get
-        {
-            lock (_lock)
-            {
-                return _cache.Count;
-            }
-        }
-    }
+	/// <summary>
+	/// 清空缓存池
+	/// </summary>
+	public void Clear()
+	{
+		lock (_lock)
+		{
+			_rawMap.Clear();
+		}
+	}
 
-    /// <summary>
-    /// 是否包含键
-    /// </summary>
-    public bool ContainsKey(K key)
-    {
-        lock (_lock)
-        {
-            return _cache.ContainsKey(key);
-        }
-    }
+	public IEnumerator<KeyValuePair<K, V>> GetEnumerator()
+	{
+		return _rawMap.Select(entry => new KeyValuePair<K, V>(entry.Key.Get(), entry.Value)).GetEnumerator();
+	}
+
+	System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+	{
+		return GetEnumerator();
+	}
 }

@@ -1,169 +1,234 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using WellTool.Core.Bean;
+using WellTool.Core.Convert;
+using WellTool.Core.Util;
 
-namespace WellTool.Core.Lang
+namespace WellTool.Core.Lang;
+
+/// <summary>
+/// 字典对象，扩充了HashMap中的方法
+/// </summary>
+[Serializable]
+public class Dict : Dictionary<string, object>
 {
-    /// <summary>
-    /// 字典类型，简化字典操作
-    /// </summary>
-    public class Dict : Dictionary<string, object>
-    {
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public Dict()
-        {
-        }
+	private const float DEFAULT_LOAD_FACTOR = 0.75f;
+	private const int DEFAULT_INITIAL_CAPACITY = 16;
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public Dict(IEnumerable<KeyValuePair<string, object>> collection) : base()
-        {
-            if (collection != null)
-            {
-                foreach (var kvp in collection)
-                {
-                    Add(kvp.Key, kvp.Value);
-                }
-            }
-        }
+	/// <summary>
+	/// 是否大小写不敏感
+	/// </summary>
+	private bool _caseInsensitive;
 
-        /// <summary>
-        /// 创建字典
-        /// </summary>
-        public static Dict Create()
-        {
-            return new Dict();
-        }
+	/// <summary>
+	/// 创建Dict
+	/// </summary>
+	/// <returns>Dict</returns>
+	public static Dict Create()
+	{
+		return new Dict();
+	}
 
-        /// <summary>
-        /// 创建字典
-        /// </summary>
-        public static Dict Of(string key, object value)
-        {
-            return new Dict { { key, value } };
-        }
+	/// <summary>
+	/// 将PO对象转为Dict
+	/// </summary>
+	/// <typeparam name="T">Bean类型</typeparam>
+	/// <param name="bean">Bean对象</param>
+	/// <returns>Vo</returns>
+	public static Dict Parse<T>(T bean)
+	{
+		return Create().ParseBean(bean);
+	}
 
-        /// <summary>
-        /// 创建字典
-        /// </summary>
-        public static Dict Of(params object[] keysAndValues)
-        {
-            var dict = new Dict();
-            for (int i = 0; i < keysAndValues.Length - 1; i += 2)
-            {
-                dict[keysAndValues[i].ToString()] = keysAndValues[i + 1];
-            }
-            return dict;
-        }
+	/// <summary>
+	/// 根据给定的键值对数组创建Dict对象
+	/// </summary>
+	/// <param name="keysAndValues">键值对列表，必须奇数参数为key，偶数参数为value</param>
+	/// <returns>Dict</returns>
+	public static Dict Of(params object[] keysAndValues)
+	{
+		var dict = Create();
+		string key = null;
+		for (int i = 0; i < keysAndValues.Length; i++)
+		{
+			if (i % 2 == 0)
+			{
+				key = Convert.ToStr(keysAndValues[i]);
+			}
+			else
+			{
+				dict[key] = keysAndValues[i];
+			}
+		}
+		return dict;
+	}
 
-        /// <summary>
-        /// 设置值
-        /// </summary>
-        public Dict Set(string key, object value)
-        {
-            this[key] = value;
-            return this;
-        }
+	/// <summary>
+	/// 构造
+	/// </summary>
+	public Dict() : base(DEFAULT_INITIAL_CAPACITY)
+	{
+	}
 
-        /// <summary>
-        /// 获取值
-        /// </summary>
-        public T Get<T>(string key)
-        {
-            if (TryGetValue(key, out var value) && value != null)
-            {
-                if (value is T typedValue)
-                {
-                    return typedValue;
-                }
-                return (T)Convert.ChangeType(value, typeof(T));
-            }
-            return default;
-        }
+	/// <summary>
+	/// 构造
+	/// </summary>
+	/// <param name="caseInsensitive">是否大小写不敏感</param>
+	public Dict(bool caseInsensitive) : base(DEFAULT_INITIAL_CAPACITY)
+	{
+		_caseInsensitive = caseInsensitive;
+	}
 
-        /// <summary>
-        /// 获取值，为空时返回默认值
-        /// </summary>
-        public T GetOrDefault<T>(string key, T defaultValue = default)
-        {
-            if (TryGetValue(key, out var value) && value != null)
-            {
-                if (value is T typedValue)
-                {
-                    return typedValue;
-                }
-                try
-                {
-                    return (T)Convert.ChangeType(value, typeof(T));
-                }
-                catch
-                {
-                    return defaultValue;
-                }
-            }
-            return defaultValue;
-        }
+	/// <summary>
+	/// 转换为Bean对象
+	/// </summary>
+	/// <typeparam name="T">Bean类型</typeparam>
+	/// <param name="bean">Bean</param>
+	/// <returns>Bean</returns>
+	public T ToBean<T>(T bean)
+	{
+		return ToBean(bean, false);
+	}
 
-        /// <summary>
-        /// 获取字符串值
-        /// </summary>
-        public string GetStr(string key, string defaultValue = null)
-        {
-            if (TryGetValue(key, out var value) && value != null)
-            {
-                return value.ToString();
-            }
-            return defaultValue;
-        }
+	/// <summary>
+	/// 转换为Bean对象
+	/// </summary>
+	/// <typeparam name="T">Bean类型</typeparam>
+	/// <param name="bean">Bean</param>
+	/// <param name="isToCamelCase">是否转换为驼峰模式</param>
+	/// <returns>Bean</returns>
+	public T ToBean<T>(T bean, bool isToCamelCase)
+	{
+		BeanUtil.FillBeanWithMap(this, bean, isToCamelCase, false);
+		return bean;
+	}
 
-        /// <summary>
-        /// 获取整数值
-        /// </summary>
-        public int GetInt(string key, int defaultValue = 0)
-        {
-            if (TryGetValue(key, out var value))
-            {
-                if (value is int i) return i;
-                if (int.TryParse(value.ToString(), out int result)) return result;
-            }
-            return defaultValue;
-        }
+	/// <summary>
+	/// 填充Value Object对象
+	/// </summary>
+	/// <typeparam name="T">Bean类型</typeparam>
+	/// <param name="clazz">Value Object的类</param>
+	/// <returns>vo</returns>
+	public T ToBean<T>(Type clazz)
+	{
+		return BeanUtil.ToBean<T>(this, clazz);
+	}
 
-        /// <summary>
-        /// 获取布尔值
-        /// </summary>
-        public bool GetBool(string key, bool defaultValue = false)
-        {
-            if (TryGetValue(key, out var value))
-            {
-                if (value is bool b) return b;
-                if (bool.TryParse(value.ToString(), out bool result)) return result;
-            }
-            return defaultValue;
-        }
+	/// <summary>
+	/// 将值对象转换为Dict
+	/// </summary>
+	/// <typeparam name="T">Bean类型</typeparam>
+	/// <param name="bean">值对象</param>
+	/// <returns>自己</returns>
+	public Dict ParseBean<T>(T bean)
+	{
+		Assert.NotNull(bean, "Bean class must be not null");
+		var map = BeanUtil.BeanToMap(bean);
+		foreach (var kvp in map)
+		{
+			this[kvp.Key] = kvp.Value;
+		}
+		return this;
+	}
 
-        /// <summary>
-        /// 获取日期值
-        /// </summary>
-        public DateTime? GetDate(string key)
-        {
-            if (TryGetValue(key, out var value))
-            {
-                if (value is DateTime dt) return dt;
-                if (DateTime.TryParse(value.ToString(), out DateTime result)) return result;
-            }
-            return null;
-        }
+	/// <summary>
+	/// 过滤Map保留指定键值对
+	/// </summary>
+	/// <param name="keys">键列表</param>
+	/// <returns>Dict结果</returns>
+	public Dict Filter(params string[] keys)
+	{
+		var result = new Dict(keys.Length);
+		foreach (string key in keys)
+		{
+			if (ContainsKey(key))
+			{
+				result[key] = this[key];
+			}
+		}
+		return result;
+	}
 
-        /// <summary>
-        /// 链式调用
-        /// </summary>
-        public Dict Put(string key, object value)
-        {
-            this[key] = value;
-            return this;
-        }
-    }
+	/// <summary>
+	/// 获得特定类型值
+	/// </summary>
+	/// <typeparam name="T">值类型</typeparam>
+	/// <param name="attr">字段名</param>
+	/// <returns>字段值</returns>
+	public T Get<T>(string attr)
+	{
+		return TryGetValue(CustomKey(attr), out var result) ? Convert.To<T>(result) : default;
+	}
+
+	/// <summary>
+	/// 获得特定类型值，带默认值
+	/// </summary>
+	/// <typeparam name="T">值类型</typeparam>
+	/// <param name="attr">字段名</param>
+	/// <param name="defaultValue">默认值</param>
+	/// <returns>字段值</returns>
+	public T Get<T>(string attr, T defaultValue)
+	{
+		var result = Get<T>(attr);
+		return result != null ? result : defaultValue;
+	}
+
+	/// <summary>
+	/// 通过表达式获取JSON中嵌套的对象
+	/// </summary>
+	/// <typeparam name="T">目标类型</typeparam>
+	/// <param name="expression">表达式</param>
+	/// <returns>对象</returns>
+	public T GetByPath<T>(string expression)
+	{
+		return Convert.To<T>(BeanPath.Create(expression).Get(this));
+	}
+
+	/// <summary>
+	/// 通过表达式获取JSON中嵌套的对象
+	/// </summary>
+	/// <typeparam name="T">返回值类型</typeparam>
+	/// <param name="expression">表达式</param>
+	/// <param name="resultType">返回值类型</param>
+	/// <returns>对象</returns>
+	public T GetByPath<T>(string expression, Type resultType)
+	{
+		return Convert.Convert<T>(GetByPath<object>(expression));
+	}
+
+	/// <summary>
+	/// 将Key转为小写
+	/// </summary>
+	/// <param name="key">KEY</param>
+	/// <returns>处理后的KEY</returns>
+	protected string CustomKey(string key)
+	{
+		if (_caseInsensitive && !string.IsNullOrEmpty(key))
+		{
+			key = key.ToLower();
+		}
+		return key;
+	}
+
+	public new bool ContainsKey(object key)
+	{
+		return base.ContainsKey(CustomKey(key?.ToString()));
+	}
+
+	public new object this[string key]
+	{
+		get => base.TryGetValue(CustomKey(key), out var value) ? value : null;
+		set => base[CustomKey(key)] = value;
+	}
+
+	public new bool Remove(string key)
+	{
+		return base.Remove(CustomKey(key));
+	}
+
+	public new bool TryGetValue(string key, out object value)
+	{
+		return base.TryGetValue(CustomKey(key), out value);
+	}
 }

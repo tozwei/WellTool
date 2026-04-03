@@ -1,41 +1,15 @@
-using System;
 using System.Globalization;
 
-namespace WellTool.Core.Converter.impl
+namespace WellTool.Core.Convert.impl;
+
+/// <summary>
+/// 货币转换器
+/// </summary>
+public class CurrencyConverter : AbstractConverter<decimal>
 {
-    /// <summary>
-    /// 货币转换器
-    /// </summary>
-    public class CurrencyConverter : IConverter
+    protected override decimal ConvertInternal(object value)
     {
-        /// <summary>
-        /// 转换值
-        /// </summary>
-        public object Convert(object value, Type targetType)
-        {
-            if (value == null)
-            {
-                return null;
-            }
-
-            var str = value.ToString();
-            return Currency.FromCode(str);
-        }
-
-        /// <summary>
-        /// 获取支持的源类型
-        /// </summary>
-        public Type[] GetSupportedSourceTypes()
-        {
-            return new Type[] { typeof(string) };
-        }
-
-        /// <summary>
-        /// 获取支持的目标类型
-        /// </summary>
-        public Type[] GetSupportedTargetTypes()
-        {
-            return new Type[] { typeof(Currency) };
-        }
+        var valueStr = ConvertToStr(value);
+        return decimal.Parse(valueStr, NumberStyles.Currency, CultureInfo.InvariantCulture);
     }
 }

@@ -1,62 +1,124 @@
+using System;
+using WellTool.Core.Lang.Func;
+using WellTool.Core.Map;
+using WellTool.Core.Util;
+
 namespace WellTool.Core.Lang;
 
 /// <summary>
-/// 单例模式工具类
+/// 单例类
+/// 提供单例对象的统一管理，当调用get方法时，如果对象池中存在此对象，返回此对象，否则创建新对象返回
 /// </summary>
-public class Singleton
+public static class Singleton
 {
-    /// <summary>
-    /// 获取指定类型的单例实例
-    /// </summary>
-    public static T GetInstance<T>() where T : class, new()
-    {
-        return Nested<T>.Instance;
-    }
+	private static readonly SafeConcurrentHashMap<string, object> POOL = new();
 
-    /// <summary>
-    /// 获取指定类型的单例实例，支持工厂方法
-    /// </summary>
-    public static T GetInstance<T>(System.Func<T> factory) where T : class
-    {
-        return Nested<T>.GetInstance(factory);
-    }
+	/// <summary>
+	/// 获得指定类的单例对象
+	/// </summary>
+	/// <typeparam name="T">单例对象类型</typeparam>
+	/// <param name="clazz">类</param>
+	/// <param name="params">构造方法参数</param>
+	/// <returns>单例对象</returns>
+	public static T Get<T>(Type clazz, params object[] @params) where T : class
+	{
+		Assert.NotNull(clazz, "Class must be not null !");
+		string key = BuildKey(clazz.FullName, @params);
+		return Get<T>(key, () => ReflectUtil.NewInstance<T>(clazz, @params));
+	}
 
-    private static class Nested<T> where T : class, new()
-    {
-        internal static readonly T Instance = new T();
-        private static T? _customInstance;
-        private static readonly object Lock = new object();
+	/// <summary>
+	/// 获得指定类的单例对象
+	/// </summary>
+	/// <typeparam name="T">单例对象类型</typeparam>
+	/// <param name="key">自定义键</param>
+	/// <param name="supplier">单例对象的创建函数</param>
+	/// <returns>单例对象</returns>
+	public static T Get<T>(string key, Func0<T> supplier)
+	{
+		if (!POOL.TryGetValue(key, out var result) || result == null)
+		{
+			result = supplier.CallWithRuntimeException();
+			POOL[key] = result;
+		}
+		return (T)result;
+	}
 
-        internal static T GetInstance(System.Func<T> factory)
-        {
-            if (_customInstance == null)
-            {
-                lock (Lock)
-                {
-                    if (_customInstance == null)
-                    {
-                        _customInstance = factory();
-                    }
-                }
-            }
-            return _customInstance;
-        }
-    }
-}
+	/// <summary>
+	/// 获得指定类的单例对象
+	/// </summary>
+	/// <typeparam name="T">单例对象类型</typeparam>
+	/// <param name="className">类名</param>
+	/// <param name="params">构造参数</param>
+	/// <returns>单例对象</returns>
+	public static T Get<T>(string className, params object[] @params) where T : class
+	{
+		Assert.NotBlank(className, "Class name must be not blank !");
+		Type clazz = ClassUtil.LoadClass(className);
+		return Get<T>(clazz, @params);
+	}
 
-/// <summary>
-/// 单例类基类
-/// </summary>
-/// <typeparam name="T">单例类型</typeparam>
-public abstract class SingletonClass<T> where T : class, new()
-{
-    /// <summary>
-    /// 获取实例
-    /// </summary>
-    public static T Instance => Nested.Instance;
+	/// <summary>
+	/// 将已有对象放入单例中，其Class做为键
+	/// </summary>
+	/// <param name="obj">对象</param>
+	public static void Put(object obj)
+	{
+		Assert.NotNull(obj, "Bean object must be not null !");
+		Put(obj.GetType().FullName, obj);
+	}
 
-    private static class Nested
-    {
-        internal static readonly T Instance = new T();
-    }
+	/// <summary>
+	/// 将已有对象放入单例中，key做为键
+	/// </summary>
+	/// <param name="key">键</param>
+	/// <param name="obj">对象</param>
+	public static void Put(string key, object obj)
+	{
+		POOL[key] = obj;
+	}
+
+	/// <summary>
+	/// 移除指定Singleton对象
+	/// </summary>
+	/// <param name="clazz">类</param>
+	public static void Remove(Type clazz)
+	{
+		if (clazz != null)
+		{
+			Remove(clazz.FullName);
+		}
+	}
+
+	/// <summary>
+	/// 移除指定Singleton对象
+	/// </summary>
+	/// <param name="key">键</param>
+	public static void Remove(string key)
+	{
+		POOL.Remove(key);
+	}
+
+	/// <summary>
+	/// 清除所有Singleton对象
+	/// </summary>
+	public static void Destroy()
+	{
+		POOL.Clear();
+	}
+
+	/// <summary>
+	/// 构建key
+	/// </summary>
+	/// <param name="className">类名</param>
+	/// <param name="params">参数列表</param>
+	/// <returns>key</returns>
+	private static string BuildKey(string className, params object[] @params)
+	{
+		if (ArrayUtil.IsEmpty(@params))
+		{
+			return className;
+		}
+		return $"{className}#{string.Join("_", @params)}";
+	}
 }

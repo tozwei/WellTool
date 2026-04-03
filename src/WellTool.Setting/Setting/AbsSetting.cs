@@ -40,7 +40,11 @@ public abstract class AbsSetting : ISettingGetter, IDisposable
     public virtual string GetStr(string key, string group, string? defaultValue)
     {
         var value = GetByGroup(key, group);
-        return value ?? defaultValue ?? string.Empty;
+        if (value != null)
+        {
+            return value;
+        }
+        return defaultValue ?? string.Empty;
     }
 
     /// <summary>

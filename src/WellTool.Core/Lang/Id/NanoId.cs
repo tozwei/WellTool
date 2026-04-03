@@ -1,110 +1,96 @@
 using System;
 using System.Security.Cryptography;
 
-namespace WellTool.Core.Lang.Id
+namespace WellTool.Core.Lang.Id;
+
+/// <summary>
+/// NanoId生成器
+/// </summary>
+public static class NanoId
 {
-    /// <summary>
-    /// NanoId生成器，生成URL友好的唯一ID
-    /// </summary>
-    public class NanoId
-    {
-        private static readonly Random _random = new Random();
-        private readonly char[] _alphabet;
-        private readonly int _mask;
-        private readonly int _size;
+	private const string DEFAULT_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_";
+	private static readonly Random _random = new Random();
 
-        /// <summary>
-        /// 默认ID大小
-        /// </summary>
-        public const int DEFAULT_SIZE = 21;
+	/// <summary>
+	/// 生成NanoId
+	/// </summary>
+	/// <param name="size">ID长度</param>
+	/// <returns>NanoId</returns>
+	public static string Generate(int size = 21)
+	{
+		return Generate(size, DEFAULT_ALPHABET);
+	}
 
-        /// <summary>
-        /// 默认字母表
-        /// </summary>
-        public const string DEFAULT_ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_";
+	/// <summary>
+	/// 生成NanoId
+	/// </summary>
+	/// <param name="size">ID长度</param>
+	/// <param name="alphabet">字符集</param>
+	/// <returns>NanoId</returns>
+	public static string Generate(int size, string alphabet)
+	{
+		if (string.IsNullOrEmpty(alphabet))
+		{
+			throw new ArgumentException("Alphabet cannot be null or empty");
+		}
+		if (size <= 0)
+		{
+			throw new ArgumentException("Size must be greater than 0");
+		}
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public NanoId() : this(DEFAULT_ALPHABET, DEFAULT_SIZE)
-        {
-        }
+		var alphabetLength = alphabet.Length;
+		var result = new char[size];
+		var bytes = new byte[size];
+		_random.NextBytes(bytes);
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public NanoId(string alphabet) : this(alphabet, DEFAULT_SIZE)
-        {
-        }
+		for (int i = 0; i < size; i++)
+		{
+			result[i] = alphabet[bytes[i] % alphabetLength];
+		}
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public NanoId(string alphabet, int size)
-        {
-            if (string.IsNullOrEmpty(alphabet))
-            {
-                throw new ArgumentException("Alphabet cannot be null or empty");
-            }
+		return new string(result);
+	}
 
-            if (size < 1)
-            {
-                throw new ArgumentException("Size must be greater than 0");
-            }
+	/// <summary>
+	/// 生成安全的NanoId
+	/// </summary>
+	/// <param name="size">ID长度</param>
+	/// <returns>NanoId</returns>
+	public static string GenerateSecure(int size = 21)
+	{
+		return GenerateSecure(size, DEFAULT_ALPHABET);
+	}
 
-            _alphabet = alphabet.ToCharArray();
-            _size = size;
-            _mask = NextPowerOfTwo(alphabet.Length) - 1;
-        }
+	/// <summary>
+	/// 生成安全的NanoId
+	/// </summary>
+	/// <param name="size">ID长度</param>
+	/// <param name="alphabet">字符集</param>
+	/// <returns>NanoId</returns>
+	public static string GenerateSecure(int size, string alphabet)
+	{
+		if (string.IsNullOrEmpty(alphabet))
+		{
+			throw new ArgumentException("Alphabet cannot be null or empty");
+		}
+		if (size <= 0)
+		{
+			throw new ArgumentException("Size must be greater than 0");
+		}
 
-        /// <summary>
-        /// 生成ID
-        /// </summary>
-        public string Generate()
-        {
-            var id = new char[_size];
-            var bytes = new byte[_size];
+		var alphabetLength = alphabet.Length;
+		var result = new char[size];
+		var bytes = new byte[size];
+		using (var rng = RandomNumberGenerator.Create())
+		{
+			rng.GetBytes(bytes);
+		}
 
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(bytes);
-            }
+		for (int i = 0; i < size; i++)
+		{
+			result[i] = alphabet[bytes[i] % alphabetLength];
+		}
 
-            for (int i = 0; i < _size; i++)
-            {
-                id[i] = _alphabet[bytes[i] & _mask];
-            }
-
-            return new string(id);
-        }
-
-        /// <summary>
-        /// 生成ID
-        /// </summary>
-        public static string GenerateId()
-        {
-            return new NanoId().Generate();
-        }
-
-        /// <summary>
-        /// 生成指定大小和字母表的ID
-        /// </summary>
-        public static string GenerateId(int size, string alphabet = DEFAULT_ALPHABET)
-        {
-            return new NanoId(alphabet, size).Generate();
-        }
-
-        /// <summary>
-        /// 计算下一个2的幂
-        /// </summary>
-        private static int NextPowerOfTwo(int value)
-        {
-            int power = 1;
-            while (power < value)
-            {
-                power <<= 1;
-            }
-            return power;
-        }
-    }
+		return new string(result);
+	}
 }

@@ -1,45 +1,23 @@
 namespace WellTool.Core.Lang;
 
-using System;
-
 /// <summary>
-/// 片段接口，表示一个区间或范围
+/// 片段表示，用于表示文本、集合等数据结构的一个区间。
 /// </summary>
-public interface Segment
+/// <typeparam name="T">数字类型，用于表示位置index</typeparam>
+public interface Segment<T> where T : struct
 {
-    /// <summary>
-    /// 获取起始位置
-    /// </summary>
-    object? StartIndex { get; }
+	/// <summary>
+	/// 获取起始位置
+	/// </summary>
+	T StartIndex { get; }
 
-    /// <summary>
-    /// 获取结束位置
-    /// </summary>
-    object? EndIndex { get; }
-}
+	/// <summary>
+	/// 获取结束位置
+	/// </summary>
+	T EndIndex { get; }
 
-/// <summary>
-/// Int 类型的片段
-/// </summary>
-public class IntSegment : DefaultSegment<int>
-{
-    /// <summary>
-    /// 构造
-    /// </summary>
-    public IntSegment(int startIndex, int endIndex) : base(startIndex, endIndex)
-    {
-    }
-}
-
-/// <summary>
-/// Long 类型的片段
-/// </summary>
-public class LongSegment : DefaultSegment<long>
-{
-    /// <summary>
-    /// 构造
-    /// </summary>
-    public LongSegment(long startIndex, long endIndex) : base(startIndex, endIndex)
-    {
-    }
+	/// <summary>
+	/// 片段长度
+	/// </summary>
+	T Length { get; }
 }

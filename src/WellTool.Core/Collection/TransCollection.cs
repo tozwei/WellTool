@@ -1,61 +1,60 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+namespace WellTool.Core.Collection;
 
-namespace WellTool.Core.Collection
+/// <summary>
+/// 转换集合
+/// </summary>
+/// <typeparam name="T">源类型</typeparam>
+/// <typeparam name="R">目标类型</typeparam>
+public class TransCollection<T, R> : ICollection<R>
 {
+    private readonly ICollection<T> _source;
+    private readonly Func<T, R> _converter;
+
     /// <summary>
-    /// 转换集合，包装一个集合并在访问时进行转换
+    /// 构造
     /// </summary>
-    public class TransCollection<TSource, TResult> : IEnumerable<TResult>
+    /// <param name="source">源集合</param>
+    /// <param name="converter">转换器</param>
+    public TransCollection(ICollection<T> source, Func<T, R> converter)
     {
-        private readonly ICollection<TSource> _source;
-        private readonly Func<TSource, TResult> _transformer;
+        _source = source;
+        _converter = converter;
+    }
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public TransCollection(ICollection<TSource> source, Func<TSource, TResult> transformer)
+    public int Count => _source.Count;
+    public bool IsReadOnly => true;
+
+    public void Add(R item) => throw new NotSupportedException();
+    public void Clear() => throw new NotSupportedException();
+    public bool Remove(R item) => throw new NotSupportedException();
+
+    public bool Contains(R item)
+    {
+        foreach (var t in _source)
         {
-            _source = source ?? throw new ArgumentNullException(nameof(source));
-            _transformer = transformer ?? throw new ArgumentNullException(nameof(transformer));
-        }
-
-        /// <summary>
-        /// 元素数量
-        /// </summary>
-        public int Count => _source.Count;
-
-        /// <summary>
-        /// 获取枚举器
-        /// </summary>
-        public IEnumerator<TResult> GetEnumerator()
-        {
-            foreach (var item in _source)
+            if (Equals(_converter(t), item))
             {
-                yield return _transformer(item);
+                return true;
             }
         }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        return false;
     }
 
-    /// <summary>
-    /// 转换集合扩展
-    /// </summary>
-    public static class TransCollectionExtensions
+    public void CopyTo(R[] array, int arrayIndex)
     {
-        /// <summary>
-        /// 转换为转换集合
-        /// </summary>
-        public static TransCollection<TSource, TResult> AsTransCollection<TSource, TResult>(
-            this ICollection<TSource> source,
-            Func<TSource, TResult> transformer)
+        foreach (var item in _source)
         {
-            return new TransCollection<TSource, TResult>(source, transformer);
+            array[arrayIndex++] = _converter(item);
         }
     }
+
+    public IEnumerator<R> GetEnumerator()
+    {
+        foreach (var item in _source)
+        {
+            yield return _converter(item);
+        }
+    }
+
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 }

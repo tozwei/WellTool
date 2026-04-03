@@ -1,82 +1,95 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+namespace WellTool.Core.Map;
 
-namespace WellTool.Core.Map
+/// <summary>
+/// Map的动态代理，用于通过字符串路径访问Map中的值
+/// </summary>
+public class MapProxy
 {
+    private readonly IDictionary<string, object?> _map;
+
     /// <summary>
-    /// Map代理类，用于以对象属性的方式访问Map
+    /// 构造
     /// </summary>
-    public class MapProxy : DynamicObject
+    /// <param name="map">被代理的Map</param>
+    public MapProxy(IDictionary<string, object?> map)
     {
-        private readonly IDictionary _map;
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public MapProxy(IDictionary map)
-        {
-            _map = map ?? throw new ArgumentNullException(nameof(map));
-        }
-
-        /// <summary>
-        /// 创建Map代理
-        /// </summary>
-        public static MapProxy Create(IDictionary map)
-        {
-            return new MapProxy(map);
-        }
-
-        /// <summary>
-        /// 获取属性值
-        /// </summary>
-        public object this[string key] => _map.Contains(key) ? _map[key] : null;
-
-        /// <summary>
-        /// 尝试获取值
-        /// </summary>
-        public bool TryGet(string key, out object value)
-        {
-            if (_map.Contains(key))
-            {
-                value = _map[key];
-                return true;
-            }
-            value = null;
-            return false;
-        }
-
-        /// <summary>
-        /// 设置值
-        /// </summary>
-        public void Set(string key, object value)
-        {
-            _map[key] = value;
-        }
-
-        /// <summary>
-        /// 获取所有键
-        /// </summary>
-        public ICollection Keys => _map.Keys;
-
-        /// <summary>
-        /// 获取所有值
-        /// </summary>
-        public ICollection Values => _map.Values;
-
-        /// <summary>
-        /// 获取底层Map
-        /// </summary>
-        public IDictionary GetMap()
-        {
-            return _map;
-        }
+        _map = map;
     }
 
     /// <summary>
-    /// 动态对象基类
+    /// 获取值
     /// </summary>
-    public class DynamicObject
+    /// <param name="key">键</param>
+    /// <returns>值</returns>
+    public object? Get(string key)
     {
+        return _map.TryGetValue(key, out var value) ? value : null;
+    }
+
+    /// <summary>
+    /// 设置值
+    /// </summary>
+    /// <param name="key">键</param>
+    /// <param name="value">值</param>
+    public void Set(string key, object? value)
+    {
+        _map[key] = value;
+    }
+
+    /// <summary>
+    /// 获取嵌套值，支持点号路径，如 "user.name"
+    /// </summary>
+    /// <param name="path">路径</param>
+    /// <returns>值</returns>
+    public object? GetByPath(string path)
+    {
+        var parts = path.Split('.');
+        object? current = _map;
+
+        foreach (var part in parts)
+        {
+            if (current is IDictionary<string, object?> dict)
+            {
+                current = dict.TryGetValue(part, out var val) ? val : null;
+            }
+            else if (current is IDictionary dict2)
+            {
+                current = dict2.Contains(part) ? dict2[part] : null;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        return current;
+    }
+
+    /// <summary>
+    /// 设置嵌套值，支持点号路径，如 "user.name"
+    /// </summary>
+    /// <param name="path">路径</param>
+    /// <param name="value">值</param>
+    public void SetByPath(string path, object? value)
+    {
+        var parts = path.Split('.');
+        if (parts.Length == 1)
+        {
+            _map[path] = value;
+            return;
+        }
+
+        var current = _map;
+        for (int i = 0; i < parts.Length - 1; i++)
+        {
+            var part = parts[i];
+            if (!current.ContainsKey(part))
+            {
+                current[part] = new Dictionary<string, object?>();
+            }
+            current = (IDictionary<string, object?>)current[part]!;
+        }
+
+        current[parts[^1]] = value;
     }
 }

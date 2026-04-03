@@ -1,231 +1,158 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using WellTool.Core.Clone;
+
 namespace WellTool.Core.Lang;
 
 /// <summary>
-/// 元组接口，用于组合多个元素
+/// 不可变数组类型（元组），用于多值返回
 /// </summary>
-public interface ITuple
+[Serializable]
+public class Tuple : CloneSupport<Tuple>, IEnumerable<object>
 {
-	/// <summary>
-	/// 获取元素数量
-	/// </summary>
-	int Size { get; }
-
-	/// <summary>
-	/// 获取所有元素
-	/// </summary>
-	object?[] ToArray();
-}
-
-/// <summary>
-/// 二元组
-/// </summary>
-/// <typeparam name="T1">第一个元素类型</typeparam>
-/// <typeparam name="T2">第二个元素类型</typeparam>
-public class Tuple<T1, T2> : ITuple
-{
-	/// <summary>
-	/// 第一个元素
-	/// </summary>
-	public T1 Item1 { get; }
-
-	/// <summary>
-	/// 第二个元素
-	/// </summary>
-	public T2 Item2 { get; }
-
-	/// <inheritdoc />
-	public int Size => 2;
+	private readonly object[] _members;
+	private int _hashCode;
+	private bool _cacheHash;
 
 	/// <summary>
 	/// 构造
 	/// </summary>
-	public Tuple(T1 item1, T2 item2)
+	/// <param name="members">成员数组</param>
+	public Tuple(params object[] members)
 	{
-		Item1 = item1;
-		Item2 = item2;
+		_members = (object[])members.Clone();
 	}
 
-	/// <inheritdoc />
-	public object?[] ToArray() => new object?[] { Item1, Item2 };
-
-	/// <inheritdoc />
-	public override bool Equals(object? obj)
+	/// <summary>
+	/// 获取指定位置元素
+	/// </summary>
+	/// <typeparam name="T">返回对象类型</typeparam>
+	/// <param name="index">位置</param>
+	/// <returns>元素</returns>
+	public T Get<T>(int index)
 	{
-		if (obj is not Tuple<T1, T2> other)
-			return false;
-		return Equals(Item1, other.Item1) && Equals(Item2, other.Item2);
+		return (T)_members[index];
 	}
 
-	/// <inheritdoc />
-	public override int GetHashCode() => HashCode.Combine(Item1, Item2);
-
-	/// <inheritdoc />
-	public override string? ToString() => $"({Item1}, {Item2})";
-
 	/// <summary>
-	/// 解构
+	/// 获取指定位置元素
 	/// </summary>
-	public void Deconstruct(out T1 item1, out T2 item2)
+	/// <param name="index">位置</param>
+	/// <returns>元素</returns>
+	public object Get(int index)
 	{
-		item1 = Item1;
-		item2 = Item2;
-	}
-}
-
-/// <summary>
-/// 三元组
-/// </summary>
-/// <typeparam name="T1">第一个元素类型</typeparam>
-/// <typeparam name="T2">第二个元素类型</typeparam>
-/// <typeparam name="T3">第三个元素类型</typeparam>
-public class Tuple<T1, T2, T3> : ITuple
-{
-	/// <summary>
-	/// 第一个元素
-	/// </summary>
-	public T1 Item1 { get; }
-
-	/// <summary>
-	/// 第二个元素
-	/// </summary>
-	public T2 Item2 { get; }
-
-	/// <summary>
-	/// 第三个元素
-	/// </summary>
-	public T3 Item3 { get; }
-
-	/// <inheritdoc />
-	public int Size => 3;
-
-	/// <summary>
-	/// 构造
-	/// </summary>
-	public Tuple(T1 item1, T2 item2, T3 item3)
-	{
-		Item1 = item1;
-		Item2 = item2;
-		Item3 = item3;
+		return _members[index];
 	}
 
-	/// <inheritdoc />
-	public object?[] ToArray() => new object?[] { Item1, Item2, Item3 };
-
-	/// <inheritdoc />
-	public override bool Equals(object? obj)
+	/// <summary>
+	/// 获得所有元素
+	/// </summary>
+	/// <returns>所有元素的副本</returns>
+	public object[] GetMembers()
 	{
-		if (obj is not Tuple<T1, T2, T3> other)
-			return false;
-		return Equals(Item1, other.Item1) && Equals(Item2, other.Item2) && Equals(Item3, other.Item3);
+		return (object[])_members.Clone();
 	}
 
-	/// <inheritdoc />
-	public override int GetHashCode() => HashCode.Combine(Item1, Item2, Item3);
-
-	/// <inheritdoc />
-	public override string? ToString() => $"({Item1}, {Item2}, {Item3})";
-
 	/// <summary>
-	/// 解构
+	/// 将元组转换成列表
 	/// </summary>
-	public void Deconstruct(out T1 item1, out T2 item2, out T3 item3)
+	/// <returns>转换得到的列表</returns>
+	public List<object> ToList()
 	{
-		item1 = Item1;
-		item2 = Item2;
-		item3 = Item3;
-	}
-}
-
-/// <summary>
-/// 四元组
-/// </summary>
-/// <typeparam name="T1">第一个元素类型</typeparam>
-/// <typeparam name="T2">第二个元素类型</typeparam>
-/// <typeparam name="T3">第三个元素类型</typeparam>
-/// <typeparam name="T4">第四个元素类型</typeparam>
-public class Tuple<T1, T2, T3, T4> : ITuple
-{
-	/// <summary>
-	/// 第一个元素
-	/// </summary>
-	public T1 Item1 { get; }
-
-	/// <summary>
-	/// 第二个元素
-	/// </summary>
-	public T2 Item2 { get; }
-
-	/// <summary>
-	/// 第三个元素
-	/// </summary>
-	public T3 Item3 { get; }
-
-	/// <summary>
-	/// 第四个元素
-	/// </summary>
-	public T4 Item4 { get; }
-
-	/// <inheritdoc />
-	public int Size => 4;
-
-	/// <summary>
-	/// 构造
-	/// </summary>
-	public Tuple(T1 item1, T2 item2, T3 item3, T4 item4)
-	{
-		Item1 = item1;
-		Item2 = item2;
-		Item3 = item3;
-		Item4 = item4;
+		return _members.ToList();
 	}
 
-	/// <inheritdoc />
-	public object?[] ToArray() => new object?[] { Item1, Item2, Item3, Item4 };
-
-	/// <inheritdoc />
-	public override bool Equals(object? obj)
+	/// <summary>
+	/// 缓存Hash值
+	/// </summary>
+	/// <param name="cacheHash">是否缓存hash值</param>
+	/// <returns>this</returns>
+	public Tuple SetCacheHash(bool cacheHash)
 	{
-		if (obj is not Tuple<T1, T2, T3, T4> other)
-			return false;
-		return Equals(Item1, other.Item1) && Equals(Item2, other.Item2) &&
-			   Equals(Item3, other.Item3) && Equals(Item4, other.Item4);
+		_cacheHash = cacheHash;
+		return this;
 	}
 
-	/// <inheritdoc />
-	public override int GetHashCode() => HashCode.Combine(Item1, Item2, Item3, Item4);
-
-	/// <inheritdoc />
-	public override string? ToString() => $"({Item1}, {Item2}, {Item3}, {Item4})";
+	/// <summary>
+	/// 得到元组的大小
+	/// </summary>
+	public int Size => _members.Length;
 
 	/// <summary>
-	/// 解构
+	/// 判断元组中是否包含某元素
 	/// </summary>
-	public void Deconstruct(out T1 item1, out T2 item2, out T3 item3, out T4 item4)
+	/// <param name="value">需要判定的元素</param>
+	/// <returns>是否包含</returns>
+	public bool Contains(object value)
 	{
-		item1 = Item1;
-		item2 = Item2;
-		item3 = Item3;
-		item4 = Item4;
+		return _members.Contains(value);
 	}
-}
-
-/// <summary>
-/// 元组静态工厂
-/// </summary>
-public static class Tuple
-{
-	/// <summary>
-	/// 创建二元组
-	/// </summary>
-	public static Tuple<T1, T2> Create<T1, T2>(T1 item1, T2 item2) => new(item1, item2);
 
 	/// <summary>
-	/// 创建三元组
+	/// 获取第0个元素
 	/// </summary>
-	public static Tuple<T1, T2, T3> Create<T1, T2, T3>(T1 item1, T2 item2, T3 item3) => new(item1, item2, item3);
+	public object Item0 => _members.Length > 0 ? _members[0] : null;
 
 	/// <summary>
-	/// 创建四元组
+	/// 获取第1个元素
 	/// </summary>
-	public static Tuple<T1, T2, T3, T4> Create<T1, T2, T3, T4>(T1 item1, T2 item2, T3 item3, T4 item4) => new(item1, item2, item3, item4);
+	public object Item1 => _members.Length > 1 ? _members[1] : null;
+
+	/// <summary>
+	/// 获取第2个元素
+	/// </summary>
+	public object Item2 => _members.Length > 2 ? _members[2] : null;
+
+	/// <summary>
+	/// 获取第3个元素
+	/// </summary>
+	public object Item3 => _members.Length > 3 ? _members[3] : null;
+
+	public override int GetHashCode()
+	{
+		if (_cacheHash && _hashCode != 0)
+		{
+			return _hashCode;
+		}
+		int result = 1;
+		foreach (var item in _members)
+		{
+			result = 31 * result + (item?.GetHashCode() ?? 0);
+		}
+		if (_cacheHash)
+		{
+			_hashCode = result;
+		}
+		return result;
+	}
+
+	public override bool Equals(object obj)
+	{
+		if (this == obj) return true;
+		if (obj == null || GetType() != obj.GetType()) return false;
+		var other = (Tuple)obj;
+		if (_members.Length != other._members.Length) return false;
+		for (int i = 0; i < _members.Length; i++)
+		{
+			if (!Equals(_members[i], other._members[i])) return false;
+		}
+		return true;
+	}
+
+	public override string ToString()
+	{
+		return "[" + string.Join(", ", _members.Select(m => m?.ToString() ?? "null")) + "]";
+	}
+
+	public IEnumerator<object> GetEnumerator()
+	{
+		return ((IEnumerable<object>)_members).GetEnumerator();
+	}
+
+	IEnumerator IEnumerable.GetEnumerator()
+	{
+		return GetEnumerator();
+	}
 }

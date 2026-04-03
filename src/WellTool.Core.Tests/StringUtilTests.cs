@@ -154,4 +154,81 @@ namespace WellTool.Core.Tests
             Assert.Equal("test", result);
         }
     }
+
+    public class StrUtilTests
+    {
+        [Fact]
+        public void TestIsBlankIfStr()
+        {
+            // 测试 null 对象
+            Assert.True(WellTool.Core.Util.StrUtil.isBlankIfStr(null));
+            // 测试空白字符串
+            Assert.True(WellTool.Core.Util.StrUtil.isBlankIfStr("   "));
+            // 测试非空白字符串
+            Assert.False(WellTool.Core.Util.StrUtil.isBlankIfStr("test"));
+            // 测试非字符串对象
+            Assert.False(WellTool.Core.Util.StrUtil.isBlankIfStr(123));
+        }
+
+        [Fact]
+        public void TestIsEmptyIfStr()
+        {
+            // 测试 null 对象
+            Assert.True(WellTool.Core.Util.StrUtil.isEmptyIfStr(null));
+            // 测试空字符串
+            Assert.True(WellTool.Core.Util.StrUtil.isEmptyIfStr(""));
+            // 测试非空字符串
+            Assert.False(WellTool.Core.Util.StrUtil.isEmptyIfStr("test"));
+            // 测试非字符串对象
+            Assert.False(WellTool.Core.Util.StrUtil.isEmptyIfStr(123));
+        }
+
+        [Fact]
+        public void TestIsBlank()
+        {
+            // 测试 null 字符串
+            Assert.True(WellTool.Core.Util.StrUtil.isBlank(null));
+            // 测试空字符串
+            Assert.True(WellTool.Core.Util.StrUtil.isBlank(""));
+            // 测试空白字符串
+            Assert.True(WellTool.Core.Util.StrUtil.isBlank("   "));
+            // 测试非空白字符串
+            Assert.False(WellTool.Core.Util.StrUtil.isBlank("test"));
+        }
+
+        [Fact]
+        public void TestIsEmpty()
+        {
+            // 测试 null 字符串
+            Assert.True(WellTool.Core.Util.StrUtil.isEmpty(null));
+            // 测试空字符串
+            Assert.True(WellTool.Core.Util.StrUtil.isEmpty(""));
+            // 测试非空字符串
+            Assert.False(WellTool.Core.Util.StrUtil.isEmpty("test"));
+        }
+
+        [Fact]
+        public void TestIsNotBlank()
+        {
+            // 测试 null 字符串
+            Assert.False(WellTool.Core.Util.StrUtil.isNotBlank(null));
+            // 测试空字符串
+            Assert.False(WellTool.Core.Util.StrUtil.isNotBlank(""));
+            // 测试空白字符串
+            Assert.False(WellTool.Core.Util.StrUtil.isNotBlank("   "));
+            // 测试非空白字符串
+            Assert.True(WellTool.Core.Util.StrUtil.isNotBlank("test"));
+        }
+
+        [Fact]
+        public void TestIsNotEmpty()
+        {
+            // 测试 null 字符串
+            Assert.False(WellTool.Core.Util.StrUtil.isNotEmpty(null));
+            // 测试空字符串
+            Assert.False(WellTool.Core.Util.StrUtil.isNotEmpty(""));
+            // 测试非空字符串
+            Assert.True(WellTool.Core.Util.StrUtil.isNotEmpty("test"));
+        }
+    }
 }

@@ -1,77 +1,68 @@
-using System;
-
 namespace WellTool.Core.Lang.Caller;
 
 /// <summary>
-/// 调用者信息
+/// 调用者接口
 /// </summary>
-public abstract class Caller
+public interface ICaller
 {
 	/// <summary>
-	/// 获得调用者
+	/// 获取调用者的类
 	/// </summary>
-	/// <returns>调用者</returns>
-	public Type GetCaller()
-	{
-		return GetCaller(1);
-	}
+	/// <returns>调用者的类</returns>
+	System.Type GetCaller();
+}
 
+/// <summary>
+/// 调用者工具类
+/// </summary>
+public static class CallerUtil
+{
 	/// <summary>
-	/// 获得调用者的调用者
+	/// 获取调用者的类
 	/// </summary>
-	/// <returns>调用者的调用者</returns>
-	public Type GetCallerCaller()
+	/// <returns>调用者的类</returns>
+	public static System.Type GetCaller()
 	{
 		return GetCaller(2);
 	}
 
 	/// <summary>
-	/// 获得调用者，指定第几级调用者<br>
-	/// 调用者层级关系：
-	/// 
-	/// <pre>
-	/// 0 CallerUtil
-	/// 1 调用CallerUtil中方法的类
-	/// 2 调用者的调用者
-	/// ...
-	/// </pre>
+	/// 获取调用者的类
 	/// </summary>
-	/// <param name="depth">层级。0表示CallerUtil本身，1表示调用CallerUtil的类，2表示调用者的调用者，依次类推</param>
-	/// <returns>第几级调用者</returns>
-	public abstract Type GetCaller(int depth);
-
-	/// <summary>
-	/// 是否被指定类调用
-	/// </summary>
-	/// <param name="clazz">调用者类</param>
-	/// <returns>是否被调用</returns>
-	public bool IsCalledBy(Type clazz)
+	/// <param name="depth">深度</param>
+	/// <returns>调用者的类</returns>
+	public static System.Type GetCaller(int depth)
 	{
-		if (clazz == null)
+		var trace = new System.Diagnostics.StackTrace(true);
+		var frames = trace.GetFrames();
+		if (frames != null && frames.Length > depth)
 		{
-			return false;
+			var method = frames[depth].GetMethod();
+			return method?.DeclaringType;
 		}
+		return null;
+	}
+}
 
-		Type caller;
-		try
-		{
-			// 从1开始，0是CallerUtil本身
-			for (int i = 1; ; i++)
-			{
-				caller = GetCaller(i);
-				if (caller == null)
-				{
-					return false;
-				}
-				if (clazz.Equals(caller))
-				{
-					return true;
-				}
-			}
-		}
-		catch (Exception)
-		{
-			return false;
-		}
+/// <summary>
+/// Caller基类
+/// </summary>
+public abstract class Caller : ICaller
+{
+	/// <summary>
+	/// 获取调用者的类
+	/// </summary>
+	/// <returns>调用者的类</returns>
+	public abstract System.Type GetCaller();
+}
+
+/// <summary>
+/// 基于堆栈跟踪的调用者
+/// </summary>
+public class StackTraceCaller : Caller
+{
+	public override System.Type GetCaller()
+	{
+		return CallerUtil.GetCaller(3);
 	}
 }

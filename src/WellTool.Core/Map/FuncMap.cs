@@ -1,65 +1,41 @@
-using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
-namespace WellTool.Core.Map
+namespace WellTool.Core.Map;
+
+/// <summary>
+/// 函数键的Map，支持使用函数作为键
+/// </summary>
+/// <typeparam name="K">键类型</typeparam>
+/// <typeparam name="V">值类型</typeparam>
+public class FuncMap<K, V> : IDictionary<K, V>
 {
+    private readonly ConcurrentDictionary<K, V> _map = new();
+    private readonly Func<K, K, bool> _equalsFunc;
+
     /// <summary>
-    /// 函数值Map，当键不存在时使用函数生成值
+    /// 构造
     /// </summary>
-    public class FuncMap<K, V> : Dictionary<K, V>
+    /// <param name="equalsFunc">相等判断函数</param>
+    public FuncMap(Func<K, K, bool> equalsFunc)
     {
-        private readonly Func<K, V> _valueFactory;
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="valueFactory">值工厂函数</param>
-        public FuncMap(Func<K, V> valueFactory)
-        {
-            _valueFactory = valueFactory ?? throw new ArgumentNullException(nameof(valueFactory));
-        }
-
-        /// <summary>
-        /// 获取值，如果不存在则使用工厂函数创建
-        /// </summary>
-        public new V this[K key]
-        {
-            get
-            {
-                if (TryGetValue(key, out var value))
-                {
-                    return value;
-                }
-                value = _valueFactory(key);
-                base[key] = value;
-                return value;
-            }
-            set
-            {
-                base[key] = value;
-            }
-        }
-
-        /// <summary>
-        /// 获取或添加值
-        /// </summary>
-        public V GetOrAdd(K key)
-        {
-            return this[key];
-        }
-
-        /// <summary>
-        /// 获取或添加值
-        /// </summary>
-        public V GetOrAdd(K key, Func<V> factory)
-        {
-            if (TryGetValue(key, out var value))
-            {
-                return value;
-            }
-            value = factory();
-            base[key] = value;
-            return value;
-        }
+        _equalsFunc = equalsFunc;
     }
+
+    public V this[K key] { get => _map[key]; set => _map[key] = value; }
+    public int Count => _map.Count;
+    public bool IsReadOnly => false;
+    public ICollection<K> Keys => _map.Keys;
+    public ICollection<V> Values => _map.Values;
+
+    public void Add(K key, V value) => _map.TryAdd(key, value);
+    public void Add(KeyValuePair<K, V> item) => Add(item.Key, item.Value);
+    public void Clear() => _map.Clear();
+    public bool Contains(KeyValuePair<K, V> item) => _map.Contains(item);
+    public bool ContainsKey(K key) => _map.ContainsKey(key);
+    public void CopyTo(KeyValuePair<K, V>[] array, int arrayIndex) => ((IDictionary<K, V>)_map).CopyTo(array, arrayIndex);
+    public IEnumerator<KeyValuePair<K, V>> GetEnumerator() => _map.GetEnumerator();
+    public bool Remove(K key) => _map.TryRemove(key, out _);
+    public bool Remove(KeyValuePair<K, V> item) => Remove(item.Key);
+    public bool TryGetValue(K key, out V value) => _map.TryGetValue(key, out value!);
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

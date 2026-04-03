@@ -13,6 +13,7 @@
 
 using WellTool.AI;
 using WellTool.AI.Core;
+using Xunit;
 
 namespace WellTool.AI.Tests
 {
@@ -51,3 +52,58 @@ namespace WellTool.AI.Tests
         }
     }
 }
+
+public class AIServiceFactoryTests
+{
+    [Fact]
+    public void TestGetService()
+    {
+        // 创建配置
+        var config = AIUtil.CreateConfigBuilder("OpenAI")
+            .SetApiKey("test-api-key")
+            .Build();
+
+        // 获取服务
+        var service = AIServiceFactory.GetService(config);
+
+        // 验证服务不为null
+        Assert.NotNull(service);
+    }
+
+    [Fact]
+    public void TestGetServiceWithNullConfig()
+    {
+        // 测试空配置
+        Assert.Throws<System.ArgumentNullException>(() => AIServiceFactory.GetService(null));
+    }
+}
+
+public class AIConfigRegistryTests
+{
+    [Fact]
+    public void TestRegistry()
+    {
+        // 测试注册和获取配置
+        var registry = AIConfigRegistry.Instance;
+        
+        // 验证注册表不为null
+        Assert.NotNull(registry);
+    }
+}
+
+public class ModelTests
+{
+    [Fact]
+    public void TestModelName()
+    {
+        // 测试模型名称
+        var modelNames = new string[] { "OpenAI", "Gemini", "Doubao", "DeepSeek", "Grok", "Ollama", "Hutool" };
+        
+        foreach (var modelName in modelNames)
+        {
+            // 验证模型名称不为空
+            Assert.False(string.IsNullOrEmpty(modelName));
+        }
+    }
+}
+

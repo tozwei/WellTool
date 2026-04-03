@@ -1,40 +1,55 @@
 namespace WellTool.Core.Lang.Copier;
 
 /// <summary>
-/// 拷贝器接口，用于对象之间的属性拷贝
+/// 拷贝器接口
 /// </summary>
 /// <typeparam name="T">源类型</typeparam>
-/// <typeparam name="TResult">目标类型</typeparam>
-public interface ICopier<in T, TResult>
+public interface ICopier<T>
 {
 	/// <summary>
-	/// 拷贝对象
+	/// 执行拷贝
 	/// </summary>
 	/// <param name="src">源对象</param>
 	/// <param name="dest">目标对象</param>
 	/// <returns>目标对象</returns>
-	TResult Copy(T src, TResult dest);
-
-	/// <summary>
-	/// 拷贝并返回新对象
-	/// </summary>
-	/// <param name="src">源对象</param>
-	/// <returns>新对象</returns>
-	TResult CopyNew(T src);
+	T Copy(T src, T dest);
 }
 
 /// <summary>
-/// 源到目标拷贝器接口
+/// 拷贝器抽象类
 /// </summary>
 /// <typeparam name="T">源类型</typeparam>
-/// <typeparam name="TResult">目标类型</typeparam>
-public interface ISrcToDestCopier<in T, TResult> : ICopier<T, TResult>
+public abstract class Copier<T> : ICopier<T>
 {
 	/// <summary>
-	/// 拷贝并覆盖目标
+	/// 执行拷贝
 	/// </summary>
 	/// <param name="src">源对象</param>
 	/// <param name="dest">目标对象</param>
 	/// <returns>目标对象</returns>
-	new TResult Copy(T src, TResult dest);
+	public abstract T Copy(T src, T dest);
+}
+
+/// <summary>
+/// 源到目标拷贝器
+/// </summary>
+/// <typeparam name="S">源类型</typeparam>
+/// <typeparam name="D">目标类型</typeparam>
+public interface ISrcToDestCopier<S, D> : ICopier<S>
+{
+	/// <summary>
+	/// 源对象
+	/// </summary>
+	S Src { get; set; }
+
+	/// <summary>
+	/// 目标对象
+	/// </summary>
+	D Dest { get; set; }
+
+	/// <summary>
+	/// 执行拷贝
+	/// </summary>
+	/// <returns>目标对象</returns>
+	D Copy();
 }

@@ -1,142 +1,178 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
-namespace WellTool.Core.Lang
+namespace WellTool.Core.Lang;
+
+/// <summary>
+/// 范围接口
+/// </summary>
+/// <typeparam name="T">范围元素类型</typeparam>
+public interface IRange<T>
 {
-    /// <summary>
-    /// 范围，用于表示一个起始值到结束值的范围
-    /// </summary>
-    public class Range<T> : IEnumerable<T> where T : IComparable<T>
-    {
-        /// <summary>
-        /// 起始值
-        /// </summary>
-        public T Start { get; }
+	/// <summary>
+	/// 获取起始元素
+	/// </summary>
+	T Start { get; }
 
-        /// <summary>
-        /// 结束值
-        /// </summary>
-        public T End { get; }
+	/// <summary>
+	/// 获取结束元素
+	/// </summary>
+	T End { get; }
 
-        /// <summary>
-        /// 步长
-        /// </summary>
-        public T Step { get; set; }
+	/// <summary>
+	/// 是否包含边界
+	/// </summary>
+	bool Inclusive { get; }
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public Range(T start, T end, T step = default)
-        {
-            Start = start;
-            End = end;
-            Step = step;
-        }
+	/// <summary>
+	/// 检查元素是否在范围内
+	/// </summary>
+	/// <param name="element">元素</param>
+	/// <returns>是否在范围内</returns>
+	bool Contains(T element);
 
-        /// <summary>
-        /// 检查值是否在范围内
-        /// </summary>
-        public bool Contains(T value)
-        {
-            return value.CompareTo(Start) >= 0 && value.CompareTo(End) <= 0;
-        }
+	/// <summary>
+	/// 获取范围内的元素
+	/// </summary>
+	/// <returns>元素枚举</returns>
+	IEnumerable<T> Elements();
 
-        /// <summary>
-        /// 获取枚举器
-        /// </summary>
-        public IEnumerator<T> GetEnumerator()
-        {
-            if (typeof(T) == typeof(int))
-            {
-                return (IEnumerator<T>)new IntRangeIterator(Convert.ToInt32(Start), Convert.ToInt32(End));
-            }
-            if (typeof(T) == typeof(long))
-            {
-                return (IEnumerator<T>)new LongRangeIterator(Convert.ToInt64(Start), Convert.ToInt64(End));
-            }
-            throw new NotSupportedException($"Range of {typeof(T).Name} is not supported");
-        }
+	/// <summary>
+	/// 获取范围大小
+	/// </summary>
+	/// <returns>元素数量</returns>
+	int Size();
+}
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+/// <summary>
+/// 范围类
+/// </summary>
+/// <typeparam name="T">范围元素类型</typeparam>
+public class Range<T> : IRange<T> where T : IComparable<T>
+{
+	/// <summary>
+	/// 起始元素
+	/// </summary>
+	public T Start { get; }
 
-        private class IntRangeIterator : IEnumerator<T>
-        {
-            private int _current;
-            private readonly int _end;
-            private readonly int _step;
+	/// <summary>
+	/// 结束元素
+	/// </summary>
+	public T End { get; }
 
-            public IntRangeIterator(int start, int end, int step = 1)
-            {
-                _current = start - step;
-                _end = end;
-                _step = step;
-            }
+	/// <summary>
+	/// 是否包含边界
+	/// </summary>
+	public bool Inclusive { get; }
 
-            public T Current => (T)(object)_current;
-            object IEnumerator.Current => Current;
+	private readonly Func<T, T, int> _step;
 
-            public bool MoveNext()
-            {
-                _current += _step;
-                return _current <= _end;
-            }
+	/// <summary>
+	/// 构造
+	/// </summary>
+	/// <param name="start">起始元素</param>
+	/// <param name="end">结束元素</param>
+	/// <param name="step">步进函数</param>
+	/// <param name="inclusive">是否包含边界</param>
+	public Range(T start, T end, Func<T, T, int> step, bool inclusive = true)
+	{
+		Start = start;
+		End = end;
+		_step = step;
+		Inclusive = inclusive;
+	}
 
-            public void Reset()
-            {
-                throw new NotImplementedException();
-            }
+	/// <summary>
+	/// 检查元素是否在范围内
+	/// </summary>
+	public bool Contains(T element)
+	{
+		int startCompare = element.CompareTo(Start);
+		int endCompare = element.CompareTo(End);
 
-            public void Dispose() { }
-        }
+		if (Inclusive)
+		{
+			return startCompare >= 0 && endCompare <= 0;
+		}
+		return startCompare > 0 && endCompare < 0;
+	}
 
-        private class LongRangeIterator : IEnumerator<T>
-        {
-            private long _current;
-            private readonly long _end;
-            private readonly long _step;
+	/// <summary>
+	/// 获取范围内的元素
+	/// </summary>
+	public IEnumerable<T> Elements()
+	{
+		var current = Start;
+		int compare = current.CompareTo(End);
 
-            public LongRangeIterator(long start, long end, long step = 1)
-            {
-                _current = start - step;
-                _end = end;
-                _step = step;
-            }
+		if (compare == 0)
+		{
+			yield return current;
+			yield break;
+		}
 
-            public T Current => (T)(object)_current;
-            object IEnumerator.Current => Current;
+		if (compare < 0)
+		{
+			while (current.CompareTo(End) < 0)
+			{
+				yield return current;
+				current = Next(current);
+			}
+			if (Inclusive)
+			{
+				yield return End;
+			}
+		}
+		else
+		{
+			while (current.CompareTo(End) > 0)
+			{
+				yield return current;
+				current = Previous(current);
+			}
+			if (Inclusive)
+			{
+				yield return End;
+			}
+		}
+	}
 
-            public bool MoveNext()
-            {
-                _current += _step;
-                return _current <= _end;
-            }
+	/// <summary>
+	/// 获取范围大小
+	/// </summary>
+	public int Size()
+	{
+		int count = 0;
+		foreach (var element in Elements())
+		{
+			count++;
+		}
+		return count;
+	}
 
-            public void Reset()
-            {
-                throw new NotImplementedException();
-            }
+	private T Next(T current)
+	{
+		if (current is int intVal && typeof(T) == typeof(int))
+		{
+			return (T)(object)(intVal + 1);
+		}
+		if (current is long longVal && typeof(T) == typeof(long))
+		{
+			return (T)(object)(longVal + 1);
+		}
+		return current;
+	}
 
-            public void Dispose() { }
-        }
-
-        /// <summary>
-        /// 创建整数范围
-        /// </summary>
-        public static Range<int> Of(int start, int end, int step = 1)
-        {
-            return new Range<int>(start, end, step);
-        }
-
-        /// <summary>
-        /// 创建长整数范围
-        /// </summary>
-        public static Range<long> Of(long start, long end, long step = 1)
-        {
-            return new Range<long>(start, end, step);
-        }
-    }
+	private T Previous(T current)
+	{
+		if (current is int intVal && typeof(T) == typeof(int))
+		{
+			return (T)(object)(intVal - 1);
+		}
+		if (current is long longVal && typeof(T) == typeof(long))
+		{
+			return (T)(object)(longVal - 1);
+		}
+		return current;
+	}
 }

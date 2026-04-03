@@ -117,3 +117,50 @@ public class ExcelUtilTests
         }
     }
 }
+
+public class WordUtilTests
+{
+    [Fact]
+    public void TestWordUtil()
+    {
+        // 创建一个临时Word文件用于测试
+        var tempFile = Path.GetTempFileName() + ".docx";
+        try
+        {
+            // 创建Word写入器
+            using var writer = WellTool.Poi.WordUtil.GetWriter(tempFile);
+            
+            // 写入文本
+            writer.Write("Hello, WellTool!");
+            writer.Write("This is a test document.");
+            
+            // 保存文件
+            writer.Save();
+            
+            // 验证文件已创建
+            Assert.True(File.Exists(tempFile));
+            
+            // 验证文件大小大于0
+            Assert.True(new FileInfo(tempFile).Length > 0);
+        }
+        finally
+        {
+            if (File.Exists(tempFile))
+            {
+                File.Delete(tempFile);
+            }
+        }
+    }
+}
+
+public class PoiUtilTests
+{
+    [Fact]
+    public void TestPoiChecker()
+    {
+        // 测试PoiChecker是否能正确初始化
+        var isPoiAvailable = WellTool.Poi.PoiChecker.IsPoiAvailable();
+        // 验证结果是布尔值
+        Assert.IsType<bool>(isPoiAvailable);
+    }
+}

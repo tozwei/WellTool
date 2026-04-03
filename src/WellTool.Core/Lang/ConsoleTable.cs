@@ -1,124 +1,133 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
-namespace WellTool.Core.Lang
+namespace WellTool.Core.Lang;
+
+/// <summary>
+/// 控制台表格
+/// </summary>
+public class ConsoleTable
 {
-    /// <summary>
-    /// 控制台表格
-    /// </summary>
-    public class ConsoleTable
-    {
-        private readonly List<string[]> _rows = new List<string[]>();
-        private string[] _headers;
-        private readonly List<int> _columnWidths;
+	private readonly List<string[]> _rows = new();
+	private string[] _headers;
+	private readonly List<int> _columnWidths = new();
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public ConsoleTable(params string[] headers)
-        {
-            _headers = headers;
-            _columnWidths = new List<int>(headers.Length);
-            for (int i = 0; i < headers.Length; i++)
-            {
-                _columnWidths.Add(headers[i].Length);
-            }
-        }
+	/// <summary>
+	/// 设置表头
+	/// </summary>
+	/// <param name="headers">表头</param>
+	/// <returns>this</returns>
+	public ConsoleTable SetHeaders(params string[] headers)
+	{
+		_headers = headers;
+		return this;
+	}
 
-        /// <summary>
-        /// 添加行
-        /// </summary>
-        public ConsoleTable AddRow(params object[] values)
-        {
-            if (values.Length != _headers.Length)
-            {
-                throw new ArgumentException($"Row must have {_headers.Length} columns");
-            }
+	/// <summary>
+	/// 添加行
+	/// </summary>
+	/// <param name="row">行数据</param>
+	/// <returns>this</returns>
+	public ConsoleTable AddRow(params string[] row)
+	{
+		_rows.Add(row);
+		return this;
+	}
 
-            var row = values.Select(v => v?.ToString() ?? "").ToArray();
-            _rows.Add(row);
+	/// <summary>
+	/// 添加行
+	/// </summary>
+	/// <param name="row">行数据</param>
+	/// <returns>this</returns>
+	public ConsoleTable AddRow(IEnumerable<object> row)
+	{
+		_rows.Add(row.Select(o => o?.ToString() ?? "").ToArray());
+		return this;
+	}
 
-            for (int i = 0; i < row.Length; i++)
-            {
-                if (row[i].Length > _columnWidths[i])
-                {
-                    _columnWidths[i] = row[i].Length;
-                }
-            }
+	/// <summary>
+	/// 输出表格到控制台
+	/// </summary>
+	public void Print()
+	{
+		CalculateColumnWidths();
+		PrintLine(GetSeparator());
+		PrintLine(GetRow(_headers));
+		PrintLine(GetSeparator());
+		foreach (var row in _rows)
+		{
+			PrintLine(GetRow(row));
+		}
+		PrintLine(GetSeparator());
+	}
 
-            return this;
-        }
+	/// <summary>
+	/// 转换为字符串
+	/// </summary>
+	public override string ToString()
+	{
+		CalculateColumnWidths();
+		var sb = new StringBuilder();
+		sb.AppendLine(GetSeparator());
+		sb.AppendLine(GetRow(_headers));
+		sb.AppendLine(GetSeparator());
+		foreach (var row in _rows)
+		{
+			sb.AppendLine(GetRow(row));
+		}
+		sb.Append(GetSeparator());
+		return sb.ToString();
+	}
 
-        /// <summary>
-        /// 添加多行
-        /// </summary>
-        public ConsoleTable AddRows(IEnumerable<object[]> rows)
-        {
-            foreach (var row in rows)
-            {
-                AddRow(row);
-            }
-            return this;
-        }
+	private void CalculateColumnWidths()
+	{
+		if (_headers == null) return;
 
-        /// <summary>
-        /// 转换为字符串
-        /// </summary>
-        public override string ToString()
-        {
-            var sb = new System.Text.StringBuilder();
+		_columnWidths.Clear();
+		for (int i = 0; i < _headers.Length; i++)
+		{
+			int maxWidth = _headers[i]?.Length ?? 0;
+			foreach (var row in _rows)
+			{
+				if (row != null && i < row.Length)
+				{
+					maxWidth = Math.Max(maxWidth, row[i]?.Length ?? 0);
+				}
+			}
+			_columnWidths.Add(maxWidth + 2);
+		}
+	}
 
-            // 标题行
-            sb.Append('|');
-            for (int i = 0; i < _headers.Length; i++)
-            {
-                sb.Append(' ');
-                sb.Append(_headers[i].PadRight(_columnWidths[i]));
-                sb.Append(" |");
-            }
-            sb.AppendLine();
+	private string GetSeparator()
+	{
+		var sb = new StringBuilder("+");
+		foreach (var width in _columnWidths)
+		{
+			sb.Append(new string('-', width));
+			sb.Append("+");
+		}
+		return sb.ToString();
+	}
 
-            // 分隔行
-            sb.Append('|');
-            for (int i = 0; i < _headers.Length; i++)
-            {
-                sb.Append('-');
-                sb.Append(new string('-', _columnWidths[i]));
-                sb.Append("-|");
-            }
-            sb.AppendLine();
+	private string GetRow(string[] cells)
+	{
+		if (cells == null) return "";
 
-            // 数据行
-            foreach (var row in _rows)
-            {
-                sb.Append('|');
-                for (int i = 0; i < row.Length; i++)
-                {
-                    sb.Append(' ');
-                    sb.Append(row[i].PadRight(_columnWidths[i]));
-                    sb.Append(" |");
-                }
-                sb.AppendLine();
-            }
+		var sb = new StringBuilder("|");
+		for (int i = 0; i < _columnWidths.Count; i++)
+		{
+			var cell = i < cells.Length ? cells[i] ?? "" : "";
+			sb.Append(" ");
+			sb.Append(cell.PadRight(_columnWidths[i] - 1));
+			sb.Append("|");
+		}
+		return sb.ToString();
+	}
 
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// 输出到控制台
-        /// </summary>
-        public void Print()
-        {
-            Console.WriteLine(ToString());
-        }
-
-        /// <summary>
-        /// 创建表格
-        /// </summary>
-        public static ConsoleTable Create(params string[] headers)
-        {
-            return new ConsoleTable(headers);
-        }
-    }
+	private void PrintLine(string line)
+	{
+		System.Console.WriteLine(line);
+	}
 }

@@ -3,43 +3,55 @@ namespace WellTool.Core.Lang;
 /// <summary>
 /// 替换器接口
 /// </summary>
-/// <typeparam name="T">要替换的对象类型</typeparam>
-public interface Replacer<T>
+/// <typeparam name="T">替换对象类型</typeparam>
+public interface IReplacer<T>
 {
-    /// <summary>
-    /// 替换对象
-    /// </summary>
-    /// <param name="t">要替换的对象</param>
-    /// <returns>替换后的对象</returns>
-    T Replace(T t);
+	/// <summary>
+	/// 替换方法
+	/// </summary>
+	/// <param name="t">待替换对象</param>
+	/// <returns>替换后的对象</returns>
+	T Replace(T t);
 }
 
 /// <summary>
-/// 链式替换器
+/// 替换器抽象类
 /// </summary>
-/// <typeparam name="T">对象类型</typeparam>
-public class ChainReplacer<T> : Replacer<T>
+/// <typeparam name="T">替换对象类型</typeparam>
+public abstract class Replacer<T> : IReplacer<T>
 {
-    private readonly System.Collections.Generic.List<Replacer<T>> _replacers = new System.Collections.Generic.List<Replacer<T>>();
+	/// <summary>
+	/// 替换方法
+	/// </summary>
+	/// <param name="t">待替换对象</param>
+	/// <returns>替换后的对象</returns>
+	public abstract T Replace(T t);
+}
 
-    /// <summary>
-    /// 添加替换器
-    /// </summary>
-    public ChainReplacer<T> Add(Replacer<T> replacer)
-    {
-        _replacers.Add(replacer);
-        return this;
-    }
+/// <summary>
+/// Lambda替换器
+/// </summary>
+/// <typeparam name="T">替换对象类型</typeparam>
+public class LambdaReplacer<T> : Replacer<T>
+{
+	private readonly System.Func<T, T> _replacer;
 
-    /// <summary>
-    /// 执行替换
-    /// </summary>
-    public T Replace(T t)
-    {
-        foreach (var replacer in _replacers)
-        {
-            t = replacer.Replace(t);
-        }
-        return t;
-    }
+	/// <summary>
+	/// 构造
+	/// </summary>
+	/// <param name="replacer">替换函数</param>
+	public LambdaReplacer(System.Func<T, T> replacer)
+	{
+		_replacer = replacer;
+	}
+
+	/// <summary>
+	/// 替换方法
+	/// </summary>
+	/// <param name="t">待替换对象</param>
+	/// <returns>替换后的对象</returns>
+	public override T Replace(T t)
+	{
+		return _replacer?.Invoke(t) ?? t;
+	}
 }

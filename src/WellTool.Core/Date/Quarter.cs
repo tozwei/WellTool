@@ -1,86 +1,72 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Runtime.InteropServices;
+using SystemTimeZone = System.TimeZoneInfo;
 
-namespace WellTool.Core.Date
+namespace WellDone.Core.Date;
+
+/// <summary>
+/// 季度
+/// </summary>
+public enum Quarter
 {
-    /// <summary>
-    /// 季度枚举
-    /// </summary>
-    public enum Quarter
-    {
-        /// <summary>
-        /// 第一季度
-        /// </summary>
-        Q1 = 1,
-        /// <summary>
-        /// 第二季度
-        /// </summary>
-        Q2 = 2,
-        /// <summary>
-        /// 第三季度
-        /// </summary>
-        Q3 = 3,
-        /// <summary>
-        /// 第四季度
-        /// </summary>
-        Q4 = 4
-    }
+	/// <summary>第一季度（1月-3月）</summary>
+	Q1 = 1,
+	/// <summary>第二季度（4月-6月）</summary>
+	Q2 = 2,
+	/// <summary>第三季度（7月-9月）</summary>
+	Q3 = 3,
+	/// <summary>第四季度（10月-12月）</summary>
+	Q4 = 4
+}
 
-    public static class QuarterExtensions
-    {
-        /// <summary>
-        /// 将季度int转换为Quarter枚举对象
-        /// </summary>
-        /// <param name="intValue">季度int表示</param>
-        /// <returns>Quarter枚举对象</returns>
-        public static Quarter? Of(int intValue)
-        {
-            switch (intValue)
-            {
-                case 1:
-                    return Quarter.Q1;
-                case 2:
-                    return Quarter.Q2;
-                case 3:
-                    return Quarter.Q3;
-                case 4:
-                    return Quarter.Q4;
-                default:
-                    return null;
-            }
-        }
+/// <summary>
+/// 季度的扩展工具类
+/// </summary>
+public static class QuarterExtensions
+{
+	/// <summary>
+	/// 获取季度值，从1开始
+	/// </summary>
+	public static int GetValue(this Quarter quarter) => (int)quarter;
 
-        /// <summary>
-        /// 根据给定的月份值返回对应的季度
-        /// </summary>
-        /// <param name="monthValue">月份值，取值范围为1到12</param>
-        /// <returns>对应的季度</returns>
-        public static Quarter FromMonth(int monthValue)
-        {
-            if (monthValue < 1 || monthValue > 12)
-            {
-                throw new ArgumentException("Invalid month value, must be between 1 and 12");
-            }
-            return Of((monthValue - 1) / 3 + 1).Value;
-        }
+	/// <summary>
+	/// 获取季度值，从1开始
+	/// </summary>
+	/// <param name="quarter">季度枚举</param>
+	/// <returns>季度值</returns>
+	public static int GetValue(this Month month) => (int)month + 1;
 
-        /// <summary>
-        /// 该季度的第一个月
-        /// </summary>
-        /// <param name="quarter">季度</param>
-        /// <returns>第一个月</returns>
-        public static int FirstMonthValue(this Quarter quarter)
-        {
-            return ((int)quarter - 1) * 3 + 1;
-        }
+	/// <summary>
+	/// 将月份转换为季度
+	/// </summary>
+	/// <param name="month">月份（1-12）</param>
+	/// <returns>季度</returns>
+	public static Quarter FromMonth(int month)
+	{
+		if (month < 1 || month > 12)
+			throw new ArgumentOutOfRangeException(nameof(month));
+		return (Quarter)((month - 1) / 3 + 1);
+	}
 
-        /// <summary>
-        /// 该季度的最后一个月
-        /// </summary>
-        /// <param name="quarter">季度</param>
-        /// <returns>最后一个月</returns>
-        public static int LastMonthValue(this Quarter quarter)
-        {
-            return (int)quarter * 3;
-        }
-    }
+	/// <summary>
+	/// 获取季度的第一个月
+	/// </summary>
+	public static int FirstMonthValue(this Quarter quarter) => ((int)quarter - 1) * 3 + 1;
+
+	/// <summary>
+	/// 获取季度的最后一个月
+	/// </summary>
+	public static int LastMonthValue(this Quarter quarter) => ((int)quarter - 1) * 3 + 3;
+
+	/// <summary>
+	/// 验证季度值是否有效
+	/// </summary>
+	public static int CheckValidIntValue(int value)
+	{
+		if (value < 1 || value > 4)
+			throw new ArgumentOutOfRangeException(nameof(value), "Quarter must be between 1 and 4");
+		return value;
+	}
 }

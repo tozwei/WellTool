@@ -126,10 +126,16 @@ public class Setting : AbsSetting, IDisposable
         }
 
         var result = value;
-        var startPos = result.IndexOf("${", StringComparison.Ordinal);
+        var startPos = 0;
 
-        while (startPos >= 0)
+        while (true)
         {
+            startPos = result.IndexOf("${", startPos, StringComparison.Ordinal);
+            if (startPos < 0)
+            {
+                break;
+            }
+
             var endPos = result.IndexOf('}', startPos);
             if (endPos < 0)
             {
@@ -139,31 +145,40 @@ public class Setting : AbsSetting, IDisposable
             var varName = result.Substring(startPos + 2, endPos - startPos - 2);
             string? varValue = null;
 
-            // 检查变量名是否包含分组前缀
-            var dotIndex = varName.IndexOf('.');
-            if (dotIndex > 0)
+            // 先尝试在当前分组中查找完整的变量名
+            varValue = _groupedMap.Get(currentGroup, varName);
+            
+            // 如果没找到，再尝试在默认分组中查找
+            if (varValue == null)
             {
-                // 带分组前缀的变量，如 ${demo.driver}
-                var group = varName.Substring(0, dotIndex);
-                var key = varName.Substring(dotIndex + 1);
-                varValue = _groupedMap.Get(group, key);
+                varValue = _groupedMap.Get(AbsSetting.DEFAULT_GROUP, varName);
             }
-            else
+            
+            // 如果还是没找到，检查变量名是否包含分组前缀
+            if (varValue == null)
             {
-                // 简单变量，先从当前分组获取，然后从默认分组获取
-                varValue = _groupedMap.Get(currentGroup, varName) ?? _groupedMap.Get(AbsSetting.DEFAULT_GROUP, varName);
+                var dotIndex = varName.IndexOf('.');
+                if (dotIndex > 0)
+                {
+                    // 带分组前缀的变量，如 ${demo.driver}
+                    var group = varName.Substring(0, dotIndex);
+                    var key = varName.Substring(dotIndex + 1);
+                    varValue = _groupedMap.Get(group, key);
+                }
             }
 
             if (varValue != null)
             {
-                result = result.Replace("${" + varName + "}", varValue);
+                // 替换变量
+                result = result.Substring(0, startPos) + varValue + result.Substring(endPos + 1);
+                // 从替换后的位置继续查找
+                startPos += varValue.Length;
             }
             else
             {
-                startPos = endPos;
+                // 没找到变量，从结束位置继续查找
+                startPos = endPos + 1;
             }
-
-            startPos = result.IndexOf("${", startPos, StringComparison.Ordinal);
         }
 
         return result;

@@ -1,115 +1,182 @@
 using System;
 using System.Reflection;
 
-namespace WellTool.Core.Util
+namespace WellTool.Core.Util;
+
+/// <summary>
+/// 修饰符工具类
+/// </summary>
+public static class ModifierUtil
 {
-    /// <summary>
-    /// 修饰符工具类
-    /// </summary>
-    public static class ModifierUtil
-    {
-        /// <summary>
-        /// 检查是否为public修饰符
-        /// </summary>
-        public static bool IsPublic(int modifiers)
-        {
-            return (modifiers & (int)BindingFlags.Public) != 0;
-        }
+	/// <summary>
+	/// 修饰符枚举
+	/// </summary>
+	[Flags]
+	public enum Modifier
+	{
+		/// <summary>
+		/// 公共
+		/// </summary>
+		Public = 0x0001,
+		/// <summary>
+		/// 私有
+		/// </summary>
+		Private = 0x0002,
+		/// <summary>
+		/// 保护
+		/// </summary>
+		Protected = 0x0004,
+		/// <summary>
+		/// 内部
+		/// </summary>
+		Internal = 0x0008,
+		/// <summary>
+		/// 静态
+		/// </summary>
+		Static = 0x0010,
+		/// <summary>
+		/// 最终
+		/// </summary>
+		Final = 0x0020,
+		/// <summary>
+		/// 抽象
+		/// </summary>
+		Abstract = 0x0040,
+		/// <summary>
+		/// 虚拟
+		/// </summary>
+		Virtual = 0x0080,
+		/// <summary>
+		/// 覆盖
+		/// </summary>
+		Override = 0x0100,
+		/// <summary>
+		/// 只读
+		/// </summary>
+		ReadOnly = 0x0200,
+		/// <summary>
+		/// 密封
+		/// </summary>
+		Sealed = 0x0400
+	}
 
-        /// <summary>
-        /// 检查是否为private修饰符
-        /// </summary>
-        public static bool IsPrivate(int modifiers)
-        {
-            return (modifiers & (int)BindingFlags.NonPublic) != 0;
-        }
+	/// <summary>
+	/// 判断类型是否为公共的
+	/// </summary>
+	/// <param name="type">类型</param>
+	/// <returns>是否为公共的</returns>
+	public static bool IsPublic(Type type)
+	{
+		return type?.IsPublic ?? false;
+	}
 
-        /// <summary>
-        /// 检查是否为static修饰符
-        /// </summary>
-        public static bool IsStatic(int modifiers)
-        {
-            return (modifiers & (int)BindingFlags.Static) != 0;
-        }
+	/// <summary>
+	/// 判断类型是否为私有的
+	/// </summary>
+	/// <param name="type">类型</param>
+	/// <returns>是否为私有的</returns>
+	public static bool IsPrivate(Type type)
+	{
+		return type?.IsNotPublic ?? false;
+	}
 
-        /// <summary>
-        /// 检查是否为final修饰符
-        /// </summary>
-        public static bool IsFinal(int modifiers)
-        {
-            return (modifiers & (int)BindingFlags.Final) != 0;
-        }
+	/// <summary>
+	/// 判断类型是否为内部的
+	/// </summary>
+	/// <param name="type">类型</param>
+	/// <returns>是否为内部的</returns>
+	public static bool IsInternal(Type type)
+	{
+		if (type == null) return false;
+		return !type.IsPublic && !type.IsPrivate && !type.IsNested;
+	}
 
-        /// <summary>
-        /// 检查是否为abstract修饰符
-        /// </summary>
-        public static bool IsAbstract(int modifiers)
-        {
-            return (modifiers & (int)BindingFlags.Abstract) != 0;
-        }
+	/// <summary>
+	/// 判断类型是否为静态的
+	/// </summary>
+	/// <param name="type">类型</param>
+	/// <returns>是否为静态的</returns>
+	public static bool IsStatic(Type type)
+	{
+		if (type == null) return false;
+		return type.IsAbstract && type.IsSealed;
+	}
 
-        /// <summary>
-        /// 检查是否为virtual修饰符
-        /// </summary>
-        public static bool IsVirtual(int modifiers)
-        {
-            return (modifiers & (int)BindingFlags.Virtual) != 0;
-        }
+	/// <summary>
+	/// 判断类型是否为抽象的
+	/// </summary>
+	/// <param name="type">类型</param>
+	/// <returns>是否为抽象的</returns>
+	public static bool IsAbstract(Type type)
+	{
+		return type?.IsAbstract ?? false;
+	}
 
-        /// <summary>
-        /// 检查是否为override修饰符
-        /// </summary>
-        public static bool IsOverride(int modifiers)
-        {
-            return (modifiers & (int)BindingFlags.Repeatable) != 0;
-        }
+	/// <summary>
+	/// 判断方法是否为抽象的
+	/// </summary>
+	/// <param name="method">方法</param>
+	/// <returns>是否为抽象的</returns>
+	public static bool IsAbstract(MethodBase method)
+	{
+		return method?.IsAbstract ?? false;
+	}
 
-        /// <summary>
-        /// 获取修饰符字符串
-        /// </summary>
-        public static string ToString(int modifiers)
-        {
-            var parts = new System.Collections.Generic.List<string>();
+	/// <summary>
+	/// 判断方法是否为虚方法
+	/// </summary>
+	/// <param name="method">方法</param>
+	/// <returns>是否为虚方法</returns>
+	public static bool IsVirtual(MethodBase method)
+	{
+		return method?.IsVirtual ?? false;
+	}
 
-            if (IsStatic(modifiers))
-            {
-                parts.Add("static");
-            }
+	/// <summary>
+	/// 判断方法是否为最终方法
+	/// </summary>
+	/// <param name="method">方法</param>
+	/// <returns>是否为最终方法</returns>
+	public static bool IsFinal(MethodBase method)
+	{
+		return method?.IsFinal ?? false;
+	}
 
-            if (IsFinal(modifiers))
-            {
-                parts.Add("final");
-            }
+	/// <summary>
+	/// 判断字段是否为只读的
+	/// </summary>
+	/// <param name="field">字段</param>
+	/// <returns>是否为只读的</returns>
+	public static bool IsReadOnly(FieldInfo field)
+	{
+		return field?.IsInitOnly ?? false;
+	}
 
-            if (IsAbstract(modifiers))
-            {
-                parts.Add("abstract");
-            }
+	/// <summary>
+	/// 判断字段是否为常量
+	/// </summary>
+	/// <param name="field">字段</param>
+	/// <returns>是否为常量</returns>
+	public static bool IsConstant(FieldInfo field)
+	{
+		if (field == null) return false;
+		return field.IsLiteral && !field.IsInitOnly;
+	}
 
-            if (IsPublic(modifiers))
-            {
-                parts.Add("public");
-            }
-            else if (IsPrivate(modifiers))
-            {
-                parts.Add("private");
-            }
-            else
-            {
-                parts.Add("protected");
-            }
-
-            if (IsVirtual(modifiers))
-            {
-                parts.Add("virtual");
-            }
-
-            if (IsOverride(modifiers))
-            {
-                parts.Add("override");
-            }
-
-            return string.Join(" ", parts);
-        }
-    }
+	/// <summary>
+	/// 获取修饰符字符串
+	/// </summary>
+	/// <param name="type">类型</param>
+	/// <returns>修饰符字符串</returns>
+	public static string ToString(Type type)
+	{
+		if (type == null) return string.Empty;
+		var modifiers = string.Empty;
+		if (IsPublic(type)) modifiers += "public ";
+		if (IsPrivate(type)) modifiers += "private ";
+		if (IsInternal(type)) modifiers += "internal ";
+		if (IsAbstract(type)) modifiers += "abstract ";
+		if (IsStatic(type)) modifiers += "static ";
+		return modifiers.TrimEnd();
+	}
 }

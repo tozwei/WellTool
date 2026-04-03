@@ -1,98 +1,113 @@
 using System;
-using System.IO;
 
-namespace WellTool.Core.Lang
+namespace WellTool.Core.Lang;
+
+/// <summary>
+/// 控制台工具类
+/// </summary>
+public static class Console
 {
-    public static class Console
-    {
-        public static void Print(string message)
-        {
-            System.Console.Write(message);
-        }
+	/// <summary>
+	/// 打印一行
+	/// </summary>
+	/// <param name="message">消息</param>
+	public static void PrintLine(object message)
+	{
+		System.Console.WriteLine(message);
+	}
 
-        public static void Println(string message = "")
-        {
-            System.Console.WriteLine(message);
-        }
+	/// <summary>
+	/// 打印
+	/// </summary>
+	/// <param name="message">消息</param>
+	public static void Print(object message)
+	{
+		System.Console.Write(message);
+	}
 
-        public static void Println(object obj)
-        {
-            System.Console.WriteLine(obj);
-        }
+	/// <summary>
+	/// 打印错误
+	/// </summary>
+	/// <param name="message">消息</param>
+	public static void PrintError(object message)
+	{
+		System.Console.Error.WriteLine(message);
+	}
 
-        public static void Println(int value)
-        {
-            System.Console.WriteLine(value);
-        }
+	/// <summary>
+	/// 读取一行
+	/// </summary>
+	/// <returns>输入行</returns>
+	public static string ReadLine()
+	{
+		return System.Console.ReadLine();
+	}
 
-        public static void Println(long value)
-        {
-            System.Console.WriteLine(value);
-        }
+	/// <summary>
+	/// 读取密码
+	/// </summary>
+	/// <returns>密码</returns>
+	public static string ReadPassword()
+	{
+		var password = new System.Text.StringBuilder();
+		ConsoleKeyInfo key;
+		while ((key = System.Console.ReadKey(true)).Key != ConsoleKey.Enter)
+		{
+			if (key.Key == ConsoleKey.Backspace && password.Length > 0)
+			{
+				password.Length--;
+				System.Console.Write("\b \b");
+			}
+			else if (key.KeyChar != '\0')
+			{
+				password.Append(key.KeyChar);
+				System.Console.Write("*");
+			}
+		}
+		System.Console.WriteLine();
+		return password.ToString();
+	}
 
-        public static void Println(double value)
-        {
-            System.Console.WriteLine(value);
-        }
+	/// <summary>
+	/// 读取按键
+	/// </summary>
+	/// <returns>按键</returns>
+	public static ConsoleKeyInfo ReadKey()
+	{
+		return System.Console.ReadKey();
+	}
 
-        public static void Println(bool value)
-        {
-            System.Console.WriteLine(value);
-        }
+	/// <summary>
+	/// 清除屏幕
+	/// </summary>
+	public static void Clear()
+	{
+		System.Console.Clear();
+	}
 
-        public static string ReadLine()
-        {
-            return System.Console.ReadLine();
-        }
+	/// <summary>
+	/// 设置前景色
+	/// </summary>
+	/// <param name="color">颜色</param>
+	public static void SetForegroundColor(ConsoleColor color)
+	{
+		System.Console.ForegroundColor = color;
+	}
 
-        public static char ReadKey()
-        {
-            return System.Console.ReadKey().KeyChar;
-        }
+	/// <summary>
+	/// 设置背景色
+	/// </summary>
+	/// <param name="color">颜色</param>
+	public static void SetBackgroundColor(ConsoleColor color)
+	{
+		System.Console.BackgroundColor = color;
+	}
 
-        public static void Clear()
-        {
-            System.Console.Clear();
-        }
-
-        public static void SetTitle(string title)
-        {
-            System.Console.Title = title;
-        }
-
-        public static void SetForeGroundColor(ConsoleColor color)
-        {
-            System.Console.ForegroundColor = (System.ConsoleColor)color;
-        }
-
-        public static void SetBackgroundColor(ConsoleColor color)
-        {
-            System.Console.BackgroundColor = (System.ConsoleColor)color;
-        }
-
-        public static void ResetColor()
-        {
-            System.Console.ResetColor();
-        }
-    }
-
-    public enum ConsoleColor
-    {
-        Black,
-        DarkBlue,
-        DarkGreen,
-        DarkCyan,
-        DarkRed,
-        DarkMagenta,
-        DarkYellow,
-        Gray,
-        DarkGray,
-        Blue,
-        Green,
-        Cyan,
-        Red,
-        Magenta,
-        Yellow,
-        White
-    }
+	/// <summary>
+	/// 重置颜色
+	/// </summary>
+	public static void ResetColor()
+	{
+		System.Console.ResetColor();
+	}
 }

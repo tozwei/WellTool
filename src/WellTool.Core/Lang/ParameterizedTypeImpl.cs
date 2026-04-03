@@ -1,14 +1,16 @@
+using System;
 using System.Text;
 
 namespace WellTool.Core.Lang;
 
 /// <summary>
-/// 参数化类型实现，用于重新定义泛型类型
+/// 参数化类型实现
 /// </summary>
-public class ParameterizedTypeImpl : IParameterizedType
+[Serializable]
+public class ParameterizedTypeImpl : System.Reflection.ParameterizedType
 {
 	private readonly Type[] _actualTypeArguments;
-	private readonly Type? _ownerType;
+	private readonly Type _ownerType;
 	private readonly Type _rawType;
 
 	/// <summary>
@@ -17,80 +19,59 @@ public class ParameterizedTypeImpl : IParameterizedType
 	/// <param name="actualTypeArguments">实际的泛型参数类型</param>
 	/// <param name="ownerType">拥有者类型</param>
 	/// <param name="rawType">原始类型</param>
-	public ParameterizedTypeImpl(Type[] actualTypeArguments, Type? ownerType, Type rawType)
+	public ParameterizedTypeImpl(Type[] actualTypeArguments, Type ownerType, Type rawType)
 	{
 		_actualTypeArguments = actualTypeArguments;
 		_ownerType = ownerType;
 		_rawType = rawType;
 	}
 
-	/// <inheritdoc />
-	public Type[] ActualTypeArguments => _actualTypeArguments;
-
-	/// <inheritdoc />
-	public Type? OwnerType => _ownerType;
-
-	/// <inheritdoc />
-	public Type RawType => _rawType;
-
-	/// <inheritdoc />
-	public override string ToString()
-	{
-		var buf = new StringBuilder();
-		var useOwner = _ownerType;
-		var raw = _rawType;
-
-		if (useOwner == null)
-		{
-			buf.Append(raw.Name);
-		}
-		else
-		{
-			if (useOwner.IsGenericType)
-			{
-				buf.Append(useOwner.GetGenericTypeDefinition().Name);
-			}
-			else
-			{
-				buf.Append(useOwner.Name);
-			}
-			buf.Append('.').Append(raw.Name);
-		}
-
-		if (_actualTypeArguments.Length > 0)
-		{
-			buf.Append('<');
-			for (var i = 0; i < _actualTypeArguments.Length; i++)
-			{
-				if (i > 0)
-					buf.Append(", ");
-				var type = _actualTypeArguments[i];
-				buf.Append(type.IsGenericType ? type.GetGenericTypeDefinition().Name : type.Name);
-			}
-			buf.Append('>');
-		}
-
-		return buf.ToString();
-	}
-}
-
-/// <summary>
-/// 参数化类型接口
-/// </summary>
-public interface IParameterizedType
-{
 	/// <summary>
 	/// 获取实际的泛型参数类型
 	/// </summary>
-	Type[] ActualTypeArguments { get; }
+	public override Type[] GetGenericArguments()
+	{
+		return _actualTypeArguments;
+	}
 
 	/// <summary>
 	/// 获取拥有者类型
 	/// </summary>
-	Type? OwnerType { get; }
+	public Type OwnerType => _ownerType;
 
 	/// <summary>
 	/// 获取原始类型
 	/// </summary>
-	Type RawType { get; }
+	public Type RawType => _rawType;
+
+	/// <summary>
+	/// 获取基础类型
+	/// </summary>
+	public override Type BaseType => _rawType;
+
+	public override string Name => GetName();
+
+	private string GetName()
+	{
+		var buf = new StringBuilder();
+		var raw = _rawType;
+		if (_ownerType == null)
+		{
+			buf.Append(raw.FullName);
+		}
+		else
+		{
+			buf.Append(_ownerType.FullName);
+			buf.Append('.');
+			buf.Append(raw.Name);
+		}
+		buf.Append('<');
+		for (int i = 0; i < _actualTypeArguments.Length; i++)
+		{
+			if (i > 0) buf.Append(", ");
+			buf.Append(_actualTypeArguments[i].Name);
+		}
+		buf.Append('>');
+		return buf.ToString();
+	}
 }

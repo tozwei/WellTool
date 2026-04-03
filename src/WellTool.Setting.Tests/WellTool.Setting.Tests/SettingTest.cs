@@ -256,7 +256,7 @@ public class SettingTest
         setting.Put("db.connection", "${db.url}/${db.username}/${db.password}", "database");
 
         // 测试分组内变量替换
-        var connection = setting.GetStr("db.connection", "database");
+        var connection = setting.GetStr("db.connection", "database", "");
         Assert.Equal("jdbc:mysql://localhost:3306/root/password", connection);
     }
 
@@ -276,8 +276,8 @@ public class SettingTest
         setting.Put("auth.url", "${global.base_url}/auth", "auth");
 
         // 测试跨分组变量替换
-        Assert.Equal("https://example.com/api", setting.GetStr("api.url", "api"));
-        Assert.Equal("https://example.com/auth", setting.GetStr("auth.url", "auth"));
+        Assert.Equal("https://example.com/api", setting.GetStr("api.url", "api", ""));
+        Assert.Equal("https://example.com/auth", setting.GetStr("auth.url", "auth", ""));
     }
 }
 
