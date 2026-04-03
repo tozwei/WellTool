@@ -7,7 +7,7 @@ namespace WellTool.Core.Text.Escape
     /// <summary>
     /// HTML转义工具类
     /// </summary>
-    public static class HtmlEscape
+    public static class HtmlEscapeUtil
     {
         private static readonly Regex HtmlPattern = new Regex(@"[<>&""']", RegexOptions.Compiled);
 
@@ -68,7 +68,7 @@ namespace WellTool.Core.Text.Escape
     /// <summary>
     /// XML转义工具类
     /// </summary>
-    public static class XmlEscape
+    public static class XmlEscapeUtil
     {
         /// <summary>
         /// XML转义
@@ -113,21 +113,21 @@ namespace WellTool.Core.Text.Escape
         /// <summary>
         /// HTML转义
         /// </summary>
-        public static string HtmlEscape(string str) => HtmlEscape.Escape(str);
+        public static string HtmlEscape(string str) => HtmlEscapeUtil.Escape(str);
 
         /// <summary>
         /// HTML反转义
         /// </summary>
-        public static string HtmlUnescape(string str) => HtmlEscape.Unescape(str);
+        public static string HtmlUnescape(string str) => HtmlEscapeUtil.Unescape(str);
 
         /// <summary>
         /// XML转义
         /// </summary>
-        public static string XmlEscape(string str) => XmlEscape.Escape(str);
+        public static string XmlEscape(string str) => XmlEscapeUtil.Escape(str);
 
         /// <summary>
         /// XML反转义
         /// </summary>
-        public static string XmlUnescape(string str) => XmlEscape.Unescape(str);
+        public static string XmlUnescape(string str) => XmlEscapeUtil.Unescape(str);
     }
 }
