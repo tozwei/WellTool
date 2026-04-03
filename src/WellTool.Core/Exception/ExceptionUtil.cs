@@ -13,7 +13,7 @@ public static class ExceptionUtil
 	/// </summary>
 	/// <param name="e">异常</param>
 	/// <returns>完整消息</returns>
-	public static string GetMessage(Exception e)
+	public static string GetMessage(System.Exception e)
 	{
 		if (e == null)
 			return null;
@@ -35,7 +35,7 @@ public static class ExceptionUtil
 	/// </summary>
 	/// <param name="e">异常</param>
 	/// <returns>堆栈信息</returns>
-	public static string GetStackTrace(Exception e)
+	public static string GetStackTrace(System.Exception e)
 	{
 		return e?.ToString();
 	}
@@ -46,7 +46,7 @@ public static class ExceptionUtil
 	/// <param name="e">异常</param>
 	/// <param name="message">新消息</param>
 	/// <returns>包装后的异常</returns>
-	public static Exception Wrap(Exception e, string message)
+	public static System.Exception Wrap(System.Exception e, string message)
 	{
 		return new UtilException(message, e);
 	}
@@ -57,7 +57,7 @@ public static class ExceptionUtil
 	/// <typeparam name="T">异常类型</typeparam>
 	/// <param name="e">异常</param>
 	/// <returns>是否包含</returns>
-	public static bool IsExceptionOr<E>(Exception e) where E : Exception
+	public static bool IsExceptionOr<E>(System.Exception e) where E : System.Exception
 	{
 		return e is E || (e?.InnerException != null && IsExceptionOr<E>(e.InnerException));
 	}
