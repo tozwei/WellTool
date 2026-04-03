@@ -1,23 +1,21 @@
 using System;
-using System.IO;
-using WellTool.Extra.Template;
 
 namespace WellTool.Extra.Template.Engine.Velocity
 {
     /// <summary>
-    /// Velocity模板引擎
-    /// 文档: http://velocity.apache.org/
+    /// Velocity模板引擎封装
+    /// 需要安装 NVelocity 或类似 NuGet 包
     /// </summary>
     public class VelocityEngine : TemplateEngine
     {
-        private readonly TemplateConfig _config;
+        private object _engine;
+        private TemplateConfig _config;
 
         /// <summary>
         /// 默认构造
         /// </summary>
         public VelocityEngine()
         {
-            _config = TemplateConfig.Default;
         }
 
         /// <summary>
@@ -26,65 +24,46 @@ namespace WellTool.Extra.Template.Engine.Velocity
         /// <param name="config">模板配置</param>
         public VelocityEngine(TemplateConfig config)
         {
-            _config = config ?? TemplateConfig.Default;
+            Init(config);
         }
 
         /// <summary>
-        /// 使用指定配置文件初始化模板引擎
+        /// 初始化引擎
         /// </summary>
-        /// <param name="config">配置文件</param>
-        /// <returns>this</returns>
-        public TemplateEngine Init(TemplateConfig config)
+        /// <param name="config">模板配置</param>
+        /// <returns>引擎本身</returns>
+        public override TemplateEngine Init(TemplateConfig config)
         {
+            if (config == null)
+            {
+                config = TemplateConfig.DEFAULT;
+            }
+            _config = config;
+            // 使用 NVelocity 或类似库创建底层引擎
             return this;
         }
 
         /// <summary>
-        /// 获取原始的引擎对象
+        /// 获取原始引擎对象
         /// </summary>
-        /// <returns>原始引擎对象</returns>
+        /// <returns>原始引擎</returns>
         public object GetRawEngine()
         {
-            return this;
+            return _engine;
         }
 
         /// <summary>
         /// 获取模板
         /// </summary>
-        /// <param name="resource">资源</param>
-        /// <returns>模板实现</returns>
-        public Template GetTemplate(string resource)
+        /// <param name="resource">资源路径</param>
+        /// <returns>模板对象</returns>
+        public override ITemplate GetTemplate(string resource)
         {
-            string content;
-
-            switch (_config.ResourceMode)
+            if (_engine == null)
             {
-                case TemplateConfig.ResourceModeType.String:
-                    content = resource;
-                    break;
-                case TemplateConfig.ResourceModeType.File:
-                    if (File.Exists(resource))
-                    {
-                        content = File.ReadAllText(resource, _config.Charset ?? System.Text.Encoding.UTF8);
-                    }
-                    else
-                    {
-                        var fullPath = Path.Combine(_config.Path ?? "", resource);
-                        content = File.Exists(fullPath)
-                            ? File.ReadAllText(fullPath, _config.Charset ?? System.Text.Encoding.UTF8)
-                            : $"${{{resource}}}";
-                    }
-                    break;
-                case TemplateConfig.ResourceModeType.ClassPath:
-                case TemplateConfig.ResourceModeType.WebRoot:
-                    content = $"${{{resource}}}";
-                    break;
-                default:
-                    content = $"${{{resource}}}";
-                    break;
+                Init(TemplateConfig.DEFAULT);
             }
-
-            return VelocityTemplate.Wrap(content)!;
+            return new VelocityTemplate(resource);
         }
     }
 }

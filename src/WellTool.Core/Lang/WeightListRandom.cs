@@ -10,7 +10,7 @@ namespace WellTool.Core.Lang;
 /// <typeparam name="T">元素类型</typeparam>
 public class WeightListRandom<T>
 {
-	private readonly List<WeightItem<T>> _items = new();
+	private readonly List<WeightItem> _items = new();
 	private readonly Random _random = new Random();
 
 	/// <summary>

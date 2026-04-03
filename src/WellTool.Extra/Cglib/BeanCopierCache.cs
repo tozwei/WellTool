@@ -1,156 +1,90 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace WellTool.Extra.Cglib
 {
     /// <summary>
-    /// BeanCopier属性缓存<br>
+    /// BeanCopier属性缓存
     /// 缓存用于防止多次反射造成的性能问题
     /// </summary>
-    public class BeanCopierCache
+    public static class BeanCopierCache
     {
-        /// <summary>
-        /// BeanCopier属性缓存单例
-        /// </summary>
-        public static readonly BeanCopierCache Instance = new BeanCopierCache();
-
-        private readonly Dictionary<string, Delegate> cache = new Dictionary<string, Delegate>();
+        private static readonly ConcurrentDictionary<string, Delegate> Cache = new ConcurrentDictionary<string, Delegate>();
 
         /// <summary>
-        /// 获得类与转换器生成的key在缓存中对应的元素
+        /// 获得类与转换器生成的key对应的BeanCopier
         /// </summary>
-        /// <typeparam name="TSource">源类型</typeparam>
-        /// <typeparam name="TTarget">目标类型</typeparam>
-        /// <returns>缓存中对应的拷贝委托</returns>
-        public Action<TSource, TTarget> Get<TSource, TTarget>()
+        /// <typeparam name="TSource">源Bean类型</typeparam>
+        /// <typeparam name="TTarget">目标Bean类型</typeparam>
+        /// <param name="useConverter">是否使用转换器</param>
+        /// <returns>缓存的拷贝函数</returns>
+        public static Action<TSource, TTarget> Get<TSource, TTarget>(bool useConverter) where TSource : new() where TTarget : new()
         {
-            var key = GenKey(typeof(TSource), typeof(TTarget), false);
-            if (!cache.TryGetValue(key, out var @delegate))
-            {
-                @delegate = CreateCopyDelegate<TSource, TTarget>();
-                cache[key] = @delegate;
-            }
-            return (Action<TSource, TTarget>)@delegate;
+            var key = GenKey(typeof(TSource), typeof(TTarget), useConverter);
+            return (Action<TSource, TTarget>)Cache.GetOrAdd(key, k => CreateCopier<TSource, TTarget>(useConverter));
         }
 
         /// <summary>
-        /// 获得类与转换器生成的key在缓存中对应的元素
+        /// 获得类与转换器生成的key对应的BeanCopier
         /// </summary>
-        /// <param name="sourceType">源类型</param>
-        /// <param name="targetType">目标类型</param>
-        /// <returns>缓存中对应的拷贝委托</returns>
-        public Delegate Get(Type sourceType, Type targetType)
+        /// <typeparam name="TSource">源Bean类型</typeparam>
+        /// <typeparam name="TTarget">目标Bean类型</typeparam>
+        /// <param name="converter">转换器</param>
+        /// <returns>缓存的拷贝函数</returns>
+        public static Action<TSource, TTarget> Get<TSource, TTarget>(Func<object, object, object> converter) where TSource : new() where TTarget : new()
         {
-            var key = GenKey(sourceType, targetType, false);
-            if (!cache.TryGetValue(key, out var @delegate))
-            {
-                // 动态创建拷贝委托
-                @delegate = CreateCopyDelegateGeneric(sourceType, targetType);
-                cache[key] = @delegate;
-            }
-            return @delegate;
+            return Get<TSource, TTarget>(converter != null);
         }
 
         /// <summary>
-        /// 创建属性拷贝委托（用于反射调用）
-        /// </summary>
-        /// <param name="sourceType">源类型</param>
-        /// <param name="targetType">目标类型</param>
-        /// <returns>拷贝委托</returns>
-        private Delegate CreateCopyDelegateGeneric(Type sourceType, Type targetType)
-        {
-            var sourceProperties = sourceType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            var targetProperties = targetType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            // 创建动态方法
-            var sourceParam = System.Linq.Expressions.Expression.Parameter(typeof(object), "source");
-            var targetParam = System.Linq.Expressions.Expression.Parameter(typeof(object), "target");
-
-            var sourceCast = System.Linq.Expressions.Expression.Convert(sourceParam, sourceType);
-            var targetCast = System.Linq.Expressions.Expression.Convert(targetParam, targetType);
-
-            var expressions = new List<System.Linq.Expressions.Expression>();
-
-            foreach (var sourceProperty in sourceProperties)
-            {
-                var targetProperty = targetProperties.FirstOrDefault(p => p.Name == sourceProperty.Name && p.PropertyType == sourceProperty.PropertyType);
-                if (targetProperty != null && targetProperty.CanWrite && sourceProperty.CanRead)
-                {
-                    var sourceAccess = System.Linq.Expressions.Expression.Property(sourceCast, sourceProperty);
-                    var targetAccess = System.Linq.Expressions.Expression.Property(targetCast, targetProperty);
-                    var assignment = System.Linq.Expressions.Expression.Assign(targetAccess, sourceAccess);
-                    expressions.Add(assignment);
-                }
-            }
-
-            System.Linq.Expressions.Expression body;
-            if (expressions.Count == 0)
-            {
-                body = System.Linq.Expressions.Expression.Empty();
-            }
-            else
-            {
-                body = System.Linq.Expressions.Expression.Block(expressions);
-            }
-            
-            var lambdaType = typeof(Action<,>).MakeGenericType(sourceType, targetType);
-            var lambda = System.Linq.Expressions.Expression.Lambda(lambdaType, body, sourceParam, targetParam);
-            
-            return lambda.Compile();
-        }
-
-        /// <summary>
-        /// 获得类与转换器生成的key<br>
-        /// 结构类似于：srcClassName#targetClassName#0
+        /// 获得类与转换器生成的key
         /// </summary>
         /// <param name="srcClass">源Bean的类</param>
         /// <param name="targetClass">目标Bean的类</param>
         /// <param name="useConverter">是否使用转换器</param>
         /// <returns>属性名和Map映射的key</returns>
-        private string GenKey(Type srcClass, Type targetClass, bool useConverter)
+        private static string GenKey(Type srcClass, Type targetClass, bool useConverter)
         {
-            var key = new StringBuilder()
-                .Append(srcClass.FullName)
-                .Append('#').Append(targetClass.FullName)
-                .Append('#').Append(useConverter ? 1 : 0);
-            return key.ToString();
+            return $"{srcClass.FullName}#{targetClass.FullName}#{(useConverter ? 1 : 0)}";
         }
 
         /// <summary>
-        /// 创建属性拷贝委托
+        /// 创建BeanCopier
         /// </summary>
-        /// <typeparam name="TSource">源类型</typeparam>
-        /// <typeparam name="TTarget">目标类型</typeparam>
-        /// <returns>拷贝委托</returns>
-        private Action<TSource, TTarget> CreateCopyDelegate<TSource, TTarget>()
+        private static Action<TSource, TTarget> CreateCopier<TSource, TTarget>(bool useConverter) where TSource : new() where TTarget : new()
         {
             var sourceType = typeof(TSource);
             var targetType = typeof(TTarget);
 
-            var sourceProperties = sourceType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            var targetProperties = targetType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var sourceProps = sourceType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var targetProps = targetType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var targetPropDict = new Dictionary<string, PropertyInfo>(StringComparer.OrdinalIgnoreCase);
+            foreach (var prop in targetProps)
+            {
+                targetPropDict[prop.Name] = prop;
+            }
 
             return (source, target) =>
             {
-                if (source == null || target == null)
+                foreach (var sourceProp in sourceProps)
                 {
-                    return;
-                }
+                    if (!targetPropDict.TryGetValue(sourceProp.Name, out var targetProp)) continue;
+                    if (!targetProp.CanWrite || !sourceProp.CanRead) continue;
 
-                foreach (var sourceProperty in sourceProperties)
-                {
-                    var targetProperty = targetProperties.FirstOrDefault(p => p.Name == sourceProperty.Name && p.PropertyType == sourceProperty.PropertyType);
-                    if (targetProperty != null && targetProperty.CanWrite && sourceProperty.CanRead)
+                    try
                     {
-                        try
+                        var value = sourceProp.GetValue(source);
+                        if (value != null && targetProp.PropertyType != sourceProp.PropertyType)
                         {
-                            var value = sourceProperty.GetValue(source);
-                            targetProperty.SetValue(target, value);
+                            value = Convert.ChangeType(value, targetProp.PropertyType);
                         }
-                        catch { }
+                        targetProp.SetValue(target, value);
+                    }
+                    catch
+                    {
+                        // 忽略属性复制错误
                     }
                 }
             };

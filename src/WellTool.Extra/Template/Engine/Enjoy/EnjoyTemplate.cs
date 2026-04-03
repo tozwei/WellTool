@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using System.IO;
 
 namespace WellTool.Extra.Template.Engine.Enjoy
@@ -6,57 +6,39 @@ namespace WellTool.Extra.Template.Engine.Enjoy
     /// <summary>
     /// Enjoy模板实现
     /// </summary>
-    public class EnjoyTemplate : AbstractTemplate
+    public class EnjoyTemplate : ITemplate
     {
-        private readonly string _content;
+        private readonly string _resource;
 
-        /// <summary>
-        /// 包装Enjoy模板
-        /// </summary>
-        /// <param name="content">模板内容</param>
-        /// <returns>EnjoyTemplate</returns>
-        public static EnjoyTemplate Wrap(string content)
+        public EnjoyTemplate(string resource)
         {
-            return content == null ? null! : new EnjoyTemplate(content);
+            _resource = resource;
         }
 
         /// <summary>
-        /// 构造
+        /// 渲染模板
         /// </summary>
-        /// <param name="content">模板内容</param>
-        public EnjoyTemplate(string content)
+        /// <param name="dataMap">数据模型</param>
+        /// <param name="writer">输出流</param>
+        public void Render(IDictionary<string, object> dataMap, TextWriter writer)
         {
-            _content = content;
+            // 需要集成 JinianNet.JiTemplate 或类似库
+            // 这里提供简化实现
+            writer.Write(_resource);
         }
 
         /// <summary>
-        /// 将模板与绑定参数融合后输出到Writer
+        /// 渲染模板并返回字符串
         /// </summary>
-        /// <param name="bindingMap">绑定的参数</param>
-        /// <param name="writer">输出</param>
-        public override void Render(IDictionary<object, object> bindingMap, TextWriter writer)
+        /// <param name="dataMap">数据模型</param>
+        /// <returns>渲染结果</returns>
+        public string RenderToString(IDictionary<string, object> dataMap)
         {
-            var result = _content;
-            foreach (var kvp in bindingMap)
+            using (var writer = new StringWriter())
             {
-                var key = kvp.Key?.ToString() ?? "";
-                var value = kvp.Value?.ToString() ?? "";
-                result = result.Replace($"${{{key}}}", value);
-                result = result.Replace($"${key}", value);
-                result = result.Replace($"#{key}", value);
+                Render(dataMap, writer);
+                return writer.ToString();
             }
-            writer.Write(result);
-        }
-
-        /// <summary>
-        /// 将模板与绑定参数融合后输出到流
-        /// </summary>
-        /// <param name="bindingMap">绑定的参数</param>
-        /// <param name="output">输出</param>
-        public override void Render(IDictionary<object, object> bindingMap, Stream output)
-        {
-            using var writer = new StreamWriter(output);
-            Render(bindingMap, writer);
         }
     }
 }

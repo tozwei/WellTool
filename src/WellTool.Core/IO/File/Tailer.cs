@@ -250,10 +250,10 @@ public class Tailer : IDisposable
 /// <summary>
 /// 控制台行处理器
 /// </summary>
-public class ConsoleLineHandler : LineHandler
+public class ConsoleLineHandler
 {
-    public void Handle(string line)
+    public static LineHandler Create()
     {
-        Console.WriteLine(line);
+        return line => Console.WriteLine(line);
     }
 }

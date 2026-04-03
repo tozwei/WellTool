@@ -56,11 +56,18 @@ public class NioClient : IDisposable
 		{
 			_channel = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 			_channel.Blocking = false;
-			_channel.Connect(address);
-
-			while (!_channel.IsBound)
+			
+			try
 			{
-				Thread.Sleep(10);
+				_channel.Connect(address);
+			}
+			catch (SocketException e) when (e.SocketErrorCode == SocketError.WouldBlock || e.SocketErrorCode == SocketError.InProgress)
+			{
+				// 非阻塞套接字，连接正在进行中
+				while (!_channel.Connected)
+				{
+					Thread.Sleep(10);
+				}
 			}
 		}
 		catch (SocketException e)

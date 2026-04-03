@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 
-namespace WellDone.Core.Img;
+namespace WellTool.Core.Img;
 
 /// <summary>
 /// 图片封装
@@ -26,7 +26,7 @@ public class Img
 
 	/// <summary>
 	/// 高
-	</summary>
+	/// </summary>
 	public int Height => _image.Height;
 
 	/// <summary>

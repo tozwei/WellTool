@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.Serialization;
 
 namespace WellTool.Core.Map;
 
@@ -63,5 +64,15 @@ public class MapWrapper<K, V> : IDictionary<K, V>, IEnumerable<KeyValuePair<K, V
         {
             action(kvp.Key, kvp.Value);
         }
+    }
+
+    public void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        info.AddValue("Raw", _raw);
+    }
+
+    protected MapWrapper(SerializationInfo info, StreamingContext context)
+    {
+        _raw = (IDictionary<K, V>)info.GetValue("Raw", typeof(IDictionary<K, V>))!;
     }
 }

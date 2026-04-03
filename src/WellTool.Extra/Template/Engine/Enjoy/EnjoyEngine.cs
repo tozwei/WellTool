@@ -1,24 +1,21 @@
-using System.Collections.Generic;
-using System.IO;
-using WellTool.Extra.Template;
+using System;
 
 namespace WellTool.Extra.Template.Engine.Enjoy
 {
     /// <summary>
     /// Enjoy模板引擎封装
-    /// 文档: https://www.jfinal.com/
+    /// 需要安装 JinianNet.JiTemplate 或类似 NuGet 包
     /// </summary>
     public class EnjoyEngine : TemplateEngine
     {
-        private readonly Dictionary<string, string> _templates = new Dictionary<string, string>();
-        private TemplateConfig.ResourceModeType _resourceMode;
+        private object _engine;
+        private TemplateConfig _config;
 
         /// <summary>
         /// 默认构造
         /// </summary>
         public EnjoyEngine()
         {
-            _resourceMode = TemplateConfig.ResourceModeType.String;
         }
 
         /// <summary>
@@ -31,73 +28,41 @@ namespace WellTool.Extra.Template.Engine.Enjoy
         }
 
         /// <summary>
-        /// 使用指定配置文件初始化模板引擎
+        /// 初始化引擎
         /// </summary>
-        /// <param name="config">配置文件</param>
-        /// <returns>this</returns>
-        public TemplateEngine Init(TemplateConfig config)
+        /// <param name="config">模板配置</param>
+        /// <returns>引擎本身</returns>
+        public override TemplateEngine Init(TemplateConfig config)
         {
             if (config == null)
             {
-                config = TemplateConfig.Default;
+                config = TemplateConfig.DEFAULT;
             }
-            this._resourceMode = config.ResourceMode;
+            _config = config;
+            // 使用反射或依赖注入创建底层引擎
+            // _engine = CreateEngine(config);
             return this;
         }
 
         /// <summary>
         /// 获取模板
         /// </summary>
-        /// <param name="resource">资源</param>
-        /// <returns>模板实现</returns>
-        public Template GetTemplate(string resource)
+        /// <param name="resource">资源路径或字符串</param>
+        /// <returns>模板对象</returns>
+        public override ITemplate GetTemplate(string resource)
         {
-            if (_resourceMode == TemplateConfig.ResourceModeType.String)
+            if (_engine == null)
             {
-                return EnjoyTemplate.Wrap(resource)!;
+                Init(TemplateConfig.DEFAULT);
             }
-
-            // 尝试从文件加载
-            if (_templates.TryGetValue(resource, out var content))
+            
+            if (_config != null && _config.ResourceMode == TemplateConfig.ResourceModeEnum.STRING)
             {
-                return EnjoyTemplate.Wrap(content)!;
+                return new EnjoyTemplate(resource);
             }
-
-            // 尝试从文件读取
-            try
-            {
-                if (File.Exists(resource))
-                {
-                    content = File.ReadAllText(resource);
-                    return EnjoyTemplate.Wrap(content)!;
-                }
-            }
-            catch
-            {
-                // 忽略
-            }
-
-            // 返回简单模板
-            return EnjoyTemplate.Wrap($"${{{resource}}}")!;
-        }
-
-        /// <summary>
-        /// 添加模板
-        /// </summary>
-        /// <param name="name">模板名称</param>
-        /// <param name="content">模板内容</param>
-        public void AddTemplate(string name, string content)
-        {
-            _templates[name] = content;
-        }
-
-        /// <summary>
-        /// 获取原始引擎的钩子方法，用于自定义特殊属性
-        /// </summary>
-        /// <returns>引擎对象</returns>
-        public object GetRawEngine()
-        {
-            return this;
+            
+            // 文件或类路径模板处理
+            return new EnjoyTemplate(resource);
         }
     }
 }

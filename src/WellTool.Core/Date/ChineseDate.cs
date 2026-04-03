@@ -1,17 +1,10 @@
 using System;
 using System.IO;
 
-namespace WellDone.Compiled;
-using WellDone.Converter;
-
-using WellDone.Core.Converter;
-using WellDone.Core.Date.Chinese;
-using WellDone.Core.Math;
-using WellDone.Core.Util;
+namespace WellTool.Core.Date;
 
 using SystemTimeZone = System.TimeZoneInfo;
 
-using java.time.LocalDate = System.DateTime;
 using Date = System.DateTime;
 
 /// <summary>

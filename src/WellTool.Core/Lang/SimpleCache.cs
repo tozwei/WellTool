@@ -13,7 +13,7 @@ namespace WellTool.Core.Lang;
 /// <typeparam name="V">值类型</typeparam>
 public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 {
-	private readonly Dictionary<Mutable<K>, V> _rawMap;
+	private readonly Dictionary<MutableObject<K>, V> _rawMap;
 	private readonly object _lock = new();
 	private readonly Dictionary<K, object> _keyLockMap = new();
 
@@ -22,7 +22,7 @@ public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 	/// </summary>
 	public SimpleCache()
 	{
-		_rawMap = new Dictionary<Mutable<K>, V>();
+		_rawMap = new Dictionary<MutableObject<K>, V>();
 	}
 
 	/// <summary>
@@ -34,7 +34,7 @@ public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 	{
 		lock (_lock)
 		{
-			return _rawMap.TryGetValue(MutableObj<K>.Of(key), out var value) ? value : default;
+			return _rawMap.TryGetValue(new MutableObject<K>(key), out var value) ? value : default;
 		}
 	}
 
@@ -44,7 +44,7 @@ public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 	/// <param name="key">键</param>
 	/// <param name="supplier">如果不存在回调方法，用于生产值对象</param>
 	/// <returns>值对象</returns>
-	public V Get(K key, Func0<V> supplier)
+	public V Get(K key, Func<V> supplier)
 	{
 		return Get(key, null, supplier);
 	}
@@ -56,7 +56,7 @@ public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 	/// <param name="validPredicate">检查结果对象是否可用</param>
 	/// <param name="supplier">如果不存在回调方法或结果不可用，用于生产值对象</param>
 	/// <returns>值对象</returns>
-	public V Get(K key, Func<bool, V> validPredicate, Func0<V> supplier)
+	public V Get(K key, Func<V, bool> validPredicate, Func<V> supplier)
 	{
 		V v = Get(key);
 		if (validPredicate != null && v != null && !validPredicate(v))
@@ -74,7 +74,7 @@ public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 				{
 					try
 					{
-						v = supplier.Call();
+						v = supplier();
 					}
 					catch (Exception e)
 					{
@@ -98,7 +98,7 @@ public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 	{
 		lock (_lock)
 		{
-			_rawMap[MutableObj<K>.Of(key)] = value;
+			_rawMap[new MutableObject<K>(key)] = value;
 		}
 		return value;
 	}
@@ -112,7 +112,7 @@ public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 	{
 		lock (_lock)
 		{
-			var mutableKey = MutableObj<K>.Of(key);
+			var mutableKey = new MutableObject<K>(key);
 			if (_rawMap.TryGetValue(mutableKey, out var value))
 			{
 				_rawMap.Remove(mutableKey);

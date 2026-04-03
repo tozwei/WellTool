@@ -133,6 +133,12 @@ namespace WellTool.Json
                 return strValue;
             }
 
+            // 对象类型直接返回字符串
+            if (type == typeof(object))
+            {
+                return strValue;
+            }
+
             // 日期时间处理
             if (type == typeof(DateTime))
             {

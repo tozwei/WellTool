@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WellTool.Core.Lang.Hash;
 
 namespace WellTool.Core.Lang;
 
@@ -64,7 +65,7 @@ public class ConsistentHash<T>
 	{
 		for (int i = 0; i < _numberOfReplicas; i++)
 		{
-			_circle[_hashFunc.Hash32(node.ToString() + i)] = node;
+			_circle[_hashFunc(node.ToString() + i)] = node;
 		}
 	}
 
@@ -76,7 +77,7 @@ public class ConsistentHash<T>
 	{
 		for (int i = 0; i < _numberOfReplicas; i++)
 		{
-			_circle.Remove(_hashFunc.Hash32(node.ToString() + i));
+			_circle.Remove(_hashFunc(node.ToString() + i));
 		}
 	}
 
@@ -91,7 +92,7 @@ public class ConsistentHash<T>
 		{
 			return default;
 		}
-		int hash = _hashFunc.Hash32(key);
+		int hash = _hashFunc(key);
 		if (!_circle.ContainsKey(hash))
 		{
 			SortedDictionary<int, T>.KeyCollection keys = _circle.Keys;

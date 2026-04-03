@@ -146,9 +146,9 @@ internal class LZWEncoder
 
         Output(_clearCode);
 
-        outer_loop:
         while ((c = NextPixel()) != EOF)
         {
+            outer_loop:
             fcode = (c << _maxBits) + ent;
             int i = (c << 4) ^ hsizeReg;
 
@@ -171,7 +171,7 @@ internal class LZWEncoder
                     if (_hTab[i] == fcode)
                     {
                         ent = _codeTab[i];
-                        continue outer_loop;
+                        continue;
                     }
                 } while (_hTab[i] >= 0);
             }

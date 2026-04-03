@@ -7,7 +7,7 @@ namespace WellTool.Core.Lang;
 /// 参数化类型实现
 /// </summary>
 [Serializable]
-public class ParameterizedTypeImpl : System.Reflection.ParameterizedType
+public class ParameterizedTypeImpl
 {
 	private readonly Type[] _actualTypeArguments;
 	private readonly Type _ownerType;
@@ -29,7 +29,7 @@ public class ParameterizedTypeImpl : System.Reflection.ParameterizedType
 	/// <summary>
 	/// 获取实际的泛型参数类型
 	/// </summary>
-	public override Type[] GetGenericArguments()
+	public Type[] GetGenericArguments()
 	{
 		return _actualTypeArguments;
 	}
@@ -47,9 +47,9 @@ public class ParameterizedTypeImpl : System.Reflection.ParameterizedType
 	/// <summary>
 	/// 获取基础类型
 	/// </summary>
-	public override Type BaseType => _rawType;
+	public Type BaseType => _rawType;
 
-	public override string Name => GetName();
+	public string Name => GetName();
 
 	private string GetName()
 	{
