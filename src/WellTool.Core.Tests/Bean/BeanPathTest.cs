@@ -1,29 +1,43 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+using WellTool.Core.Bean;
 using Xunit;
 
-namespace WellTool.Core.Tests.Bean;
+namespace WellTool.Core.Tests;
 
-/// <summary>
-/// Bean 路径测试
-/// </summary>
 public class BeanPathTest
 {
     [Fact]
-    public void TestBeanPath()
+    public void GetTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var bean = new TestBean { Name = "John", Inner = new InnerBean { Value = "test" } };
+        var path = BeanPath.Create("Inner.Value");
+        var value = path.Get(bean);
+        Assert.Equal("test", value);
+    }
+
+    [Fact]
+    public void SetTest()
+    {
+        var bean = new TestBean { Name = "John" };
+        var path = BeanPath.Create("Inner.Value");
+        path.Set(bean, "newValue");
+        Assert.Equal("newValue", bean.Inner?.Value);
+    }
+
+    [Fact]
+    public void CreateTest()
+    {
+        var path = BeanPath.Create("a.b.c");
+        Assert.NotNull(path);
+    }
+
+    private class TestBean
+    {
+        public string Name { get; set; } = "";
+        public InnerBean? Inner { get; set; }
+    }
+
+    private class InnerBean
+    {
+        public string Value { get; set; } = "";
     }
 }

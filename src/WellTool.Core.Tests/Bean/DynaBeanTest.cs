@@ -1,29 +1,79 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+using WellTool.Core.Bean;
 using Xunit;
 
-namespace WellTool.Core.Tests.Bean;
+namespace WellTool.Core.Tests;
 
-/// <summary>
-/// 动态 Bean 测试
-/// </summary>
 public class DynaBeanTest
 {
     [Fact]
-    public void TestDynaBean()
+    public void ConstructorTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var bean = new DynaBean("name", "John");
+        Assert.Equal("John", bean.Get("name"));
+    }
+
+    [Fact]
+    public void SetGetTest()
+    {
+        var bean = new DynaBean();
+        bean.Set("name", "John");
+        bean.Set("age", 25);
+        Assert.Equal("John", bean.Get("name"));
+        Assert.Equal(25, bean.Get("age"));
+    }
+
+    [Fact]
+    public void ContainsTest()
+    {
+        var bean = new DynaBean();
+        bean.Set("name", "John");
+        Assert.True(bean.Contains("name"));
+        Assert.False(bean.Contains("age"));
+    }
+
+    [Fact]
+    public void RemoveTest()
+    {
+        var bean = new DynaBean();
+        bean.Set("name", "John");
+        bean.Remove("name");
+        Assert.False(bean.Contains("name"));
+    }
+
+    [Fact]
+    public void ToBeanTest()
+    {
+        var bean = new DynaBean();
+        bean.Set("name", "John");
+        bean.Set("age", 25);
+        var obj = bean.ToBean<Person>();
+        Assert.Equal("John", obj.Name);
+        Assert.Equal(25, obj.Age);
+    }
+
+    [Fact]
+    public void ToMapTest()
+    {
+        var bean = new DynaBean();
+        bean.Set("name", "John");
+        bean.Set("age", 25);
+        var map = bean.ToMap();
+        Assert.Equal(2, map.Count);
+        Assert.Equal("John", map["name"]);
+    }
+
+    [Fact]
+    public void CloneTest()
+    {
+        var bean = new DynaBean();
+        bean.Set("name", "John");
+        var cloned = bean.Clone();
+        Assert.Equal("John", cloned.Get("name"));
+    }
+
+    private class Person
+    {
+        public string Name { get; set; } = "";
+        public int Age { get; set; }
     }
 }

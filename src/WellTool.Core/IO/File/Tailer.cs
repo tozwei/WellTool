@@ -190,7 +190,7 @@ public class Tailer : IDisposable
     {
         try
         {
-            using var fs = new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var fs = new FileStream(_filePath, System.IO.FileMode.Open, System.IO.FileAccess.Read, FileShare.ReadWrite);
             fs.Seek(position, SeekOrigin.Begin);
             using var reader = new StreamReader(fs, _charset);
 
@@ -211,7 +211,7 @@ public class Tailer : IDisposable
         try
         {
             var lines = new ConcurrentQueue<string>();
-            using var fs = new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var fs = new FileStream(_filePath, System.IO.FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var reader = new StreamReader(fs, _charset);
 
             string? line;

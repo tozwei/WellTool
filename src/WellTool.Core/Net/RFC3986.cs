@@ -47,7 +47,7 @@ namespace WellTool.Core.Net
         /// <summary>
         /// 路径段编码
         /// </summary>
-        private static class Segment
+        public static class Segment
         {
             /// <summary>
             /// 编码路径段

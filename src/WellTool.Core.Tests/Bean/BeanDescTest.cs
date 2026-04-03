@@ -1,29 +1,69 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+using WellTool.Core.Bean;
 using Xunit;
 
-namespace WellTool.Core.Tests.Bean;
+namespace WellTool.Core.Tests;
 
-/// <summary>
-/// Bean 描述测试
-/// </summary>
 public class BeanDescTest
 {
     [Fact]
-    public void TestBeanDesc()
+    public void GetTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var desc = BeanDesc.Get(typeof(Person));
+        Assert.NotNull(desc);
+    }
+
+    [Fact]
+    public void GetPropTest()
+    {
+        var desc = BeanDesc.Get(typeof(Person));
+        var prop = desc.GetProp("Name");
+        Assert.NotNull(prop);
+        Assert.Equal("Name", prop.Name);
+    }
+
+    [Fact]
+    public void GetPropsTest()
+    {
+        var desc = BeanDesc.Get(typeof(Person));
+        var props = desc.GetProps();
+        Assert.NotEmpty(props);
+    }
+
+    [Fact]
+    public void GetSetterTest()
+    {
+        var desc = BeanDesc.Get(typeof(Person));
+        var setter = desc.GetSetter("Name");
+        Assert.NotNull(setter);
+    }
+
+    [Fact]
+    public void GetGetterTest()
+    {
+        var desc = BeanDesc.Get(typeof(Person));
+        var getter = desc.GetGetter("Name");
+        Assert.NotNull(getter);
+    }
+
+    [Fact]
+    public void IsReadableTest()
+    {
+        var desc = BeanDesc.Get(typeof(Person));
+        Assert.True(desc.IsReadable("Name"));
+        Assert.True(desc.IsReadable("Age"));
+    }
+
+    [Fact]
+    public void IsWritableTest()
+    {
+        var desc = BeanDesc.Get(typeof(Person));
+        Assert.True(desc.IsWritable("Name"));
+        Assert.True(desc.IsWritable("Age"));
+    }
+
+    private class Person
+    {
+        public string Name { get; set; } = "";
+        public int Age { get; set; }
     }
 }
