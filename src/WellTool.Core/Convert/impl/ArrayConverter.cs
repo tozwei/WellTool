@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using WellTool.Core.Convert;
 
-namespace WellTool.Core.Converter.impl
+namespace WellTool.Core.Convert.impl
 {
     /// <summary>
     /// 数组转换器

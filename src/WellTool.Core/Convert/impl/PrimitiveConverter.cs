@@ -1,15 +1,17 @@
 using System;
+using WellTool.Core.Convert;
 using System.Globalization;
+using WellTool.Core.Convert;
 
-namespace WellTool.Core.Converter.impl
+namespace WellTool.Core.Convert.impl
 {
     /// <summary>
-    /// 基础类型转换器
+    /// 基础类型转换�?
     /// </summary>
     public class PrimitiveConverter : IConverter
     {
         /// <summary>
-        /// 转换值
+        /// 转换�?
         /// </summary>
         public object Convert(object value, Type targetType)
         {
@@ -56,7 +58,7 @@ namespace WellTool.Core.Converter.impl
         }
 
         /// <summary>
-        /// 获取默认值
+        /// 获取默认�?
         /// </summary>
         private static object GetDefaultValue(Type type)
         {
@@ -81,7 +83,7 @@ namespace WellTool.Core.Converter.impl
         }
 
         /// <summary>
-        /// 获取支持的目标类型
+        /// 获取支持的目标类�?
         /// </summary>
         public Type[] GetSupportedTargetTypes()
         {

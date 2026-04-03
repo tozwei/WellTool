@@ -1,19 +1,19 @@
 using System;
+using WellTool.Core.Convert;
 using System.Collections.Generic;
+using WellTool.Core.Convert;
 
-namespace WellTool.Core.Converter.impl
+namespace WellTool.Core.Convert.impl
 {
     /// <summary>
-    /// 枚举转换器
-    /// </summary>
+    /// 枚举转换�?    /// </summary>
     public class EnumConverter : IConverter
     {
         /// <summary>
-        /// 转换值
-        /// </summary>
-        /// <param name="value">要转换的值</param>
+        /// 转换�?        /// </summary>
+        /// <param name="value">要转换的�?/param>
         /// <param name="targetType">目标类型</param>
-        /// <returns>转换后的值</returns>
+        /// <returns>转换后的�?/returns>
         public object Convert(object value, Type targetType)
         {
             if (value == null)
@@ -52,9 +52,8 @@ namespace WellTool.Core.Converter.impl
         }
 
         /// <summary>
-        /// 获取支持的目标类型
-        /// </summary>
-        /// <returns>支持的目标类型数组</returns>
+        /// 获取支持的目标类�?        /// </summary>
+        /// <returns>支持的目标类型数�?/returns>
         public Type[] GetSupportedTargetTypes()
         {
             return new[] { typeof(Enum) };

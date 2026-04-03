@@ -30,12 +30,23 @@ public static class SystemUtil
 	/// <summary>
 	/// 获取当前进程的ID
 	/// </summary>
-	public static int CurrentPid() => Environment.ProcessId;
+	//public static int CurrentPid() => Environment.ProcessId;
 
-	/// <summary>
-	/// 获取当前线程的ID
-	/// </summary>
-	public static int CurrentTid() => Environment.CurrentManagedThreadId;
+    public static int CurrentPid()
+    {
+#if NET6_0_OR_GREATER
+        // ✅ .NET 6 及以上版本：使用高性能 API
+        return Environment.ProcessId;
+#else
+        // ⚠️ 旧版本 (.NET Framework, .NET Core 2.1/3.1 等)：使用兼容 API
+        return System.Diagnostics.Process.GetCurrentProcess().Id;
+#endif
+    }
+
+    /// <summary>
+    /// 获取当前线程的ID
+    /// </summary>
+    public static int CurrentTid() => Environment.CurrentManagedThreadId;
 
 	/// <summary>
 	/// 获取操作系统版本

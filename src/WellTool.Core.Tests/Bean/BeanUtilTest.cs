@@ -1,134 +1,100 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-using System;
-using Xunit;
 using WellTool.Core.Bean;
-using XAssert = Xunit.Assert;
+using Xunit;
 
-namespace WellTool.Core.Tests.Bean;
+namespace WellTool.Core.Tests;
 
-/// <summary>
-/// BeanUtil 测试
-/// </summary>
 public class BeanUtilTest
 {
-    public class Person
+    public class SourceBean
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
         public int Age { get; set; }
-        public string Openid { get; set; }
+        public string? Email { get; set; }
     }
 
-    public class SubPerson : Person
+    public class TargetBean
     {
-        public string SubName { get; set; }
-    }
-
-    [Fact]
-    public void IsBeanTest()
-    {
-        // Dictionary 不包含 setXXX 方法，不是 bean
-        bool isBean = BeanUtil.IsBean(typeof(System.Collections.Generic.Dictionary<string, object>));
-        XAssert.False(isBean);
-    }
-
-    [Fact]
-    public void FillBeanTest()
-    {
-        var person = BeanUtil.FillBean(new Person(), new Person { Name = "张三", Age = 18 });
-
-        XAssert.Equal("张三", person.Name);
-        XAssert.Equal(18, person.Age);
-    }
-
-    [Fact]
-    public void ToBeanTest()
-    {
-        var person = new SubPerson
-        {
-            Age = 14,
-            Openid = "11213232",
-            Name = "测试A11",
-            SubName = "sub名字"
-        };
-
-        var map = BeanUtil.BeanToMap(person);
-        XAssert.NotNull(map);
-        XAssert.Equal("测试A11", map["name"]);
-        XAssert.Equal(14, map["age"]);
-        XAssert.Equal("11213232", map["openid"]);
-    }
-
-    [Fact]
-    public void BeanToMapTest()
-    {
-        var person = new SubPerson
-        {
-            Age = 14,
-            Openid = "11213232",
-            Name = "测试A11",
-            SubName = "sub名字"
-        };
-
-        var map = BeanUtil.BeanToMap(person);
-
-        XAssert.Equal("测试A11", map["name"]);
-        XAssert.Equal(14, map["age"]);
-        XAssert.Equal("11213232", map["openid"]);
-    }
-
-    [Fact]
-    public void GetPropertyTest()
-    {
-        var person = new SubPerson
-        {
-            Age = 14,
-            Openid = "11213232",
-            Name = "测试A11",
-            SubName = "sub名字"
-        };
-
-        var name = BeanUtil.GetProperty(person, "name");
-        XAssert.Equal("测试A11", name);
-        var subName = BeanUtil.GetProperty(person, "subName");
-        XAssert.Equal("sub名字", subName);
+        public string Name { get; set; } = "";
+        public int Age { get; set; }
+        public string? Email { get; set; }
     }
 
     [Fact]
     public void CopyPropertiesTest()
     {
-        var person = new SubPerson
-        {
-            Age = 14,
-            Openid = "11213232",
-            Name = "测试A11",
-            SubName = "sub名字"
-        };
+        var source = new SourceBean { Name = "John", Age = 25, Email = "john@test.com" };
+        var target = new TargetBean();
 
-        var person1 = BeanUtil.CopyProperties(person, new SubPerson());
-        XAssert.NotNull(person1);
-        XAssert.Equal(14, person1.Age);
-        XAssert.Equal("11213232", person1.Openid);
-        XAssert.Equal("测试A11", person1.Name);
-        XAssert.Equal("sub名字", person1.SubName);
+        BeanUtil.CopyProperties(source, target);
+
+        Assert.Equal(source.Name, target.Name);
+        Assert.Equal(source.Age, target.Age);
+        Assert.Equal(source.Email, target.Email);
     }
 
     [Fact]
-    public void SetPropertiesTest()
+    public void CopyPropertiesWithIgnoreTest()
     {
-        var person = new Person();
-        BeanUtil.SetProperty(person, "Name", "张三");
-        XAssert.Equal("张三", person.Name);
+        var source = new SourceBean { Name = "John", Age = 25, Email = "john@test.com" };
+        var target = new TargetBean();
+
+        BeanUtil.CopyProperties(source, target, "Email");
+
+        Assert.Equal(source.Name, target.Name);
+        Assert.Equal(source.Age, target.Age);
+        Assert.Null(target.Email);
+    }
+
+    [Fact]
+    public void ToBeanTest()
+    {
+        var map = new Dictionary<string, object>
+        {
+            { "name", "John" },
+            { "age", 25 },
+            { "email", "john@test.com" }
+        };
+
+        var bean = BeanUtil.ToBean<TargetBean>(map);
+
+        Assert.Equal("John", bean.Name);
+        Assert.Equal(25, bean.Age);
+        Assert.Equal("john@test.com", bean.Email);
+    }
+
+    [Fact]
+    public void IsEmptyBeanTest()
+    {
+        var emptyBean = new TargetBean();
+        var nonEmptyBean = new TargetBean { Name = "John" };
+
+        Assert.True(BeanUtil.IsEmpty(emptyBean));
+        Assert.False(BeanUtil.IsEmpty(nonEmptyBean));
+    }
+
+    [Fact]
+    public void DescribeTest()
+    {
+        var bean = new TargetBean { Name = "John", Age = 25 };
+        var desc = BeanUtil.Describe(bean);
+
+        Assert.Equal("John", desc["Name"]);
+        Assert.Equal(25, desc["Age"]);
+    }
+
+    [Fact]
+    public void FillBeanTest()
+    {
+        var map = new Dictionary<string, object>
+        {
+            { "name", "Jane" },
+            { "age", 30 }
+        };
+
+        var bean = new TargetBean();
+        BeanUtil.FillBean(bean, map);
+
+        Assert.Equal("Jane", bean.Name);
+        Assert.Equal(30, bean.Age);
     }
 }

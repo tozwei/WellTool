@@ -1,6 +1,7 @@
 using System;
+using WellTool.Core.Convert;
 
-namespace WellTool.Core.Converter.impl
+namespace WellTool.Core.Convert.impl
 {
     /// <summary>
     /// 布尔转换器

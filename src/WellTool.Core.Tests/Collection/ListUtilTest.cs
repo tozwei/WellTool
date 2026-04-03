@@ -1,29 +1,65 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+using WellTool.Core.Collection;
 using Xunit;
 
-namespace WellTool.Core.Tests.Collection;
+namespace WellTool.Core.Tests;
 
-/// <summary>
-/// 列表工具测试
-/// </summary>
 public class ListUtilTest
 {
     [Fact]
-    public void TestListUtil()
+    public void NewArrayListTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var list = ListUtil.NewArrayList<string>();
+        Assert.NotNull(list);
+        Assert.Empty(list);
+    }
+
+    [Fact]
+    public void NewArrayListWithElementsTest()
+    {
+        var list = ListUtil.NewArrayList("a", "b", "c");
+        Assert.Equal(3, list.Count);
+        Assert.Equal("a", list[0]);
+        Assert.Equal("b", list[1]);
+        Assert.Equal("c", list[2]);
+    }
+
+    [Fact]
+    public void NewLinkedListTest()
+    {
+        var list = ListUtil.NewLinkedList<string>();
+        Assert.NotNull(list);
+    }
+
+    [Fact]
+    public void ToListTest()
+    {
+        var array = new[] { 1, 2, 3 };
+        var list = ListUtil.ToList(array);
+        Assert.Equal(3, list.Count);
+        Assert.Equal(1, list[0]);
+        Assert.Equal(2, list[1]);
+        Assert.Equal(3, list[2]);
+    }
+
+    [Fact]
+    public void SubTest()
+    {
+        var list = ListUtil.NewArrayList("a", "b", "c", "d", "e");
+        var sub = ListUtil.Sub(list, 1, 4);
+        Assert.Equal(3, sub.Count);
+        Assert.Equal("b", sub[0]);
+        Assert.Equal("c", sub[1]);
+        Assert.Equal("d", sub[2]);
+    }
+
+    [Fact]
+    public void PartitionTest()
+    {
+        var list = ListUtil.NewArrayList(1, 2, 3, 4, 5, 6, 7);
+        var partitions = ListUtil.Partition(list, 3);
+        Assert.Equal(3, partitions.Count);
+        Assert.Equal(3, partitions[0].Count);
+        Assert.Equal(3, partitions[1].Count);
+        Assert.Single(partitions[2]);
     }
 }

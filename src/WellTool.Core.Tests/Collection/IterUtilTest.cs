@@ -1,29 +1,61 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+using WellTool.Core.Collection;
 using Xunit;
 
-namespace WellTool.Core.Tests.Collection;
+namespace WellTool.Core.Tests;
 
-/// <summary>
-/// 迭代器工具测试
-/// </summary>
 public class IterUtilTest
 {
     [Fact]
-    public void TestIterUtil()
+    public void HasNextTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var list = new List<int> { 1, 2, 3 };
+        using var iterator = list.GetEnumerator();
+        Assert.True(IterUtil.HasNext(iterator));
+        iterator.MoveNext();
+        Assert.True(IterUtil.HasNext(iterator));
+        iterator.MoveNext();
+        Assert.True(IterUtil.HasNext(iterator));
+        iterator.MoveNext();
+        Assert.False(IterUtil.HasNext(iterator));
+    }
+
+    [Fact]
+    public void NextTest()
+    {
+        var list = new List<int> { 1, 2, 3 };
+        using var iterator = list.GetEnumerator();
+        Assert.Equal(1, IterUtil.Next(iterator));
+        Assert.Equal(2, IterUtil.Next(iterator));
+        Assert.Equal(3, IterUtil.Next(iterator));
+    }
+
+    [Fact]
+    public void ToListTest()
+    {
+        var list = new List<int> { 1, 2, 3 };
+        using var iterator = list.GetEnumerator();
+        var result = IterUtil.ToList(iterator);
+        Assert.Equal(3, result.Count);
+        Assert.Contains(1, result);
+        Assert.Contains(2, result);
+        Assert.Contains(3, result);
+    }
+
+    [Fact]
+    public void CountTest()
+    {
+        var list = new List<int> { 1, 2, 3 };
+        using var iterator = list.GetEnumerator();
+        Assert.Equal(3, IterUtil.Count(iterator));
+    }
+
+    [Fact]
+    public void ForEachTest()
+    {
+        var list = new List<int> { 1, 2, 3 };
+        using var iterator = list.GetEnumerator();
+        var sum = 0;
+        IterUtil.ForEach(iterator, x => sum += x);
+        Assert.Equal(6, sum);
     }
 }

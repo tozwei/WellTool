@@ -1,6 +1,7 @@
 using System;
+using WellTool.Core.Convert;
 
-namespace WellTool.Core.Converter.impl
+namespace WellTool.Core.Convert.impl
 {
     /// <summary>
     /// 字符转换器
@@ -71,4 +72,3 @@ namespace WellTool.Core.Converter.impl
         }
     }
 }
-
