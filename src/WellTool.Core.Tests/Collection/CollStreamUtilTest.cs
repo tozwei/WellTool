@@ -1,29 +1,115 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+using WellTool.Core.Collection;
 using Xunit;
+using System.Linq;
 
-namespace WellTool.Core.Tests.Collection;
+namespace WellTool.Core.Tests;
 
-/// <summary>
-/// 集合流工具测试
-/// </summary>
 public class CollStreamUtilTest
 {
     [Fact]
-    public void TestCollStreamUtil()
+    public void FilterTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var list = CollUtil.NewArrayList(1, 2, 3, 4, 5);
+        var filtered = CollStreamUtil.Filter(list, x => x > 2);
+        Assert.Equal(3, filtered.Count);
+        Assert.Contains(3, filtered);
+        Assert.Contains(4, filtered);
+        Assert.Contains(5, filtered);
+    }
+
+    [Fact]
+    public void MapTest()
+    {
+        var list = CollUtil.NewArrayList(1, 2, 3);
+        var mapped = CollStreamUtil.Map(list, x => x * 2);
+        Assert.Equal(3, mapped.Count);
+        Assert.Equal(2, mapped[0]);
+        Assert.Equal(4, mapped[1]);
+        Assert.Equal(6, mapped[2]);
+    }
+
+    [Fact]
+    public void FlatMapTest()
+    {
+        var list = CollUtil.NewArrayList(new[] { 1, 2 }, new[] { 3, 4 });
+        var flat = CollStreamUtil.FlatMap(list, x => x);
+        Assert.Equal(4, flat.Count);
+    }
+
+    [Fact]
+    public void DistinctTest()
+    {
+        var list = CollUtil.NewArrayList(1, 2, 2, 3, 3, 3);
+        var distinct = CollStreamUtil.Distinct(list);
+        Assert.Equal(3, distinct.Count);
+    }
+
+    [Fact]
+    public void SortTest()
+    {
+        var list = CollUtil.NewArrayList(3, 1, 2);
+        var sorted = CollStreamUtil.Sort(list);
+        Assert.Equal(1, sorted[0]);
+        Assert.Equal(2, sorted[1]);
+        Assert.Equal(3, sorted[2]);
+    }
+
+    [Fact]
+    public void ReverseSortTest()
+    {
+        var list = CollUtil.NewArrayList(1, 2, 3);
+        var sorted = CollStreamUtil.Sort(list, (a, b) => b.CompareTo(a));
+        Assert.Equal(3, sorted[0]);
+        Assert.Equal(2, sorted[1]);
+        Assert.Equal(1, sorted[2]);
+    }
+
+    [Fact]
+    public void LimitTest()
+    {
+        var list = CollUtil.NewArrayList(1, 2, 3, 4, 5);
+        var limited = CollStreamUtil.Limit(list, 3);
+        Assert.Equal(3, limited.Count);
+    }
+
+    [Fact]
+    public void SkipTest()
+    {
+        var list = CollUtil.NewArrayList(1, 2, 3, 4, 5);
+        var skipped = CollStreamUtil.Skip(list, 2);
+        Assert.Equal(3, skipped.Count);
+        Assert.Equal(3, skipped[0]);
+    }
+
+    [Fact]
+    public void CountTest()
+    {
+        var list = CollUtil.NewArrayList(1, 2, 3, 4, 5);
+        var count = CollStreamUtil.Count(list, x => x > 2);
+        Assert.Equal(3, count);
+    }
+
+    [Fact]
+    public void AnyMatchTest()
+    {
+        var list = CollUtil.NewArrayList(1, 2, 3);
+        Assert.True(CollStreamUtil.AnyMatch(list, x => x == 2));
+        Assert.False(CollStreamUtil.AnyMatch(list, x => x == 10));
+    }
+
+    [Fact]
+    public void AllMatchTest()
+    {
+        var list = CollUtil.NewArrayList(1, 2, 3);
+        Assert.True(CollStreamUtil.AllMatch(list, x => x > 0));
+        Assert.False(CollStreamUtil.AllMatch(list, x => x > 2));
+    }
+
+    [Fact]
+    public void NoneMatchTest()
+    {
+        var list = CollUtil.NewArrayList(1, 2, 3);
+        Assert.True(CollStreamUtil.NoneMatch(list, x => x > 10));
+        Assert.False(CollStreamUtil.NoneMatch(list, x => x == 2));
     }
 }
