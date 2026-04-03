@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace WellTool.Core.Converter.impl
 {
@@ -8,12 +7,20 @@ namespace WellTool.Core.Converter.impl
     /// </summary>
     public class DateConverter : IConverter
     {
+        private readonly string _format;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="format">日期格式</param>
+        public DateConverter(string format = null)
+        {
+            _format = format;
+        }
+
         /// <summary>
         /// 转换值
         /// </summary>
-        /// <param name="value">要转换的值</param>
-        /// <param name="targetType">目标类型</param>
-        /// <returns>转换后的值</returns>
         public object Convert(object value, Type targetType)
         {
             if (value == null)
@@ -21,251 +28,86 @@ namespace WellTool.Core.Converter.impl
                 return null;
             }
 
-            if (value is DateTime dateTimeValue)
+            // 处理 DateTime
+            if (value is DateTime dt)
             {
-                if (targetType == typeof(DateTime))
-                {
-                    return dateTimeValue;
-                }
-                else if (targetType == typeof(DateTimeOffset))
-                {
-                    return new DateTimeOffset(dateTimeValue);
-                }
-                else if (IsDateOnlyType(targetType))
-                {
-                    // 尝试创建 DateOnly 实例
-                    var dateOnly = CreateDateOnly(dateTimeValue);
-                    if (dateOnly != null)
-                    {
-                        return dateOnly;
-                    }
-                    // 为了兼容 .NET Standard 2.1，使用 DateTime 作为替代
-                    return dateTimeValue.Date;
-                }
-                else if (IsTimeOnlyType(targetType))
-                {
-                    // 尝试创建 TimeOnly 实例
-                    var timeOnly = CreateTimeOnly(dateTimeValue);
-                    if (timeOnly != null)
-                    {
-                        return timeOnly;
-                    }
-                    // 为了兼容 .NET Standard 2.1，使用 TimeSpan 作为替代
-                    return dateTimeValue.TimeOfDay;
-                }
+                return dt;
             }
-            else if (value is DateTimeOffset dateTimeOffsetValue)
+
+            // 处理 DateOnly
+            if (value is DateOnly dateOnly)
             {
-                if (targetType == typeof(DateTime))
-                {
-                    return dateTimeOffsetValue.DateTime;
-                }
-                else if (targetType == typeof(DateTimeOffset))
-                {
-                    return dateTimeOffsetValue;
-                }
-                else if (IsDateOnlyType(targetType))
-                {
-                    // 尝试创建 DateOnly 实例
-                    var dateOnly = CreateDateOnly(dateTimeOffsetValue.DateTime);
-                    if (dateOnly != null)
-                    {
-                        return dateOnly;
-                    }
-                    // 为了兼容 .NET Standard 2.1，使用 DateTime 作为替代
-                    return dateTimeOffsetValue.DateTime.Date;
-                }
-                else if (IsTimeOnlyType(targetType))
-                {
-                    // 尝试创建 TimeOnly 实例
-                    var timeOnly = CreateTimeOnly(dateTimeOffsetValue.DateTime);
-                    if (timeOnly != null)
-                    {
-                        return timeOnly;
-                    }
-                    // 为了兼容 .NET Standard 2.1，使用 TimeSpan 作为替代
-                    return dateTimeOffsetValue.DateTime.TimeOfDay;
-                }
+                return dateOnly.ToDateTime(TimeOnly.MinValue);
             }
-            else if (value is string stringValue)
+
+            // 处理数字（毫秒时间戳）
+            if (value is long longValue)
             {
-                if (DateTime.TryParse(stringValue, out var dateTime))
+                // 毫秒时间戳
+                if (longValue > 1e12)
                 {
-                    if (targetType == typeof(DateTime))
-                    {
-                        return dateTime;
-                    }
-                    else if (targetType == typeof(DateTimeOffset))
-                    {
-                        return new DateTimeOffset(dateTime);
-                    }
-                    else if (IsDateOnlyType(targetType))
-                    {
-                        // 尝试创建 DateOnly 实例
-                        var dateOnly = CreateDateOnly(dateTime);
-                        if (dateOnly != null)
-                        {
-                            return dateOnly;
-                        }
-                        // 为了兼容 .NET Standard 2.1，使用 DateTime 作为替代
-                        return dateTime.Date;
-                    }
-                    else if (IsTimeOnlyType(targetType))
-                    {
-                        // 尝试创建 TimeOnly 实例
-                        var timeOnly = CreateTimeOnly(dateTime);
-                        if (timeOnly != null)
-                        {
-                            return timeOnly;
-                        }
-                        // 为了兼容 .NET Standard 2.1，使用 TimeSpan 作为替代
-                        return dateTime.TimeOfDay;
-                    }
+                    return DateTimeOffset.FromUnixTimeMilliseconds(longValue).DateTime;
                 }
+                // 秒时间戳
+                return DateTimeOffset.FromUnixTimeSeconds(longValue).DateTime;
             }
-            else if (value is long longValue)
+
+            // 处理字符串
+            var str = value.ToString();
+            if (string.IsNullOrWhiteSpace(str))
             {
-                var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(longValue).ToLocalTime();
-                if (targetType == typeof(DateTime))
+                return null;
+            }
+
+            if (!string.IsNullOrEmpty(_format))
+            {
+                if (DateTime.TryParseExact(str, _format, null, System.Globalization.DateTimeStyles.None, out DateTime result))
                 {
-                    return dateTime;
-                }
-                else if (targetType == typeof(DateTimeOffset))
-                {
-                    return new DateTimeOffset(dateTime);
-                }
-                else if (IsDateOnlyType(targetType))
-                {
-                    // 尝试创建 DateOnly 实例
-                    var dateOnly = CreateDateOnly(dateTime);
-                    if (dateOnly != null)
-                    {
-                        return dateOnly;
-                    }
-                    // 为了兼容 .NET Standard 2.1，使用 DateTime 作为替代
-                    return dateTime.Date;
-                }
-                else if (IsTimeOnlyType(targetType))
-                {
-                    // 尝试创建 TimeOnly 实例
-                    var timeOnly = CreateTimeOnly(dateTime);
-                    if (timeOnly != null)
-                    {
-                        return timeOnly;
-                    }
-                    // 为了兼容 .NET Standard 2.1，使用 TimeSpan 作为替代
-                    return dateTime.TimeOfDay;
+                    return result;
                 }
             }
 
-            throw new ConvertException($"Cannot convert {value.GetType().Name} to {targetType.Name}");
-        }
+            // 尝试多种格式解析
+            string[] formats = {
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-dd",
+                "yyyy/MM/dd",
+                "yyyy/MM/dd HH:mm:ss",
+                "yyyyMMdd",
+                "yyyyMMddHHmmss"
+            };
 
-        /// <summary>
-        /// 尝试创建 DateOnly 实例
-        /// </summary>
-        /// <param name="dateTime">DateTime 值</param>
-        /// <returns>DateOnly 实例或 null</returns>
-        private object CreateDateOnly(DateTime dateTime)
-        {
-            try
+            foreach (var format in formats)
             {
-                var dateOnlyType = Type.GetType("System.DateOnly");
-                if (dateOnlyType != null)
+                if (DateTime.TryParseExact(str, format, null, System.Globalization.DateTimeStyles.None, out DateTime result))
                 {
-                    // 尝试调用 DateOnly.FromDateTime 方法
-                    var fromDateTimeMethod = dateOnlyType.GetMethod("FromDateTime", new[] { typeof(DateTime) });
-                    if (fromDateTimeMethod != null)
-                    {
-                        return fromDateTimeMethod.Invoke(null, new object[] { dateTime });
-                    }
+                    return result;
                 }
             }
-            catch
-            {
-                // 忽略异常，返回 null
-            }
-            return null;
-        }
 
-        /// <summary>
-        /// 尝试创建 TimeOnly 实例
-        /// </summary>
-        /// <param name="dateTime">DateTime 值</param>
-        /// <returns>TimeOnly 实例或 null</returns>
-        private object CreateTimeOnly(DateTime dateTime)
-        {
-            try
+            // 最后尝试通用解析
+            if (DateTime.TryParse(str, out DateTime dtResult))
             {
-                var timeOnlyType = Type.GetType("System.TimeOnly");
-                if (timeOnlyType != null)
-                {
-                    // 尝试调用 TimeOnly.FromDateTime 方法
-                    var fromDateTimeMethod = timeOnlyType.GetMethod("FromDateTime", new[] { typeof(DateTime) });
-                    if (fromDateTimeMethod != null)
-                    {
-                        return fromDateTimeMethod.Invoke(null, new object[] { dateTime });
-                    }
-                }
+                return dtResult;
             }
-            catch
-            {
-                // 忽略异常，返回 null
-            }
-            return null;
-        }
 
-        /// <summary>
-        /// 检查是否为 DateOnly 类型
-        /// </summary>
-        /// <param name="type">类型</param>
-        /// <returns>是否为 DateOnly 类型</returns>
-        private bool IsDateOnlyType(Type type)
-        {
-            return type.Name == "DateOnly";
-        }
-
-        /// <summary>
-        /// 检查是否为 TimeOnly 类型
-        /// </summary>
-        /// <param name="type">类型</param>
-        /// <returns>是否为 TimeOnly 类型</returns>
-        private bool IsTimeOnlyType(Type type)
-        {
-            return type.Name == "TimeOnly";
+            throw new ConvertException($"Cannot convert '{str}' to DateTime");
         }
 
         /// <summary>
         /// 获取支持的源类型
         /// </summary>
-        /// <returns>支持的源类型数组</returns>
         public Type[] GetSupportedSourceTypes()
         {
-            return new[] { typeof(string), typeof(long), typeof(DateTime), typeof(DateTimeOffset) };
+            return new Type[] { typeof(string), typeof(long), typeof(DateTime), typeof(DateOnly) };
         }
 
         /// <summary>
         /// 获取支持的目标类型
         /// </summary>
-        /// <returns>支持的目标类型数组</returns>
         public Type[] GetSupportedTargetTypes()
         {
-            var targetTypes = new List<Type> { typeof(DateTime), typeof(DateTimeOffset) };
-            
-            // 尝试添加 DateOnly 和 TimeOnly 类型，如果它们存在
-            var dateOnlyType = Type.GetType("System.DateOnly");
-            if (dateOnlyType != null)
-            {
-                targetTypes.Add(dateOnlyType);
-            }
-            
-            var timeOnlyType = Type.GetType("System.TimeOnly");
-            if (timeOnlyType != null)
-            {
-                targetTypes.Add(timeOnlyType);
-            }
-            
-            return targetTypes.ToArray();
+            return new Type[] { typeof(DateTime) };
         }
     }
 }

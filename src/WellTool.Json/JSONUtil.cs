@@ -105,7 +105,7 @@ namespace WellTool.Json
         /// </summary>
         /// <param name="json">JSON 对象</param>
         /// <returns>格式化后的字符串</returns>
-        public static string Format(IJSON json)
+        public static string Format(JSONBase json)
         {
             if (json == null)
             {
@@ -227,7 +227,7 @@ namespace WellTool.Json
         /// </summary>
         /// <param name="obj">对象</param>
         /// <returns>JSON</returns>
-        public static IJSON Parse(object obj)
+        public static JSON Parse(object obj)
         {
             return Parse(obj, (JSONConfig)null);
         }
@@ -238,7 +238,7 @@ namespace WellTool.Json
         /// <param name="obj">对象</param>
         /// <param name="config">JSON 配置</param>
         /// <returns>JSON</returns>
-        public static IJSON Parse(object obj, JSONConfig config)
+        public static JSON Parse(object obj, JSONConfig config)
         {
             if (obj == null)
             {
@@ -247,7 +247,7 @@ namespace WellTool.Json
 
             config = config ?? JSONConfig.Create();
 
-            if (obj is IJSON json)
+            if (obj is JSON json)
             {
                 return json;
             }
@@ -299,11 +299,11 @@ namespace WellTool.Json
         /// <param name="filePath">文件路径</param>
         /// <param name="encoding">编码</param>
         /// <returns>JSON</returns>
-        public static IJSON ReadJSON(string filePath, System.Text.Encoding encoding = null)
+        public static JSONBase ReadJSON(string filePath, System.Text.Encoding encoding = null)
         {
             encoding = encoding ?? System.Text.Encoding.UTF8;
             var content = File.ReadAllText(filePath, encoding);
-            return Parse(content);
+            return (JSONBase)Parse(content);
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace WellTool.Json
         /// <param name="json">JSON</param>
         /// <param name="indentFactor">缩进因子</param>
         /// <returns>JSON 字符串</returns>
-        public static string ToJsonStr(IJSON json, int indentFactor)
+        public static string ToJsonStr(JSONBase json, int indentFactor)
         {
             if (json == null)
             {
@@ -356,7 +356,7 @@ namespace WellTool.Json
         /// </summary>
         /// <param name="json">JSON</param>
         /// <returns>JSON 字符串</returns>
-        public static string ToJsonStr(IJSON json)
+        public static string ToJsonStr(JSONBase json)
         {
             return ToJsonStr(json, 0);
         }
@@ -366,7 +366,7 @@ namespace WellTool.Json
         /// </summary>
         /// <param name="json">JSON</param>
         /// <param name="writer">Writer</param>
-        public static void ToJsonStr(IJSON json, TextWriter writer)
+        public static void ToJsonStr(JSONBase json, TextWriter writer)
         {
             if (json != null && json is JSONBase jsonBase)
             {
@@ -379,7 +379,7 @@ namespace WellTool.Json
         /// </summary>
         /// <param name="json">JSON</param>
         /// <returns>JSON 字符串</returns>
-        public static string ToJsonPrettyStr(IJSON json)
+        public static string ToJsonPrettyStr(JSONBase json)
         {
             return ToJsonStr(json, 4);
         }
@@ -438,7 +438,7 @@ namespace WellTool.Json
         /// </summary>
         /// <param name="json">JSON</param>
         /// <returns>XML 字符串</returns>
-        public static string ToXmlStr(IJSON json)
+        public static string ToXmlStr(JSONBase json)
         {
             // XML 功能暂未实现
             return null;
@@ -516,7 +516,7 @@ namespace WellTool.Json
         /// <param name="type">类型</param>
         /// <param name="ignoreError">是否忽略错误</param>
         /// <returns>实体类对象</returns>
-        public static T ToBean<T>(IJSON json, Type type, bool ignoreError)
+        public static T ToBean<T>(JSONBase json, Type type, bool ignoreError)
         {
             if (json == null)
             {
@@ -536,7 +536,7 @@ namespace WellTool.Json
         /// <param name="type">类型</param>
         /// <param name="ignoreError">是否忽略错误</param>
         /// <returns>实体类对象</returns>
-        public static object ToBean(IJSON json, Type type, bool ignoreError)
+        public static object ToBean(JSONBase json, Type type, bool ignoreError)
         {
             if (json == null)
             {
@@ -600,7 +600,7 @@ namespace WellTool.Json
         /// <param name="json">JSON</param>
         /// <param name="expression">表达式</param>
         /// <returns>对象</returns>
-        public static object GetByPath(IJSON json, string expression)
+        public static object GetByPath(JSONBase json, string expression)
         {
             if (json == null || string.IsNullOrWhiteSpace(expression))
             {
@@ -617,7 +617,7 @@ namespace WellTool.Json
         /// <param name="expression">表达式</param>
         /// <param name="defaultValue">默认值</param>
         /// <returns>对象</returns>
-        public static T GetByPath<T>(IJSON json, string expression, T defaultValue)
+        public static T GetByPath<T>(JSONBase json, string expression, T defaultValue)
         {
             if (json == null || string.IsNullOrWhiteSpace(expression))
             {
@@ -639,7 +639,7 @@ namespace WellTool.Json
         /// <param name="json">JSON</param>
         /// <param name="expression">表达式</param>
         /// <param name="value">值</param>
-        public static void PutByPath(IJSON json, string expression, object value)
+        public static void PutByPath(JSONBase json, string expression, object value)
         {
             json?.PutByPath(expression, value);
         }
@@ -767,7 +767,7 @@ namespace WellTool.Json
 
             if (obj is string || obj is bool || obj is int || obj is long ||
                 obj is double || obj is float || obj is decimal ||
-                obj is IJSON || obj is JSONNull)
+                obj is JSON || obj is JSONNull)
             {
                 return obj;
             }

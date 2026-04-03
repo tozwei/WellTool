@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Globalization;
 
 namespace WellTool.Core.Converter.impl
 {
@@ -8,184 +8,154 @@ namespace WellTool.Core.Converter.impl
     /// </summary>
     public class NumberConverter : IConverter
     {
+        private readonly Type _targetType;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="targetType">目标数字类型</param>
+        public NumberConverter(Type targetType)
+        {
+            _targetType = targetType;
+        }
+
         /// <summary>
         /// 转换值
         /// </summary>
-        /// <param name="value">要转换的值</param>
-        /// <param name="targetType">目标类型</param>
-        /// <returns>转换后的值</returns>
         public object Convert(object value, Type targetType)
         {
             if (value == null)
             {
-                return GetDefaultValue(targetType);
+                return GetDefaultValue(_targetType);
             }
 
-            // 处理布尔值
-            if (value is bool boolValue)
+            // 处理已经是目标类型
+            if (_targetType.IsAssignableFrom(value.GetType()))
             {
-                int boolIntValue = boolValue ? 1 : 0;
-                if (targetType == typeof(int))
-                {
-                    return boolIntValue;
-                }
-                else if (targetType == typeof(long))
-                {
-                    return (long)boolIntValue;
-                }
-                else if (targetType == typeof(float))
-                {
-                    return (float)boolIntValue;
-                }
-                else if (targetType == typeof(double))
-                {
-                    return (double)boolIntValue;
-                }
-                else if (targetType == typeof(decimal))
-                {
-                    return (decimal)boolIntValue;
-                }
-                else if (targetType == typeof(byte))
-                {
-                    return (byte)boolIntValue;
-                }
-                else if (targetType == typeof(sbyte))
-                {
-                    return (sbyte)boolIntValue;
-                }
-                else if (targetType == typeof(short))
-                {
-                    return (short)boolIntValue;
-                }
-                else if (targetType == typeof(ushort))
-                {
-                    return (ushort)boolIntValue;
-                }
-                else if (targetType == typeof(uint))
-                {
-                    return (uint)boolIntValue;
-                }
-                else if (targetType == typeof(ulong))
-                {
-                    return (ulong)boolIntValue;
-                }
+                return value;
             }
 
-            string strValue = value.ToString().Trim();
+            var str = value.ToString().Trim();
 
-            try
+            // 处理空字符串
+            if (string.IsNullOrEmpty(str))
             {
-                if (targetType == typeof(int))
-                {
-                    if (strValue.Contains("."))
-                    {
-                        return (int)decimal.Parse(strValue);
-                    }
-                    return int.Parse(strValue);
-                }
-                else if (targetType == typeof(long))
-                {
-                    if (strValue.Contains("."))
-                    {
-                        return (long)decimal.Parse(strValue);
-                    }
-                    return long.Parse(strValue);
-                }
-                else if (targetType == typeof(float))
-                {
-                    return float.Parse(strValue);
-                }
-                else if (targetType == typeof(double))
-                {
-                    return double.Parse(strValue);
-                }
-                else if (targetType == typeof(decimal))
-                {
-                    return decimal.Parse(strValue);
-                }
-                else if (targetType == typeof(byte))
-                {
-                    if (strValue.Contains("."))
-                    {
-                        return (byte)decimal.Parse(strValue);
-                    }
-                    return byte.Parse(strValue);
-                }
-                else if (targetType == typeof(sbyte))
-                {
-                    if (strValue.Contains("."))
-                    {
-                        return (sbyte)decimal.Parse(strValue);
-                    }
-                    return sbyte.Parse(strValue);
-                }
-                else if (targetType == typeof(short))
-                {
-                    if (strValue.Contains("."))
-                    {
-                        return (short)decimal.Parse(strValue);
-                    }
-                    return short.Parse(strValue);
-                }
-                else if (targetType == typeof(ushort))
-                {
-                    if (strValue.Contains("."))
-                    {
-                        return (ushort)decimal.Parse(strValue);
-                    }
-                    return ushort.Parse(strValue);
-                }
-                else if (targetType == typeof(uint))
-                {
-                    if (strValue.Contains("."))
-                    {
-                        return (uint)decimal.Parse(strValue);
-                    }
-                    return uint.Parse(strValue);
-                }
-                else if (targetType == typeof(ulong))
-                {
-                    if (strValue.Contains("."))
-                    {
-                        return (ulong)decimal.Parse(strValue);
-                    }
-                    return ulong.Parse(strValue);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new ConvertException($"Cannot convert {value.GetType().Name} to {targetType.Name}: {ex.Message}", ex);
+                return GetDefaultValue(_targetType);
             }
 
-            throw new ConvertException($"Cannot convert {value.GetType().Name} to {targetType.Name}");
+            // 处理科学计数法
+            if (str.Contains("e") || str.Contains("E"))
+            {
+                if (decimal.TryParse(str, NumberStyles.Float, CultureInfo.InvariantCulture, out decimal d))
+                {
+                    return ChangeType(d, _targetType);
+                }
+            }
+
+            // 先尝试转换为 decimal 作为中间类型
+            if (!decimal.TryParse(str, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal decimalValue))
+            {
+                // 尝试去除货币符号和其他非数字字符
+                var cleanedStr = CleanNumberString(str);
+                if (!decimal.TryParse(cleanedStr, NumberStyles.Any, CultureInfo.InvariantCulture, out decimalValue))
+                {
+                    return GetDefaultValue(_targetType);
+                }
+            }
+
+            return ChangeType(decimalValue, _targetType);
         }
 
         /// <summary>
-        /// 获取类型的默认值
+        /// 清理数字字符串
         /// </summary>
-        /// <param name="type">类型</param>
-        /// <returns>默认值</returns>
-        private object GetDefaultValue(Type type)
+        private static string CleanNumberString(string str)
         {
-            return type.IsValueType ? Activator.CreateInstance(type) : null;
+            var result = new System.Text.StringBuilder();
+            bool hasDecimal = false;
+
+            foreach (char c in str)
+            {
+                if (char.IsDigit(c) || c == '-' || c == '+')
+                {
+                    result.Append(c);
+                }
+                else if (c == '.' && !hasDecimal)
+                {
+                    result.Append(c);
+                    hasDecimal = true;
+                }
+            }
+
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// 转换为目标数字类型
+        /// </summary>
+        private static object ChangeType(decimal value, Type targetType)
+        {
+            var typeCode = Type.GetTypeCode(targetType);
+
+            switch (typeCode)
+            {
+                case TypeCode.Byte:
+                    return (byte)value;
+                case TypeCode.SByte:
+                    return (sbyte)value;
+                case TypeCode.Int16:
+                    return (short)value;
+                case TypeCode.UInt16:
+                    return (ushort)value;
+                case TypeCode.Int32:
+                    return (int)value;
+                case TypeCode.UInt32:
+                    return (uint)value;
+                case TypeCode.Int64:
+                    return (long)value;
+                case TypeCode.UInt64:
+                    return (ulong)value;
+                case TypeCode.Single:
+                    return (float)value;
+                case TypeCode.Double:
+                    return (double)value;
+                case TypeCode.Decimal:
+                    return value;
+                default:
+                    return Convert.ChangeType(value, targetType);
+            }
+        }
+
+        /// <summary>
+        /// 获取默认值
+        /// </summary>
+        private static object GetDefaultValue(Type type)
+        {
+            if (type.IsValueType)
+            {
+                return Activator.CreateInstance(type);
+            }
+            return null;
         }
 
         /// <summary>
         /// 获取支持的源类型
         /// </summary>
-        /// <returns>支持的源类型数组</returns>
         public Type[] GetSupportedSourceTypes()
         {
-            return new[] { typeof(string), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(byte), typeof(sbyte), typeof(short), typeof(ushort), typeof(uint), typeof(ulong), typeof(object) };
+            return new Type[] { typeof(string), typeof(byte), typeof(sbyte), typeof(short), typeof(ushort),
+                               typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float),
+                               typeof(double), typeof(decimal) };
         }
 
         /// <summary>
         /// 获取支持的目标类型
         /// </summary>
-        /// <returns>支持的目标类型数组</returns>
         public Type[] GetSupportedTargetTypes()
         {
-            return new[] { typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(byte), typeof(sbyte), typeof(short), typeof(ushort), typeof(uint), typeof(ulong) };
+            return new Type[] { typeof(byte), typeof(sbyte), typeof(short), typeof(ushort),
+                               typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float),
+                               typeof(double), typeof(decimal) };
         }
     }
 }

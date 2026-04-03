@@ -24,6 +24,17 @@ namespace WellTool.Json
         }
 
         /// <summary>
+        /// 创建 JSONTokener
+        /// </summary>
+        /// <param name="input">输入字符串</param>
+        /// <param name="config">JSON配置</param>
+        public JSONTokener(string input, JSONConfig config)
+            : this(input)
+        {
+            // 配置暂时未使用
+        }
+
+        /// <summary>
         /// 当前读取位置
         /// </summary>
         public int Position => _position;
@@ -32,6 +43,15 @@ namespace WellTool.Json
         /// 是否到达末尾
         /// </summary>
         public bool EndOfFile => _position >= _length;
+
+        /// <summary>
+        /// 是否到达末尾
+        /// </summary>
+        /// <returns>是否到达末尾</returns>
+        public bool End()
+        {
+            return EndOfFile;
+        }
 
         /// <summary>
         /// 跳过空白字符
@@ -323,11 +343,187 @@ namespace WellTool.Json
         }
 
         /// <summary>
+        /// 取到下一个值，跳过空白
+        /// </summary>
+        /// <returns>JSON支持的类型的值</returns>
+        public virtual object NextValue()
+        {
+            SkipWhitespace();
+            if (End())
+            {
+                throw new JSONException("Unexpected end of JSON input");
+            }
+
+            char c = Next();
+            return NextValue(c);
+        }
+
+        /// <summary>
+        /// 取到下一个值，跳过空白
+        /// </summary>
+        /// <param name="c">当前字符</param>
+        /// <returns>JSON支持的类型的值</returns>
+        public virtual object NextValue(char c)
+        {
+            switch (c)
+            {
+                case '"':
+                    return NextString();
+                case '[':
+                    return ReadArray();
+                case '{':
+                    return ReadObject();
+                case '-':
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    Back();
+                    return NextNumber();
+                case 't':
+                    return ReadTrue();
+                case 'f':
+                    return ReadFalse();
+                case 'n':
+                    return ReadNull();
+                default:
+                    throw new JSONException($"Unexpected character: {c}");
+            }
+        }
+
+        /// <summary>
+        /// 读取数组
+        /// </summary>
+        /// <returns>JSONArray</returns>
+        private object ReadArray()
+        {
+            var array = new JSONArray();
+            SkipWhitespace();
+            if (NextClean() == ']')
+            {
+                return array;
+            }
+            Back();
+            while (true)
+            {
+                SkipWhitespace();
+                var value = NextValue();
+                array.Add(value);
+                SkipWhitespace();
+                var c = NextClean();
+                if (c == ']')
+                {
+                    return array;
+                }
+                if (c != ',')
+                {
+                    throw SyntaxError("Expected ',' or ']'");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 读取对象
+        /// </summary>
+        /// <returns>JSONObject</returns>
+        private object ReadObject()
+        {
+            var obj = new JSONObject();
+            SkipWhitespace();
+            if (NextClean() == '}')
+            {
+                return obj;
+            }
+            Back();
+            while (true)
+            {
+                SkipWhitespace();
+                var key = NextString();
+                SkipWhitespace();
+                if (NextClean() != ':')
+                {
+                    throw SyntaxError("Expected ':' after key");
+                }
+                var value = NextValue();
+                obj.Set(key, value);
+                SkipWhitespace();
+                var c = NextClean();
+                if (c == '}')
+                {
+                    return obj;
+                }
+                if (c != ',')
+                {
+                    throw SyntaxError("Expected ',' or '}'");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 读取数字
+        /// </summary>
+        /// <param name="c">当前字符</param>
+        /// <returns>数字</returns>
+        private object ReadNumber(char c)
+        {
+            Back();
+            return NextNumber();
+        }
+
+        /// <summary>
+        /// 读取true
+        /// </summary>
+        /// <returns>true</returns>
+        private object ReadTrue()
+        {
+            if (_position + 3 < _length && _input.Substring(_position, 4).ToLower() == "true")
+            {
+                _position += 4;
+                return true;
+            }
+            throw SyntaxError("Expected 'true'");
+        }
+
+        /// <summary>
+        /// 读取false
+        /// </summary>
+        /// <returns>false</returns>
+        private object ReadFalse()
+        {
+            if (_position + 4 < _length && _input.Substring(_position, 5).ToLower() == "false")
+            {
+                _position += 5;
+                return false;
+            }
+            throw SyntaxError("Expected 'false'");
+        }
+
+        /// <summary>
+        /// 读取null
+        /// </summary>
+        /// <returns>JSONNull</returns>
+        private object ReadNull()
+        {
+            if (_position + 3 < _length && _input.Substring(_position, 4).ToLower() == "null")
+            {
+                _position += 4;
+                return JSONNull.NULL;
+            }
+            throw SyntaxError("Expected 'null'");
+        }
+
+        /// <summary>
         /// 读取到指定字符
         /// </summary>
         /// <param name="separator">分隔符</param>
         /// <returns>字符串</returns>
-        public string NextValue(char separator)
+        public string NextValueString(char separator)
         {
             var sb = new StringBuilder();
             SkipWhitespace();
@@ -365,6 +561,34 @@ namespace WellTool.Json
             {
                 _position++;
             }
+        }
+
+        /// <summary>
+        /// 抛出语法错误异常
+        /// </summary>
+        /// <param name="message">错误消息</param>
+        /// <returns>异常</returns>
+        public JSONException SyntaxError(string message)
+        {
+            throw new JSONException($"Syntax error: {message} at position {_position}");
+        }
+
+        /// <summary>
+        /// 获取前一个字符
+        /// </summary>
+        /// <returns>前一个字符</returns>
+        public char GetPrevious()
+        {
+            return _position > 0 ? _input[_position - 1] : '\0';
+        }
+
+        /// <summary>
+        /// 读取下一个字符串值
+        /// </summary>
+        /// <returns>字符串值</returns>
+        public string NextStringValue()
+        {
+            return NextString();
         }
     }
 }

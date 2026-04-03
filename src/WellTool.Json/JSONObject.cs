@@ -398,6 +398,55 @@ namespace WellTool.Json
         }
 
         /// <summary>
+        /// 设置值
+        /// </summary>
+        /// <param name="key">键</param>
+        /// <param name="value">值</param>
+        /// <param name="checkDuplicate">是否检查重复</param>
+        /// <returns>this</returns>
+        public JSONObject Set(string key, object value, bool checkDuplicate)
+        {
+            if (key == null)
+            {
+                return this;
+            }
+
+            var wrappedValue = WrapValue(value);
+
+            if (wrappedValue == null && Config.IsIgnoreNullValue())
+            {
+                Remove(key);
+                return this;
+            }
+
+            if (checkDuplicate && _map.ContainsKey(key))
+            {
+                throw new JSONException($"Duplicate key \"{key}\"");
+            }
+
+            _map[key] = wrappedValue;
+            return this;
+        }
+
+        /// <summary>
+        /// 设置值
+        /// </summary>
+        /// <param name="key">键</param>
+        /// <param name="value">值</param>
+        /// <param name="include">是否包含</param>
+        /// <param name="checkDuplicate">是否检查重复</param>
+        /// <returns>this</returns>
+        public JSONObject Set(string key, object value, bool include, bool checkDuplicate)
+        {
+            if (!include || key == null)
+            {
+                return this;
+            }
+
+            return Set(key, value, checkDuplicate);
+        }
+
+        /// <summary>
         /// 添加键值对，如果键已存在则抛出异常
         /// </summary>
         /// <param name="key">键</param>

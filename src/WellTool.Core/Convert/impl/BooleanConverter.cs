@@ -1,99 +1,91 @@
 using System;
-using System.Collections.Generic;
 
 namespace WellTool.Core.Converter.impl
 {
     /// <summary>
-    /// 布尔值转换器
+    /// 布尔转换器
     /// </summary>
     public class BooleanConverter : IConverter
     {
         /// <summary>
         /// 转换值
         /// </summary>
-        /// <param name="value">要转换的值</param>
-        /// <param name="targetType">目标类型</param>
-        /// <returns>转换后的值</returns>
         public object Convert(object value, Type targetType)
         {
             if (value == null)
             {
-                return GetDefaultValue(targetType);
+                return false;
             }
 
-            if (value is bool boolValue)
+            // 处理数字类型：0为false，其他为true
+            if (value is Number number)
             {
-                if (targetType == typeof(bool))
-                {
-                    return boolValue;
-                }
-                else if (targetType == typeof(string))
-                {
-                    return boolValue.ToString();
-                }
+                return number.ToDouble() != 0;
             }
 
-            if (value is string stringValue)
+            // 处理布尔类型
+            if (value is bool b)
             {
-                stringValue = stringValue.Trim().ToLower();
-                return stringValue == "true" || stringValue == "1" || stringValue == "yes" || stringValue == "y";
+                return b;
             }
 
-            if (value is int intValue)
+            // 处理字符串
+            if (value is string str)
             {
-                return intValue != 0;
+                return ToBoolean(str);
             }
 
-            if (value is long longValue)
+            // 处理数字类型
+            if (value is IConvertible convertible)
             {
-                return longValue != 0;
+                return convertible.ToBoolean(null);
             }
 
-            throw new ConvertException($"Cannot convert {value.GetType().Name} to {targetType.Name}");
+            return ToBoolean(value.ToString());
+        }
+
+        /// <summary>
+        /// 将字符串转换为布尔值
+        /// </summary>
+        private static bool ToBoolean(string str)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+            {
+                return false;
+            }
+
+            str = str.Trim().ToLower();
+
+            // true/false
+            if (str == "true" || str == "false")
+            {
+                return bool.Parse(str);
+            }
+
+            // yes/no, y/n, on/off, 1/0
+            if (str == "yes" || str == "y" || str == "t" || str == "ok" || str == "1" || str == "on" ||
+                str == "是" || str == "对" || str == "真" || str == "對" || str == "√")
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
         /// 获取支持的源类型
         /// </summary>
-        /// <returns>支持的源类型数组</returns>
         public Type[] GetSupportedSourceTypes()
         {
-            return new[] { typeof(string), typeof(int), typeof(long), typeof(bool) };
+            return new Type[] { typeof(string), typeof(bool), typeof(int), typeof(long), typeof(double), typeof(Number) };
         }
 
         /// <summary>
         /// 获取支持的目标类型
         /// </summary>
-        /// <returns>支持的目标类型数组</returns>
         public Type[] GetSupportedTargetTypes()
         {
-            return new[] { typeof(bool), typeof(string) };
-        }
-
-        /// <summary>
-        /// 获取类型的默认值
-        /// </summary>
-        /// <param name="type">类型</param>
-        /// <returns>默认值</returns>
-        private static object GetDefaultValue(Type type)
-        {
-            if (type == typeof(bool))
-            {
-                return false;
-            }
-            else if (type == typeof(int))
-            {
-                return 0;
-            }
-            else if (type == typeof(long))
-            {
-                return 0L;
-            }
-            else if (type == typeof(string))
-            {
-                return null;
-            }
-            return null;
+            return new Type[] { typeof(bool) };
         }
     }
 }

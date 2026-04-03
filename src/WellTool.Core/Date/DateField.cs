@@ -69,4 +69,38 @@ namespace WellTool.Core.Date
         /// </summary>
         Millisecond = 14
     }
+
+    /// <summary>
+    /// DateField 扩展方法
+    /// </summary>
+    public static class DateFieldExtensions
+    {
+        /// <summary>
+        /// 转换为 TimeSpan
+        /// </summary>
+        public static TimeSpan ToTimeSpan(this DateField field)
+        {
+            switch (field)
+            {
+                case DateField.Year:
+                    return TimeSpan.FromDays(365);
+                case DateField.Month:
+                    return TimeSpan.FromDays(30);
+                case DateField.DayOfMonth:
+                case DateField.DayOfYear:
+                    return TimeSpan.FromDays(1);
+                case DateField.Hour:
+                case DateField.HourOfDay:
+                    return TimeSpan.FromHours(1);
+                case DateField.Minute:
+                    return TimeSpan.FromMinutes(1);
+                case DateField.Second:
+                    return TimeSpan.FromSeconds(1);
+                case DateField.Millisecond:
+                    return TimeSpan.FromMilliseconds(1);
+                default:
+                    return TimeSpan.Zero;
+            }
+        }
+    }
 }

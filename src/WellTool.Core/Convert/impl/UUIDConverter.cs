@@ -10,9 +10,6 @@ namespace WellTool.Core.Converter.impl
         /// <summary>
         /// 转换值
         /// </summary>
-        /// <param name="value">要转换的值</param>
-        /// <param name="targetType">目标类型</param>
-        /// <returns>转换后的值</returns>
         public object Convert(object value, Type targetType)
         {
             if (value == null)
@@ -20,48 +17,29 @@ namespace WellTool.Core.Converter.impl
                 return null;
             }
 
-            if (targetType != typeof(Guid))
-            {
-                return value;
-            }
-
             if (value is Guid guid)
             {
                 return guid;
             }
 
-            if (value is string str)
-            {
-                try
-                {
-                    return Guid.Parse(str);
-                }
-                catch
-                {
-                    // 转换失败，返回原值
-                }
-            }
-
-            return value;
+            var str = value.ToString();
+            return Guid.Parse(str);
         }
 
         /// <summary>
         /// 获取支持的源类型
         /// </summary>
-        /// <returns>支持的源类型数组</returns>
         public Type[] GetSupportedSourceTypes()
         {
-            return new[] { typeof(object) };
+            return new Type[] { typeof(string), typeof(Guid) };
         }
 
         /// <summary>
         /// 获取支持的目标类型
         /// </summary>
-        /// <returns>支持的目标类型数组</returns>
         public Type[] GetSupportedTargetTypes()
         {
-            return new[] { typeof(Guid) };
+            return new Type[] { typeof(Guid) };
         }
     }
 }
-

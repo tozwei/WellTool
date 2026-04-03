@@ -291,6 +291,41 @@ namespace WellTool.Json
         }
 
         /// <summary>
+        /// 添加原始值
+        /// </summary>
+        /// <param name="value">值</param>
+        /// <returns>this</returns>
+        public JSONArray AddRaw(object value)
+        {
+            _list.Add(value);
+            return this;
+        }
+
+        /// <summary>
+        /// 添加原始值
+        /// </summary>
+        /// <param name="value">值</param>
+        /// <param name="filter">键值对过滤编辑器</param>
+        /// <returns>this</returns>
+        public JSONArray AddRaw(object value, Func<string, object, bool> filter)
+        {
+            _list.Add(value);
+            return this;
+        }
+
+        /// <summary>
+        /// 添加原始值
+        /// </summary>
+        /// <param name="value">值</param>
+        /// <param name="filter">值过滤编辑器</param>
+        /// <returns>this</returns>
+        public JSONArray AddRaw(object value, Func<object, bool> filter)
+        {
+            _list.Add(value);
+            return this;
+        }
+
+        /// <summary>
         /// 添加值
         /// </summary>
         /// <param name="value">值</param>

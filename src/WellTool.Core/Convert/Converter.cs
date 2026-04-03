@@ -684,35 +684,6 @@ namespace WellTool.Core.Converter
         }
 
         /// <summary>
-        /// 中文金额转数字
-        /// </summary>
-        /// <param name="chineseMoney">中文金额</param>
-        /// <returns>转换后的数字</returns>
-        public static decimal? ChineseMoneyToNumber(string chineseMoney)
-        {
-            if (string.IsNullOrEmpty(chineseMoney))
-            {
-                return null;
-            }
-
-            // 简化实现，实际可能需要更复杂的处理
-            // 这里只是一个基本的实现示例
-            try
-            {
-                // 替换常见的金额单位
-                chineseMoney = chineseMoney.Replace("圆", "元");
-                
-                // 简单处理，实际需要更复杂的解析
-                // 这里只是返回一个示例值
-                return 0;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// 数字转中文
         /// </summary>
         /// <param name="value">数字</param>
@@ -724,9 +695,32 @@ namespace WellTool.Core.Converter
                 return "零元整";
             }
 
-            // 简化实现，实际可能需要更复杂的处理
-            // 这里只是一个基本的实现示例
-            return "零元整";
+            return NumberChineseFormatter.Format((double)value, false, true);
+        }
+
+        /// <summary>
+        /// 数字转中文（繁体）
+        /// </summary>
+        /// <param name="value">数字</param>
+        /// <returns>转换后的中文</returns>
+        public static string DigitToChineseTraditional(decimal? value)
+        {
+            if (value == null)
+            {
+                return "零元整";
+            }
+
+            return NumberChineseFormatter.Format((double)value, true, true);
+        }
+
+        /// <summary>
+        /// 中文金额转数字
+        /// </summary>
+        /// <param name="chineseMoney">中文金额</param>
+        /// <returns>转换后的数字</returns>
+        public static decimal? ChineseMoneyToNumber(string chineseMoney)
+        {
+            return NumberChineseFormatter.ChineseMoneyToNumber(chineseMoney);
         }
 
         /// <summary>

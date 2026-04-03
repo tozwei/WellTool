@@ -1,3 +1,4 @@
+using Xunit;
 using WellTool.Log;
 using WellTool.Log.Dialect.Commons;
 using WellTool.Log.Dialect.Console;
