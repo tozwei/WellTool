@@ -54,12 +54,49 @@ namespace WellTool.Extra.Template.Engine.Freemarker
             this._cfg = freemarkerCfg;
         }
 
+        private void SetLocalizedLookup(dynamic cfg, bool value)
+        {
+            var method = cfg.GetType().GetMethod("SetLocalizedLookup");
+            if (method != null)
+            {
+                method.Invoke(cfg, new object[] { value });
+            }
+        }
+
+        private void SetDefaultEncoding(dynamic cfg, string encoding)
+        {
+            var method = cfg.GetType().GetMethod("SetDefaultEncoding");
+            if (method != null)
+            {
+                method.Invoke(cfg, new object[] { encoding });
+            }
+        }
+
+        private void SetTemplateLoader(dynamic cfg, object templateLoader)
+        {
+            var method = cfg.GetType().GetMethod("SetTemplateLoader");
+            if (method != null)
+            {
+                method.Invoke(cfg, new object[] { templateLoader });
+            }
+        }
+
+        private object GetTemplate(dynamic cfg, string resource)
+        {
+            var method = cfg.GetType().GetMethod("GetTemplate", new Type[] { typeof(string) });
+            if (method != null)
+            {
+                return method.Invoke(cfg, new object[] { resource });
+            }
+            return null;
+        }
+
         /// <summary>
         /// 获取模板
         /// </summary>
         /// <param name="resource">资源</param>
         /// <returns>模板实现</returns>
-        public override Template GetTemplate(string resource)
+        public Template GetTemplate(string resource)
         {
             if (this._cfg == null)
             {
@@ -67,7 +104,7 @@ namespace WellTool.Extra.Template.Engine.Freemarker
             }
             try
             {
-                var template = _cfg.GetTemplate(resource);
+                var template = GetTemplate(_cfg, resource);
                 return FreemarkerTemplate.Wrap(template)!;
             }
             catch (IOException e)
@@ -111,24 +148,24 @@ namespace WellTool.Extra.Template.Engine.Freemarker
             var cfg = Activator.CreateInstance(cfgType);
 
             // 设置基本配置
-            cfg.SetLocalizedLookup(false);
-            cfg.SetDefaultEncoding(config.Charset.WebName);
+            SetLocalizedLookup(cfg, false);
+            SetDefaultEncoding(cfg, config.Charset.WebName);
 
             switch (config.ResourceMode)
             {
-                case TemplateConfig.ResourceModeEnum.Classpath:
+                case TemplateConfig.ResourceModeType.ClassPath:
                     var classLoader = Assembly.GetExecutingAssembly().GetType().Assembly.GetName().Name;
                     dynamic classTemplateLoader = CreateClassTemplateLoader(classLoader, config.Path ?? "");
-                    cfg.SetTemplateLoader(classTemplateLoader);
+                    SetTemplateLoader(cfg, classTemplateLoader);
                     break;
-                case TemplateConfig.ResourceModeEnum.File:
-                    cfg.SetTemplateLoader(CreateFileTemplateLoader(FileUtil.File(config.Path ?? "")));
+                case TemplateConfig.ResourceModeType.File:
+                    SetTemplateLoader(cfg, CreateFileTemplateLoader(FileUtil.File(config.Path ?? "")));
                     break;
-                case TemplateConfig.ResourceModeEnum.WebRoot:
-                    cfg.SetTemplateLoader(CreateFileTemplateLoader(FileUtil.GetWebRoot()));
+                case TemplateConfig.ResourceModeType.WebRoot:
+                    SetTemplateLoader(cfg, CreateFileTemplateLoader(FileUtil.File(System.IO.Directory.GetCurrentDirectory())));
                     break;
-                case TemplateConfig.ResourceModeEnum.String:
-                    cfg.SetTemplateLoader(new SimpleStringTemplateLoader());
+                case TemplateConfig.ResourceModeType.String:
+                    SetTemplateLoader(cfg, new SimpleStringTemplateLoader());
                     break;
             }
 
