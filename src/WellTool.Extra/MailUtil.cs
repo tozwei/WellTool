@@ -57,7 +57,7 @@ public class MailUtil
 
             client.Send(message);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new MailException("发送邮件失败", ex);
         }
@@ -101,7 +101,7 @@ public class MailUtil
 
             client.Send(message);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new MailException("发送邮件失败", ex);
         }

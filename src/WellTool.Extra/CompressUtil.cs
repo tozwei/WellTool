@@ -63,7 +63,7 @@ public class CompressUtil
                 }
             }
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new CompressException("压缩文件失败", ex);
         }
@@ -118,7 +118,7 @@ public class CompressUtil
             // 使用 ZipFile.CreateFromDirectory 来创建 ZIP
             System.IO.Compression.ZipFile.CreateFromDirectory(sourceDirectoryPath, targetZipPath, System.IO.Compression.CompressionLevel.Optimal, false);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new CompressException("压缩目录失败", ex);
         }
@@ -152,7 +152,7 @@ public class CompressUtil
             // 使用 ZipFile.ExtractToDirectory 来解压
             System.IO.Compression.ZipFile.ExtractToDirectory(zipFilePath, targetDirectoryPath, true);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new CompressException("解压文件失败", ex);
         }
@@ -177,7 +177,7 @@ public class CompressUtil
             }
             return memoryStream.ToArray();
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new CompressException("Gzip压缩失败", ex);
         }
@@ -201,7 +201,7 @@ public class CompressUtil
             gzipStream.CopyTo(outputStream);
             return outputStream.ToArray();
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new CompressException("Gzip解压失败", ex);
         }

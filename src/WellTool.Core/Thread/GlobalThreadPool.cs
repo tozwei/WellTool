@@ -54,7 +54,7 @@ namespace WellTool.Core.Threading
                     action();
                     tcs.SetResult(null);
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     tcs.SetException(ex);
                 }
@@ -78,7 +78,7 @@ namespace WellTool.Core.Threading
                     var result = func();
                     tcs.SetResult(result);
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     tcs.SetException(ex);
                 }
@@ -101,7 +101,7 @@ namespace WellTool.Core.Threading
                     await func();
                     tcs.SetResult(null);
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     tcs.SetException(ex);
                 }
@@ -125,7 +125,7 @@ namespace WellTool.Core.Threading
                     var result = await func();
                     tcs.SetResult(result);
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     tcs.SetException(ex);
                 }
@@ -147,7 +147,7 @@ namespace WellTool.Core.Threading
                         taskFunc();
                     }
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     // 处理异常
                     Console.WriteLine($"GlobalThreadPool error: {ex.Message}");

@@ -93,7 +93,7 @@ public class ConsoleTable
 			{
 				if (row != null && i < row.Length)
 				{
-					maxWidth = Math.Max(maxWidth, row[i]?.Length ?? 0);
+					maxWidth = System.Math.Max(maxWidth, row[i]?.Length ?? 0);
 				}
 			}
 			_columnWidths.Add(maxWidth + 2);

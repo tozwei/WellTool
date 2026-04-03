@@ -52,7 +52,7 @@ public class FtpUtil
                 throw new FtpException($"上传失败: {response.StatusDescription}");
             }
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new FtpException("上传文件失败", ex);
         }
@@ -84,7 +84,7 @@ public class FtpUtil
                 throw new FtpException($"下载失败: {response.StatusDescription}");
             }
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new FtpException("下载文件失败", ex);
         }
@@ -111,7 +111,7 @@ public class FtpUtil
                 throw new FtpException($"删除失败: {response.StatusDescription}");
             }
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new FtpException("删除文件失败", ex);
         }
@@ -146,7 +146,7 @@ public class FtpUtil
 
             return files;
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new FtpException("列出文件失败", ex);
         }

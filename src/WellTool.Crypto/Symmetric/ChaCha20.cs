@@ -44,7 +44,7 @@ namespace WellTool.Crypto.Symmetric
                 
                 return ciphertext;
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 throw new NotSupportedException(
                     "ChaCha20 encryption is not supported in this framework version. " +
@@ -88,7 +88,7 @@ namespace WellTool.Crypto.Symmetric
                 
                 return plaintext;
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 throw new NotSupportedException(
                     "ChaCha20 decryption is not supported in this framework version. " +

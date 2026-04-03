@@ -191,7 +191,7 @@ namespace WellTool.Crypto.Symmetric
             {
                 return cipher.DoFinal(data);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 throw new CryptoException("SM4 encryption failed", ex);
             }
@@ -233,7 +233,7 @@ namespace WellTool.Crypto.Symmetric
             {
                 return cipher.DoFinal(data);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 throw new CryptoException("SM4 decryption failed", ex);
             }

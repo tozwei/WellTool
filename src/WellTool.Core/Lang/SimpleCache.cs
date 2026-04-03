@@ -65,7 +65,12 @@ public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 		}
 		if (v == null && supplier != null)
 		{
-			object keyLock = _keyLockMap.GetOrAdd(key, _ => new object());
+			object keyLock;
+			if (!_keyLockMap.TryGetValue(key, out keyLock))
+			{
+				keyLock = new object();
+				_keyLockMap[key] = keyLock;
+			}
 			lock (keyLock)
 			{
 				// 双重检查
@@ -76,14 +81,14 @@ public class SimpleCache<K, V> : IEnumerable<KeyValuePair<K, V>> where K : class
 					{
 						v = supplier();
 					}
-					catch (Exception e)
+					catch (System.Exception e)
 					{
-						throw new Exception("Supplier execution failed", e);
+						throw new System.Exception("Supplier execution failed", e);
 					}
 					Put(key, v);
 				}
 			}
-			_keyLockMap.Remove(key);
+			_keyLockMap.Remove(key, out _);
 		}
 		return v;
 	}

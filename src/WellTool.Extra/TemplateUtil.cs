@@ -43,7 +43,7 @@ public class TemplateUtil
             }
             return result;
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new TemplateException("渲染模板失败", ex);
         }
@@ -62,7 +62,7 @@ public class TemplateUtil
             var template = File.ReadAllText(filePath);
             return Render(template, parameters);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new TemplateException("从文件渲染模板失败", ex);
         }

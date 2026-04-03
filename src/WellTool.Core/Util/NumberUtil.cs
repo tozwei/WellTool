@@ -75,52 +75,52 @@ public static class NumberUtil
 	/// <summary>
 	/// 保留小数位
 	/// </summary>
-	public static string Round(double value, int decimals) => Math.Round(value, decimals).ToString($"F{decimals}");
+	public static string Round(double value, int decimals) => System.Math.Round(value, decimals).ToString($"F{decimals}");
 
 	/// <summary>
 	/// 取绝对值
 	/// </summary>
-	public static int Abs(int value) => Math.Abs(value);
+	public static int Abs(int value) => System.Math.Abs(value);
 
 	/// <summary>
 	/// 取绝对值
 	/// </summary>
-	public static long Abs(long value) => Math.Abs(value);
+	public static long Abs(long value) => System.Math.Abs(value);
 
 	/// <summary>
 	/// 取绝对值
 	/// </summary>
-	public static double Abs(double value) => Math.Abs(value);
+	public static double Abs(double value) => System.Math.Abs(value);
 
 	/// <summary>
 	/// 最大值
 	/// </summary>
-	public static int Max(int a, int b) => Math.Max(a, b);
+	public static int Max(int a, int b) => System.Math.Max(a, b);
 
 	/// <summary>
 	/// 最大值
 	/// </summary>
-	public static long Max(long a, long b) => Math.Max(a, b);
+	public static long Max(long a, long b) => System.Math.Max(a, b);
 
 	/// <summary>
 	/// 最大值
 	/// </summary>
-	public static double Max(double a, double b) => Math.Max(a, b);
+	public static double Max(double a, double b) => System.Math.Max(a, b);
 
 	/// <summary>
 	/// 最小值
 	/// </summary>
-	public static int Min(int a, int b) => Math.Min(a, b);
+	public static int Min(int a, int b) => System.Math.Min(a, b);
 
 	/// <summary>
 	/// 最小值
 	/// </summary>
-	public static long Min(long a, long b) => Math.Min(a, b);
+	public static long Min(long a, long b) => System.Math.Min(a, b);
 
 	/// <summary>
 	/// 最小值
 	/// </summary>
-	public static double Min(double a, double b) => Math.Min(a, b);
+	public static double Min(double a, double b) => System.Math.Min(a, b);
 
 	/// <summary>
 	/// 是否为偶数

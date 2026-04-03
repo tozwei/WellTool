@@ -199,7 +199,7 @@ namespace WellTool.Core.IO.Unit
                 var unit = DetermineDataUnit(matcher.Groups[3].Value, defaultUnit);
                 return Of(decimal.Parse(matcher.Groups[1].Value), unit);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 throw new ArgumentException($"'{text}' is not a valid data size", ex);
             }

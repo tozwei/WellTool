@@ -40,7 +40,7 @@ public class SshUtil
             // 这里只是模拟执行结果
             return $"Command executed: {command}\nHost: {host}:{port}\nUser: {username}";
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new SshException("执行SSH命令失败", ex);
         }
@@ -63,7 +63,7 @@ public class SshUtil
             // 这里只是模拟上传操作
             Console.WriteLine($"Uploading file: {localFilePath} to {remoteFilePath} on {host}:{port}");
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new SshException("上传文件失败", ex);
         }
@@ -86,7 +86,7 @@ public class SshUtil
             // 这里只是模拟下载操作
             Console.WriteLine($"Downloading file: {remoteFilePath} to {localFilePath} from {host}:{port}");
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new SshException("下载文件失败", ex);
         }

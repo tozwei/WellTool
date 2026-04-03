@@ -164,7 +164,7 @@ namespace WellTool.Core.Threading
                         }
                         worker.Work();
                     }
-                    catch (Exception ex)
+                    catch (System.Exception ex)
                     {
                         _exceptionHandler?.Invoke(this, new UnhandledExceptionEventArgs(ex, false));
                     }

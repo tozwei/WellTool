@@ -33,6 +33,16 @@ public static class StrUtil
 	public static string Empty() => string.Empty;
 
 	/// <summary>
+	/// 空字符串常量
+	/// </summary>
+	public static readonly string EMPTY = string.Empty;
+
+	/// <summary>
+	/// 斜杠常量
+	/// </summary>
+	public static readonly string SLASH = "/";
+
+	/// <summary>
 	/// 空字符串数组
 	/// </summary>
 	public static string[] EmptyArray() => Array.Empty<string>();
@@ -46,6 +56,39 @@ public static class StrUtil
 	/// 格式化
 	/// </summary>
 	public static string Format(string template, params object[] args) => string.Format(template, args);
+
+	/// <summary>
+	/// 移除字符串后缀
+	/// </summary>
+	/// <param name="str">字符串</param>
+	/// <param name="suffix">后缀</param>
+	/// <returns>移除后缀后的字符串</returns>
+	public static string RemoveSuffix(string str, string suffix)
+	{
+		if (IsEmpty(str) || IsEmpty(suffix))
+		{
+			return str;
+		}
+		if (str.EndsWith(suffix))
+		{
+			return str.Substring(0, str.Length - suffix.Length);
+		}
+		return str;
+	}
+
+	/// <summary>
+	/// 清理空白字符
+	/// </summary>
+	/// <param name="str">字符串</param>
+	/// <returns>清理后的字符串</returns>
+	public static string CleanBlank(string str)
+	{
+		if (IsEmpty(str))
+		{
+			return str;
+		}
+		return str.Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\n", "");
+	}
 
 	/// <summary>
 	/// 子字符串

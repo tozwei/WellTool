@@ -75,7 +75,7 @@ public class FullSupportScriptEngine
             var result = _engine.Evaluate(script);
             return result.ToObject();
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new ScriptRuntimeException("执行脚本失败", ex);
         }
@@ -110,7 +110,7 @@ public class FullSupportScriptEngine
             var result = _engine.Evaluate($"{functionName}({string.Join(", ", args.Select(arg => JsonSerializer.Serialize(arg)))}");
             return result.ToObject();
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new ScriptRuntimeException("调用脚本函数失败", ex);
         }

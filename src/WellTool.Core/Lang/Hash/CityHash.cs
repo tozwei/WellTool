@@ -70,7 +70,7 @@ public static class CityHash
 		z += HashLen16(v[0], v[1]) + HashLen16(w[0], w[1]);
 
 		var finalBlock = new byte[32];
-		Array.Copy(data, Math.Max(0, len - 32), finalBlock, 0, Math.Min(32, len));
+		Array.Copy(data, System.Math.Max(0, len - 32), finalBlock, 0, System.Math.Min(32, len));
 
 		return HashLen16(HashLen16(x, y, z) + v[0] + w[0], HashLen16(x, z, w[1]) + v[1] + HashLen16(y, z, w[0] + v[0]));
 	}
@@ -87,7 +87,7 @@ public static class CityHash
 		if (len >= 4)
 		{
 			var a = BitConverter.ToUInt32(data, 0);
-			var b = BitConverter.ToUInt32(data, Math.Max(0, len - 4));
+			var b = BitConverter.ToUInt32(data, System.Math.Max(0, len - 4));
 			return HashLen16(a, b ^ seed);
 		}
 		if (len > 0)
@@ -159,14 +159,14 @@ public static class CityHash
 
 	private static ulong BinaryHash(byte[] data, int start, ref int end)
 	{
-		end = Math.Min(start + 8, data.Length);
+		end = System.Math.Min(start + 8, data.Length);
 		if (start >= data.Length)
 		{
 			end = start;
 			return 0;
 		}
 		var result = new byte[8];
-		Array.Copy(data, start, result, 0, Math.Min(8, data.Length - start));
+		Array.Copy(data, start, result, 0, System.Math.Min(8, data.Length - start));
 		return BitConverter.ToUInt64(result, 0);
 	}
 }

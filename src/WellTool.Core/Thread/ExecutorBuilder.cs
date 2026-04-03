@@ -179,7 +179,7 @@ namespace WellTool.Core.Threading
                             break;
                         }
                     }
-                    catch (Exception ex)
+                    catch (System.Exception ex)
                     {
                         // 处理异常
                         Console.WriteLine($"Thread error: {ex.Message}");

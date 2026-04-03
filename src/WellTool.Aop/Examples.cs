@@ -41,7 +41,7 @@ namespace WellTool.Aop
             {
                 proxy.Divide(10, 0);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Console.WriteLine($"捕获到异常: {ex.Message}");
             }

@@ -57,8 +57,8 @@ public static class Number128Util
 		if (hex.Length != 32)
 			throw new ArgumentException("Hex string must be 32 characters", nameof(hex));
 
-		var high = Convert.ToInt64(hex[..16], 16);
-		var low = Convert.ToInt64(hex[16..], 16);
+		var high = System.Convert.ToInt64(hex[..16], 16);
+		var low = System.Convert.ToInt64(hex[16..], 16);
 		return new Number128(high, low);
 	}
 

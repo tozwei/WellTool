@@ -32,7 +32,7 @@ public class JavaScriptEngine
             var result = engine.Evaluate(script);
             return result.ToObject();
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new ScriptRuntimeException("执行 JavaScript 代码失败", ex);
         }

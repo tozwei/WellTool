@@ -1,31 +1,31 @@
 using System;
 
-namespace WellTool.Core.Lang
+namespace WellTool.Core.Lang;
+
+/// <summary>
+/// 对象工具类
+/// </summary>
+public static class ObjectUtil
 {
     /// <summary>
-    /// 对象工具类
+    /// 判断是否为空
     /// </summary>
-    public static class ObjectUtil
+    public static bool IsNull(object obj)
     {
-        /// <summary>
-        /// 判断是否为空
-        /// </summary>
-        public static bool IsNull(object obj)
-        {
-            return obj == null;
-        }
+        return obj == null;
+    }
 
-        /// <summary>
-        /// 判断是否不为空
-        /// </summary>
-        public static bool IsNotNull(object obj)
-        {
-            return obj != null;
-        }
+    /// <summary>
+/// 判断是否不为空
+/// </summary>
+    public static bool IsNotNull(object obj)
+    {
+        return obj != null;
+    }
 
-        /// <summary>
-        /// 判断是否为空（null或DBNull）
-        /// </summary>
+    /// <summary>
+    /// 判断是否为空（null或DBNull）
+    /// </summary>
         public static bool IsEmpty(object obj)
         {
             if (obj == null)

@@ -102,7 +102,7 @@ namespace WellTool.Core.Bean.Copier
 					// 目标赋值
 					tDesc.SetValue(Target, newValue, CopyOptions.IgnoreNullValue, CopyOptions.IgnoreError, CopyOptions.Override);
 				}
-				catch (Exception ex)
+				catch (System.Exception ex)
 				{
 					if (!CopyOptions.IgnoreError)
 					{
@@ -222,7 +222,7 @@ namespace WellTool.Core.Bean.Copier
 					// 目标赋值
 					tDesc.SetValue(Target, newValue, CopyOptions.IgnoreNullValue, CopyOptions.IgnoreError, CopyOptions.Override);
 				}
-				catch (Exception ex)
+				catch (System.Exception ex)
 				{
 					if (!CopyOptions.IgnoreError)
 					{

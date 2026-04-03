@@ -72,8 +72,8 @@ public class Snowflake
 	public Snowflake(long workerId, long dataCenterId, bool isUseSystemClock)
 	{
 		_twepoch = DEFAULT_TWEPOCH;
-		_workerId = Math.Max(0, Math.Min(workerId, MAX_WORKER_ID));
-		_dataCenterId = Math.Max(0, Math.Min(dataCenterId, MAX_DATA_CENTER_ID));
+		_workerId = System.Math.Max(0, System.Math.Min(workerId, MAX_WORKER_ID));
+		_dataCenterId = System.Math.Max(0, System.Math.Min(dataCenterId, MAX_DATA_CENTER_ID));
 		_useSystemClock = isUseSystemClock;
 		_timeOffset = DEFAULT_TIME_OFFSET;
 		_randomSequenceLimit = 0;

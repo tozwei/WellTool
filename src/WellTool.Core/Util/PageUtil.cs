@@ -123,12 +123,12 @@ namespace WellTool.Core.Util
             int totalPages = TotalPages(total, pageSize);
             int half = showCount / 2;
 
-            int start = Math.Max(1, pageNo - half);
-            int end = Math.Min(totalPages, start + showCount - 1);
+            int start = System.Math.Max(1, pageNo - half);
+            int end = System.Math.Min(totalPages, start + showCount - 1);
 
             if (end - start + 1 < showCount)
             {
-                start = Math.Max(1, end - showCount + 1);
+                start = System.Math.Max(1, end - showCount + 1);
             }
 
             var result = new int[end - start + 1];

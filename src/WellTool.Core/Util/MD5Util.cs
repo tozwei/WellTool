@@ -38,7 +38,7 @@ public static class MD5Util
 	{
 		if (data == null || data.Length == 0)
 			return string.Empty;
-		using var md5 = MD5.Create("MD5");
+		using var md5 = System.Security.Cryptography.MD5.Create("MD5");
 		var hash = md5.ComputeHash(data);
 		return BitConverter.ToString(hash).Replace("-", "").ToLower();
 	}

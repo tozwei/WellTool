@@ -98,7 +98,7 @@ public class AioSession : IDisposable
 					}
 				});
 			}
-			catch (Exception ex)
+			catch (System.Exception ex)
 			{
 				_ioAction.Failed(ex, this);
 			}

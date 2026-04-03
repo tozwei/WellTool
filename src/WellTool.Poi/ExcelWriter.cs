@@ -142,7 +142,7 @@ public class ExcelWriter : IDisposable
             }
             return 0;
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("创建 Excel 工作表失败", ex);
         }
@@ -215,7 +215,7 @@ public class ExcelWriter : IDisposable
                 }
             }
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("写入 Excel 数据失败", ex);
         }
@@ -273,7 +273,7 @@ public class ExcelWriter : IDisposable
                 }
             }
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("写入 Excel 表头失败", ex);
         }
@@ -345,7 +345,7 @@ public class ExcelWriter : IDisposable
             // 自动调整列宽
             AutoFitColumns(worksheet, headers.Count);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("写入 Excel 数据失败", ex);
         }
@@ -420,7 +420,7 @@ public class ExcelWriter : IDisposable
             // 自动调整列宽
             AutoFitColumns(worksheet, headers.Count);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("写入 Excel 数据失败", ex);
         }
@@ -483,7 +483,7 @@ public class ExcelWriter : IDisposable
             // 自动调整列宽
             AutoFitColumns(worksheet, headers.Count);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("写入 Excel 数据失败", ex);
         }
@@ -511,7 +511,7 @@ public class ExcelWriter : IDisposable
         {
             _package.Save();
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("保存 Excel 文件失败", ex);
         }
@@ -527,7 +527,7 @@ public class ExcelWriter : IDisposable
         {
             _package.SaveAs(new FileInfo(filePath));
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("保存 Excel 文件失败", ex);
         }
@@ -543,7 +543,7 @@ public class ExcelWriter : IDisposable
         {
             _package.SaveAs(stream);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("保存 Excel 文件失败", ex);
         }

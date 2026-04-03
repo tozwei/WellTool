@@ -74,7 +74,7 @@ public class QrCodeUtil
             
             return bitmap;
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new QrCodeException("生成二维码失败", ex);
         }
@@ -94,7 +94,7 @@ public class QrCodeUtil
             using var bitmap = Generate(content, width, height);
             bitmap.Save(filePath);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new QrCodeException("保存二维码失败", ex);
         }
@@ -116,7 +116,7 @@ public class QrCodeUtil
             bitmap.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
             return memoryStream.ToArray();
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new QrCodeException("生成二维码字节数组失败", ex);
         }

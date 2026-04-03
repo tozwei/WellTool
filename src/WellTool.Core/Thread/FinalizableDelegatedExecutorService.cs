@@ -25,7 +25,7 @@ namespace WellTool.Core.Threading
             {
                 Shutdown();
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 // 忽略异常
             }

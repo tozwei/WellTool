@@ -198,7 +198,7 @@ namespace WellTool.Core.Bean
 					_property.SetValue(obj, value);
 				}
 			}
-			catch (Exception ex)
+			catch (System.Exception ex)
 			{
 				if (!ignoreError)
 				{

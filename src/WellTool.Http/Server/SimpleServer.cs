@@ -153,12 +153,12 @@ namespace WellTool.Http.Server
                     var context = _listener.GetContext();
                     ThreadPool.QueueUserWorkItem(_ => HandleRequest(context));
                 }
-                catch (Exception ex) when (!_running)
+                catch (System.Exception ex) when (!_running)
                 {
                     // 服务器停止时忽略异常
                     break;
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     Console.WriteLine($"Server error: {ex.Message}");
                 }
@@ -193,7 +193,7 @@ namespace WellTool.Http.Server
                     response.Send404("No handler found for path: " + path);
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 HandleException(request, response, ex);
             }

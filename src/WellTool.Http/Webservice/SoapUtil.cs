@@ -173,7 +173,7 @@ namespace WellTool.Http.Webservice
 
                 return sb.ToString();
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 throw new SoapRuntimeException("Failed to format XML", ex);
             }

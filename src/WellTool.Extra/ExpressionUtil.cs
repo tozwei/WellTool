@@ -72,7 +72,7 @@ public class ExpressionUtil
         {
             throw new ExpressionException($"表达式执行失败: {ex.Message}", ex);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new ExpressionException("表达式执行失败", ex);
         }

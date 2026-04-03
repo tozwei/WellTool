@@ -532,7 +532,7 @@ namespace WellTool.Http.Webservice
                 
                 return body;
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 throw new SoapRuntimeException("SOAP request failed", ex);
             }
@@ -576,7 +576,7 @@ namespace WellTool.Http.Webservice
                 response.EnsureSuccessStatusCode();
                 return response.Content.ReadAsStringAsync().Result;
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 throw new SoapRuntimeException("SOAP request failed", ex);
             }

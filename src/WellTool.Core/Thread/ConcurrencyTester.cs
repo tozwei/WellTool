@@ -60,7 +60,7 @@ namespace WellTool.Core.Threading
                         barrier.SignalAndWait();
                         action();
                     }
-                    catch (Exception ex)
+                    catch (System.Exception ex)
                     {
                         Console.WriteLine(ex);
                     }

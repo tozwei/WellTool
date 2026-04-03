@@ -296,7 +296,7 @@ public class HttpResponse : HttpBase<HttpResponse>, IDisposable
         {
             ReadBody();
         }
-        catch (Exception ex) when (ex is FileNotFoundException || ex.Message.Contains("404"))
+        catch (System.Exception ex) when (ex is FileNotFoundException || ex.Message.Contains("404"))
         {
             // 服务器无返回内容，忽略之
         }
@@ -321,7 +321,7 @@ public class HttpResponse : HttpBase<HttpResponse>, IDisposable
         {
             _bodyBytes = _responseMessage.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
         }
-        catch (Exception ex) when (_config.IgnoreEOFError && (ex is EndOfStreamException || ex.Message.Contains("EOF")))
+        catch (System.Exception ex) when (_config.IgnoreEOFError && (ex is EndOfStreamException || ex.Message.Contains("EOF")))
         {
             // 忽略 EOF 错误
         }

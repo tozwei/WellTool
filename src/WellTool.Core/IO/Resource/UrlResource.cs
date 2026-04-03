@@ -104,7 +104,7 @@ namespace WellTool.Core.IO.Resource
                 var response = request.GetResponse();
                 return response.GetResponseStream();
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new NoResourceException(e);
             }

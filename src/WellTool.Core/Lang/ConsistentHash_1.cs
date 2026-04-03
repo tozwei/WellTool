@@ -121,6 +121,6 @@ public class VirtualConsistentHash<T> : IConsistentHash<T>
 
 	private int GetHash(object key)
 	{
-		return Math.Abs(key?.GetHashCode() ?? 0);
+		return System.Math.Abs(key?.GetHashCode() ?? 0);
 	}
 }

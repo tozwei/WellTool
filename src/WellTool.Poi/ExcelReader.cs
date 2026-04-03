@@ -120,7 +120,7 @@ public class ExcelReader : IDisposable
             }
             return result;
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("读取 Excel 工作表失败", ex);
         }
@@ -199,7 +199,7 @@ public class ExcelReader : IDisposable
             }
             return result;
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("读取 Excel 工作表失败", ex);
         }
@@ -281,7 +281,7 @@ public class ExcelReader : IDisposable
             }
             return dataTable;
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("读取 Excel 工作表失败", ex);
         }
@@ -384,7 +384,7 @@ public class ExcelReader : IDisposable
             }
             return result;
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("读取 Excel 工作表失败", ex);
         }

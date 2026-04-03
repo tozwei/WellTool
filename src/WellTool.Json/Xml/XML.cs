@@ -63,7 +63,7 @@ namespace WellTool.Json.Xml
                     ParseXmlNode(jo, doc.DocumentElement, keepStrings);
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 throw new JSONException("Error parsing XML", ex);
             }

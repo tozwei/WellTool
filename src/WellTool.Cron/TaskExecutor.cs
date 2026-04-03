@@ -73,7 +73,7 @@ namespace WellTool.Cron
                 task.Execute();
                 scheduler.ListenerManager.NotifyTaskSuccess(task.Id);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 scheduler.ListenerManager.NotifyTaskFailure(task.Id, ex);
             }

@@ -62,7 +62,7 @@ public class ExcelUtil
             var package = new ExcelPackage(new FileInfo(filePath));
             return new ExcelReader(package, sheetIndex);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("创建 Excel 读取器失败", ex);
         }
@@ -81,7 +81,7 @@ public class ExcelUtil
             var package = new ExcelPackage(new FileInfo(filePath));
             return new ExcelReader(package, sheetName);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("创建 Excel 读取器失败", ex);
         }
@@ -110,7 +110,7 @@ public class ExcelUtil
             var package = new ExcelPackage(stream);
             return new ExcelReader(package, sheetIndex);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("创建 Excel 读取器失败", ex);
         }
@@ -129,7 +129,7 @@ public class ExcelUtil
             var package = new ExcelPackage(stream);
             return new ExcelReader(package, sheetName);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("创建 Excel 读取器失败", ex);
         }
@@ -148,7 +148,7 @@ public class ExcelUtil
             var package = new ExcelPackage();
             return new ExcelWriter(package);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("创建 Excel 写入器失败", ex);
         }
@@ -166,7 +166,7 @@ public class ExcelUtil
             var package = new ExcelPackage(new FileInfo(filePath));
             return new ExcelWriter(package);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("创建 Excel 写入器失败", ex);
         }
@@ -185,7 +185,7 @@ public class ExcelUtil
             var package = new ExcelPackage(new FileInfo(filePath));
             return new ExcelWriter(package, sheetName);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("创建 Excel 写入器失败", ex);
         }
@@ -203,7 +203,7 @@ public class ExcelUtil
             var package = new ExcelPackage(stream);
             return new ExcelWriter(package);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("创建 Excel 写入器失败", ex);
         }
@@ -222,7 +222,7 @@ public class ExcelUtil
             var package = new ExcelPackage(stream);
             return new ExcelWriter(package, sheetName);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("创建 Excel 写入器失败", ex);
         }
@@ -241,7 +241,7 @@ public class ExcelUtil
             var package = new ExcelPackage();
             return new BigExcelWriter(package);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("创建 BigExcelWriter 失败", ex);
         }
@@ -259,7 +259,7 @@ public class ExcelUtil
             var package = new ExcelPackage(new FileInfo(filePath));
             return new BigExcelWriter(package);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("创建 BigExcelWriter 失败", ex);
         }
@@ -278,7 +278,7 @@ public class ExcelUtil
             var package = new ExcelPackage(new FileInfo(filePath));
             return new BigExcelWriter(package, sheetName);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new POIException("创建 BigExcelWriter 失败", ex);
         }

@@ -61,7 +61,7 @@ public class TokenizerUtil
             
             return result;
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new TokenizerException("分词失败", ex);
         }
@@ -93,7 +93,7 @@ public class TokenizerUtil
             
             return frequency;
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             throw new TokenizerException("分词并统计词频失败", ex);
         }

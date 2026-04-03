@@ -57,7 +57,7 @@ namespace WellTool.Aop.Interceptor
                 // 执行后置通知
                 return _aspect.After(target, method, parameters, returnValue);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 // 执行异常通知
                 var exceptionResult = _aspect.AfterException(target, method, parameters, ex);

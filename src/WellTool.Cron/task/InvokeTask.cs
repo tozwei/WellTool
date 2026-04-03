@@ -89,7 +89,7 @@ namespace WellTool.Cron.Task
                 // 执行方法
                 method.Invoke(instance, null);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 throw new CronException(ex, "Invoke task failed: {0}", className);
             }

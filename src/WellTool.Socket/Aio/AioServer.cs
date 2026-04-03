@@ -124,7 +124,7 @@ public class AioServer : IDisposable
 					// Server closed
 					break;
 				}
-				catch (Exception ex)
+				catch (System.Exception ex)
 				{
 					_logger?.LogError(ex, "Accept error");
 				}

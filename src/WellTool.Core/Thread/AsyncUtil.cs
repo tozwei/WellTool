@@ -148,7 +148,7 @@ namespace WellTool.Core.Threading
             {
                 await Task.Run(action);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 // 处理异常
                 Console.WriteLine($"Async task error: {ex.Message}");
@@ -168,7 +168,7 @@ namespace WellTool.Core.Threading
             {
                 return await Task.Run(func);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 // 处理异常
                 Console.WriteLine($"Async task error: {ex.Message}");
