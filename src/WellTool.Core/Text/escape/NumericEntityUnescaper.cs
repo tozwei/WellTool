@@ -1,4 +1,4 @@
-using WellTool.Core.Text;
+using System.Text;
 using WellTool.Core.Util;
 
 namespace WellTool.Core.Text.Escape;
@@ -8,55 +8,72 @@ namespace WellTool.Core.Text.Escape;
 /// </summary>
 public class NumericEntityUnescaper : StrReplacer
 {
-    protected override int Replace(string str, int pos, StrBuilder outBuilder)
+    /// <summary>
+    /// 替换文本
+    /// </summary>
+    /// <param name="text">文本</param>
+    /// <param name="textBuilder">文本构建器</param>
+    /// <returns>替换后的文本</returns>
+    public override string Replace(string text, StringBuilder textBuilder)
     {
-        var len = str.Length;
-        // 检查以确保以&#开头
-        if (str[pos] == '&' && pos < len - 2 && str[pos + 1] == '#')
+        if (string.IsNullOrEmpty(text))
+            return text;
+
+        int pos = 0;
+        int len = text.Length;
+        
+        while (pos < len)
         {
-            int start = pos + 2;
-            bool isHex = false;
-            char firstChar = str[start];
-            if (firstChar == 'x' || firstChar == 'X')
+            // 检查以确保以&#开头
+            if (text[pos] == '&' && pos < len - 2 && text[pos + 1] == '#')
             {
-                start++;
-                isHex = true;
-            }
-
-            // 确保&#后还有数字
-            if (start == len)
-            {
-                return 0;
-            }
-
-            int end = start;
-            while (end < len && CharUtil.IsHexChar(str[end]))
-            {
-                end++;
-            }
-            bool isSemiNext = end != len && str[end] == ';';
-            if (isSemiNext)
-            {
-                int entityValue;
-                try
+                int start = pos + 2;
+                bool isHex = false;
+                char firstChar = text[start];
+                if (firstChar == 'x' || firstChar == 'X')
                 {
-                    if (isHex)
+                    start++;
+                    isHex = true;
+                }
+
+                // 确保&#后还有数字
+                if (start < len)
+                {
+                    int end = start;
+                    while (end < len && CharUtil.IsHexChar(text[end]))
                     {
-                        entityValue = Convert.ToInt32(str.Substring(start, end - start), 16);
+                        end++;
                     }
-                    else
+                    bool isSemiNext = end != len && text[end] == ';';
+                    if (isSemiNext)
                     {
-                        entityValue = int.Parse(str.Substring(start, end - start));
+                        int entityValue;
+                        try
+                        {
+                            if (isHex)
+                            {
+                                entityValue = Convert.ToInt32(text.Substring(start, end - start), 16);
+                            }
+                            else
+                            {
+                                entityValue = int.Parse(text.Substring(start, end - start));
+                            }
+                            textBuilder.Append((char)entityValue);
+                            pos = end + 1;
+                            continue;
+                        }
+                        catch (System.FormatException)
+                        {
+                            // 解析失败，直接添加原字符
+                        }
                     }
                 }
-                catch (FormatException)
-                {
-                    return 0;
-                }
-                outBuilder.Append((char)entityValue);
-                return 2 + (end - start) + (isHex ? 1 : 0) + 1;
             }
+            
+            textBuilder.Append(text[pos]);
+            pos++;
         }
-        return 0;
+        
+        return textBuilder.ToString();
     }
 }
