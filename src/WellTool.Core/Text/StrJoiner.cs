@@ -1,6 +1,5 @@
 using System.Text;
 using WellTool.Core.Collection;
-using WellTool.Core.Io;
 
 namespace WellTool.Core.Text;
 

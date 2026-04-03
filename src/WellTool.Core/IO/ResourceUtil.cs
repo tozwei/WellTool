@@ -1,4 +1,4 @@
-namespace WellTool.Core.io;
+namespace WellTool.Core.IO;
 
 using System;
 using System.IO;

@@ -73,17 +73,17 @@ public class CheckedUtil
     }
 
     /// <summary>
-    /// 接收一个可以转化成 VoidFunc0 的 Lambda 表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+    /// 接收一个可以转化成 VoidFunc 的 Lambda 表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
     /// </summary>
     /// <param name="expression">Lambda表达式</param>
     /// <returns>VoidFunc0Rt</returns>
-    public static VoidFunc0Rt Uncheck(VoidFunc0 expression)
+    public static VoidFunc0Rt Uncheck(VoidFunc expression)
     {
         return Uncheck(expression, e => new RuntimeException(e));
     }
 
     /// <summary>
-    /// 接收一个可以转化成 VoidFunc1 的 Lambda 表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
+    /// 接收一个可以转化成 VoidFunc 的 Lambda 表达式，当执行表达式抛出任何异常的时候，都会转化成运行时异常
     /// </summary>
     /// <param name="expression">Lambda表达式</param>
     /// <typeparam name="P">参数类型</typeparam>
@@ -188,12 +188,12 @@ public class CheckedUtil
     }
 
     /// <summary>
-    /// 接收一个可以转化成 VoidFunc0 的 Lambda 表达式，和一个 RuntimeException
+    /// 接收一个可以转化成 VoidFunc 的 Lambda 表达式，和一个 RuntimeException
     /// </summary>
     /// <param name="expression">Lambda表达式</param>
     /// <param name="rte">期望抛出的运行时异常</param>
     /// <returns>VoidFunc0Rt</returns>
-    public static VoidFunc0Rt Uncheck(VoidFunc0 expression, RuntimeException rte)
+    public static VoidFunc0Rt Uncheck(VoidFunc expression, RuntimeException rte)
     {
         ArgumentNullException.ThrowIfNull(expression);
         return () =>
@@ -218,7 +218,7 @@ public class CheckedUtil
     }
 
     /// <summary>
-    /// 接收一个可以转化成 VoidFunc1 的 Lambda 表达式，和一个 RuntimeException
+    /// 接收一个可以转化成 VoidFunc 的 Lambda 表达式，和一个 RuntimeException
     /// </summary>
     /// <param name="expression">Lambda表达式</param>
     /// <param name="rteSupplier">转化运行时异常的表达式</param>
