@@ -1,18 +1,18 @@
 namespace WellTool.Core.Lang;
 
-/// <summary>
-/// 过滤器接口
-/// </summary>
-/// <typeparam name="T">过滤对象类型</typeparam>
-public interface IFilter<T>
-{
-	/// <summary>
-	/// 过滤方法
-	/// </summary>
-	/// <param name="t">待过滤对象</param>
-	/// <returns>是否保留</returns>
-	bool Accept(T t);
-}
+///// <summary>
+///// 过滤器接口
+///// </summary>
+///// <typeparam name="T">过滤对象类型</typeparam>
+//public interface IFilter<T>
+//{
+//	/// <summary>
+//	/// 过滤方法
+//	/// </summary>
+//	/// <param name="t">待过滤对象</param>
+//	/// <returns>是否保留</returns>
+//	bool Accept(T t);
+//}
 
 /// <summary>
 /// 过滤器抽象类

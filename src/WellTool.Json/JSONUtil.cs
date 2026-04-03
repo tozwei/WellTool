@@ -152,9 +152,9 @@ namespace WellTool.Json
                 return jsonObj;
             }
 
-            if (obj is JSONObject jsonObj)
+            if (obj is JSONObject jsonObject)
             {
-                return jsonObj;
+                return jsonObject;
             }
 
             return new JSONObject(obj, config ?? JSONConfig.Create());
