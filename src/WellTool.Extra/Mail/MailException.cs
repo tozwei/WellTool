@@ -1,12 +1,21 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace WellTool.Extra.Mail
 {
     /// <summary>
     /// 邮件异常
     /// </summary>
+    [Serializable]
     public class MailException : Exception
     {
+        /// <summary>
+        /// 构造
+        /// </summary>
+        public MailException()
+        {
+        }
+
         /// <summary>
         /// 构造
         /// </summary>
@@ -27,27 +36,9 @@ namespace WellTool.Extra.Mail
         /// <summary>
         /// 构造
         /// </summary>
-        /// <param name="innerException">内部异常</param>
-        public MailException(Exception innerException) : base(innerException.Message, innerException)
-        {
-        }
-
-        /// <summary>
-        /// 构造
-        /// </summary>
-        /// <param name="format">消息格式</param>
-        /// <param name="args">消息参数</param>
-        public MailException(string format, params object[] args) : base(string.Format(format, args))
-        {
-        }
-
-        /// <summary>
-        /// 构造
-        /// </summary>
-        /// <param name="innerException">内部异常</param>
-        /// <param name="format">消息格式</param>
-        /// <param name="args">消息参数</param>
-        public MailException(Exception innerException, string format, params object[] args) : base(string.Format(format, args), innerException)
+        /// <param name="info">序列化信息</param>
+        /// <param name="context">流上下文</param>
+        protected MailException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
