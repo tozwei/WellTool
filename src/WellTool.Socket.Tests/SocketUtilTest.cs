@@ -1,6 +1,5 @@
 namespace WellTool.Socket.Tests;
 
-using Well.Socket;
 
 public class SocketUtilTest
 {

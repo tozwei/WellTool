@@ -68,12 +68,12 @@ public static class ObjectUtil
     }
 
     /// <summary>
-    /// 如果为空，返回默认值（使用工厂方法）
-    /// </summary>
-    public static T DefaultIfNull<T>(T obj, Func<T> factory)
-    {
-        return obj ?? factory();
-    }
+        /// 如果为空，返回默认值（使用工厂方法）
+        /// </summary>
+        public static T DefaultIfNull<T>(T obj, System.Func<T> factory)
+        {
+            return obj ?? factory();
+        }
 
     /// <summary>
     /// 获取哈希码

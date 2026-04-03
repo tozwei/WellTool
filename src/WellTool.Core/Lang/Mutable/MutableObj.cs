@@ -60,7 +60,7 @@ namespace WellTool.Core.Lang.Mutable
         /// <summary>
         /// 获取值，为null时使用工厂方法
         /// </summary>
-        public T GetOrDefault(Func<T> factory)
+        public T GetOrDefault(System.Func<T> factory)
         {
             return _value ?? factory();
         }
@@ -79,7 +79,7 @@ namespace WellTool.Core.Lang.Mutable
         /// <summary>
         /// 如果为null则使用工厂方法设置值
         /// </summary>
-        public void SetIfNull(Func<T> factory)
+        public void SetIfNull(System.Func<T> factory)
         {
             if (_value == null)
             {
