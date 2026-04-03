@@ -139,7 +139,17 @@ namespace WellTool.Json
 
             if (obj is string str)
             {
-                return string.IsNullOrWhiteSpace(str) ? null : new JSONObject(str);
+                if (string.IsNullOrWhiteSpace(str))
+                {
+                    return null;
+                }
+                var jsonObj = new JSONObject(str);
+                if (config != null)
+                {
+                    // 复制配置到新创建的 JSONObject
+                    jsonObj.Config = config.Copy();
+                }
+                return jsonObj;
             }
 
             if (obj is JSONObject jsonObj)

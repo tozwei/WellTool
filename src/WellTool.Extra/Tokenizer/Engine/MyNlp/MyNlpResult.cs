@@ -1,0 +1,45 @@
+using System.Collections.Generic;
+
+namespace WellTool.Extra.Tokenizer.Engine.MyNlp
+{
+    /// <summary>
+    /// MyNlp分词结果
+    /// </summary>
+    public class MyNlpResult : Result
+    {
+        private readonly List<Word> _words;
+
+        public MyNlpResult(string text)
+        {
+            _words = new List<Word>();
+            // TODO: 需要集成 MyNlp.Net 或类似库进行实际分词
+            // 临时实现：按字符分割
+            foreach (var c in text)
+            {
+                _words.Add(new MyNlpWord(c.ToString()));
+            }
+        }
+
+        public override bool HasNext => _words.Count > 0;
+
+        public override Word Next()
+        {
+            return _words.Count > 0 ? _words[0] : null;
+        }
+    }
+
+    /// <summary>
+    /// MyNlp词条
+    /// </summary>
+    public class MyNlpWord : Word
+    {
+        private readonly string _text;
+
+        public MyNlpWord(string text)
+        {
+            _text = text;
+        }
+
+        public override string Text => _text;
+    }
+}
