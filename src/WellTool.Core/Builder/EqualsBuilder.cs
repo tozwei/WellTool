@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
-using WellDone.Core.Lang;
 using WellTool.Core.Lang;
 
 namespace WellTool.Core.Builder
@@ -519,55 +518,4 @@ namespace WellTool.Core.Builder
         /// </summary>
         /// <param name="lhs">the left hand <code>bool</code></param>
         /// <param name="rhs">the right hand <code>bool</code></param>
-        /// <returns>EqualsBuilder - used to chain calls.</returns>
-        public EqualsBuilder Append(bool lhs, bool rhs)
-        {
-            if (isEquals == false)
-            {
-                return this;
-            }
-            isEquals = (lhs == rhs);
-            return this;
-        }
-
-        /// <summary>
-        /// Returns <code>true</code> if the fields that have been checked
-        /// are all equal.
-        /// </summary>
-        /// <returns>boolean</returns>
-        public bool IsEquals()
-        {
-            return this.isEquals;
-        }
-
-        /// <summary>
-        /// Returns <code>true</code> if the fields that have been checked
-        /// are all equal.
-        /// </summary>
-        /// <returns><code>true</code> if all of the fields that have been checked
-        /// are equal, <code>false</code> otherwise.</returns>
-        public bool Build()
-        {
-            return IsEquals();
-        }
-
-        /// <summary>
-        /// Sets the <code>isEquals</code> value.
-        /// </summary>
-        /// <param name="isEquals">The value to set.</param>
-        /// <returns>this</returns>
-        protected EqualsBuilder SetEquals(bool isEquals)
-        {
-            this.isEquals = isEquals;
-            return this;
-        }
-
-        /// <summary>
-        /// Reset the EqualsBuilder so you can use the same object again
-        /// </summary>
-        public void Reset()
-        {
-            this.isEquals = true;
-        }
-    }
-}
+        /// <returns>EqualsBuilder - used to chain calls
