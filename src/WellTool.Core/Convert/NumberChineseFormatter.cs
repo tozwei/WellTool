@@ -41,7 +41,7 @@ public static class NumberChineseFormatter
 			var n = value % 10;
 			if (sb.Length > 0 && n > 0)
 				sb.Insert(0, UNITS[unitsIndex]);
-			sb.Insert(0, isUpper ? ToUpper(n) : CHINESE_DIGITS[n]);
+			sb.Insert(0, isUpper ? ToUpper((int)n) : CHINESE_DIGITS[(int)n]);
 			value /= 10;
 			unitsIndex++;
 		}

@@ -1,6 +1,7 @@
 namespace WellTool.Captcha.Tests;
 
-using Well.Captcha;
+using WellTool.Captcha;
+using Xunit;
 
 public class GifCaptchaUtilTest
 {

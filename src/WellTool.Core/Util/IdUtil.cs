@@ -38,7 +38,7 @@ public static class IdUtil
 	/// <summary>
 	/// 生成ObjectId
 	/// </summary>
-	public static string ObjectId() => ObjectId.NewObjectId();
+	public static string ObjectId() => new ObjectId().NewObjectId();
 
 	/// <summary>
 	/// 生成时间戳ID

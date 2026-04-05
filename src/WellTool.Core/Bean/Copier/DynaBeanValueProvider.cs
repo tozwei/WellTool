@@ -22,10 +22,21 @@ public class DynaBeanValueProvider : IValueProvider<string>
     }
 
     public object Value(string key, Type valueType)
-    {
-        var value = _dynaBean.Get(key);
-        return ConvertUtil.ConvertWithCheck(valueType, value, null, _ignoreError);
-    }
+        {
+            try
+            {
+                var value = _dynaBean.Get<object>(key);
+                return System.Convert.ChangeType(value, valueType);
+            }
+            catch
+            {
+                if (_ignoreError)
+                {
+                    return null;
+                }
+                throw;
+            }
+        }
 
     public bool ContainsKey(string key)
     {

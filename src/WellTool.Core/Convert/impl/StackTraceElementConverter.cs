@@ -12,10 +12,15 @@ public class StackTraceElementConverter : AbstractConverter<StackFrame>
     {
         if (value is IDictionary<string, object> map)
         {
-            var declaringClass = map.GetValueOrDefault("className")?.ToString() ?? "";
-            var methodName = map.GetValueOrDefault("methodName")?.ToString() ?? "";
-            var fileName = map.GetValueOrDefault("fileName")?.ToString();
-            var lineNumberStr = map.GetValueOrDefault("lineNumber")?.ToString() ?? "0";
+            map.TryGetValue("className", out var classNameValue);
+            map.TryGetValue("methodName", out var methodNameValue);
+            map.TryGetValue("fileName", out var fileNameValue);
+            map.TryGetValue("lineNumber", out var lineNumberValue);
+            
+            var declaringClass = classNameValue?.ToString() ?? "";
+            var methodName = methodNameValue?.ToString() ?? "";
+            var fileName = fileNameValue?.ToString();
+            var lineNumberStr = lineNumberValue?.ToString() ?? "0";
             var lineNumber = int.TryParse(lineNumberStr, out var ln) ? ln : 0;
 
             var methodInfo = new StackFrame(fileName, lineNumber);

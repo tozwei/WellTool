@@ -96,7 +96,8 @@ namespace WellTool.Core.Bean
             }
             else
             {
-                var prop = BeanDesc.GetPropDesc(_beanClass, fieldName);
+                var beanDesc = BeanDesc.GetBeanDesc(_beanClass);
+                var prop = beanDesc?.GetPropDesc(fieldName);
                 if (prop == null)
                 {
                     throw new BeanException($"No public field or get method for '{fieldName}'");
@@ -135,7 +136,8 @@ namespace WellTool.Core.Bean
             }
             else
             {
-                var prop = BeanDesc.GetPropDesc(_beanClass, fieldName);
+                var beanDesc = BeanDesc.GetBeanDesc(_beanClass);
+                var prop = beanDesc?.GetPropDesc(fieldName);
                 if (prop == null)
                 {
                     throw new BeanException($"No public field or set method for '{fieldName}'");
@@ -156,7 +158,8 @@ namespace WellTool.Core.Bean
             }
             else
             {
-                return BeanDesc.GetPropDesc(_beanClass, fieldName) != null;
+                var beanDesc = BeanDesc.GetBeanDesc(_beanClass);
+                return beanDesc?.GetPropDesc(fieldName) != null;
             }
         }
 

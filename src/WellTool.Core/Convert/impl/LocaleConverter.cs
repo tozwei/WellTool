@@ -24,9 +24,13 @@ public class LocaleConverter : AbstractConverter<CultureInfo>
             }
             if (items.Length == 2)
             {
-                return new CultureInfo(items[0], items[1]);
+                return new CultureInfo($"{items[0]}-{items[1]}");
             }
-            return new CultureInfo(items[0], items[1], items[2]);
+            if (items.Length == 3)
+            {
+                return new CultureInfo($"{items[0]}-{items[1]}-{items[2]}");
+            }
+            return CultureInfo.InvariantCulture;
         }
         catch
         {

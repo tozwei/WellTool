@@ -93,4 +93,33 @@ public static class ArrayUtil
 		}
 		return array;
 	}
+
+	/// <summary>
+	/// 截取数组的子数组
+	/// </summary>
+	/// <typeparam name="T">数组元素类型</typeparam>
+	/// <param name="array">数组</param>
+	/// <param name="start">起始索引</param>
+	/// <param name="end">结束索引</param>
+	/// <param name="step">步长</param>
+	/// <returns>子数组</returns>
+	public static T[] Sub<T>(T[] array, int start, int end, int step = 1)
+	{
+		if (array == null)
+		{
+			return Array.Empty<T>();
+		}
+		if (start < 0) start = 0;
+		if (end > array.Length) end = array.Length;
+		if (start >= end || step <= 0)
+		{
+			return Array.Empty<T>();
+		}
+		var list = new List<T>();
+		for (int i = start; i < end; i += step)
+		{
+			list.Add(array[i]);
+		}
+		return list.ToArray();
+	}
 }

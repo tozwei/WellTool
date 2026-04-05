@@ -1,3 +1,5 @@
+using System;
+
 namespace WellTool.Core.lang.id;
 
 /// <summary>
@@ -57,8 +59,8 @@ public class SnowflakeGenerator : IdGenerator
 		lock (this)
 		{
 			var timestamp = TimeGen();
-			if (timestamp < _lastTimestamp)
-				throw new Exception("Clock moved backwards!");
+		if (timestamp < _lastTimestamp)
+			throw new System.Exception("Clock moved backwards!");
 
 			if (_lastTimestamp == timestamp)
 			{

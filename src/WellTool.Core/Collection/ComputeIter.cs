@@ -81,7 +81,7 @@ namespace WellTool.Core.Collection
         /// </summary>
         public static ComputeIter<T> Compute<T>(this IEnumerable<T> source, Func<T, int, T> computer)
         {
-            return new ComputeIter<T>(source.Select((item, index) => computer(item, index)));
+            return new ComputeIter<T>(source.Select((item, index) => computer(item, index)), x => x);
         }
     }
 }

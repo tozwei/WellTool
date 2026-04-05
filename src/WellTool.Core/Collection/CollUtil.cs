@@ -255,6 +255,113 @@ namespace WellTool.Core.Collection
         }
 
         /// <summary>
+        /// 添加所有元素到集合
+        /// </summary>
+        /// <typeparam name="T">集合元素类型</typeparam>
+        /// <param name="collection">目标集合</param>
+        /// <param name="items">要添加的元素</param>
+        public static void AddAll<T>(ICollection<T> collection, IEnumerable<T> items)
+        {
+            if (collection != null && items != null)
+            {
+                foreach (var item in items)
+                {
+                    collection.Add(item);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 截取集合的子集合
+        /// </summary>
+        /// <typeparam name="T">集合元素类型</typeparam>
+        /// <param name="collection">集合</param>
+        /// <param name="fromIndex">起始索引</param>
+        /// <param name="toIndex">结束索引</param>
+        /// <param name="step">步长</param>
+        /// <returns>子集合</returns>
+        public static ICollection<T> Sub<T>(ICollection<T> collection, int fromIndex, int toIndex, int step = 1)
+        {
+            var list = ToList(collection);
+            if (fromIndex < 0) fromIndex = 0;
+            if (toIndex > list.Count) toIndex = list.Count;
+            if (fromIndex >= toIndex || step <= 0) return new List<T>();
+            var result = new List<T>();
+            for (int i = fromIndex; i < toIndex; i += step)
+            {
+                result.Add(list[i]);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 截取IList的子集合
+        /// </summary>
+        /// <param name="list">IList</param>
+        /// <param name="fromIndex">起始索引</param>
+        /// <param name="toIndex">结束索引</param>
+        /// <param name="step">步长</param>
+        /// <returns>子集合</returns>
+        public static IList Sub(IList list, int fromIndex, int toIndex, int step = 1)
+        {
+            if (list == null)
+            {
+                return new List<object>();
+            }
+            if (fromIndex < 0) fromIndex = 0;
+            if (toIndex > list.Count) toIndex = list.Count;
+            if (fromIndex >= toIndex || step <= 0) return new List<object>();
+            var result = new List<object>();
+            for (int i = fromIndex; i < toIndex; i += step)
+            {
+                result.Add(list[i]);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 获取集合中的任意一个元素
+        /// </summary>
+        /// <typeparam name="T">集合元素类型</typeparam>
+        /// <param name="collection">集合</param>
+        /// <returns>任意一个元素，如果集合为空则返回默认值</returns>
+        public static T GetAny<T>(ICollection<T> collection)
+        {
+            if (IsEmpty(collection))
+            {
+                return default;
+            }
+            foreach (var item in collection)
+            {
+                return item;
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// 获取IList中指定索引的元素
+        /// </summary>
+        /// <param name="list">IList</param>
+        /// <param name="indices">索引数组</param>
+        /// <returns>元素列表</returns>
+        public static IList GetAny(IList list, int[] indices)
+        {
+            if (list == null || indices == null)
+            {
+                return new List<object>();
+            }
+            var result = new List<object>();
+            foreach (var index in indices)
+            {
+                if (index >= 0 && index < list.Count)
+                {
+                    result.Add(list[index]);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// 反转集合
         /// </summary>
         /// <typeparam name="T">集合元素类型</typeparam>

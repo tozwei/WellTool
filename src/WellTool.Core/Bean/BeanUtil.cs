@@ -503,4 +503,72 @@ public static class BeanUtil
 
 		return methodName;
 	}
+
+	/// <summary>
+	/// 检查对象名是否匹配模式
+	/// </summary>
+	/// <param name="bean">对象</param>
+	/// <param name="pattern">模式</param>
+	/// <param name="ignoreCase">是否忽略大小写</param>
+	/// <returns>是否匹配</returns>
+	public static bool IsMatchName(object bean, string pattern, bool ignoreCase)
+	{
+		if (bean == null || string.IsNullOrEmpty(pattern))
+		{
+			return false;
+		}
+
+		var type = bean.GetType();
+		var name = type.Name;
+		return ignoreCase ? string.Equals(name, pattern, StringComparison.OrdinalIgnoreCase) : name == pattern;
+	}
+
+	/// <summary>
+	/// 获取字段值
+	/// </summary>
+	/// <param name="bean">对象</param>
+	/// <param name="fieldName">字段名</param>
+	/// <returns>字段值</returns>
+	public static object GetFieldValue(object bean, string fieldName)
+	{
+		if (bean == null || string.IsNullOrEmpty(fieldName))
+		{
+			return null;
+		}
+
+		var type = bean.GetType();
+		var field = type.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+		if (field != null)
+		{
+			return field.GetValue(bean);
+		}
+
+		// 如果字段不存在，尝试获取属性
+		return GetProperty(bean, fieldName);
+	}
+
+	/// <summary>
+	/// 设置字段值
+	/// </summary>
+	/// <param name="bean">对象</param>
+	/// <param name="fieldName">字段名</param>
+	/// <param name="value">字段值</param>
+	public static void SetFieldValue(object bean, string fieldName, object value)
+	{
+		if (bean == null || string.IsNullOrEmpty(fieldName))
+		{
+			return;
+		}
+
+		var type = bean.GetType();
+		var field = type.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+		if (field != null)
+		{
+			field.SetValue(bean, value);
+			return;
+		}
+
+		// 如果字段不存在，尝试设置属性
+		SetProperty(bean, fieldName, value);
+	}
 }

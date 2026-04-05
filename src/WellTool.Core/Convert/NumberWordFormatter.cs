@@ -34,7 +34,7 @@ public static class NumberWordFormatter
 			var n = number % 10;
 			if (sb.Length > 0 && n > 0)
 				sb.Insert(0, UNITS[level]);
-			sb.Insert(0, isUpper ? ToChineseUpper(n) : ToChinese(n));
+			sb.Insert(0, isUpper ? ToChineseUpper((int)n) : ToChinese((int)n));
 			number /= 10;
 			level++;
 		}

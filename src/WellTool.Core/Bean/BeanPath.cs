@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using WellTool.Core.Collection;
 using WellTool.Core.Convert;
 using WellTool.Core.Map;
+using WellTool.Core.Util;
 
 namespace WellTool.Core.Bean;
 
@@ -152,11 +153,11 @@ public class BeanPath
 
             if (bean is IList list)
             {
-                return CollUtil.Sub(list, start, end, step);
+                return WellTool.Core.Collection.CollUtil.Sub(list, start, end, step);
             }
             if (bean is Array array)
             {
-                return ArrayUtil.Sub(array, start, end, step);
+                return ArrayUtil.Sub((object[])array, start, end, step);
             }
         }
         else if (expression.Contains(','))
@@ -165,7 +166,7 @@ public class BeanPath
             var keys = expression.Split(',');
             if (bean is IList list)
             {
-                return CollUtil.GetAny(list, Convert.ToIntArray(keys));
+                return WellTool.Core.Collection.CollUtil.GetAny(list, WellTool.Core.Convert.Convert.ToIntArray(keys));
             }
             if (bean is IDictionary dictionary)
             {
@@ -203,7 +204,7 @@ public class BeanPath
         if (subBean == null)
         {
             var parentParts = patternParts.Take(patternParts.Count - 1).ToList();
-            var newValue = nextNumberPart ? new List<object>() : new Dictionary<string, object>();
+            object newValue = nextNumberPart ? (object)new List<object>() : (object)new Dictionary<string, object>();
             Set(bean, parentParts, lastIsNumber(parentParts), newValue);
             subBean = Get(patternParts, bean, true);
         }

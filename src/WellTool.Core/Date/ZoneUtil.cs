@@ -23,12 +23,11 @@ public static class ZoneUtil
 	}
 
 	/// <summary>
-	/// DateTimeOffset转换为SystemTimeZone
+	/// 获取本地时区
 	/// </summary>
-	/// <param name="dateTimeOffset">日期时间偏移</param>
 	/// <returns>SystemTimeZone</returns>
-	public static SystemTimeZone ToTimeZone(DateTimeOffset dateTimeOffset)
+	public static SystemTimeZone GetLocalTimeZone()
 	{
-		return dateTimeOffset.Offset;
+		return SystemTimeZone.Local;
 	}
 }

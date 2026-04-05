@@ -215,7 +215,7 @@ public class Convert
 	/// <param name="value">值</param>
 	/// <param name="defaultValue">默认值</param>
 	/// <returns>Enum</returns>
-	public static T? ToEnum<T>(object value, T? defaultValue) where T : Enum
+	public static T? ToEnum<T>(object value, T? defaultValue) where T : struct, Enum
 	{
 		if (value == null) return defaultValue;
 		if (value is T t) return t;
@@ -229,9 +229,9 @@ public class Convert
 	/// <typeparam name="T">枚举类型</typeparam>
 	/// <param name="value">值</param>
 	/// <returns>Enum</returns>
-	public static T? ToEnum<T>(object value) where T : Enum
+	public static T? ToEnum<T>(object value) where T : struct, Enum
 	{
-		return ToEnum(value, null);
+		return ToEnum<T>(value, null);
 	}
 
 	/// <summary>
@@ -316,7 +316,7 @@ public class Convert
 	public static string ToHex(string str, Encoding encoding)
 	{
 		if (string.IsNullOrEmpty(str)) return str;
-		return HexUtil.EncodeHexStr(encoding.GetBytes(str));
+		return WellTool.Core.Util.HexUtil.Encode(encoding.GetBytes(str));
 	}
 
 	/// <summary>
@@ -327,7 +327,7 @@ public class Convert
 	public static string ToHex(byte[] bytes)
 	{
 		if (bytes == null || bytes.Length == 0) return string.Empty;
-		return HexUtil.EncodeHexStr(bytes);
+		return WellTool.Core.Util.HexUtil.Encode(bytes);
 	}
 
 	/// <summary>
@@ -338,7 +338,7 @@ public class Convert
 	public static byte[] HexToBytes(string src)
 	{
 		if (string.IsNullOrEmpty(src)) return Array.Empty<byte>();
-		return HexUtil.DecodeHex(src.ToCharArray());
+		return WellTool.Core.Util.HexUtil.Decode(src);
 	}
 
 	/// <summary>
@@ -392,6 +392,46 @@ public class Convert
 	public static T ConvertTo<T>(object value)
 	{
 		return To<T>(value);
+	}
+
+	/// <summary>
+	/// 将字符串数组转换为int数组
+	/// </summary>
+	/// <param name="strArray">字符串数组</param>
+	/// <returns>int数组</returns>
+	public static int[] ToIntArray(string[] strArray)
+	{
+		if (strArray == null)
+		{
+			return Array.Empty<int>();
+		}
+		var result = new int[strArray.Length];
+		for (int i = 0; i < strArray.Length; i++)
+		{
+			result[i] = ToInt(strArray[i]);
+		}
+		return result;
+	}
+
+	/// <summary>
+	/// 将字节数组转换为Base64字符串
+	/// </summary>
+	/// <param name="bytes">字节数组</param>
+	/// <returns>Base64字符串</returns>
+	public static string ToBase64String(byte[] bytes)
+	{
+		return Convert.ToBase64String(bytes);
+	}
+
+	/// <summary>
+	/// 将对象转换为指定类型
+	/// </summary>
+	/// <param name="value">被转换的值</param>
+	/// <param name="targetType">目标类型</param>
+	/// <returns>转换后的值</returns>
+	public static object ChangeType(object value, Type targetType)
+	{
+		return System.Convert.ChangeType(value, targetType);
 	}
 }
 

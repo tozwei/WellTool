@@ -22,13 +22,13 @@ public class RandomAccessPartition<T> : Partition<T>, IList
     // IList 实现
     public bool IsFixedSize => true;
     public bool IsReadOnly => true;
-    public object this[int index] { get => ((IList)GetSourceList())[index]; set => throw new NotSupportedException(); }
-    public void CopyTo(Array array, int index) { ((IList)GetSourceList()).CopyTo(array, index); }
+    public object this[int index] { get => ((IList)_list)[index]; set => throw new NotSupportedException(); }
+    public void CopyTo(Array array, int index) { ((IList)_list).CopyTo(array, index); }
     public IEnumerator GetEnumerator() => ((IEnumerable<T>)this).GetEnumerator();
     public int Add(object value) => throw new NotSupportedException();
     public void Clear() => throw new NotSupportedException();
-    public bool Contains(object value) => ((IList)GetSourceList()).Contains(value);
-    public int IndexOf(object value) => ((IList)GetSourceList()).IndexOf(value);
+    public bool Contains(object value) => ((IList)_list).Contains(value);
+    public int IndexOf(object value) => ((IList)_list).IndexOf(value);
     public void Insert(int index, object value) => throw new NotSupportedException();
     public void Remove(object value) => throw new NotSupportedException();
     public void RemoveAt(int index) => throw new NotSupportedException();
