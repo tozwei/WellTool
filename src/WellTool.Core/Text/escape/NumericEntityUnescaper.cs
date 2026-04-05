@@ -52,7 +52,7 @@ public class NumericEntityUnescaper : StrReplacer
                         {
                             if (isHex)
                             {
-                                entityValue = Convert.ToInt32(text.Substring(start, end - start), 16);
+                                entityValue = System.Convert.ToInt32(text.Substring(start, end - start), 16);
                             }
                             else
                             {

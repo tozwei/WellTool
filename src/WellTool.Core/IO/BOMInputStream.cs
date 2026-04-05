@@ -107,7 +107,7 @@ namespace WellTool.Core.IO
 
             if (_buffer != null && _bufferPosition < _buffer.Length)
             {
-                var bytesToRead = Math.Min(count, _buffer.Length - _bufferPosition);
+                var bytesToRead = System.Math.Min(count, _buffer.Length - _bufferPosition);
                 Array.Copy(_buffer, _bufferPosition, buffer, offset, bytesToRead);
                 _bufferPosition += bytesToRead;
 

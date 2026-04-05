@@ -43,7 +43,7 @@ namespace WellTool.Core.Date
             if (month < 1) month = 1;
             if (month > 12) month = 12;
             var maxDay = DateTime.DaysInMonth(_date.Year, month);
-            var day = Math.Min(_date.Day, maxDay);
+            var day = System.Math.Min(_date.Day, maxDay);
             _date = new DateTime(_date.Year, month, day, _date.Hour, _date.Minute, _date.Second, _date.Millisecond, _date.Kind);
             return this;
         }
@@ -54,7 +54,7 @@ namespace WellTool.Core.Date
         public DateModifier SetDay(int day)
         {
             var maxDay = DateTime.DaysInMonth(_date.Year, _date.Month);
-            day = Math.Min(day, maxDay);
+            day = System.Math.Min(day, maxDay);
             _date = new DateTime(_date.Year, _date.Month, day, _date.Hour, _date.Minute, _date.Second, _date.Millisecond, _date.Kind);
             return this;
         }

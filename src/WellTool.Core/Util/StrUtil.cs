@@ -209,4 +209,17 @@ public static class StrUtil
 			return str.Substring(prefix.Length);
 		return str;
 	}
+
+	/// <summary>
+	/// 转换为布尔值
+	/// </summary>
+	/// <param name="str">字符串</param>
+	/// <returns>布尔值</returns>
+	public static bool ToBoolean(string str)
+	{
+		if (IsEmpty(str))
+			return false;
+		str = str.Trim().ToLower();
+		return str == "true" || str == "1" || str == "yes" || str == "y" || str == "on";
+	}
 }

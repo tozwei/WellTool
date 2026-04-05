@@ -115,7 +115,7 @@ namespace WellTool.Core.Text.Csv
         public Dictionary<string, string> ToDictionary()
         {
             var dict = new Dictionary<string, string>();
-            for (int i = 0; i < Math.Min(_data.Headers.Count, _values.Count); i++)
+            for (int i = 0; i < System.Math.Min(_data.Headers.Count, _values.Count); i++)
             {
                 dict[_data.Headers[i]] = _values[i];
             }

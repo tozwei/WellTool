@@ -18,7 +18,7 @@ public class SerializeUtil
 	public static T? Clone<T>(T obj) where T : class
 	{
 		if (obj == null) return null;
-		if (obj.GetType().IsNotSerializable) return null;
+		if (!obj.GetType().IsSerializable) return null;
 		return Deserialize<T>(Serialize(obj));
 	}
 

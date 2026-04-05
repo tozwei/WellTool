@@ -45,8 +45,8 @@ public static class TemporalAccessorUtil
 		var thisTicks = date.Ticks;
 		var beginTicks = beginDate.Ticks;
 		var endTicks = endDate.Ticks;
-		var rangeMin = Math.Min(beginTicks, endTicks);
-		var rangeMax = Math.Max(beginTicks, endTicks);
+		var rangeMin = System.Math.Min(beginTicks, endTicks);
+		var rangeMax = System.Math.Max(beginTicks, endTicks);
 
 		// 先判断是否满足 date ∈ (beginDate, endDate)
 		bool isIn = rangeMin < thisTicks && thisTicks < rangeMax;

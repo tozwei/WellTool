@@ -37,7 +37,7 @@ public static class Base64Util
 	{
 		if (data == null || data.Length == 0)
 			return string.Empty;
-		return Convert.ToBase64String(data);
+		return System.Convert.ToBase64String(data);
 	}
 
 	/// <summary>

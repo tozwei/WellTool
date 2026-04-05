@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using System;
+using WellTool.Core.Math;
 
 namespace WellTool.Core.Text;
 
@@ -56,7 +57,7 @@ public static class TextSimilarity
             for (var j = 1; j <= s2.Length; j++)
             {
                 var cost = s1[i - 1] == s2[j - 1] ? 0 : 1;
-                matrix[i, j] = Math.Min(Math.Min(matrix[i - 1, j] + 1, matrix[i, j - 1] + 1), matrix[i - 1, j - 1] + cost);
+                matrix[i, j] = MathUtil.Min(MathUtil.Min(matrix[i - 1, j] + 1, matrix[i, j - 1] + 1), matrix[i - 1, j - 1] + cost);
             }
         }
 
@@ -82,7 +83,7 @@ public static class TextSimilarity
         }
 
         var distance = EditDistance(s1, s2);
-        var maxLength = Math.Max(s1.Length, s2.Length);
+        var maxLength = MathUtil.Max(s1.Length, s2.Length);
         return 1.0 - (double)distance / maxLength;
     }
 
@@ -145,6 +146,6 @@ public static class TextSimilarity
             return 0.0;
         }
 
-        return dotProduct / (Math.Sqrt(norm1) * Math.Sqrt(norm2));
+        return dotProduct / (MathUtil.Sqrt(norm1) * MathUtil.Sqrt(norm2));
     }
 }

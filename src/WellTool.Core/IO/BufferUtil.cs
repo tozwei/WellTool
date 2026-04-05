@@ -44,7 +44,7 @@ namespace WellTool.Core.IO
         /// <returns>目标字节数组</returns>
         public static byte[] Copy(byte[] src, byte[] dest)
         {
-            var length = Math.Min(src.Length, dest.Length);
+            var length = System.Math.Min(src.Length, dest.Length);
             return Copy(src, 0, dest, 0, length);
         }
 

@@ -98,7 +98,7 @@ namespace WellTool.Core.Swing
                     Verb = "print"
                 });
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new WellToolException(e);
             }
