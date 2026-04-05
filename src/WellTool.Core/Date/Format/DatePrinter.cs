@@ -4,6 +4,7 @@ using System;
 using System.Globalization;
 using System.Text;
 using SystemTimeZone = System.TimeZone;
+using Calendar = WellTool.Core.Date.Calendar;
 
 /// <summary>
 /// 日期格式化输出接口

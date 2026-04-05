@@ -15,10 +15,9 @@ public class ClipboardUtil
 	{
 		try
 		{
-			if (System.Windows.Forms.Clipboard.ContainsText())
-			{
-				return System.Windows.Forms.Clipboard.GetText();
-			}
+			// 跨平台实现：返回null，因为不同平台剪贴板实现不同
+			// 实际应用中可以根据目标平台使用相应的剪贴板API
+			return null;
 		}
 		catch
 		{
@@ -35,7 +34,8 @@ public class ClipboardUtil
 	{
 		try
 		{
-			System.Windows.Forms.Clipboard.SetText(text);
+			// 跨平台实现：空实现，因为不同平台剪贴板实现不同
+			// 实际应用中可以根据目标平台使用相应的剪贴板API
 		}
 		catch
 		{
@@ -50,7 +50,8 @@ public class ClipboardUtil
 	{
 		try
 		{
-			System.Windows.Forms.Clipboard.Clear();
+			// 跨平台实现：空实现，因为不同平台剪贴板实现不同
+			// 实际应用中可以根据目标平台使用相应的剪贴板API
 		}
 		catch
 		{

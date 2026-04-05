@@ -80,7 +80,7 @@ namespace WellTool.Core.Builder
                             object fieldValue = field.GetValue(obj);
                             builder.Append(fieldValue);
                         }
-                        catch (Exception e)
+                        catch (System.Exception e)
                         {
                             // this can't happen. Would get a Security exception instead
                             // throw a runtime exception in case the impossible happens.

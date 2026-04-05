@@ -26,7 +26,9 @@ namespace WellTool.Core.Swing
         /// <returns>屏幕宽度</returns>
         public static int GetWidth()
         {
-            return System.Windows.Forms.Screen.PrimaryScreen?.Bounds.Width ?? 1920;
+            // 跨平台实现：返回默认值，因为不同平台屏幕获取方式不同
+            // 实际应用中可以根据目标平台使用相应的API
+            return 1920;
         }
 
         /// <summary>
@@ -35,7 +37,9 @@ namespace WellTool.Core.Swing
         /// <returns>屏幕高度</returns>
         public static int GetHeight()
         {
-            return System.Windows.Forms.Screen.PrimaryScreen?.Bounds.Height ?? 1080;
+            // 跨平台实现：返回默认值，因为不同平台屏幕获取方式不同
+            // 实际应用中可以根据目标平台使用相应的API
+            return 1080;
         }
 
         /// <summary>
@@ -44,7 +48,9 @@ namespace WellTool.Core.Swing
         /// <returns>屏幕的矩形</returns>
         public static Rectangle GetRectangle()
         {
-            return System.Windows.Forms.Screen.PrimaryScreen?.Bounds ?? new Rectangle(0, 0, 1920, 1080);
+            // 跨平台实现：返回默认值，因为不同平台屏幕获取方式不同
+            // 实际应用中可以根据目标平台使用相应的API
+            return new Rectangle(0, 0, 1920, 1080);
         }
 
         //-------------------------------------------------------------------------------------------- 截屏

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WellTool.Core.Math;
 
 namespace WellTool.Core.Comparator
 {
@@ -33,7 +34,7 @@ namespace WellTool.Core.Comparator
             var xParts = x.Split('.').Select(int.Parse).ToArray();
             var yParts = y.Split('.').Select(int.Parse).ToArray();
 
-            int minLength = Math.Min(xParts.Length, yParts.Length);
+            int minLength = MathUtil.Min(xParts.Length, yParts.Length);
             for (int i = 0; i < minLength; i++)
             {
                 int result = xParts[i].CompareTo(yParts[i]);

@@ -26,7 +26,7 @@ namespace WellTool.Extra.Servlet
         /// 获取请求内容
         /// </summary>
         /// <param name="request">请求对象</param>
-        <param name="charset">编码</param>
+        /// <param name="charset">编码</param>
         /// <returns>请求内容</returns>
         public static string GetRequestBody(object request, Encoding charset = null)
         {

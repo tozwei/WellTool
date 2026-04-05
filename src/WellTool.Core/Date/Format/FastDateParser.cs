@@ -3,6 +3,7 @@ namespace WellTool.Core.Date.Format;
 using System;
 using System.Globalization;
 using SystemTimeZone = System.TimeZone;
+using Calendar = WellTool.Core.Date.Calendar;
 
 /// <summary>
 /// 日期解析器 - SimpleDateFormat的线程安全版本
@@ -39,7 +40,7 @@ public class FastDateParser : AbstractDateBasic, DateParser
 		var centuryStartYear = definingCalendar.Year - 80;
 		Century = (centuryStartYear / 100) * 100;
 		StartYear = centuryStartYear - Century;
-		FormatInfo = new DateTimeFormatInfo(locale);
+		FormatInfo = locale.DateTimeFormat;
 	}
 
 	/// <summary>
@@ -64,9 +65,9 @@ public class FastDateParser : AbstractDateBasic, DateParser
 	/// <returns>{DateTime}</returns>
 	public DateTime Parse(string source, ref int pos)
 	{
-		var calendar = new Calendar();
+		var calendar = new Calendar(TimeZoneInfo.Local, Locale);
 		if (Parse(source, ref pos, calendar))
-			return calendar.GetDateTime();
+			return calendar.Time;
 		return DateTime.MinValue;
 	}
 
@@ -146,7 +147,7 @@ public class FastDateParser : AbstractDateBasic, DateParser
 					if (yearStr == null) return false;
 					var year = int.Parse(yearStr);
 					if (year < 100) year = AdjustYear(year);
-					calendar.SetValue(1, year);
+					calendar.Set(1, year);
 					return true;
 				}
 			case 'M': // 月份
@@ -157,14 +158,14 @@ public class FastDateParser : AbstractDateBasic, DateParser
 						var monthName = ParseText(source, ref pos, FormatInfo.AbbreviatedMonthNames);
 						if (monthName >= 0)
 						{
-							calendar.SetValue(2, monthName);
+							calendar.Set(2, monthName);
 							return true;
 						}
 					}
 					var monthStr = ParseNumber(source, ref pos, len);
 					if (monthStr == null) return false;
 					var month = int.Parse(monthStr);
-					calendar.SetValue(2, month - 1); // 月份从0开始
+					calendar.Set(2, month - 1); // 月份从0开始
 					return true;
 				}
 			case 'd': // 日期
@@ -172,7 +173,7 @@ public class FastDateParser : AbstractDateBasic, DateParser
 					var dayStr = ParseNumber(source, ref pos, len);
 					if (dayStr == null) return false;
 					var day = int.Parse(dayStr);
-					calendar.SetValue(3, day);
+					calendar.Set(5, day);
 					return true;
 				}
 			case 'H': // 24小时
@@ -181,7 +182,7 @@ public class FastDateParser : AbstractDateBasic, DateParser
 					var hourStr = ParseNumber(source, ref pos, len);
 					if (hourStr == null) return false;
 					var hour = int.Parse(hourStr);
-					calendar.SetValue(10, hour);
+					calendar.Set(10, hour);
 					return true;
 				}
 			case 'm': // 分钟
@@ -189,7 +190,7 @@ public class FastDateParser : AbstractDateBasic, DateParser
 					var minStr = ParseNumber(source, ref pos, len);
 					if (minStr == null) return false;
 					var minute = int.Parse(minStr);
-					calendar.SetValue(2, minute);
+					calendar.Set(12, minute);
 					return true;
 				}
 			case 's': // 秒
@@ -197,7 +198,7 @@ public class FastDateParser : AbstractDateBasic, DateParser
 					var secStr = ParseNumber(source, ref pos, len);
 					if (secStr == null) return false;
 					var second = int.Parse(secStr);
-					calendar.SetValue(1, second);
+					calendar.Set(13, second);
 					return true;
 				}
 			case 'S': // 毫秒
@@ -205,7 +206,7 @@ public class FastDateParser : AbstractDateBasic, DateParser
 					var msStr = ParseNumber(source, ref pos, len);
 					if (msStr == null) return false;
 					var ms = int.Parse(msStr);
-					calendar.SetValue(0, ms);
+					calendar.Set(14, ms);
 					return true;
 				}
 			default:

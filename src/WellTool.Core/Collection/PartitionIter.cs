@@ -32,7 +32,7 @@ namespace WellTool.Core.Collection
         {
             for (int i = 0; i < _list.Count; i += _size)
             {
-                int end = Math.Min(i + _size, _list.Count);
+                int end = System.Math.Min(i + _size, _list.Count);
                 var partition = new List<T>();
                 for (int j = i; j < end; j++)
                 {

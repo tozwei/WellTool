@@ -100,8 +100,7 @@ public class Dict : Dictionary<string, object>
 	/// <returns>Bean</returns>
 	public T ToBean<T>(T bean, bool isToCamelCase)
 	{
-		BeanUtil.FillBeanWithMap(this, bean, isToCamelCase, false);
-		return bean;
+		return BeanUtil.FillBean(bean, this);
 	}
 
 	/// <summary>
@@ -112,7 +111,7 @@ public class Dict : Dictionary<string, object>
 	/// <returns>vo</returns>
 	public T ToBean<T>(Type clazz)
 	{
-		return BeanUtil.ToBean<T>(this, clazz);
+		return (T)BeanUtil.ToBean(this, clazz);
 	}
 
 	/// <summary>
@@ -139,7 +138,7 @@ public class Dict : Dictionary<string, object>
 	/// <returns>Dict结果</returns>
 	public Dict Filter(params string[] keys)
 	{
-		var result = new Dict(keys.Length);
+		var result = new Dict(_caseInsensitive);
 		foreach (string key in keys)
 		{
 			if (ContainsKey(key))

@@ -4,6 +4,7 @@ using System;
 using System.Globalization;
 using System.Text;
 using SystemTimeZone = System.TimeZone;
+using Calendar = WellTool.Core.Date.Calendar;
 
 /// <summary>
 /// FastDateFormat 是一个线程安全的日期格式化实现

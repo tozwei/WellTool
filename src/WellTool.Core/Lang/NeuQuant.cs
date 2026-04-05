@@ -62,11 +62,12 @@ public class NeuQuant
 	/// <returns>256色的调色板</returns>
 	public byte[] Process()
 	{
+		var sampleFac = _sampleFac;
 		if (_lengthCount < MinPictureBytes)
-			_sampleFac = 1;
+			sampleFac = 1;
 
-		var alphaDec = 30 + ((_sampleFac - 1) / 3);
-		var samplePixels = _lengthCount / (3 * _sampleFac);
+		var alphaDec = 30 + ((sampleFac - 1) / 3);
+		var samplePixels = _lengthCount / (3 * sampleFac);
 		var delta = Math.Max(samplePixels / NCycles, 1);
 		var alpha = IntBias;
 		var radius = InitRadius;
@@ -74,7 +75,7 @@ public class NeuQuant
 		var rad = InitRad >> RadiusBiasShift;
 		if (rad <= 1) rad = 0;
 		for (int i = 0; i < rad; i++)
-			_radPower[i] = AlphaDec * (((rad * rad - i * i) * RadiusBias) / (rad * rad));
+			_radPower[i] = alphaDec * (((rad * rad - i * i) * RadiusBias) / (rad * rad));
 
 		var step = 3;
 		if (_lengthCount < MinPictureBytes)
@@ -100,12 +101,12 @@ public class NeuQuant
 			if (delta == 0) delta = 1;
 			if (i % delta == 0)
 			{
-				alpha -= alpha / AlphaDec;
+				alpha -= alpha / alphaDec;
 				radius -= radius / RadiusDec;
 				rad = radius >> RadiusBiasShift;
 				if (rad <= 1) rad = 0;
 				for (int k = 0; k < rad; k++)
-					_radPower[k] = AlphaDec * (((rad * rad - k * k) * RadiusBias) / (rad * rad));
+					_radPower[k] = alphaDec * (((rad * rad - k * k) * RadiusBias) / (rad * rad));
 			}
 		}
 

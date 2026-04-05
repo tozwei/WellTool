@@ -226,7 +226,7 @@ public class Tailer : IDisposable
 
             foreach (var l in lines)
             {
-                _lineHandler.Handle(l);
+                _lineHandler(l);
             }
         }
         catch (Exception)

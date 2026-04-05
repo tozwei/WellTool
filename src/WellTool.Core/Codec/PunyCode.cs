@@ -111,7 +111,7 @@ namespace WellTool.Core.Codec
 				}
 				if (m - n > (int.MaxValue - delta) / (h + 1))
 				{
-					throw new Exception("OVERFLOW");
+					throw new System.Exception("OVERFLOW");
 				}
 				delta = delta + (m - n) * (h + 1);
 				n = m;
@@ -122,7 +122,7 @@ namespace WellTool.Core.Codec
 						delta++;
 						if (delta == 0)
 						{
-							throw new Exception("OVERFLOW");
+							throw new System.Exception("OVERFLOW");
 						}
 					}
 					if (c == n)
@@ -239,13 +239,13 @@ namespace WellTool.Core.Codec
 				{
 					if (d == input.Length)
 					{
-						throw new Exception("BAD_INPUT");
+						throw new System.Exception("BAD_INPUT");
 					}
 					int c = input[d++];
 					int digit = CodepointToDigit(c);
 					if (digit > (int.MaxValue - i) / w)
 					{
-						throw new Exception("OVERFLOW");
+						throw new System.Exception("OVERFLOW");
 					}
 					i = i + digit * w;
 					int t;
@@ -270,7 +270,7 @@ namespace WellTool.Core.Codec
 				bias = Adapt(i - oldi, output.Length + 1, oldi == 0);
 				if (i / (output.Length + 1) > int.MaxValue - n)
 				{
-					throw new Exception("OVERFLOW");
+					throw new System.Exception("OVERFLOW");
 				}
 				n = n + i / (output.Length + 1);
 				i = i % (output.Length + 1);
@@ -339,7 +339,7 @@ namespace WellTool.Core.Codec
 			}
 			else
 			{
-				throw new Exception("BAD_INPUT");
+				throw new System.Exception("BAD_INPUT");
 			}
 		}
 
@@ -372,7 +372,7 @@ namespace WellTool.Core.Codec
 			}
 			else
 			{
-				throw new Exception("BAD_INPUT");
+				throw new System.Exception("BAD_INPUT");
 			}
 		}
 	}

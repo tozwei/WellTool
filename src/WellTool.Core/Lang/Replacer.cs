@@ -52,6 +52,10 @@ public class LambdaReplacer<T> : Replacer<T>
 	/// <returns>替换后的对象</returns>
 	public override T Replace(T t)
 	{
-		return _replacer?.Invoke(t) ?? t;
+		if (_replacer != null)
+		{
+			return _replacer(t);
+		}
+		return t;
 	}
 }

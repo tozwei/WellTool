@@ -42,28 +42,28 @@ public class MapProxy
     /// <param name="path">路径</param>
     /// <returns>值</returns>
     public object? GetByPath(string path)
-    {
-        var parts = path.Split('.');
-        object? current = _map;
-
-        foreach (var part in parts)
         {
-            if (current is IDictionary<string, object?> dict)
-            {
-                current = dict.TryGetValue(part, out var val) ? val : null;
-            }
-            else if (current is IDictionary dict2)
-            {
-                current = dict2.Contains(part) ? dict2[part] : null;
-            }
-            else
-            {
-                return null;
-            }
-        }
+            var parts = path.Split('.');
+            object? current = _map;
 
-        return current;
-    }
+            foreach (var part in parts)
+            {
+                if (current is IDictionary<string, object?> dict)
+                {
+                    current = dict.TryGetValue(part, out var val) ? val : null;
+                }
+                else if (current is Dictionary<string, object?> dict2)
+                {
+                    current = dict2.TryGetValue(part, out var val) ? val : null;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            return current;
+        }
 
     /// <summary>
     /// 设置嵌套值，支持点号路径，如 "user.name"

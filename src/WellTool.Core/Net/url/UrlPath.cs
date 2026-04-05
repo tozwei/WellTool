@@ -103,7 +103,7 @@ namespace WellTool.Core.Net.Url
                 path = FixPath(path);
                 if (StrUtil.IsNotEmpty(path))
                 {
-                    var split = StrUtil.Split(path, '/');
+                    var split = path.Split('/');
                     foreach (var seg in split)
                     {
                         AddInternal(URLDecoder.DecodeForPath(seg, charset), false);

@@ -100,7 +100,7 @@ public class Opt<T>
 	/// </summary>
 	/// <param name="action">你想要执行的操作</param>
 	/// <returns>this</returns>
-	public Opt<T> IfPresent(Action<T> action)
+	public Opt<T> IfPresent(System.Action<T> action)
 	{
 		if (IsPresent)
 			action(_value!);

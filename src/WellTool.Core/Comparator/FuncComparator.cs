@@ -51,7 +51,7 @@ namespace WellTool.Core.Comparator
                 v1 = _func(a);
                 v2 = _func(b);
             }
-            catch (Exception)
+            catch (System.Exception)
             {
                 throw new ComparatorException();
             }

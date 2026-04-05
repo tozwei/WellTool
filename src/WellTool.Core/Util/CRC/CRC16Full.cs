@@ -1,4 +1,4 @@
-namespace WellTool.Core.util.crc;
+namespace WellTool.Core.Util.CRC;
 
 using System;
 

@@ -234,7 +234,7 @@ namespace WellTool.Core.Builder
 				{
 					builder.Append(field.GetValue(lhs), field.GetValue(rhs));
 				}
-				catch (Exception e)
+				catch (System.Exception e)
 				{
 					// This can't happen. Would get a Security exception instead.
 					// Throw a runtime exception in case the impossible happens.

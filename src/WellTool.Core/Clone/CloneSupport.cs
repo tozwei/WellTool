@@ -18,7 +18,7 @@ namespace WellTool.Core.Clone
             {
                 return (T)MemberwiseClone();
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new CloneRuntimeException(e);
             }

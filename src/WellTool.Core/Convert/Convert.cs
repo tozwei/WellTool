@@ -4,8 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using WellTool.Core.lang;
-using WellTool.Core.util;
+using WellTool.Core.Lang;
+using WellTool.Core.Util;
 using WellTool.Core.Converter;
 
 /// <summary>

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using WellTool.Core.Clone;
 using WellTool.Core.Lang;
+using WellTool.Core.Util;
 
 namespace WellTool.Core.Bean
 {
@@ -51,7 +52,7 @@ namespace WellTool.Core.Bean
         /// <param name="args">构造函数参数</param>
         public DynaBean(Type beanClass, params object[] args)
         {
-            _bean = ReflectUtil.NewInstance(beanClass, args);
+            _bean = ReflectUtil.CreateInstance(beanClass, args);
             _beanClass = _bean.GetType();
             _isMap = typeof(IDictionary).IsAssignableFrom(_beanClass);
         }

@@ -10,9 +10,33 @@ namespace WellTool.Core.Bean
 	/// <author>looly</author>
 	public class BeanDesc
 	{
+		private static readonly Dictionary<Type, BeanDesc> BEAN_DESC_CACHE = new Dictionary<Type, BeanDesc>();
 		private readonly Type _type;
 		private readonly Dictionary<string, PropDesc> _propMap;
 		private readonly Dictionary<string, PropDesc> _propMapIgnoreCase;
+
+		/// <summary>
+		/// 获取Bean描述
+		/// </summary>
+		/// <param name="type">Bean类型</param>
+		/// <returns>Bean描述</returns>
+		public static BeanDesc GetBeanDesc(Type type)
+		{
+			if (type == null)
+			{
+				return null;
+			}
+
+			lock (BEAN_DESC_CACHE)
+			{
+				if (!BEAN_DESC_CACHE.TryGetValue(type, out var beanDesc))
+				{
+					beanDesc = new BeanDesc(type);
+					BEAN_DESC_CACHE[type] = beanDesc;
+				}
+				return beanDesc;
+			}
+		}
 
 		/// <summary>
 		/// 构造函数
@@ -190,5 +214,14 @@ namespace WellTool.Core.Bean
 		/// </summary>
 		/// <returns>属性描述映射</returns>
 		public Dictionary<string, PropDesc> PropDescs => _propMap;
+
+		/// <summary>
+		/// 获取所有属性描述
+		/// </summary>
+		/// <returns>属性描述映射</returns>
+		public Dictionary<string, PropDesc> GetProps()
+		{
+			return _propMap;
+		}
 	}
 }

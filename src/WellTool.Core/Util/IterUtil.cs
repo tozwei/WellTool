@@ -25,7 +25,7 @@ namespace WellTool.Core.Util
                 return dictionary;
             }
 
-            int minCount = Math.Min(keys.Count, values.Count);
+            int minCount = System.Math.Min(keys.Count, values.Count);
             for (int i = 0; i < minCount; i++)
             {
                 var key = keys[i];

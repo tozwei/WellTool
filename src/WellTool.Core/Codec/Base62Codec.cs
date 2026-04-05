@@ -224,7 +224,7 @@ namespace WellTool.Core.Codec
 		/// <returns>估算长度</returns>
 		private static int EstimateOutputLength(int inputLength, int sourceBase, int targetBase)
 		{
-			return (int)Math.Ceiling((Math.Log(sourceBase) / Math.Log(targetBase)) * inputLength);
+			return (int)System.Math.Ceiling((System.Math.Log(sourceBase) / System.Math.Log(targetBase)) * inputLength);
 		}
 		// endregion
 	}

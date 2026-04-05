@@ -6,7 +6,7 @@ namespace WellTool.Core.Map
     /// <summary>
     /// 树形结构的Map，使用森林（多棵树）结构存储数据
     /// </summary>
-    public class LinkedForestMap<V> : Dictionary<LinkedForestMap<V>.TreeNode, LinkedForestMap<V>.TreeNode>
+    public class LinkedForestMap<V> : Dictionary<LinkedForestMap<V>.TreeNode, LinkedForestMap<V>.TreeNode> where V : class
     {
         private readonly TreeNode _root;
 

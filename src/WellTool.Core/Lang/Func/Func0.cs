@@ -14,6 +14,24 @@ namespace WellTool.Core.Lang.Func
     public static class FuncExtensions
     {
         /// <summary>
+        /// 执行函数，异常包装为RuntimeException
+        /// </summary>
+        /// <typeparam name="T">返回值类型</typeparam>
+        /// <param name="func">函数</param>
+        /// <returns>函数执行结果</returns>
+        public static T CallWithRuntimeException<T>(this Func0<T> func)
+        {
+            try
+            {
+                return func();
+            }
+            catch (System.Exception e)
+            {
+                throw new SystemException("Function execution failed", e);
+            }
+        }
+
+        /// <summary>
         /// 组合函数
         /// </summary>
         public static System.Func<T1, R> Compose<T1, T2, R>(this Func1<T2, R> func, System.Func<T1, T2> before)

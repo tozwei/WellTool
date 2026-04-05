@@ -135,6 +135,18 @@ namespace WellTool.Core.Util
         }
 
         /// <summary>
+        /// 调用方法
+        /// </summary>
+        /// <param name="obj">对象</param>
+        /// <param name="methodName">方法名</param>
+        /// <param name="parameters">参数</param>
+        /// <returns>方法返回值</returns>
+        public static object Invoke(object obj, string methodName, params object[] parameters)
+        {
+            return InvokeMethod(obj, methodName, parameters);
+        }
+
+        /// <summary>
         /// 创建实例
         /// </summary>
         /// <param name="type">类型</param>
@@ -154,6 +166,18 @@ namespace WellTool.Core.Util
         public static T CreateInstance<T>(params object[] parameters)
         {
             return (T)CreateInstance(typeof(T), parameters);
+        }
+
+        /// <summary>
+        /// 创建实例
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="type">类型</param>
+        /// <param name="parameters">构造函数参数</param>
+        /// <returns>实例</returns>
+        public static T NewInstance<T>(Type type, params object[] parameters)
+        {
+            return (T)CreateInstance(type, parameters);
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-namespace WellTool.Core.util.CRC;
+namespace WellTool.Core.Util.CRC;
 
 /// <summary>
 /// CRC16算法类

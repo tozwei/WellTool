@@ -42,7 +42,7 @@ namespace WellTool.Core.Comparator
                 v1 = (IComparable)field.GetValue(x);
                 v2 = (IComparable)field.GetValue(y);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new ComparatorException(e.Message);
             }

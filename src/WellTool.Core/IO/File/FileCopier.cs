@@ -123,7 +123,7 @@ public class FileCopier
 			}
 
 			var target = _isCopyContentIfDir ? _dest : _dest;
-			CopyDirContent(_src, target);
+			CopyDirContent(new DirectoryInfo(_src.FullName), new DirectoryInfo(target.FullName));
 		}
 		else
 		{
@@ -138,11 +138,6 @@ public class FileCopier
 	/// </summary>
 	private void CopyDirContent(DirectoryInfo src, DirectoryInfo dest)
 	{
-		if (_copyFilter != null && !_copyFilter(src))
-		{
-			return;
-		}
-
 		if (!dest.Exists)
 		{
 			dest.Create();

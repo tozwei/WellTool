@@ -1,4 +1,4 @@
-namespace WellTool.Core.util.CRC;
+namespace WellTool.Core.Util.CRC;
 
 /// <summary>
 /// CRC16 校验工具类

@@ -1,7 +1,9 @@
 using System;
 using System.IO;
-using WellTool.Core.IO;
 using WellTool.Core.Util;
+
+// 使用别名解决FileUtil命名冲突
+using FileUtil = WellTool.Core.IO.FileUtil;
 
 namespace WellTool.Core.Net.Multipart
 {

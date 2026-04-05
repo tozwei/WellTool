@@ -22,7 +22,7 @@ namespace WellTool.Core.Collection
         public Partition(IList<T> list, int size)
         {
             _list = list ?? throw new ArgumentNullException(nameof(list));
-            _size = Math.Min(list.Count, size);
+            _size = System.Math.Min(list.Count, size);
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace WellTool.Core.Collection
             get
             {
                 int start = index * _size;
-                int end = Math.Min(start + _size, _list.Count);
+                int end = System.Math.Min(start + _size, _list.Count);
                 var result = new List<T>();
                 for (int i = start; i < end; i++)
                 {

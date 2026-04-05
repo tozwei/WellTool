@@ -1,50 +1,54 @@
 using System;
 
-namespace WellTool.Core.Lang;
-
-/// <summary>
-/// Predicate接口
-/// </summary>
-public interface IPredicate<T>
+namespace WellTool.Core.Lang
 {
-	bool Test(T t);
-}
-
-/// <summary>
-/// Predicate实现
-/// </summary>
-public class Predicate<T> : IPredicate<T>
-{
-	private readonly Func<T, bool> _func;
-
-	public Predicate(Func<T, bool> func)
-	{
-		_func = func;
-	}
-
-	public bool Test(T t) => _func(t);
-
 	/// <summary>
-	/// 与运算
+	/// Predicate接口
 	/// </summary>
-	public Predicate<T> And(Predicate<T> other)
+	public interface IPredicate<T>
 	{
-		return new Predicate<T>(t => Test(t) && other.Test(t));
+		bool Test(T t);
 	}
 
 	/// <summary>
-	/// 或运算
+	/// Predicate实现
 	/// </summary>
-	public Predicate<T> Or(Predicate<T> other)
+	public class PredicateImpl<T> : IPredicate<T>
 	{
-		return new Predicate<T>(t => Test(t) || other.Test(t));
-	}
+		private readonly System.Func<T, bool> _func;
 
-	/// <summary>
-	/// 取反
-	/// </summary>
-	public Predicate<T> Negate()
-	{
-		return new Predicate<T>(t => !Test(t));
+		public PredicateImpl(System.Func<T, bool> func)
+		{
+			_func = func;
+		}
+
+		public bool Test(T t)
+		{
+			return _func(t);
+		}
+
+		/// <summary>
+		/// 与运算
+		/// </summary>
+		public PredicateImpl<T> And(PredicateImpl<T> other)
+		{
+			return new PredicateImpl<T>(new System.Func<T, bool>(t => Test(t) && other.Test(t)));
+		}
+
+		/// <summary>
+		/// 或运算
+		/// </summary>
+		public PredicateImpl<T> Or(PredicateImpl<T> other)
+		{
+			return new PredicateImpl<T>(new System.Func<T, bool>(t => Test(t) || other.Test(t)));
+		}
+
+		/// <summary>
+		/// 取反
+		/// </summary>
+		public PredicateImpl<T> Negate()
+		{
+			return new PredicateImpl<T>(new System.Func<T, bool>(t => !Test(t)));
+		}
 	}
 }

@@ -75,7 +75,11 @@ namespace WellTool.Core.Lang.Func
         /// </summary>
         public static T GetOrDefault<T>(this Supplier<T> supplier, T defaultValue = default)
         {
-            return supplier?.Get() ?? defaultValue;
+            if (supplier == null)
+            {
+                return defaultValue;
+            }
+            return supplier.Get();
         }
 
         /// <summary>
@@ -83,7 +87,11 @@ namespace WellTool.Core.Lang.Func
         /// </summary>
         public static T GetOrDefault<T>(this Supplier<T> supplier, System.Func<T> factory)
         {
-            return supplier?.Get() ?? factory();
+            if (supplier == null)
+            {
+                return factory();
+            }
+            return supplier.Get();
         }
     }
 

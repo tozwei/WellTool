@@ -11,27 +11,27 @@ namespace WellTool.Core.Map.Multi
 	public class SetValueMap<K, V> : AbsCollValueMap<K, V, HashSet<V>>
 	{
 		/// <summary>
-		/// 构造
-		/// </summary>
-		public SetValueMap() : this(DEFAULT_INITIAL_CAPACITY)
-		{
-		}
+	/// 构造
+	/// </summary>
+	public SetValueMap() : this(MapConstants.DEFAULT_INITIAL_CAPACITY)
+	{
+	}
 
-		/// <summary>
-		/// 构造
-		/// </summary>
-		/// <param name="initialCapacity">初始大小</param>
-		public SetValueMap(int initialCapacity) : this(initialCapacity, DEFAULT_LOAD_FACTOR)
-		{
-		}
+	/// <summary>
+	/// 构造
+	/// </summary>
+	/// <param name="initialCapacity">初始大小</param>
+	public SetValueMap(int initialCapacity) : this(initialCapacity, MapConstants.DEFAULT_LOAD_FACTOR)
+	{
+	}
 
-		/// <summary>
-		/// 构造
-		/// </summary>
-		/// <param name="m">Map</param>
-		public SetValueMap(IDictionary<K, ICollection<V>> m) : this(DEFAULT_LOAD_FACTOR, m)
-		{
-		}
+	/// <summary>
+	/// 构造
+	/// </summary>
+	/// <param name="m">Map</param>
+	public SetValueMap(IDictionary<K, ICollection<V>> m) : this(MapConstants.DEFAULT_LOAD_FACTOR, m)
+	{
+	}
 
 		/// <summary>
 		/// 构造

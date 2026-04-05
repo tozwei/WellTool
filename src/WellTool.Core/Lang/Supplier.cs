@@ -1,26 +1,30 @@
 using System;
 
-namespace WellTool.Core.Lang;
-
-/// <summary>
-/// Supplier接口
-/// </summary>
-public interface ISupplier<T>
+namespace WellTool.Core.Lang
 {
-	T Get();
-}
-
-/// <summary>
-/// Supplier实现
-/// </summary>
-public class Supplier<T> : ISupplier<T>
-{
-	private readonly Func<T> _func;
-
-	public Supplier(Func<T> func)
+	/// <summary>
+	/// Supplier接口
+	/// </summary>
+	public interface ISupplier<T>
 	{
-		_func = func;
+		T Get();
 	}
 
-	public T Get() => _func();
+	/// <summary>
+	/// Supplier实现
+	/// </summary>
+	public class Supplier<T> : ISupplier<T>
+	{
+		private readonly System.Func<T> _func;
+
+		public Supplier(System.Func<T> func)
+		{
+			_func = func;
+		}
+
+		public T Get()
+		{
+			return _func.Invoke();
+		}
+	}
 }

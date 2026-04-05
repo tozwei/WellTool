@@ -96,7 +96,7 @@ public static class Singleton
 	/// <param name="key">键</param>
 	public static void Remove(string key)
 	{
-		POOL.Remove(key);
+		POOL.TryRemove(key, out _);
 	}
 
 	/// <summary>

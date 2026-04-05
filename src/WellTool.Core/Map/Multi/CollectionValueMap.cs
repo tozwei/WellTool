@@ -16,7 +16,7 @@ namespace WellTool.Core.Map.Multi
 		/// <summary>
 		/// 构造
 		/// </summary>
-		public CollectionValueMap() : this(DEFAULT_INITIAL_CAPACITY)
+		public CollectionValueMap() : this(MapConstants.DEFAULT_INITIAL_CAPACITY)
 		{
 		}
 
@@ -24,7 +24,7 @@ namespace WellTool.Core.Map.Multi
 		/// 构造
 		/// </summary>
 		/// <param name="initialCapacity">初始大小</param>
-		public CollectionValueMap(int initialCapacity) : this(initialCapacity, DEFAULT_LOAD_FACTOR)
+		public CollectionValueMap(int initialCapacity) : this(initialCapacity, MapConstants.DEFAULT_LOAD_FACTOR)
 		{
 		}
 
@@ -32,7 +32,7 @@ namespace WellTool.Core.Map.Multi
 		/// 构造
 		/// </summary>
 		/// <param name="m">Map</param>
-		public CollectionValueMap(IDictionary<K, ICollection<V>> m) : this(DEFAULT_LOAD_FACTOR, m)
+		public CollectionValueMap(IDictionary<K, ICollection<V>> m) : this(MapConstants.DEFAULT_LOAD_FACTOR, m)
 		{
 		}
 

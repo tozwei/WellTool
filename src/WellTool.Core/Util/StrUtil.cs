@@ -1,4 +1,5 @@
 using System;
+using WellTool.Core.Math;
 
 namespace WellTool.Core.Util;
 
@@ -97,7 +98,7 @@ public static class StrUtil
 	{
 		if (IsEmpty(str))
 			return str;
-		return str.Substring(fromIndex, Math.Min(toIndex, str.Length) - fromIndex);
+		return str.Substring(fromIndex, MathUtil.Min(toIndex, str.Length) - fromIndex);
 	}
 
 	/// <summary>

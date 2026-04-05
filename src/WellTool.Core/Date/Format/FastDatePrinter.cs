@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text;
 using SystemTimeZone = System.TimeZone;
+using Calendar = WellTool.Core.Date.Calendar;
 
 /// <summary>
 /// 日期格式化器 - SimpleDateFormat的线程安全版本
@@ -136,7 +137,7 @@ public class FastDatePrinter : AbstractDateBasic, DatePrinter
 			case 'E': // 星期
 				return new TextField(0, symbols.DayNames);
 			case 'a': // AM/PM
-				return new TextField(1, symbols.AMDesignators != null ? symbols.AMDesignators : new[] { "AM", "PM" });
+				return new TextField(1, new[] { symbols.AMDesignator, symbols.PMDesignator });
 			case 'z': // 时区
 				return new TimeZoneRule(TimeZone);
 			case 'Z': // 时区偏移
@@ -159,7 +160,9 @@ public class FastDatePrinter : AbstractDateBasic, DatePrinter
 	/// </summary>
 	public string Format(DateTime date)
 	{
-		return Format(new Calendar(date));
+		var calendar = new Calendar(TimeZoneInfo.Local, Locale);
+		calendar.Time = date;
+		return Format(calendar);
 	}
 
 	/// <summary>
@@ -175,7 +178,9 @@ public class FastDatePrinter : AbstractDateBasic, DatePrinter
 	/// </summary>
 	public StringBuilder Format(long millis, StringBuilder buf)
 	{
-		return Format(buf, new Calendar(new DateTime(millis)));
+		var calendar = new Calendar(TimeZoneInfo.Local, Locale);
+		calendar.Time = new DateTime(millis);
+		return Format(buf, calendar);
 	}
 
 	/// <summary>
@@ -183,7 +188,9 @@ public class FastDatePrinter : AbstractDateBasic, DatePrinter
 	/// </summary>
 	public StringBuilder Format(DateTime date, StringBuilder buf)
 	{
-		return Format(buf, new Calendar(date));
+		var calendar = new Calendar(TimeZoneInfo.Local, Locale);
+		calendar.Time = date;
+		return Format(buf, calendar);
 	}
 
 	/// <summary>
@@ -237,7 +244,7 @@ public class FastDatePrinter : AbstractDateBasic, DatePrinter
 
 		public void AppendTo(StringBuilder buffer, Calendar calendar)
 		{
-			var value = calendar.GetValue(Field);
+			var value = calendar.Get(Field);
 			AppendDigits(buffer, value);
 		}
 
@@ -284,7 +291,7 @@ public class FastDatePrinter : AbstractDateBasic, DatePrinter
 
 		public void AppendTo(StringBuilder buffer, Calendar calendar)
 		{
-			var value = calendar.GetValue(Field);
+			var value = calendar.Get(Field);
 			if (value >= 0 && value < Values.Length && Values[value] != null)
 				buffer.Append(Values[value]);
 		}
@@ -348,7 +355,7 @@ public class FastDatePrinter : AbstractDateBasic, DatePrinter
 
 		public new void AppendTo(StringBuilder buffer, Calendar calendar)
 		{
-			var value = calendar.GetValue(2) + 1; // 月份从0开始
+			var value = calendar.Get(2) + 1; // 月份从0开始
 			AppendDigits(buffer, value);
 		}
 	}
@@ -362,7 +369,7 @@ public class FastDatePrinter : AbstractDateBasic, DatePrinter
 
 		public new void AppendTo(StringBuilder buffer, Calendar calendar)
 		{
-			var value = calendar.GetValue(10);
+			var value = calendar.Get(10);
 			if (value == 0) value = 12;
 			AppendDigits(buffer, value);
 		}
@@ -397,7 +404,7 @@ public class FastDatePrinter : AbstractDateBasic, DatePrinter
 
 		public void AppendTo(StringBuilder buffer, Calendar calendar)
 		{
-			var offset = TimeZone.CurrentTimeZone.GetUtcOffset(calendar.GetDateTime());
+			var offset = TimeZoneInfo.Local.GetUtcOffset(calendar.Time);
 			var sign = offset.TotalMinutes >= 0 ? '+' : '-';
 			var hours = (int)Math.Abs(offset.TotalMinutes / 60);
 			var minutes = (int)Math.Abs(offset.TotalMinutes % 60);

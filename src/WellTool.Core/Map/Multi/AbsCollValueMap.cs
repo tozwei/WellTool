@@ -5,6 +5,27 @@ using WellTool.Core.Map;
 namespace WellTool.Core.Map.Multi
 {
 	/// <summary>
+	/// 常量定义
+	/// </summary>
+	public static class MapConstants
+	{
+		/// <summary>
+		/// 默认初始容量
+		/// </summary>
+		public const int DEFAULT_INITIAL_CAPACITY = 16;
+
+		/// <summary>
+		/// 默认加载因子
+		/// </summary>
+		public const float DEFAULT_LOAD_FACTOR = 0.75f;
+
+		/// <summary>
+		/// 默认集合初始容量
+		/// </summary>
+		public const int DEFAULT_COLLECTION_INITIAL_CAPACITY = 10;
+	}
+
+	/// <summary>
 	/// 值作为集合的Map实现，通过调用putValue可以在相同key时加入多个值，多个值用集合表示
 	/// </summary>
 	/// <typeparam name="K">键类型</typeparam>
@@ -20,7 +41,7 @@ namespace WellTool.Core.Map.Multi
 		/// <summary>
 		/// 构造
 		/// </summary>
-		public AbsCollValueMap() : this(DEFAULT_INITIAL_CAPACITY)
+		public AbsCollValueMap() : this(MapConstants.DEFAULT_INITIAL_CAPACITY)
 		{
 		}
 
@@ -28,7 +49,7 @@ namespace WellTool.Core.Map.Multi
 		/// 构造
 		/// </summary>
 		/// <param name="initialCapacity">初始大小</param>
-		public AbsCollValueMap(int initialCapacity) : this(initialCapacity, DEFAULT_LOAD_FACTOR)
+		public AbsCollValueMap(int initialCapacity) : this(initialCapacity, MapConstants.DEFAULT_LOAD_FACTOR)
 		{
 		}
 
@@ -36,7 +57,7 @@ namespace WellTool.Core.Map.Multi
 		/// 构造
 		/// </summary>
 		/// <param name="m">Map</param>
-		public AbsCollValueMap(IDictionary<K, C> m) : this(DEFAULT_LOAD_FACTOR, m)
+		public AbsCollValueMap(IDictionary<K, C> m) : this(MapConstants.DEFAULT_LOAD_FACTOR, m)
 		{
 		}
 

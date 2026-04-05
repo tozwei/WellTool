@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using WellTool.Core.Math;
 
 namespace WellTool.Core.Codec
 {
@@ -115,7 +116,7 @@ namespace WellTool.Core.Codec
 			if (tmpSeparators.Length == 0 ||
 				((double)(tmpAlphabet.Length / tmpSeparators.Length)) > SeparatorThreshold)
 			{
-				var minSeparatorsSize = (int)Math.Ceiling(tmpAlphabet.Length / SeparatorThreshold);
+				var minSeparatorsSize = (int)System.Math.Ceiling(tmpAlphabet.Length / SeparatorThreshold);
 				// check minimum size of separators
 				if (minSeparatorsSize > tmpSeparators.Length)
 				{
@@ -130,7 +131,7 @@ namespace WellTool.Core.Codec
 			Shuffle(tmpAlphabet, this.salt);
 
 			// check guards
-			this.guards = new char[(int)Math.Ceiling(tmpAlphabet.Length / GuardThreshold)];
+			this.guards = new char[(int)System.Math.Ceiling(tmpAlphabet.Length / GuardThreshold)];
 			if (alphabet.Length < 3)
 			{
 				Array.Copy(tmpSeparators, 0, guards, 0, guards.Length);
@@ -436,7 +437,7 @@ namespace WellTool.Core.Codec
 				{
 					throw new ArgumentException("Invalid alphabet for hash");
 				}
-				number += value * (long)Math.Pow(alphabet.Length, hash.Length - i - 1);
+				number += value * (long)System.Math.Pow(alphabet.Length, hash.Length - i - 1);
 			}
 
 			return number;
@@ -454,7 +455,7 @@ namespace WellTool.Core.Codec
 			// 2. salt
 			if (salt.Length > 0 && spaceLeft > 0)
 			{
-				int length = Math.Min(salt.Length, spaceLeft);
+				int length = System.Math.Min(salt.Length, spaceLeft);
 				Array.Copy(salt, 0, newSalt, offset, length);
 				spaceLeft -= length;
 				offset += length;

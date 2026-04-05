@@ -213,6 +213,48 @@ namespace WellTool.Core.Collection
         }
 
         /// <summary>
+        /// 创建新的LinkedHashSet
+        /// </summary>
+        /// <typeparam name="T">集合元素类型</typeparam>
+        /// <returns>新的LinkedHashSet</returns>
+        public static HashSet<T> NewLinkedHashSet<T>()
+        {
+            return new HashSet<T>();
+        }
+
+        /// <summary>
+        /// 创建新的LinkedHashSet
+        /// </summary>
+        /// <typeparam name="T">集合元素类型</typeparam>
+        /// <param name="collection">要添加到集合中的元素</param>
+        /// <returns>新的LinkedHashSet</returns>
+        public static HashSet<T> NewLinkedHashSet<T>(IEnumerable<T> collection)
+        {
+            return new HashSet<T>(collection);
+        }
+
+        /// <summary>
+        /// 创建新的LinkedList
+        /// </summary>
+        /// <typeparam name="T">集合元素类型</typeparam>
+        /// <returns>新的LinkedList</returns>
+        public static LinkedList<T> NewLinkedList<T>()
+        {
+            return new LinkedList<T>();
+        }
+
+        /// <summary>
+        /// 创建新的LinkedList
+        /// </summary>
+        /// <typeparam name="T">集合元素类型</typeparam>
+        /// <param name="collection">要添加到集合中的元素</param>
+        /// <returns>新的LinkedList</returns>
+        public static LinkedList<T> NewLinkedList<T>(IEnumerable<T> collection)
+        {
+            return new LinkedList<T>(collection);
+        }
+
+        /// <summary>
         /// 反转集合
         /// </summary>
         /// <typeparam name="T">集合元素类型</typeparam>
@@ -373,7 +415,7 @@ namespace WellTool.Core.Collection
             var list = ToList(collection);
             for (int i = 0; i < list.Count; i += size)
             {
-                int end = Math.Min(i + size, list.Count);
+                int end = System.Math.Min(i + size, list.Count);
                 result.Add(list.GetRange(i, end - i));
             }
             return result;

@@ -102,7 +102,7 @@ namespace WellTool.Core.Util
         /// </summary>
         public static char ToTitleCase(char c)
         {
-            return char.ToTitleCase(c);
+            return char.ToUpperInvariant(c);
         }
 
         /// <summary>

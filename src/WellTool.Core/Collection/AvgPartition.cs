@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using WellTool.Core.Math;
 
 namespace WellTool.Core.Collection
 {
@@ -23,7 +24,7 @@ namespace WellTool.Core.Collection
                 throw new ArgumentException("Partition count must be greater than 0", nameof(partitionCount));
             }
 
-            partitionCount = Math.Min(partitionCount, list.Count);
+            partitionCount = System.Math.Min(partitionCount, list.Count);
             var result = new List<List<T>>(partitionCount);
 
             int avgSize = list.Count / partitionCount;
@@ -65,7 +66,7 @@ namespace WellTool.Core.Collection
             for (int i = 0; i < partitionCount; i++)
             {
                 int start = i * size;
-                int end = Math.Min(start + size, list.Count);
+                int end = System.Math.Min(start + size, list.Count);
                 var group = new List<T>(end - start);
                 for (int j = start; j < end; j++)
                 {

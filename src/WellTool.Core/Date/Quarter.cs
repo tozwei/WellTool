@@ -69,4 +69,18 @@ public static class QuarterExtensions
 			throw new ArgumentOutOfRangeException(nameof(value), "Quarter must be between 1 and 4");
 		return value;
 	}
+
+	/// <summary>
+	/// 将季度int值转换为Quarter枚举对象
+	/// </summary>
+	/// <param name="quarterIntValue">季度int值，从1开始</param>
+	/// <returns>Quarter枚举对象</returns>
+	public static Quarter? Of(int quarterIntValue)
+	{
+		if (quarterIntValue >= 1 && quarterIntValue <= 4)
+		{
+			return (Quarter)quarterIntValue;
+		}
+		return null;
+	}
 }
