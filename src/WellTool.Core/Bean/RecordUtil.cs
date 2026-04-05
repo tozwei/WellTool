@@ -68,10 +68,16 @@ namespace WellTool.Core.Bean
         {
             // .NET中的Record类型有特定特征
             // 检查是否有Init属性（Record的特征）
-            if (type.GetCustomAttribute<System.Runtime.CompilerServices.RecordAttribute>() != null)
+            try
             {
-                return true;
+                var recordAttributeType = Type.GetType("System.Runtime.CompilerServices.RecordAttribute");
+                if (recordAttributeType != null && type.GetCustomAttribute(recordAttributeType) != null)
+                {
+                    return true;
+                }
             }
+            catch {}
+
 
             // 检查类型名是否以Record结尾（编译后的Record类型特征）
             if (type.Name.EndsWith("Record"))

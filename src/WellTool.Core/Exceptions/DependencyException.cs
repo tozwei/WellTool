@@ -26,10 +26,7 @@ public class DependencyException : RuntimeException
     {
     }
 
-    public DependencyException(string message, System.Exception? throwable, bool enableSuppression, bool writableStackTrace)
-        : base(message, throwable, enableSuppression, writableStackTrace)
-    {
-    }
+
 
     public DependencyException(System.Exception? throwable, string messageTemplate, params object[] @params)
     {

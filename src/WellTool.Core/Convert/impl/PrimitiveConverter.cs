@@ -10,8 +10,7 @@ namespace WellTool.Core.Convert.impl
     public class PrimitiveConverter : IConverter
     {
         /// <summary>
-        /// 转换�?
-        /// </summary>
+        /// 转换�?        /// </summary>
         public object Convert(object value, Type targetType)
         {
             if (value == null)
@@ -24,35 +23,35 @@ namespace WellTool.Core.Convert.impl
             switch (targetTypeCode)
             {
                 case TypeCode.Boolean:
-                    return Convert.ToBoolean(value);
+                    return System.Convert.ToBoolean(value);
                 case TypeCode.Byte:
-                    return Convert.ToByte(value);
+                    return System.Convert.ToByte(value);
                 case TypeCode.Char:
-                    return Convert.ToChar(value);
+                    return System.Convert.ToChar(value);
                 case TypeCode.DateTime:
-                    return Convert.ToDateTime(value);
+                    return System.Convert.ToDateTime(value);
                 case TypeCode.Decimal:
-                    return Convert.ToDecimal(value);
+                    return System.Convert.ToDecimal(value);
                 case TypeCode.Double:
-                    return Convert.ToDouble(value);
+                    return System.Convert.ToDouble(value);
                 case TypeCode.Int16:
-                    return Convert.ToInt16(value);
+                    return System.Convert.ToInt16(value);
                 case TypeCode.Int32:
-                    return Convert.ToInt32(value);
+                    return System.Convert.ToInt32(value);
                 case TypeCode.Int64:
-                    return Convert.ToInt64(value);
+                    return System.Convert.ToInt64(value);
                 case TypeCode.SByte:
-                    return Convert.ToSByte(value);
+                    return System.Convert.ToSByte(value);
                 case TypeCode.Single:
-                    return Convert.ToSingle(value);
+                    return System.Convert.ToSingle(value);
                 case TypeCode.UInt16:
-                    return Convert.ToUInt16(value);
+                    return System.Convert.ToUInt16(value);
                 case TypeCode.UInt32:
-                    return Convert.ToUInt32(value);
+                    return System.Convert.ToUInt32(value);
                 case TypeCode.UInt64:
-                    return Convert.ToUInt64(value);
+                    return System.Convert.ToUInt64(value);
                 default:
-                    return Convert.ChangeType(value, targetType);
+                    return System.Convert.ChangeType(value, targetType);
             }
         }
 

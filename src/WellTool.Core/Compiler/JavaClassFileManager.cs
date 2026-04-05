@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using WellTool.Core.IO.Resource;
+using System.IO;
 
 namespace WellTool.Core.Compiler;
 
@@ -12,7 +12,7 @@ internal class JavaClassFileManager
 	/// <summary>
 	/// 存储java字节码文件对象映射
 	/// </summary>
-	private readonly Dictionary<string, FileObjectResource> _classFileObjectMap = new();
+	private readonly Dictionary<string, JavaClassFileObject> _classFileObjectMap = new();
 
 	/// <summary>
 	/// 加载动态编译生成类的父类加载器
@@ -36,7 +36,7 @@ internal class JavaClassFileManager
 	public JavaClassFileObject GetJavaFileForOutput(string className)
 	{
 		var javaFileObject = new JavaClassFileObject(className);
-		_classFileObjectMap[className] = new FileObjectResource(javaFileObject);
+		_classFileObjectMap[className] = javaFileObject;
 		return javaFileObject;
 	}
 
@@ -47,9 +47,16 @@ internal class JavaClassFileManager
 	/// <returns>字节数组</returns>
 	public byte[] GetBytes(string className)
 	{
-		if (_classFileObjectMap.TryGetValue(className, out var resource))
+		if (_classFileObjectMap.TryGetValue(className, out var javaFileObject))
 		{
-			return resource.ReadBytes();
+			using (var stream = javaFileObject.OpenInputStream())
+			{
+				using (var memoryStream = new MemoryStream())
+				{
+					stream.CopyTo(memoryStream);
+					return memoryStream.ToArray();
+				}
+			}
 		}
 		return null;
 	}

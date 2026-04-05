@@ -1,6 +1,6 @@
 using System;
 
-namespace WellTool.Core.lang.id;
+namespace WellTool.Core.Lang.Id;
 
 /// <summary>
 /// ID生成器接口

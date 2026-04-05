@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Linq;
+using WellTool.Core.Convert;
 using WellTool.Core.Map;
 
 namespace WellTool.Core.Convert.impl;
@@ -27,16 +29,16 @@ public class EntryConverter<TKey, TValue> : AbstractConverter<KeyValuePair<TKey,
                 var entry = enumerator.Current;
                 if (entry is DictionaryEntry de)
                 {
-                    key = (TKey)Convert.To(de.Key);
-                    val = (TValue)Convert.To(de.Value);
+                    key = Convert.To<TKey>(de.Key);
+                    val = Convert.To<TValue>(de.Value);
                 }
             }
         }
         else if (value is IEnumerable<KeyValuePair<object, object>> kvps)
         {
             var first = kvps.FirstOrDefault();
-            key = (TKey)Convert.To(first.Key);
-            val = (TValue)Convert.To(first.Value);
+            key = Convert.To<TKey>(first.Key);
+            val = Convert.To<TValue>(first.Value);
         }
         else if (value is Tuple<TKey, TValue> tuple)
         {

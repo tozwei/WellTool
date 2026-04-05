@@ -6,7 +6,7 @@ namespace WellTool.Http.UserAgent
     /// User-Agent信息对象
     /// </summary>
     [Serializable]
-    public class UserAgent
+    public class   UserAgent
     {
         /// <summary>
         /// 是否为移动平台

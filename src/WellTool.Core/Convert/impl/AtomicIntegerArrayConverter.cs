@@ -1,6 +1,6 @@
 using System;
 
-namespace WellTool.Core.Convert.Impl;
+namespace WellTool.Core.Convert.impl;
 
 /// <summary>
 /// AtomicIntegerArray转换器

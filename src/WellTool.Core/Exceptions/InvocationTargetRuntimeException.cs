@@ -21,10 +21,7 @@ public class InvocationTargetRuntimeException : UtilException
     {
     }
 
-    public InvocationTargetRuntimeException(string message, System.Exception? throwable, bool enableSuppression, bool writableStackTrace)
-        : base(message, throwable, enableSuppression, writableStackTrace)
-    {
-    }
+
 
     public InvocationTargetRuntimeException(System.Exception? throwable, string messageTemplate, params object[] @params)
     {

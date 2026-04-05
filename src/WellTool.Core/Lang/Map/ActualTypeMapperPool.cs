@@ -92,7 +92,7 @@ public static class MethodHandleUtil
 	public static Delegate GetMethodHandle(System.Reflection.MethodInfo method)
 	{
 		var delegateType = GetDelegateType(method);
-		return System.Reflection.Emit.DynamicMethodBuilder.CreateDelegate(method, delegateType);
+		return Delegate.CreateDelegate(delegateType, method);
 	}
 
 	private static Type GetDelegateType(System.Reflection.MethodInfo method)

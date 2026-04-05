@@ -31,7 +31,7 @@ namespace WellTool.Core.Convert
     /// 转换器不会抛出转换异常，转换失败时会返回null
     /// </summary>
     /// <typeparam name="T">转换的目标类型</typeparam>
-    public abstract class AbstractConverter<T> : IConverter<T>
+    public abstract class AbstractConverter<T> : IConverter<T>, IConverter
     {
         private static readonly long serialVersionUID = 1L;
 
@@ -159,6 +159,35 @@ namespace WellTool.Core.Convert
                 baseType = baseType.BaseType;
             }
             return null;
+        }
+
+        /// <summary>
+        /// 转换值
+        /// </summary>
+        /// <param name="value">要转换的值</param>
+        /// <param name="targetType">目标类型</param>
+        /// <returns>转换后的值</returns>
+        object IConverter.Convert(object value, Type targetType)
+        {
+            return Convert(value);
+        }
+
+        /// <summary>
+        /// 获取支持的源类型
+        /// </summary>
+        /// <returns>支持的源类型数组</returns>
+        public virtual Type[] GetSupportedSourceTypes()
+        {
+            return new[] { typeof(object) };
+        }
+
+        /// <summary>
+        /// 获取支持的目标类型
+        /// </summary>
+        /// <returns>支持的目标类型数组</returns>
+        public virtual Type[] GetSupportedTargetTypes()
+        {
+            return new[] { typeof(T) };
         }
     }
 }

@@ -34,10 +34,7 @@ public class StatefulException : RuntimeException
     {
     }
 
-    public StatefulException(string message, System.Exception? throwable, bool enableSuppression, bool writableStackTrace)
-        : base(message, throwable, enableSuppression, writableStackTrace)
-    {
-    }
+
 
     public StatefulException(int status, string msg) : base(msg)
     {

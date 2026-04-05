@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.CodeDom.Compiler;
 using System.Reflection;
+using Microsoft.CSharp;
 
 namespace WellTool.Core.Compiler
 {
@@ -152,7 +153,7 @@ namespace WellTool.Core.Compiler
                     throw new CompilerException("No source code to compile");
                 }
 
-                using (var provider = new CSharpCodeProvider())
+                using (var provider = CodeDomProvider.CreateProvider("CSharp"))
                 {
                     var parameters = new CompilerParameters
                     {

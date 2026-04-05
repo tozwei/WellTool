@@ -161,45 +161,50 @@ namespace WellTool.Core.Annotation.Scanner
             filter = filter ?? (a => true);
             var memberInfo = annotatedEle as MemberInfo;
             var sourceClass = GetClassFormAnnotatedElement(memberInfo);
-            var classDeque = CollUtil.NewLinkedList(new List<Type> { sourceClass });
+            var classDeque = CollUtil.NewLinkedList<Type>();
+            classDeque.AddLast(sourceClass);
             var accessedTypes = new HashSet<Type>();
-            int index = 0;
+            int index = 0;  
             while (classDeque.Count > 0)
             {
-                var currClassList = classDeque.First.Value;
+                var currClass = classDeque.First.Value;
                 classDeque.RemoveFirst();
-                var nextClassQueue = new List<Type>();
-                foreach (var targetClass in currClassList)
+                
+                var convertedClass = Convert(currClass);
+                // 过滤不需要处理的类
+                if (IsNotNeedProcess(accessedTypes, convertedClass))
                 {
-                    var convertedClass = Convert(targetClass);
-                    // 过滤不需要处理的类
-                    if (IsNotNeedProcess(accessedTypes, convertedClass))
+                    continue;
+                }
+                accessedTypes.Add(convertedClass);
+                
+                // 扫描父类
+                var superClass = convertedClass.BaseType;
+                if (superClass != null && superClass != typeof(object))
+                {
+                    classDeque.AddLast(superClass);
+                }
+                
+                // 扫描接口
+                var interfaces = convertedClass.GetInterfaces();
+                foreach (var iface in interfaces)
+                {
+                    classDeque.AddLast(iface);
+                }
+                
+                // 处理层级索引和注解
+                var targetAnnotations = GetAnnotationsFromTargetClass(memberInfo, index, convertedClass);
+                if (targetAnnotations != null)
+                {
+                    foreach (var annotation in targetAnnotations)
                     {
-                        continue;
-                    }
-                    accessedTypes.Add(convertedClass);
-                    // 扫描父类
-                    ScanSuperClassIfNecessary(nextClassQueue, convertedClass);
-                    // 扫描接口
-                    ScanInterfaceIfNecessary(nextClassQueue, convertedClass);
-                    // 处理层级索引和注解
-                    var targetAnnotations = GetAnnotationsFromTargetClass(memberInfo, index, convertedClass);
-                    if (targetAnnotations != null)
-                    {
-                        foreach (var annotation in targetAnnotations)
+                        if (!AnnotationUtil.IsJdkMetaAnnotation(annotation.GetType()) && filter(annotation))
                         {
-                            if (!AnnotationUtil.IsJdkMetaAnnotation(annotation.GetType()) && filter(annotation))
-                            {
-                                consumer(index, annotation);
-                            }
+                            consumer(index, annotation);
                         }
                     }
-                    index++;
                 }
-                if (CollUtil.IsNotEmpty<Type>(nextClassQueue))
-                {
-                    classDeque.AddLast(nextClassQueue);
-                }
+                index++;
             }
         }
 
