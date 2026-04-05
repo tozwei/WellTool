@@ -74,9 +74,9 @@ public class SnowflakeGenerator : IdGenerator
 			}
 
 			_lastTimestamp = timestamp;
-			var id = ((timestamp - _twepoch) << TimestampLeftShift)
-				| (_datacenterId << DatacenterIdShift)
-				| (_workerId << WorkerIdShift)
+			var id = ((timestamp - _twepoch) << (int)TimestampLeftShift)
+				| (_datacenterId << (int)DatacenterIdShift)
+				| (_workerId << (int)WorkerIdShift)
 				| _sequence;
 			return id.ToString();
 		}

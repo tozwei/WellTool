@@ -721,7 +721,7 @@ namespace WellTool.Core.Converter
         /// <returns>转换后的数字</returns>
         public static decimal? ChineseMoneyToNumber(string chineseMoney)
         {
-            return WellTool.Core.Converter.Converter.ChineseMoneyToNumber(chineseMoney);
+            return NumberChineseFormatter.ChineseMoneyToNumber(chineseMoney);
         }
 
         /// <summary>
