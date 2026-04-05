@@ -69,7 +69,7 @@ namespace WellTool.Core.Net
         public string ToBase64()
         {
             var raw = $"{UserName}:{Password}";
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(raw));
+            return System.Convert.ToBase64String(Encoding.UTF8.GetBytes(raw));
         }
 
         /// <summary>

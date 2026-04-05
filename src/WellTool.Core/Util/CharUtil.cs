@@ -190,5 +190,23 @@ namespace WellTool.Core.Util
         {
             return c >= 0xAC00 && c <= 0xD7AF;
         }
+
+        /// <summary>
+        /// 判断是否为十六进制字符
+        /// </summary>
+        public static bool IsHexChar(char c)
+        {
+            return (c >= '0' && c <= '9') ||
+                   (c >= 'a' && c <= 'f') ||
+                   (c >= 'A' && c <= 'F');
+        }
+
+        /// <summary>
+        /// 将十六进制字符转换为数字
+        /// </summary>
+        public static int Digit16(char c)
+        {
+            return ToHexInt(c);
+        }
     }
 }
