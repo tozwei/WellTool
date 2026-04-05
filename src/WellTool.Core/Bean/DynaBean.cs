@@ -229,7 +229,7 @@ namespace WellTool.Core.Bean
                 var beanDesc = BeanDesc.GetBeanDesc(_beanClass);
                 foreach (var prop in beanDesc.GetProps())
                 {
-                    yield return new KeyValuePair<string, object>(prop.Name, prop.GetValue(_bean));
+                    yield return new KeyValuePair<string, object>(prop.Key, prop.Value.GetValue(_bean));
                 }
             }
         }

@@ -62,7 +62,7 @@ namespace WellTool.Core.Bean
 
             foreach (var prop in beanDesc.GetProps())
             {
-                result[prop.Name] = prop;
+                result[prop.Key] = prop.Value;
             }
 
             return result;

@@ -48,5 +48,10 @@ namespace WellTool.Core.Math
         {
             return System.Math.Log(x, y);
         }
+
+        public static double Sqrt(double x)
+        {
+            return System.Math.Sqrt(x);
+        }
     }
 }

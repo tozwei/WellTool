@@ -66,7 +66,7 @@ public class Simhash
             sb.Append(weight[i] > 0 ? '1' : '0');
         }
 
-        return Convert.ToInt64(sb.ToString(), 2);
+        return System.Convert.ToInt64(sb.ToString(), 2);
     }
 
     /// <summary>

@@ -129,7 +129,7 @@ namespace WellTool.Core.Compress
             if (compressedSize < 0 || uncompressedSize < 0 ||
                 compressedSize * maxSizeDiff < uncompressedSize)
             {
-                throw new Exception($"Zip bomb attack detected, invalid sizes: compressed {compressedSize}, uncompressed {uncompressedSize}, name {entry.FullName}");
+                throw new System.Exception($"Zip bomb attack detected, invalid sizes: compressed {compressedSize}, uncompressed {uncompressedSize}, name {entry.FullName}");
             }
         }
     }
