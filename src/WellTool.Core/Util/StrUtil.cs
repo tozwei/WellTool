@@ -56,6 +56,16 @@ public static class StrUtil
 	public static string NullToEmpty(string str) => str ?? string.Empty;
 
 	/// <summary>
+	/// 去除字符串开头的空白字符
+	/// </summary>
+	/// <param name="str">字符串</param>
+	/// <returns>去除开头空白字符后的字符串</returns>
+	public static string TrimStart(string str)
+	{
+		return str?.TrimStart() ?? string.Empty;
+	}
+
+	/// <summary>
 	/// 去除字符串开头的指定字符
 	/// </summary>
 	/// <param name="str">字符串</param>
@@ -82,6 +92,22 @@ public static class StrUtil
 	/// <param name="defaultValue">默认值</param>
 	/// <returns>默认值如果输入为空，否则返回原字符串</returns>
 	public static string EmptyToDefault(string str, string defaultValue) => IsEmpty(str) ? defaultValue : str;
+
+	/// <summary>
+	/// 忽略大小写查找子字符串的位置
+	/// </summary>
+	/// <param name="str">字符串</param>
+	/// <param name="substr">子字符串</param>
+	/// <param name="startIndex">起始索引</param>
+	/// <returns>子字符串的位置，未找到返回-1</returns>
+	public static int IndexOfIgnoreCase(string str, string substr, int startIndex = 0)
+	{
+		if (IsEmpty(str) || IsEmpty(substr))
+		{
+			return -1;
+		}
+		return str.IndexOf(substr, startIndex, StringComparison.OrdinalIgnoreCase);
+	}
 
 	/// <summary>
 	/// 字符串连接
