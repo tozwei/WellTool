@@ -39,7 +39,7 @@ public class LocalPortGenerater
 		{
 			var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
 			var tcpListeners = ipGlobalProperties.GetActiveTcpListeners();
-			var tcpConnections = ipGlobalProperties.GetActiveTcpConnectionInformation();
+			var tcpConnections = ipGlobalProperties.GetActiveTcpConnections();
 
 			foreach (var listener in tcpListeners)
 			{

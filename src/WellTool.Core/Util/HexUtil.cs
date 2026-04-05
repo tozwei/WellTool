@@ -99,4 +99,24 @@ public static class HexUtil
 			return c - 'A' + 10;
 		throw new ArgumentException($"Invalid hex character: {c}");
 	}
+
+	/// <summary>
+	/// 将字符转换为Unicode十六进制格式
+	/// </summary>
+	/// <param name="c">字符</param>
+	/// <returns>Unicode十六进制字符串</returns>
+	public static string ToUnicodeHex(char c)
+	{
+		return "\\u" + ((int)c).ToString("X4");
+	}
+
+	/// <summary>
+	/// 解码十六进制字符串
+	/// </summary>
+	/// <param name="hex">十六进制字符串</param>
+	/// <returns>字节数组</returns>
+	public static byte[] DecodeHex(string hex)
+	{
+		return Decode(hex);
+	}
 }

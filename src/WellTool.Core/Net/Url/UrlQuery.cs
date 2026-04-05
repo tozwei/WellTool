@@ -317,7 +317,7 @@ namespace WellTool.Core.Net.Url
         {
             if (_query.Count == 0)
             {
-                return StrUtil.Empty;
+                return string.Empty;
             }
 
             char[] safeChars = encodePercent ? null : new char[] { '%' };
@@ -408,11 +408,11 @@ namespace WellTool.Core.Net.Url
         {
             if (value == null)
             {
-                return null;
+                return string.Empty;
             }
             if (value is System.Collections.IEnumerable enumerable && !(value is string))
             {
-                return StrUtil.Join(",", enumerable);
+                return string.Join(",", enumerable);
             }
             return value.ToString();
         }
