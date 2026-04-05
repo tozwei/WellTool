@@ -25,10 +25,7 @@ public class NotInitedException : RuntimeException
     {
     }
 
-    public NotInitedException(string message, System.Exception? throwable, bool enableSuppression, bool writableStackTrace)
-        : base(message, throwable, enableSuppression, writableStackTrace)
-    {
-    }
+
 
     public NotInitedException(System.Exception? throwable, string messageTemplate, params object[] @params)
     {

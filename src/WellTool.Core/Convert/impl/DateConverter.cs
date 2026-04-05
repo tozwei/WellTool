@@ -4,14 +4,14 @@ using WellTool.Core.Convert;
 namespace WellTool.Core.Convert.impl
 {
     /// <summary>
-    /// 日期转换�?
+    /// 日期转换�?
     /// </summary>
     public class DateConverter : IConverter
     {
         private readonly string _format;
 
         /// <summary>
-        /// 构造函�?
+        /// 构造函�?
         /// </summary>
         /// <param name="format">日期格式</param>
         public DateConverter(string format = null)
@@ -20,7 +20,7 @@ namespace WellTool.Core.Convert.impl
         }
 
         /// <summary>
-        /// 转换�?
+        /// 转换�?
         /// </summary>
         public object Convert(object value, Type targetType)
         {
@@ -35,16 +35,12 @@ namespace WellTool.Core.Convert.impl
                 return dt;
             }
 
-            // 处理 DateOnly
-            if (value is DateOnly dateOnly)
-            {
-                return dateOnly.ToDateTime(TimeOnly.MinValue);
-            }
 
-            // 处理数字（毫秒时间戳�?
+
+            // 处理数字（毫秒时间戳�?
             if (value is long longValue)
             {
-                // 毫秒时间�?
+                // 毫秒时间�?
                 if (longValue > 1e12)
                 {
                     return DateTimeOffset.FromUnixTimeMilliseconds(longValue).DateTime;
@@ -53,7 +49,7 @@ namespace WellTool.Core.Convert.impl
                 return DateTimeOffset.FromUnixTimeSeconds(longValue).DateTime;
             }
 
-            // 处理字符�?
+            // 处理字符�?
             var str = value.ToString();
             if (string.IsNullOrWhiteSpace(str))
             {
@@ -100,11 +96,11 @@ namespace WellTool.Core.Convert.impl
         /// </summary>
         public Type[] GetSupportedSourceTypes()
         {
-            return new Type[] { typeof(string), typeof(long), typeof(DateTime), typeof(DateOnly) };
+            return new Type[] { typeof(string), typeof(long), typeof(DateTime) };
         }
 
         /// <summary>
-        /// 获取支持的目标类�?
+        /// 获取支持的目标类�?
         /// </summary>
         public Type[] GetSupportedTargetTypes()
         {

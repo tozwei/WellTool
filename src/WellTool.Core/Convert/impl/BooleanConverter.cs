@@ -18,11 +18,7 @@ namespace WellTool.Core.Convert.impl
                 return false;
             }
 
-            // 处理数字类型：0为false，其他为true
-            if (value is Number number)
-            {
-                return number.ToDouble() != 0;
-            }
+
 
             // 处理布尔类型
             if (value is bool b)
@@ -78,7 +74,7 @@ namespace WellTool.Core.Convert.impl
         /// </summary>
         public Type[] GetSupportedSourceTypes()
         {
-            return new Type[] { typeof(string), typeof(bool), typeof(int), typeof(long), typeof(double), typeof(Number) };
+            return new Type[] { typeof(string), typeof(bool), typeof(int), typeof(long), typeof(double) };
         }
 
         /// <summary>

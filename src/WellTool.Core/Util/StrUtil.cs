@@ -49,6 +49,41 @@ public static class StrUtil
 	public static string[] EmptyArray() => Array.Empty<string>();
 
 	/// <summary>
+	/// 将null转换为空字符串
+	/// </summary>
+	/// <param name="str">字符串</param>
+	/// <returns>空字符串如果输入为null，否则返回原字符串</returns>
+	public static string NullToEmpty(string str) => str ?? string.Empty;
+
+	/// <summary>
+	/// 去除字符串开头的指定字符
+	/// </summary>
+	/// <param name="str">字符串</param>
+	/// <param name="trimChar">要去除的字符</param>
+	/// <returns>去除开头指定字符后的字符串</returns>
+	public static string TrimStart(string str, char trimChar)
+	{
+		if (IsEmpty(str))
+		{
+			return str;
+		}
+		int startIndex = 0;
+		while (startIndex < str.Length && str[startIndex] == trimChar)
+		{
+			startIndex++;
+		}
+		return str.Substring(startIndex);
+	}
+
+	/// <summary>
+	/// 将空字符串转换为默认值
+	/// </summary>
+	/// <param name="str">字符串</param>
+	/// <param name="defaultValue">默认值</param>
+	/// <returns>默认值如果输入为空，否则返回原字符串</returns>
+	public static string EmptyToDefault(string str, string defaultValue) => IsEmpty(str) ? defaultValue : str;
+
+	/// <summary>
 	/// 字符串连接
 	/// </summary>
 	public static string Concat(params string[] strs) => string.Concat(strs);

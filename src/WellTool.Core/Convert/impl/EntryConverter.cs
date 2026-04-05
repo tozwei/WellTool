@@ -29,16 +29,16 @@ public class EntryConverter<TKey, TValue> : AbstractConverter<KeyValuePair<TKey,
                 var entry = enumerator.Current;
                 if (entry is DictionaryEntry de)
                 {
-                    key = Convert.To<TKey>(de.Key);
-                    val = Convert.To<TValue>(de.Value);
+                    key = (TKey)de.Key;
+                    val = (TValue)de.Value;
                 }
             }
         }
         else if (value is IEnumerable<KeyValuePair<object, object>> kvps)
         {
             var first = kvps.FirstOrDefault();
-            key = Convert.To<TKey>(first.Key);
-            val = Convert.To<TValue>(first.Value);
+            key = (TKey)first.Key;
+            val = (TValue)first.Value;
         }
         else if (value is Tuple<TKey, TValue> tuple)
         {

@@ -241,9 +241,9 @@ public class Version : IComparable<Version>
 				if (c == 0) continue;
 				return c;
 			}
-			int c = o1.ToString().CompareTo(o2.ToString());
-			if (c == 0) continue;
-			return c;
+			int compareResult = o1.ToString().CompareTo(o2.ToString());
+			if (compareResult == 0) continue;
+			return compareResult;
 		}
 		List<object> rest = ts1.Count > ts2.Count ? ts1 : ts2;
 		int e = rest.Count;

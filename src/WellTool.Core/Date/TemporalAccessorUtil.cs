@@ -13,9 +13,31 @@ public static class TemporalAccessorUtil
 	/// </summary>
 	/// <param name="dateTime">需要获取的时间对象</param>
 	/// <returns>时间的值，如果无法获取则获取最小值，一般为0</returns>
-	public static int Get(DateTime dateTime, CalendarField field)
+	public static int Get(DateTime dateTime, Calendar.CalendarField field)
 	{
-		return dateTime.Get(field);
+		switch (field)
+			{
+				case Calendar.CalendarField.Year:
+					return dateTime.Year;
+				case Calendar.CalendarField.Month:
+					return dateTime.Month;
+				case Calendar.CalendarField.DayOfMonth:
+					return dateTime.Day;
+				case Calendar.CalendarField.DayOfYear:
+					return dateTime.DayOfYear;
+				case Calendar.CalendarField.DayOfWeek:
+					return (int)dateTime.DayOfWeek;
+				case Calendar.CalendarField.Hour:
+					return dateTime.Hour;
+				case Calendar.CalendarField.Minute:
+					return dateTime.Minute;
+				case Calendar.CalendarField.Second:
+					return dateTime.Second;
+				case Calendar.CalendarField.Millisecond:
+					return dateTime.Millisecond;
+				default:
+					return 0;
+			}
 	}
 
 	/// <summary>
@@ -26,8 +48,6 @@ public static class TemporalAccessorUtil
 	/// <returns>格式化后的字符串</returns>
 	public static string Format(DateTime time, string format)
 	{
-		if (time == null)
-			return null;
 		return time.ToString(format);
 	}
 

@@ -69,7 +69,7 @@ public static class Base64Util
 	{
 		if (string.IsNullOrEmpty(input))
 			return Array.Empty<byte>();
-		return Convert.FromBase64String(input);
+		return System.Convert.FromBase64String(input);
 	}
 }
 

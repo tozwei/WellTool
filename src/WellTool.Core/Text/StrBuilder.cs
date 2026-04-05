@@ -9,6 +9,11 @@ namespace WellTool.Core.Text
     /// </summary>
     public class StrBuilder
     {
+        /// <summary>
+        /// 默认容量
+        /// </summary>
+        public static readonly int DefaultCapacity = 16;
+
         private readonly StringBuilder _sb;
         private readonly int _initialCapacity;
 
@@ -104,6 +109,15 @@ namespace WellTool.Core.Text
         public StrBuilder Append(char c, int repeatCount)
         {
             _sb.Append(c, repeatCount);
+            return this;
+        }
+
+        /// <summary>
+        /// 追加字符数组的指定范围
+        /// </summary>
+        public StrBuilder Append(char[] buffer, int index, int count)
+        {
+            _sb.Append(buffer, index, count);
             return this;
         }
 

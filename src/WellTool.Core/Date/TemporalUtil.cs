@@ -46,21 +46,21 @@ public static class TemporalUtil
 	/// <param name="number">偏移量，正数为向后偏移，负数为向前偏移</param>
 	/// <param name="field">偏移单位</param>
 	/// <returns>偏移后的日期时间</returns>
-	public static DateTime Offset(DateTime time, long number, DateUnit field)
+	public static DateTime? Offset(DateTime? time, long number, DateUnit field)
 	{
 		if (time == null)
 			return null;
 
 		return field switch
 		{
-			DateUnit.Millisecond => time.AddMilliseconds(number),
-			DateUnit.Second => time.AddSeconds(number),
-			DateUnit.Minute => time.AddMinutes(number),
-			DateUnit.Hour => time.AddHours(number),
-			DateUnit.Day => time.AddDays(number),
-			DateUnit.Month => time.AddMonths((int)number),
-			DateUnit.Year => time.AddYears((int)number),
-			_ => time.AddMilliseconds(number)
+			DateUnit.Millisecond => time.Value.AddMilliseconds(number),
+			DateUnit.Second => time.Value.AddSeconds(number),
+			DateUnit.Minute => time.Value.AddMinutes(number),
+			DateUnit.Hour => time.Value.AddHours(number),
+			DateUnit.Day => time.Value.AddDays(number),
+			DateUnit.Month => time.Value.AddMonths((int)number),
+			DateUnit.Year => time.Value.AddYears((int)number),
+			_ => time.Value.AddMilliseconds(number)
 		};
 	}
 }

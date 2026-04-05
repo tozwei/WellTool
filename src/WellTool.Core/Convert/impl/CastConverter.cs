@@ -12,6 +12,6 @@ public class CastConverter<T> : AbstractConverter<T>
         {
             return result;
         }
-        return (T)Convert.ChangeType(value, typeof(T));
+        return (T)System.Convert.ChangeType(value, typeof(T));
     }
 }

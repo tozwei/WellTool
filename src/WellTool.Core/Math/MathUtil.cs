@@ -49,6 +49,22 @@ namespace WellTool.Core.Math
             return System.Math.Log(x, y);
         }
 
+        /// <summary>
+        /// 乘法运算
+        /// </summary>
+        public static decimal Mul(string a, string b)
+        {
+            return ToDecimal(a) * ToDecimal(b);
+        }
+
+        /// <summary>
+        /// 将字符串转换为decimal
+        /// </summary>
+        public static decimal ToDecimal(string value)
+        {
+            return decimal.Parse(value);
+        }
+
         public static double Sqrt(double x)
         {
             return System.Math.Sqrt(x);

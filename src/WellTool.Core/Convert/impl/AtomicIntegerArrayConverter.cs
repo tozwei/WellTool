@@ -14,8 +14,11 @@ public class AtomicIntegerArrayConverter : AbstractConverter<AtomicIntegerArray>
 	/// <returns>结果</returns>
 	protected override AtomicIntegerArray ConvertInternal(object value)
 	{
-		var intArray = Convert.To<int[]>(value);
-		return new AtomicIntegerArray(intArray);
+		if (value is int[] intArray)
+		{
+			return new AtomicIntegerArray(intArray);
+		}
+		throw new InvalidOperationException("Cannot convert to int array");
 	}
 }
 

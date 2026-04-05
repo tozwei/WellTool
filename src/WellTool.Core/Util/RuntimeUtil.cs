@@ -71,7 +71,7 @@ namespace WellTool.Core.Util
         /// <summary>
         /// 获取可用内存（字节）
         /// </summary>
-        public static long AvailableMemory => GC.GetGCMemoryInfo().TotalAvailableMemoryBytes;
+        public static long AvailableMemory => GC.GetTotalMemory(false);
 
         /// <summary>
         /// 获取已用内存（字节）
@@ -168,14 +168,14 @@ namespace WellTool.Core.Util
         /// <summary>
         /// 获取系统启动以来的毫秒数
         /// </summary>
-        public static long TickCount => Environment.TickCount64;
+        public static long TickCount => Environment.TickCount;
 
         /// <summary>
         /// 获取堆内存信息
         /// </summary>
         public static (long totalMemory, long managedMemory) GetHeapInfo()
         {
-            return (GC.GetTotalMemory(false), GC.GetTotalAllocatedBytes(false));
+            return (GC.GetTotalMemory(false), GC.GetTotalMemory(false));
         }
     }
 }

@@ -14,8 +14,11 @@ public class AtomicLongArrayConverter : AbstractConverter<AtomicLongArray>
 	/// <returns>结果</returns>
 	protected override AtomicLongArray ConvertInternal(object value)
 	{
-		var longArray = Convert.To<long[]>(value);
-		return new AtomicLongArray(longArray);
+		if (value is long[] longArray)
+		{
+			return new AtomicLongArray(longArray);
+		}
+		throw new InvalidOperationException("Cannot convert to long array");
 	}
 }
 

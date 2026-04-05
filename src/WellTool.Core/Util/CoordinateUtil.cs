@@ -47,7 +47,7 @@ public static class CoordinateUtil
 	/// <returns>弧度</returns>
 	public static double ToRadians(double degree)
 	{
-		return degree * Math.PI / 180;
+		return degree * System.Math.PI / 180;
 	}
 
 	/// <summary>
@@ -57,7 +57,7 @@ public static class CoordinateUtil
 	/// <returns>度</returns>
 	public static double ToDegree(double radian)
 	{
-		return radian * 180 / Math.PI;
+		return radian * 180 / System.Math.PI;
 	}
 
 	/// <summary>

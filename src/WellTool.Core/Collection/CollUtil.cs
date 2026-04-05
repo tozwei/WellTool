@@ -295,6 +295,27 @@ namespace WellTool.Core.Collection
         }
 
         /// <summary>
+        /// 查找集合中所有匹配元素的索引
+        /// </summary>
+        /// <typeparam name="T">集合元素类型</typeparam>
+        /// <param name="collection">集合</param>
+        /// <param name="predicate">匹配条件</param>
+        /// <returns>所有匹配元素的索引</returns>
+        public static List<int> IndexOfAll<T>(ICollection<T> collection, Func<T, bool> predicate)
+        {
+            var list = ToList(collection);
+            var result = new List<int>();
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (predicate(list[i]))
+                {
+                    result.Add(i);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// 截取IList的子集合
         /// </summary>
         /// <param name="list">IList</param>
@@ -356,6 +377,41 @@ namespace WellTool.Core.Collection
                 if (index >= 0 && index < list.Count)
                 {
                     result.Add(list[index]);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 获取IList中指定索引的元素
+        /// </summary>
+        /// <param name="list">IList</param>
+        /// <param name="indices">索引列表</param>
+        /// <returns>元素列表</returns>
+        public static IList GetAny(IList list, List<int> indices)
+        {
+            return GetAny(list, indices?.ToArray());
+        }
+
+        /// <summary>
+        /// 获取泛型集合中指定索引的元素
+        /// </summary>
+        /// <typeparam name="T">集合元素类型</typeparam>
+        /// <param name="collection">集合</param>
+        /// <param name="indices">索引列表</param>
+        /// <returns>元素列表</returns>
+        public static List<T> GetAny<T>(ICollection<T> collection, List<int> indices)
+        {
+            var list = ToList(collection);
+            var result = new List<T>();
+            if (indices != null)
+            {
+                foreach (var index in indices)
+                {
+                    if (index >= 0 && index < list.Count)
+                    {
+                        result.Add(list[index]);
+                    }
                 }
             }
             return result;

@@ -74,7 +74,7 @@ public class TableMap<K, V> : IDictionary<K, V>, IEnumerable<KeyValuePair<K, V>>
     public List<V> GetValues(K key)
     {
         var indices = CollUtil.IndexOfAll(_keys, ele => Equals(ele, key));
-        return CollUtil.GetAny(_values, indices);
+        return CollUtil.GetAny<V>(_values, indices);
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ public class TableMap<K, V> : IDictionary<K, V>, IEnumerable<KeyValuePair<K, V>>
     public List<K> GetKeys(V value)
     {
         var indices = CollUtil.IndexOfAll(_values, ele => Equals(ele, value));
-        return CollUtil.GetAny(_keys, indices);
+        return CollUtil.GetAny<K>(_keys, indices);
     }
 
     /// <summary>
