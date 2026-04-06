@@ -36,7 +36,7 @@ namespace WellTool.Extra.Template.Engine.Thymeleaf
         {
             if (config == null)
             {
-                config = TemplateConfig.DEFAULT;
+                config = TemplateConfig.Default;
             }
             _config = config;
             return this;
@@ -60,7 +60,7 @@ namespace WellTool.Extra.Template.Engine.Thymeleaf
         {
             if (_engine == null)
             {
-                Init(TemplateConfig.DEFAULT);
+                Init(TemplateConfig.Default);
             }
             return new ThymeleafTemplate(resource);
         }

@@ -31,6 +31,17 @@ public class ExpressionUtil
     /// <param name="expression">表达式字符串</param>
     /// <param name="parameters">参数</param>
     /// <returns>执行结果</returns>
+    public static object Eval(string expression, IDictionary<string, object> parameters = null)
+    {
+        return Instance.Evaluate(expression, parameters);
+    }
+
+    /// <summary>
+    /// 执行表达式
+    /// </summary>
+    /// <param name="expression">表达式字符串</param>
+    /// <param name="parameters">参数</param>
+    /// <returns>执行结果</returns>
     public object Evaluate(string expression, IDictionary<string, object> parameters = null)
     {
         if (string.IsNullOrWhiteSpace(expression))

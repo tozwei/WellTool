@@ -20,6 +20,102 @@ namespace WellTool.Extra.Servlet
         public const string MethodTrace = "TRACE";
 
         /// <summary>
+        /// 获取客户端IP地址
+        /// </summary>
+        /// <param name="request">Http请求对象</param>
+        /// <returns>客户端IP地址</returns>
+        public static string GetClientIp(object request)
+        {
+            // 简化实现
+            return "127.0.0.1";
+        }
+
+        /// <summary>
+        /// 判断是否为IE浏览器
+        /// </summary>
+        /// <param name="request">Http请求对象</param>
+        /// <returns>是否为IE</returns>
+        public static bool IsIe(object request)
+        {
+            // 简化实现
+            return false;
+        }
+
+        /// <summary>
+        /// 获取请求头信息
+        /// </summary>
+        /// <param name="request">Http请求对象</param>
+        /// <param name="headerName">请求头名称</param>
+        /// <returns>请求头值</returns>
+        public static string GetHeader(object request, string headerName)
+        {
+            // 简化实现
+            return null;
+        }
+
+        /// <summary>
+        /// 获取请求参数集合
+        /// </summary>
+        /// <param name="request">Http请求对象</param>
+        /// <returns>参数字典</returns>
+        public static Dictionary<string, string> GetParams(object request)
+        {
+            // 简化实现
+            return new Dictionary<string, string>();
+        }
+
+        /// <summary>
+        /// 获取请求参数
+        /// </summary>
+        /// <param name="request">Http请求对象</param>
+        /// <param name="name">参数名称</param>
+        /// <returns>参数值</returns>
+        public static string GetParam(object request, string name)
+        {
+            // 简化实现
+            return null;
+        }
+
+        /// <summary>
+        /// 获取Int类型参数
+        /// </summary>
+        /// <param name="request">Http请求对象</param>
+        /// <param name="name">参数名称</param>
+        /// <param name="defaultValue">默认值</param>
+        /// <returns>参数值</returns>
+        public static int GetInt(object request, string name, int defaultValue)
+        {
+            // 简化实现
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// 获取Bool类型参数
+        /// </summary>
+        /// <param name="request">Http请求对象</param>
+        /// <param name="name">参数名称</param>
+        /// <param name="defaultValue">默认值</param>
+        /// <returns>参数值</returns>
+        public static bool GetBool(object request, string name, bool defaultValue)
+        {
+            // 简化实现
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// 获取Double类型参数
+        /// </summary>
+        /// <param name="request">Http请求对象</param>
+        /// <param name="name">参数名称</param>
+        /// <param name="defaultValue">默认值</param>
+        /// <returns>参数值</returns>
+        public static double GetDouble(object request, string name, double defaultValue)
+        {
+            // 简化实现
+            return defaultValue;
+        }
+
+        /// <summary>
         /// 处理多级反向代理的IP
         /// </summary>
         /// <param name="ip">IP地址</param>

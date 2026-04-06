@@ -36,7 +36,7 @@ namespace WellTool.Extra.Template.Engine.Enjoy
         {
             if (config == null)
             {
-                config = TemplateConfig.DEFAULT;
+                config = TemplateConfig.Default;
             }
             _config = config;
             // 使用反射或依赖注入创建底层引擎
@@ -53,10 +53,10 @@ namespace WellTool.Extra.Template.Engine.Enjoy
         {
             if (_engine == null)
             {
-                Init(TemplateConfig.DEFAULT);
+                Init(TemplateConfig.Default);
             }
             
-            if (_config != null && _config.ResourceMode == TemplateConfig.ResourceModeEnum.STRING)
+            if (_config != null && _config.ResourceMode == TemplateConfig.ResourceModeType.String)
             {
                 return new EnjoyTemplate(resource);
             }

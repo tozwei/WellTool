@@ -10,6 +10,11 @@ namespace WellTool.Json
     public static class JSONStrFormatter
     {
         /// <summary>
+        /// 默认缩进空格数
+        /// </summary>
+        public const int DEFAULT_INDENT = 4;
+
+        /// <summary>
         /// 单位缩进字符串
         /// </summary>
         private const string SPACE = "    ";
@@ -25,6 +30,17 @@ namespace WellTool.Json
         /// <param name="json">未格式化的JSON字符串</param>
         /// <returns>格式化的JSON字符串</returns>
         public static string Format(string json)
+        {
+            return Format(json, DEFAULT_INDENT);
+        }
+
+        /// <summary>
+        /// 返回格式化JSON字符串
+        /// </summary>
+        /// <param name="json">未格式化的JSON字符串</param>
+        /// <param name="indentFactor">缩进因子</param>
+        /// <returns>格式化的JSON字符串</returns>
+        public static string Format(string json, int indentFactor)
         {
             if (string.IsNullOrEmpty(json))
             {
@@ -99,14 +115,14 @@ namespace WellTool.Json
                     if (i > 1 && json[i - 1] == ':')
                     {
                         result.Append(NEW_LINE);
-                        result.Append(Indent(number));
+                        result.Append(Indent(number, indentFactor));
                     }
                     result.Append(key);
                     //前方括号、前花括号，的后面必须换行
                     result.Append(NEW_LINE);
                     //每出现一次前方括号、前花括号，缩进次数增加一次
                     number++;
-                    result.Append(Indent(number));
+                    result.Append(Indent(number, indentFactor));
 
                     continue;
                 }
@@ -118,7 +134,7 @@ namespace WellTool.Json
                     result.Append(NEW_LINE);
                     //每出现一次后方括号、后花括号，缩进次数减少一次
                     number--;
-                    result.Append(Indent(number));
+                    result.Append(Indent(number, indentFactor));
                     //打印当前字符
                     result.Append(key);
                     continue;
@@ -129,7 +145,7 @@ namespace WellTool.Json
                 {
                     result.Append(key);
                     result.Append(NEW_LINE);
-                    result.Append(Indent(number));
+                    result.Append(Indent(number, indentFactor));
                     continue;
                 }
 
@@ -146,16 +162,20 @@ namespace WellTool.Json
         }
 
         /// <summary>
-        /// 返回指定次数的缩进字符串。每一次缩进4个空格
+        /// 返回指定次数的缩进字符串
         /// </summary>
         /// <param name="number">缩进次数</param>
+        /// <param name="indentFactor">缩进因子</param>
         /// <returns>指定缩进次数的字符串</returns>
-        private static string Indent(int number)
+        private static string Indent(int number, int indentFactor)
         {
             var sb = new StringBuilder();
             for (int i = 0; i < number; i++)
             {
-                sb.Append(SPACE);
+                for (int j = 0; j < indentFactor; j++)
+                {
+                    sb.Append(' ');
+                }
             }
             return sb.ToString();
         }

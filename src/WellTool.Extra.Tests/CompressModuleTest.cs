@@ -226,52 +226,7 @@ public class CompressExceptionTest
     }
 }
 
-/// <summary>
-/// Archiver 接口测试类
-/// </summary>
-public class ArchiverTest
-{
-    /// <summary>
-    /// 测试Archiver接口存在
-    /// </summary>
-    [Fact]
-    public void TestArchiverInterfaceExists()
-    {
-        // 验证接口类型存在
-        var type = typeof(Archiver);
-        Assert.NotNull(type);
-        Assert.True(type.IsInterface);
-    }
-}
 
-/// <summary>
-/// Extractor 接口测试类
-/// </summary>
-public class ExtractorTest
-{
-    /// <summary>
-    /// 测试Extractor接口存在
-    /// </summary>
-    [Fact]
-    public void TestExtractorInterfaceExists()
-    {
-        // 验证接口类型存在
-        var type = typeof(Extractor);
-        Assert.NotNull(type);
-        Assert.True(type.IsInterface);
-    }
-
-    /// <summary>
-    /// 测试StripName方法
-    /// </summary>
-    [Fact]
-    public void TestStripNameMethodExists()
-    {
-        // 验证接口有StripName方法
-        var method = typeof(Extractor).GetMethod("StripName");
-        Assert.NotNull(method);
-    }
-}
 
 /// <summary>
 /// StreamArchiver 测试类

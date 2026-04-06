@@ -1,6 +1,6 @@
 namespace WellTool.Extra.Tests;
 
-using WellTool.Extra.Template.Engines;
+using WellTool.Extra.Template.Engine;
 
 public class ThymeleafTest
 {

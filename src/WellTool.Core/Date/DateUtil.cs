@@ -573,6 +573,18 @@ namespace WellTool.Core.Date
             return DateTime.Now;
         }
 
+        // 获取当前时间戳（秒）
+        public static long CurrentSeconds()
+        {
+            return (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+        }
+
+        // 获取当前时间戳（毫秒）
+        public static long CurrentMillis()
+        {
+            return (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+        }
+
         // 获取年份
         public static int Year(DateTime date)
         {

@@ -35,7 +35,7 @@ namespace WellTool.Extra.Template.Engine.Wit
         {
             if (config == null)
             {
-                config = TemplateConfig.DEFAULT;
+                config = TemplateConfig.Default;
             }
             return this;
         }
@@ -58,7 +58,7 @@ namespace WellTool.Extra.Template.Engine.Wit
         {
             if (_engine == null)
             {
-                Init(TemplateConfig.DEFAULT);
+                Init(TemplateConfig.Default);
             }
             return new WitTemplate(resource);
         }

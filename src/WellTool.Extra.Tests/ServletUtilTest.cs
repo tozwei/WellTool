@@ -27,8 +27,8 @@ public class ServletUtilTest
     [Fact]
     public void GetParamsTest()
     {
-        var params = ServletUtil.GetParams(null);
-        Assert.NotNull(params);
+        var parameters = ServletUtil.GetParams(null);
+        Assert.NotNull(parameters);
     }
 
     [Fact]

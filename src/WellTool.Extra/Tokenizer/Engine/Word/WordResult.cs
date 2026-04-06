@@ -13,7 +13,7 @@ namespace WellTool.Extra.Tokenizer.Engine.Word
 
         public WordResult(string text)
         {
-            _words = new List<Word>();
+            _words = new List<WellTool.Extra.Tokenizer.Word>();
             _index = 0;
             // TODO: 需要集成 Word.Net 或类似库进行实际分词
             // 临时实现：按字符分割

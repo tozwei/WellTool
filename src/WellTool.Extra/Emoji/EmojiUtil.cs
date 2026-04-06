@@ -293,6 +293,37 @@ namespace WellTool.Extra.Emoji
         }
 
         /// <summary>
+        /// 去除字符串中所有的Emoji Unicode字符
+        /// </summary>
+        /// <param name="str">包含Emoji字符的字符串</param>
+        /// <returns>替换后的字符串</returns>
+        public static string RemoveEmojis(string str)
+        {
+            return RemoveAllEmojis(str);
+        }
+
+        /// <summary>
+        /// 将Emoji转换为字符串
+        /// </summary>
+        /// <param name="str">包含Emoji字符的字符串</param>
+        /// <returns>转换后的字符串</returns>
+        public static string EmojiToString(string str)
+        {
+            if (string.IsNullOrEmpty(str)) return str;
+            return ToAlias(str);
+        }
+
+        /// <summary>
+        /// 将字符串中的Unicode Emoji字符转换为HTML 10进制表现形式
+        /// </summary>
+        /// <param name="str">包含Emoji Unicode字符的字符串</param>
+        /// <returns>替换后的字符串</returns>
+        public static string ToHtmlDecimal(string str)
+        {
+            return ToHtml(str);
+        }
+
+        /// <summary>
         /// 提取字符串中所有的Emoji Unicode
         /// </summary>
         /// <param name="str">包含Emoji字符的字符串</param>

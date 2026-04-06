@@ -12,6 +12,66 @@ namespace WellTool.Extra.Cglib
     public static class CglibUtil
     {
         /// <summary>
+        /// 将对象转换为字典
+        /// </summary>
+        /// <param name="obj">源对象</param>
+        /// <returns>字典</returns>
+        public static Dictionary<string, object> ToMap(object obj)
+        {
+            if (obj == null) return new Dictionary<string, object>();
+
+            var result = new Dictionary<string, object>();
+            var type = obj.GetType();
+            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var prop in props)
+            {
+                if (prop.CanRead)
+                {
+                    result[prop.Name] = prop.GetValue(obj);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 将字典转换为对象
+        /// </summary>
+        /// <typeparam name="T">目标类型</typeparam>
+        /// <param name="map">源字典</param>
+        /// <returns>目标对象</returns>
+        public static T ToBean<T>(Dictionary<string, object> map) where T : new()
+        {
+            if (map == null) return new T();
+
+            var result = new T();
+            var type = typeof(T);
+            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var prop in props)
+            {
+                if (prop.CanWrite && map.TryGetValue(prop.Name, out var value))
+                {
+                    try
+                    {
+                        if (value != null && prop.PropertyType != value.GetType())
+                        {
+                            value = Convert.ChangeType(value, prop.PropertyType);
+                        }
+                        prop.SetValue(result, value);
+                    }
+                    catch
+                    {
+                        // 忽略属性赋值错误
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// 拷贝Bean对象属性到目标类型
         /// </summary>
         /// <typeparam name="T">目标对象类型</typeparam>

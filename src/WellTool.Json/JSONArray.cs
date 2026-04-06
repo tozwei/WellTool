@@ -291,6 +291,56 @@ namespace WellTool.Json
         }
 
         /// <summary>
+        /// 仅在值不为空时添加
+        /// </summary>
+        /// <param name="value">值</param>
+        /// <returns>this</returns>
+        public JSONArray PutOpt(object value)
+        {
+            if (value != null)
+            {
+                Set(value);
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// 仅在值不为空时设置指定位置的值
+        /// </summary>
+        /// <param name="index">位置</param>
+        /// <param name="value">值</param>
+        /// <returns>this</returns>
+        public JSONArray PutOpt(int index, object value)
+        {
+            if (value != null)
+            {
+                Set(index, value);
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// 仅在值不为空时设置指定位置的值
+        /// </summary>
+        /// <param name="index">位置</param>
+        /// <param name="value">值</param>
+        /// <returns>this</returns>
+        public JSONArray SetOpt(int index, object value)
+        {
+            return PutOpt(index, value);
+        }
+
+        /// <summary>
+        /// 仅在值不为空时添加
+        /// </summary>
+        /// <param name="value">值</param>
+        /// <returns>this</returns>
+        public JSONArray SetOpt(object value)
+        {
+            return PutOpt(value);
+        }
+
+        /// <summary>
         /// 添加原始值
         /// </summary>
         /// <param name="value">值</param>

@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WellTool.Json\WellTool.Json.csproj" />
+    <ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
   </ItemGroup>
 
 </Project>

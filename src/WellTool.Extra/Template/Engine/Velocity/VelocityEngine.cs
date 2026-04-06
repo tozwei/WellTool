@@ -36,7 +36,7 @@ namespace WellTool.Extra.Template.Engine.Velocity
         {
             if (config == null)
             {
-                config = TemplateConfig.DEFAULT;
+                config = TemplateConfig.Default;
             }
             _config = config;
             // 使用 NVelocity 或类似库创建底层引擎
@@ -61,7 +61,7 @@ namespace WellTool.Extra.Template.Engine.Velocity
         {
             if (_engine == null)
             {
-                Init(TemplateConfig.DEFAULT);
+                Init(TemplateConfig.Default);
             }
             return new VelocityTemplate(resource);
         }

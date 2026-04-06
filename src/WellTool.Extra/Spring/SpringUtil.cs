@@ -106,6 +106,108 @@ namespace WellTool.Extra.Spring
         }
 
         /// <summary>
+        /// 获取指定类型对应的所有Bean
+        /// </summary>
+        /// <typeparam name="T">Bean类型</typeparam>
+        /// <returns>类型对应的bean</returns>
+        public static T[] GetBeans<T>() where T : class
+        {
+            if (_applicationContext == null)
+            {
+                return Array.Empty<T>();
+            }
+            var beans = _applicationContext.GetBeansOfType<T>();
+            return beans.Values.ToArray();
+        }
+
+        /// <summary>
+        /// 检查是否包含指定名称的Bean
+        /// </summary>
+        /// <param name="name">Bean名称</param>
+        /// <returns>是否包含</returns>
+        public static bool ContainsBean(string name)
+        {
+            if (_applicationContext == null)
+            {
+                return false;
+            }
+            var beanNames = _applicationContext.GetBeanNamesForType(typeof(object));
+            return beanNames.Contains(name);
+        }
+
+        /// <summary>
+        /// 获取所有Bean名称
+        /// </summary>
+        /// <returns>Bean名称数组</returns>
+        public static string[] GetBeanNames()
+        {
+            if (_applicationContext == null)
+            {
+                return Array.Empty<string>();
+            }
+            return _applicationContext.GetBeanNamesForType(typeof(object));
+        }
+
+        /// <summary>
+        /// 通过类型获取Bean
+        /// </summary>
+        /// <param name="type">Bean类型</param>
+        /// <returns>Bean</returns>
+        public static object GetBean(Type type)
+        {
+            if (_applicationContext == null)
+            {
+                throw new Exception("No ApplicationContext injected, maybe not in the Spring environment?");
+            }
+            return _applicationContext.GetBean(type);
+        }
+
+        /// <summary>
+        /// 设置对象属性值
+        /// </summary>
+        /// <param name="obj">目标对象</param>
+        /// <param name="name">属性名称</param>
+        /// <param name="value">属性值</param>
+        public static void SetProperty(object obj, string name, object value)
+        {
+            if (obj == null) return;
+            var type = obj.GetType();
+            var prop = type.GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
+            if (prop != null && prop.CanWrite)
+            {
+                prop.SetValue(obj, value);
+            }
+        }
+
+        /// <summary>
+        /// 调用对象方法
+        /// </summary>
+        /// <param name="obj">目标对象</param>
+        /// <param name="methodName">方法名称</param>
+        /// <param name="args">方法参数</param>
+        /// <returns>方法返回值</returns>
+        public static object InvokeMethod(object obj, string methodName, params object[] args)
+        {
+            if (obj == null) return null;
+            var type = obj.GetType();
+            var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance);
+            if (method != null)
+            {
+                return method.Invoke(obj, args);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 检查是否在Spring环境中
+        /// </summary>
+        /// <returns>是否在Spring环境中</returns>
+        public static bool IsInSpring()
+        {
+            return _applicationContext != null;
+        }
+
+        /// <summary>
         /// 获取指定类型对应的Bean名称
         /// </summary>
         /// <param name="type">类型</param>

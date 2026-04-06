@@ -35,7 +35,7 @@ namespace WellTool.Extra.Template.Engine.Beetl
         {
             if (config == null)
             {
-                config = TemplateConfig.DEFAULT;
+                config = TemplateConfig.Default;
             }
             return this;
         }
@@ -58,7 +58,7 @@ namespace WellTool.Extra.Template.Engine.Beetl
         {
             if (_engine == null)
             {
-                Init(TemplateConfig.DEFAULT);
+                Init(TemplateConfig.Default);
             }
             return new BeetlTemplate(resource);
         }

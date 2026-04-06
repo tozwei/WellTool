@@ -1,6 +1,6 @@
 namespace WellTool.Extra.Tests;
 
-using WellTool.Extra.QrCode;
+using WellTool.Extra;
 
 public class QrCodeUtilTest
 {

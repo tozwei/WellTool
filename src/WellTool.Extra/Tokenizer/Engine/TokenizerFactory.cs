@@ -99,7 +99,7 @@ namespace WellTool.Extra.Tokenizer.Engine
         {
             if (_index < _words.Length)
             {
-                return new Word(_words[_index++]);
+                return new WellTool.Extra.Tokenizer.Engine.Word.WordWord(_words[_index++]);
             }
             return null;
         }

@@ -20,10 +20,10 @@ namespace WellTool.Extra.Mail
         /// <returns>发送是否成功</returns>
         public static bool Send(MailAccount account, string to, string subject, string content, bool isHtml = false)
         {
-            using (var client = new SmtpClient(account.Host, account.Port))
+            using (var client = new SmtpClient(account.Host, account.Port ?? (account.SslEnable == true ? 465 : 25)))
             {
-                client.Credentials = new System.Net.NetworkCredential(account.User, account.Password);
-                client.EnableSsl = account.Ssl;
+                client.Credentials = new System.Net.NetworkCredential(account.User, account.Pass);
+                client.EnableSsl = account.SslEnable ?? account.StarttlsEnable;
 
                 var message = new MailMessage();
                 message.From = new MailAddress(account.From);
@@ -48,10 +48,10 @@ namespace WellTool.Extra.Mail
         /// <returns>发送是否成功</returns>
         public static bool Send(MailAccount account, IEnumerable<string> to, string subject, string content, bool isHtml = false)
         {
-            using (var client = new SmtpClient(account.Host, account.Port))
+            using (var client = new SmtpClient(account.Host, account.Port ?? (account.SslEnable == true ? 465 : 25)))
             {
-                client.Credentials = new System.Net.NetworkCredential(account.User, account.Password);
-                client.EnableSsl = account.Ssl;
+                client.Credentials = new System.Net.NetworkCredential(account.User, account.Pass);
+                client.EnableSsl = account.SslEnable ?? account.StarttlsEnable;
 
                 var message = new MailMessage();
                 message.From = new MailAddress(account.From);

@@ -1,6 +1,8 @@
 namespace WellTool.Extra.Tests;
 
 using WellTool.Extra.Template;
+using System.Collections.Generic;
+using System.IO;
 
 public class TemplateUtilTest
 {
@@ -62,38 +64,22 @@ public class TemplateUtilTest
     }
 }
 
-internal class CustomTemplateEngine : ITemplate
+internal class CustomTemplateEngine : Template
 {
-    public string Name => "custom";
-
-    public ITemplate GetTemplate(string template)
+    public void Render(IDictionary<object, object> bindingMap, TextWriter writer)
     {
-        return this;
     }
 
-    public string Render(string template, Dictionary<string, object> bindingMap)
+    public void Render(IDictionary<object, object> bindingMap, Stream output)
+    {
+    }
+
+    public void Render(IDictionary<object, object> bindingMap, FileInfo file)
+    {
+    }
+
+    public string Render(IDictionary<object, object> bindingMap)
     {
         return string.Empty;
-    }
-
-    public void Render(string template, Dictionary<string, object> bindingMap, TextWriter writer)
-    {
-    }
-
-    public void Render(IDictionary<string, object> bindingMap, TextWriter writer)
-    {
-    }
-
-    public string Render(IDictionary<string, object> bindingMap)
-    {
-        return string.Empty;
-    }
-
-    public void Writer(IDictionary<string, object> bindingMap, TextWriter writer)
-    {
-    }
-
-    public void Dispose()
-    {
     }
 }

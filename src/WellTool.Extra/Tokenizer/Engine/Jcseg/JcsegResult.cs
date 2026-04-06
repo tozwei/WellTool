@@ -13,13 +13,13 @@ namespace WellTool.Extra.Tokenizer.Engine.Jcseg
 
         public JcsegResult(string text)
         {
-            _words = new List<Word>();
+            _words = new List<WellTool.Extra.Tokenizer.Word>();
             _index = 0;
             // TODO: 需要集成 Jcseg.Net 或类似库进行实际分词
             // 临时实现：按字符分割
-            foreach (var c in text)
+            foreach (var (c, i) in text.Select((ch, index) => (ch, index)))
             {
-                _words.Add(new JcsegWord(c.ToString()));
+                _words.Add(new JcsegWord(c.ToString(), i));
             }
         }
 

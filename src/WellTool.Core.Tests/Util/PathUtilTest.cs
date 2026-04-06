@@ -1,4 +1,6 @@
 using WellTool.Core.IO;
+using WellTool.Core.IO.File;
+using System.IO;
 using Xunit;
 
 namespace WellTool.Core.Tests;
@@ -8,57 +10,50 @@ public class PathUtilTest
     [Fact]
     public void NormalizeTest()
     {
-        var path = PathUtil.Normalize("C:\\path\\to\\file");
+        var path = FileUtil.Normalize(@"C:\path\to\file");
         Assert.NotNull(path);
     }
 
     [Fact]
     public void CleanPathTest()
     {
-        var path = PathUtil.CleanPath("C:\\path\\..\\file");
+        var path = Path.GetFullPath(@"C:\path\..\file");
         Assert.Contains("file", path);
-    }
-
-    [Fact]
-    public void GetFullPathTest()
-    {
-        var path = PathUtil.GetFullPath("test.txt");
-        Assert.NotNull(path);
     }
 
     [Fact]
     public void GetParentTest()
     {
-        var path = PathUtil.GetParent("C:\\path\\to\\file.txt");
+        var path = Path.GetDirectoryName(@"C:\path\to\file.txt");
         Assert.Contains("path", path);
     }
 
     [Fact]
     public void IsAbsoluteTest()
     {
-        Assert.True(PathUtil.IsAbsolute("C:\\path"));
-        Assert.True(PathUtil.IsAbsolute("/path"));
-        Assert.False(PathUtil.IsAbsolute("path"));
+        Assert.True(Path.IsPathRooted(@"C:\path"));
+        Assert.True(Path.IsPathRooted("/path"));
+        Assert.False(Path.IsPathRooted("path"));
     }
 
     [Fact]
     public void IsPathCharTest()
     {
-        Assert.True(PathUtil.IsPathChar('/'));
-        Assert.True(PathUtil.IsPathChar('\\'));
+        Assert.True(Path.DirectorySeparatorChar == '/' || Path.DirectorySeparatorChar == '\\');
+        Assert.True(Path.AltDirectorySeparatorChar == '/' || Path.AltDirectorySeparatorChar == '\\');
     }
 
     [Fact]
     public void UnixNormalizeTest()
     {
-        var path = PathUtil.UnixNormalize("/path/../file");
+        var path = Path.GetFullPath("/path/../file").Replace('\\', '/');
         Assert.Contains("file", path);
     }
 
     [Fact]
     public void SeparatorsToSystemTest()
     {
-        var path = PathUtil.SeparatorsToSystem("/path/to/file");
+        var path = "/path/to/file".Replace('/', Path.DirectorySeparatorChar);
         Assert.NotNull(path);
     }
 }

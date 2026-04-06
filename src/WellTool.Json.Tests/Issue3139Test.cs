@@ -1,5 +1,6 @@
 using System;
 using Xunit;
+using WellTool.Core.Date;
 
 namespace WellTool.Json.Tests
 {
@@ -11,7 +12,7 @@ namespace WellTool.Json.Tests
         [Fact]
         public void TestTimestamp()
         {
-            var timestamp = DateTimeUtil.CurrentSeconds();
+            var timestamp = DateUtil.CurrentSeconds();
             var jsonStr = $"{{\"ts\":{timestamp}}}";
             var bean = JSONUtil.ToBean<TimestampBean>(jsonStr);
             Assert.NotNull(bean);
@@ -20,7 +21,7 @@ namespace WellTool.Json.Tests
         [Fact]
         public void TestDateTimeMillis()
         {
-            var millis = DateTimeUtil.CurrentMillis();
+            var millis = DateUtil.CurrentMillis();
             var jsonStr = $"{{\"ts\":{millis}}}";
             var bean = JSONUtil.ToBean<TimestampBean>(jsonStr);
             Assert.NotNull(bean);

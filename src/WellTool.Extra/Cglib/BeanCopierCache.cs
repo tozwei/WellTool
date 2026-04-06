@@ -11,6 +11,11 @@ namespace WellTool.Extra.Cglib
     /// </summary>
     public static class BeanCopierCache
     {
+        /// <summary>
+        /// 获取单例实例（返回静态类本身）
+        /// </summary>
+        public static BeanCopierCache Instance => default;
+
         private static readonly ConcurrentDictionary<string, Delegate> Cache = new ConcurrentDictionary<string, Delegate>();
 
         /// <summary>

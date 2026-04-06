@@ -60,7 +60,7 @@ public class ReflectUtilTest
     [Fact]
     public void NewInstanceTest()
     {
-        var obj = ReflectUtil.NewInstance<TestClass>();
+        var obj = ReflectUtil.CreateInstance<TestClass>();
         Assert.NotNull(obj);
     }
 

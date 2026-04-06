@@ -477,6 +477,17 @@ namespace WellTool.Json
         }
 
         /// <summary>
+        /// 仅在键和值都不为空时添加
+        /// </summary>
+        /// <param name="key">键</param>
+        /// <param name="value">值</param>
+        /// <returns>this</returns>
+        public JSONObject SetOpt(string key, object value)
+        {
+            return PutOpt(key, value);
+        }
+
+        /// <summary>
         /// 累加值
         /// </summary>
         /// <param name="key">键</param>

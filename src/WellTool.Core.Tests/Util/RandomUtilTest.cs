@@ -67,7 +67,7 @@ public class RandomUtilTest
     [Fact]
     public void SecureRandomTest()
     {
-        var random = RandomUtil.SecureRandom;
+        var random = RandomUtil.SecureRandom();
         var num = random.Next();
         Assert.True(num >= 0);
     }

@@ -35,7 +35,7 @@ namespace WellTool.Extra.Template.Engine.Jetbrick
         {
             if (config == null)
             {
-                config = TemplateConfig.DEFAULT;
+                config = TemplateConfig.Default;
             }
             return this;
         }
@@ -58,7 +58,7 @@ namespace WellTool.Extra.Template.Engine.Jetbrick
         {
             if (_engine == null)
             {
-                Init(TemplateConfig.DEFAULT);
+                Init(TemplateConfig.Default);
             }
             return new JetbrickTemplate(resource);
         }

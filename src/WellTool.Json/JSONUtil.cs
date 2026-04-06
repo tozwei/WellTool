@@ -875,6 +875,117 @@ namespace WellTool.Json
         }
 
         /// <summary>
+        /// 验证 JSON 字符串是否有效
+        /// </summary>
+        /// <param name="jsonStr">JSON 字符串</param>
+        /// <returns>是否有效</returns>
+        public static bool IsValidJSON(string jsonStr)
+        {
+            try
+            {
+                Parse(jsonStr);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 验证 JSON 字符串是否有效
+        /// </summary>
+        /// <param name="jsonStr">JSON 字符串</param>
+        /// <param name="lenient">是否宽松模式</param>
+        /// <returns>是否有效</returns>
+        public static bool IsValidJSON(string jsonStr, bool lenient)
+        {
+            try
+            {
+                Parse(jsonStr);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 验证 JSONArray 字符串是否有效
+        /// </summary>
+        /// <param name="jsonStr">JSON 字符串</param>
+        /// <returns>是否有效</returns>
+        public static bool IsValidJSONArray(string jsonStr)
+        {
+            try
+            {
+                ParseArray(jsonStr);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 验证 JSONArray 字符串是否有效
+        /// </summary>
+        /// <param name="jsonStr">JSON 字符串</param>
+        /// <param name="lenient">是否宽松模式</param>
+        /// <returns>是否有效</returns>
+        public static bool IsValidJSONArray(string jsonStr, bool lenient)
+        {
+            try
+            {
+                ParseArray(jsonStr);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 验证 JSONObject 字符串是否有效
+        /// </summary>
+        /// <param name="jsonStr">JSON 字符串</param>
+        /// <returns>是否有效</returns>
+        public static bool IsValidJSONObject(string jsonStr)
+        {
+            try
+            {
+                ParseObj(jsonStr);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 验证 JSONObject 字符串是否有效
+        /// </summary>
+        /// <param name="jsonStr">JSON 字符串</param>
+        /// <param name="lenient">是否宽松模式</param>
+        /// <returns>是否有效</returns>
+        public static bool IsValidJSONObject(string jsonStr, bool lenient)
+        {
+            try
+            {
+                ParseObj(jsonStr);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// XML 转 JSONObject
         /// </summary>
         /// <param name="xml">XML 字符串</param>
@@ -883,6 +994,16 @@ namespace WellTool.Json
         {
             // XML 功能暂未实现
             return null;
+        }
+
+        /// <summary>
+        /// 解析 JSON 字符串
+        /// </summary>
+        /// <param name="jsonStr">JSON 字符串</param>
+        /// <returns>JSON 对象</returns>
+        public static JSON ParseJson(string jsonStr)
+        {
+            return Parse(jsonStr);
         }
 
         #endregion
