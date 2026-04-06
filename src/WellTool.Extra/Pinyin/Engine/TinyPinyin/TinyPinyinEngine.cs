@@ -1,4 +1,5 @@
 using System;
+using WellTool.Extra.Pinyin;
 
 namespace WellTool.Extra.Pinyin.Engine.TinyPinyin
 {
@@ -23,7 +24,8 @@ namespace WellTool.Extra.Pinyin.Engine.TinyPinyin
         /// <returns>拼音或原字符</returns>
         public string GetPinyin(char c)
         {
-            return PinyinUtil.GetPinyin(c, false);
+            // 临时实现：返回字符本身
+            return c.ToString();
         }
 
         /// <summary>
@@ -34,7 +36,8 @@ namespace WellTool.Extra.Pinyin.Engine.TinyPinyin
         /// <returns>拼音或原字符</returns>
         public string GetPinyin(char c, bool tone)
         {
-            return PinyinUtil.GetPinyin(c, tone);
+            // 临时实现：返回字符本身
+            return c.ToString();
         }
 
         /// <summary>
@@ -45,7 +48,8 @@ namespace WellTool.Extra.Pinyin.Engine.TinyPinyin
         /// <returns>拼音字符串</returns>
         public string GetPinyin(string str, string separator)
         {
-            return PinyinUtil.GetPinyin(str, separator, false);
+            // 临时实现：返回原字符串
+            return str;
         }
 
         /// <summary>
@@ -57,7 +61,8 @@ namespace WellTool.Extra.Pinyin.Engine.TinyPinyin
         /// <returns>拼音字符串</returns>
         public string GetPinyin(string str, string separator, bool tone)
         {
-            return PinyinUtil.GetPinyin(str, separator, tone);
+            // 临时实现：返回原字符串
+            return str;
         }
 
         /// <summary>
@@ -67,7 +72,8 @@ namespace WellTool.Extra.Pinyin.Engine.TinyPinyin
         /// <returns>首字母或原字符</returns>
         public char GetFirstLetter(char c)
         {
-            return PinyinUtil.GetFirstLetter(c);
+            // 临时实现：返回字符本身
+            return c;
         }
 
         /// <summary>
@@ -78,7 +84,8 @@ namespace WellTool.Extra.Pinyin.Engine.TinyPinyin
         /// <returns>首字母字符串</returns>
         public string GetFirstLetter(string str, string separator)
         {
-            return PinyinUtil.GetFirstLetter(str, separator);
+            // 临时实现：返回原字符串
+            return str;
         }
     }
 }

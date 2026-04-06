@@ -32,7 +32,7 @@ namespace WellTool.Extra.Template.Engine.Velocity
         /// </summary>
         /// <param name="config">模板配置</param>
         /// <returns>引擎本身</returns>
-        public override TemplateEngine Init(TemplateConfig config)
+        public TemplateEngine Init(TemplateConfig config)
         {
             if (config == null)
             {
@@ -57,7 +57,7 @@ namespace WellTool.Extra.Template.Engine.Velocity
         /// </summary>
         /// <param name="resource">资源路径</param>
         /// <returns>模板对象</returns>
-        public override ITemplate GetTemplate(string resource)
+        public Template GetTemplate(string resource)
         {
             if (_engine == null)
             {

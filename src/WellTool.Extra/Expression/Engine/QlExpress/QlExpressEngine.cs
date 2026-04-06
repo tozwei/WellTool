@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
+using WellTool.Extra.Expression;
 
 namespace WellTool.Extra.Expression.Engine.QlExpress
 {
     /// <summary>
-    /// QLExpress表达式引擎实现
+    /// QlExpress表达式引擎实现
     /// 
-    /// 需要安装 QLExpress 或类似 NuGet 包
-    /// 项目地址：https://github.com/alibaba/QLExpress
+    /// 需要安装 QlExpress 或类似 NuGet 包
     /// </summary>
-    public class QlExpressEngine : ExpressionEngine
+    public class QlExpressEngine : IExpressionEngine
     {
         /// <summary>
         /// 构造
@@ -22,11 +22,12 @@ namespace WellTool.Extra.Expression.Engine.QlExpress
         /// 执行表达式
         /// </summary>
         /// <param name="expression">表达式</param>
-        /// <param name="env">环境变量</param>
+        /// <param name="context">上下文</param>
+        /// <param name="allowClassSet">允许的Class白名单</param>
         /// <returns>执行结果</returns>
-        public override object Eval(string expression, IDictionary<string, object> env)
+        public object? Eval(string expression, Dictionary<string, object?> context, HashSet<Type>? allowClassSet = null)
         {
-            // TODO: 需要集成 QLExpress.NET 或类似库
+            // TODO: 需要集成 QlExpress 或类似库
             return null;
         }
     }

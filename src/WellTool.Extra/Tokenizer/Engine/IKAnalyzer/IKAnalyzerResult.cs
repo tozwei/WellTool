@@ -1,17 +1,20 @@
 using System.Collections.Generic;
+using WellTool.Extra.Tokenizer;
 
 namespace WellTool.Extra.Tokenizer.Engine.IKAnalyzer
 {
     /// <summary>
     /// IKAnalyzer分词结果
     /// </summary>
-    public class IKAnalyzerResult : Result
+    public class IKAnalyzerResult : AbstractResult
     {
         private readonly List<Word> _words;
+        private int _index;
 
         public IKAnalyzerResult(string text)
         {
             _words = new List<Word>();
+            _index = 0;
             // TODO: 需要集成 IKAnalyzer.Net 或类似库进行实际分词
             // 临时实现：按字符分割
             foreach (var c in text)
@@ -20,26 +23,13 @@ namespace WellTool.Extra.Tokenizer.Engine.IKAnalyzer
             }
         }
 
-        public override bool HasNext => _words.Count > 0;
-
-        public override Word Next()
+        protected override Word NextWord()
         {
-            return _words.Count > 0 ? _words[0] : null;
+            if (_index < _words.Count)
+            {
+                return _words[_index++];
+            }
+            return null;
         }
-    }
-
-    /// <summary>
-    /// IKAnalyzer词条
-    /// </summary>
-    public class IKAnalyzerWord : Word
-    {
-        private readonly string _text;
-
-        public IKAnalyzerWord(string text)
-        {
-            _text = text;
-        }
-
-        public override string Text => _text;
     }
 }

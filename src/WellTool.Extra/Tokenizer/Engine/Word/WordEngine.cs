@@ -21,7 +21,7 @@ namespace WellTool.Extra.Tokenizer.Engine.Word
         /// </summary>
         /// <param name="text">文本</param>
         /// <returns>分词结果</returns>
-        public override Result Parse(string text)
+        public Result Parse(string text)
         {
             if (string.IsNullOrEmpty(text))
             {

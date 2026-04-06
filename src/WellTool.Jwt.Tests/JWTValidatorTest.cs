@@ -1,6 +1,7 @@
 namespace WellTool.Jwt.Tests;
 
 using WellTool.Jwt;
+using WellTool.JWT;
 
 public class JWTValidatorTest
 {
@@ -65,7 +66,7 @@ public class JWTValidatorTest
         var jwt = JWT.Create()
             .SetPayload("sub", "test")
             .SetExpiresAt(DateTime.UtcNow.AddHours(1))
-            .SetKey(key);
+            .SetKey(key);  
 
         var token = jwt.Sign();
         var parsedJwt = JWTUtil.ParseToken(token);

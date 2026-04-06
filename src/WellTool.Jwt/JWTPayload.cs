@@ -131,4 +131,25 @@ public class JWTPayload : Claims, RegisteredPayload<JWTPayload>
         base.SetClaim(name, value);
         return this;
     }
+
+    /// <summary>
+    /// 设置值
+    /// </summary>
+    /// <param name="key">键</param>
+    /// <param name="value">值</param>
+    /// <returns>this</returns>
+    public JWTPayload SetValue(string key, object value)
+    {
+        return SetPayload(key, value);
+    }
+
+    /// <summary>
+    /// 获取值
+    /// </summary>
+    /// <param name="key">键</param>
+    /// <returns>值</returns>
+    public object? GetValue(string key)
+    {
+        return GetClaim(key);
+    }
 }

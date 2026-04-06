@@ -1,7 +1,7 @@
 namespace WellTool.Jwt.Tests;
 
-using WellTool.Jwt;
-using WellTool.Jwt.Signers;
+using WellTool.JWT;
+using WellTool.JWT.Signers;
 
 public class JWTTest
 {

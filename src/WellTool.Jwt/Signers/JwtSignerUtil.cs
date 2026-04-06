@@ -8,6 +8,45 @@ namespace WellTool.JWT.Signers;
 public static class JwtSignerUtil
 {
     /// <summary>
+    /// 获取无签名签名器
+    /// </summary>
+    /// <returns>无签名签名器</returns>
+    public static IJwtSigner None()
+    {
+        return NoneJwtSigner.None;
+    }
+
+    /// <summary>
+    /// 创建 HS256 签名器
+    /// </summary>
+    /// <param name="key">密钥</param>
+    /// <returns>签名器</returns>
+    public static IJwtSigner HS256(byte[] key)
+    {
+        return CreateSigner("HS256", key);
+    }
+
+    /// <summary>
+    /// 创建 HS384 签名器
+    /// </summary>
+    /// <param name="key">密钥</param>
+    /// <returns>签名器</returns>
+    public static IJwtSigner HS384(byte[] key)
+    {
+        return CreateSigner("HS384", key);
+    }
+
+    /// <summary>
+    /// 创建 HS512 签名器
+    /// </summary>
+    /// <param name="key">密钥</param>
+    /// <returns>签名器</returns>
+    public static IJwtSigner HS512(byte[] key)
+    {
+        return CreateSigner("HS512", key);
+    }
+
+    /// <summary>
     /// 创建签名器
     /// </summary>
     /// <param name="algorithmId">算法ID</param>

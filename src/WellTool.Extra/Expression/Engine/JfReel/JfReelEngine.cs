@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using WellTool.Extra.Expression;
 
 namespace WellTool.Extra.Expression.Engine.JfReel
 {
@@ -8,7 +9,7 @@ namespace WellTool.Extra.Expression.Engine.JfReel
     /// 
     /// 需要安装 JfReel 或类似 NuGet 包
     /// </summary>
-    public class JfReelEngine : ExpressionEngine
+    public class JfReelEngine : IExpressionEngine
     {
         /// <summary>
         /// 构造
@@ -21,11 +22,12 @@ namespace WellTool.Extra.Expression.Engine.JfReel
         /// 执行表达式
         /// </summary>
         /// <param name="expression">表达式</param>
-        /// <param name="env">环境变量</param>
+        /// <param name="context">上下文</param>
+        /// <param name="allowClassSet">允许的Class白名单</param>
         /// <returns>执行结果</returns>
-        public override object Eval(string expression, IDictionary<string, object> env)
+        public object? Eval(string expression, Dictionary<string, object?> context, HashSet<Type>? allowClassSet = null)
         {
-            // TODO: 需要集成 JfReel.NET 或类似库
+            // TODO: 需要集成 JfReel 或类似库
             return null;
         }
     }

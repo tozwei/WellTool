@@ -199,6 +199,60 @@ public class JWT
     }
 
     /// <summary>
+    /// 设置Payload
+    /// </summary>
+    /// <param name="key">键</param>
+    /// <param name="value">值</param>
+    /// <returns>this</returns>
+    public JWT SetPayload(string key, object? value)
+    {
+        Payload.SetValue(key, value);
+        return this;
+    }
+
+    /// <summary>
+    /// 获取Payload
+    /// </summary>
+    /// <param name="key">键</param>
+    /// <returns>值</returns>
+    public object? GetPayload(string key)
+    {
+        return Payload.GetValue(key);
+    }
+
+    /// <summary>
+    /// 获取Header
+    /// </summary>
+    /// <param name="key">键</param>
+    /// <returns>值</returns>
+    public object? GetHeader(string key)
+    {
+        return Header.GetValue(key);
+    }
+
+    /// <summary>
+    /// 设置过期时间
+    /// </summary>
+    /// <param name="dateTime">过期时间</param>
+    /// <returns>this</returns>
+    public JWT SetExpiresAt(DateTime dateTime)
+    {
+        Payload.SetValue("exp", dateTime);
+        return this;
+    }
+
+    /// <summary>
+    /// 设置生效时间
+    /// </summary>
+    /// <param name="dateTime">生效时间</param>
+    /// <returns>this</returns>
+    public JWT SetNotBefore(DateTime dateTime)
+    {
+        Payload.SetValue("nbf", dateTime);
+        return this;
+    }
+
+    /// <summary>
     /// 签名生成JWT字符串
     /// </summary>
     /// <returns>JWT字符串</returns>

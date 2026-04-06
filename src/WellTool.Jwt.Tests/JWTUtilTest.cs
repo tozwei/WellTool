@@ -1,5 +1,6 @@
 namespace WellTool.Jwt.Tests;
 
+using WellTool.JWT;
 
 public class JWTUtilTest
 {
@@ -7,13 +8,7 @@ public class JWTUtilTest
     public void CreateTokenTest()
     {
         byte[] key = "1234"u8.ToArray();
-        var map = new Dictionary<string, object>
-        {
-            { "uid", 123 },
-            { "expire_time", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 1000 * 60 * 60 * 24 * 15 }
-        };
-
-        var token = JWTUtil.CreateToken(map, key);
+        var token = JWTUtil.CreateToken("secret");
         Assert.NotNull(token);
         Assert.Contains(".", token);
     }
@@ -53,7 +48,7 @@ public class JWTUtilTest
                 "eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE2MjQwMDQ4MjIsInVzZXJJZCI6MSwiYXV0aG9yaXRpZXMiOlsiUk9MRV_adminIiwiU1lfTUVOVV8xIiwiUk9MRV91c2VyIiwiU1lfTUVOVV8yIl0sImp0aSI6ImQ0YzVlYjgwLTA5ZTctNGU0ZC1hZTg3LTVkNGI5M2FhNmFiNiIsImNsaWVudF9pZCI6ImhhbmR5LXNob3AifQ." +
                 "aixF1eKlAKS_k3ynFnStE7-IRGiD5YaqznvK2xEjBew";
 
-        var verify = JWTUtil.Verify(token, "123456"u8.ToArray());
+        var verify = JWTUtil.VerifyToken(token, "123456");
         Assert.True(verify);
     }
 }

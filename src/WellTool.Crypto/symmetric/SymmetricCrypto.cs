@@ -23,6 +23,34 @@ namespace WellTool.Crypto.Symmetric
     public abstract class SymmetricCrypto
     {
         /// <summary>
+        /// 字节数组转十六进制字符串
+        /// </summary>
+        protected static string ToHexString(byte[] bytes)
+        {
+            StringBuilder sb = new StringBuilder(bytes.Length * 2);
+            foreach (byte b in bytes)
+            {
+                sb.Append(b.ToString("x2"));
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 十六进制字符串转字节数组
+        /// </summary>
+        protected static byte[] FromHexString(string hex)
+        {
+            if (hex == null) throw new ArgumentNullException(nameof(hex));
+            if (hex.Length % 2 != 0) throw new ArgumentException("Hex string must have even length");
+
+            byte[] result = new byte[hex.Length / 2];
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
+            }
+            return result;
+        }
+        /// <summary>
         /// 加密算法
         /// </summary>
         protected readonly SymmetricAlgorithmType Algorithm;
@@ -59,7 +87,7 @@ namespace WellTool.Crypto.Symmetric
         {
             byte[] bytes = Encoding.UTF8.GetBytes(data);
             byte[] encrypted = Encrypt(bytes);
-            return Convert.ToHexString(encrypted).ToLower();
+            return ToHexString(encrypted);
         }
 
         /// <summary>
@@ -69,7 +97,7 @@ namespace WellTool.Crypto.Symmetric
         /// <returns>解密后的字符串</returns>
         public virtual string DecryptStr(string encryptedHex)
         {
-            byte[] encrypted = Convert.FromHexString(encryptedHex);
+            byte[] encrypted = FromHexString(encryptedHex);
             byte[] decrypted = Decrypt(encrypted);
             return Encoding.UTF8.GetString(decrypted);
         }
@@ -82,7 +110,7 @@ namespace WellTool.Crypto.Symmetric
         /// <returns>解密后的字符串</returns>
         public virtual string DecryptStr(string encryptedHex, Encoding encoding)
         {
-            byte[] encrypted = Convert.FromHexString(encryptedHex);
+            byte[] encrypted = FromHexString(encryptedHex);
             byte[] decrypted = Decrypt(encrypted);
             return encoding.GetString(decrypted);
         }

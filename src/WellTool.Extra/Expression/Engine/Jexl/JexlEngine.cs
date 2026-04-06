@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using WellTool.Extra.Expression;
 
 namespace WellTool.Extra.Expression.Engine.Jexl
 {
@@ -7,9 +8,8 @@ namespace WellTool.Extra.Expression.Engine.Jexl
     /// Jexl表达式引擎实现
     /// 
     /// 需要安装 Jexl 或类似 NuGet 包
-    /// 项目地址：https://github.com/apache/commons-jexl
     /// </summary>
-    public class JexlEngine : ExpressionEngine
+    public class JexlEngine : IExpressionEngine
     {
         /// <summary>
         /// 构造
@@ -22,9 +22,10 @@ namespace WellTool.Extra.Expression.Engine.Jexl
         /// 执行表达式
         /// </summary>
         /// <param name="expression">表达式</param>
-        /// <param name="env">环境变量</param>
+        /// <param name="context">上下文</param>
+        /// <param name="allowClassSet">允许的Class白名单</param>
         /// <returns>执行结果</returns>
-        public override object Eval(string expression, IDictionary<string, object> env)
+        public object? Eval(string expression, Dictionary<string, object?> context, HashSet<Type>? allowClassSet = null)
         {
             // TODO: 需要集成 Jexl.NET 或类似库
             return null;

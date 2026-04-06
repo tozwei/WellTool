@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using WellTool.Extra.Expression;
 
 namespace WellTool.Extra.Expression.Engine
 {
@@ -8,13 +9,13 @@ namespace WellTool.Extra.Expression.Engine
     /// </summary>
     public static class ExpressionFactory
     {
-        private static ExpressionEngine _instance;
+        private static IExpressionEngine _instance;
 
         /// <summary>
         /// 获取单例的表达式引擎
         /// </summary>
         /// <returns>表达式引擎</returns>
-        public static ExpressionEngine Get()
+        public static IExpressionEngine Get()
         {
             if (_instance == null)
             {
@@ -27,7 +28,7 @@ namespace WellTool.Extra.Expression.Engine
         /// 创建表达式引擎
         /// </summary>
         /// <returns>表达式引擎</returns>
-        public static ExpressionEngine Create()
+        public static IExpressionEngine Create()
         {
             var engine = DoCreate();
             return engine;
@@ -37,7 +38,7 @@ namespace WellTool.Extra.Expression.Engine
         /// 执行创建表达式引擎
         /// </summary>
         /// <returns>表达式引擎</returns>
-        private static ExpressionEngine DoCreate()
+        private static IExpressionEngine DoCreate()
         {
             // 尝试加载可用的表达式引擎
             // 默认返回 Jint 引擎（基于 JavaScript 的表达式引擎）
@@ -57,15 +58,16 @@ namespace WellTool.Extra.Expression.Engine
     /// <summary>
     /// Jint表达式引擎实现（使用 Jint JavaScript 引擎）
     /// </summary>
-    public class JintExpressionEngine : ExpressionEngine
+    public class JintExpressionEngine : IExpressionEngine
     {
         /// <summary>
         /// 根据表达式计算结果
         /// </summary>
         /// <param name="expression">表达式</param>
         /// <param name="context">上下文变量</param>
+        /// <param name="allowClassSet">允许的Class白名单</param>
         /// <returns>计算结果</returns>
-        public object Eval(string expression, IDictionary<string, object> context)
+        public object? Eval(string expression, Dictionary<string, object?> context, HashSet<Type>? allowClassSet = null)
         {
             // 使用 Jint 引擎执行表达式
             // 这里需要添加 Jint NuGet 包引用

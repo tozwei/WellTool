@@ -36,18 +36,47 @@ namespace WellTool.JWT
             return new JWTValidator(jwt);
         }
 
-        /// <summary>
-        /// 构造
-        /// </summary>
-        /// <param name="jwt">JWT对象</param>
-        public JWTValidator(JWT jwt)
-        {
-            _jwt = jwt;
-        }
+    /// <summary>
+    /// 构造
+    /// </summary>
+    /// <param name="jwt">JWT对象</param>
+    public JWTValidator(JWT jwt)
+    {
+        _jwt = jwt;
+    }
 
-        /// <summary>
-        /// 验证算法，使用JWT对象自带的{@link IJwtSigner}
-        /// </summary>
+    /// <summary>
+    /// 构造
+    /// </summary>
+    /// <param name="jwt">JWT对象</param>
+    /// <param name="key">密钥</param>
+    public JWTValidator(JWT jwt, byte[] key)
+    {
+        _jwt = jwt;
+        _jwt.SetKey(key);
+    }
+
+    /// <summary>
+    /// 验证JWT（验证算法和日期）
+    /// </summary>
+    /// <returns>验证是否通过</returns>
+    public bool Validate()
+    {
+        try
+        {
+            ValidateAlgorithm();
+            ValidateDate();
+            return true;
+        }
+        catch (ValidateException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 验证算法，使用JWT对象自带的{@link IJwtSigner}
+    /// </summary>
         /// <returns>this</returns>
         /// <exception cref="ValidateException">验证失败的异常</exception>
         public JWTValidator ValidateAlgorithm()

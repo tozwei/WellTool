@@ -1,0 +1,31 @@
+﻿  姝ｅ湪纭畾瑕佽繕鍘熺殑椤圭洰鈥?
+  鎵€鏈夐」鐩潎鏄渶鏂扮殑锛屾棤娉曡繕鍘熴€?
+  WellTool.Core -> D:\Work\WellTool\src\WellTool.Core\bin\Debug\net8.0\WellTool.Core.dll
+  WellTool.Jwt -> D:\Work\WellTool\src\WellTool.Jwt\bin\Debug\net8.0\WellTool.Jwt.dll
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTTest.cs(59,24): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTUtilTest.cs(41,71): warning CS8625: 鏃犳硶灏?null 瀛楅潰閲忚浆鎹负闈?null 鐨勫紩鐢ㄧ被鍨嬨€?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(11,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(19,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(27,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(35,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(43,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(55,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(63,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(73,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+
+鐢熸垚澶辫触銆?
+
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTUtilTest.cs(41,71): warning CS8625: 鏃犳硶灏?null 瀛楅潰閲忚浆鎹负闈?null 鐨勫紩鐢ㄧ被鍨嬨€?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTTest.cs(59,24): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(11,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(19,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(27,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(35,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(43,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(55,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(63,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+D:\Work\WellTool\src\WellTool.JWT.Tests\JWTSignerTest.cs(73,22): error CS0103: 褰撳墠涓婁笅鏂囦腑涓嶅瓨鍦ㄥ悕绉扳€淛WTSignerUtil鈥?[D:\Work\WellTool\src\WellTool.JWT.Tests\WellTool.JWT.Tests.csproj]
+    1 涓鍛?
+    9 涓敊璇?
+
+宸茬敤鏃堕棿 00:00:02.81

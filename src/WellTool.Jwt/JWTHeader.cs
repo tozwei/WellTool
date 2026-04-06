@@ -27,6 +27,10 @@ public class JWTHeader : Claims
     /// </summary>
     public const string TYPE = "typ";
     /// <summary>
+    /// 内容类型
+    /// </summary>
+    public const string CONTENT_TYPE = "cty";
+    /// <summary>
     /// 密钥 ID
     /// </summary>
     public const string KEY_ID = "kid";
@@ -110,5 +114,15 @@ public class JWTHeader : Claims
     {
         SetClaim(name, value);
         return this;
+    }
+
+    /// <summary>
+    /// 获取值
+    /// </summary>
+    /// <param name="key">键</param>
+    /// <returns>值</returns>
+    public object? GetValue(string key)
+    {
+        return GetClaim(key);
     }
 }

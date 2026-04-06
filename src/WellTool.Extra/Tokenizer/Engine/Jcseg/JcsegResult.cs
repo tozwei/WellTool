@@ -1,17 +1,20 @@
 using System.Collections.Generic;
+using WellTool.Extra.Tokenizer;
 
 namespace WellTool.Extra.Tokenizer.Engine.Jcseg
 {
     /// <summary>
     /// Jcseg分词结果
     /// </summary>
-    public class JcsegResult : Result
+    public class JcsegResult : AbstractResult
     {
         private readonly List<Word> _words;
+        private int _index;
 
         public JcsegResult(string text)
         {
             _words = new List<Word>();
+            _index = 0;
             // TODO: 需要集成 Jcseg.Net 或类似库进行实际分词
             // 临时实现：按字符分割
             foreach (var c in text)
@@ -20,26 +23,13 @@ namespace WellTool.Extra.Tokenizer.Engine.Jcseg
             }
         }
 
-        public override bool HasNext => _words.Count > 0;
-
-        public override Word Next()
+        protected override Word NextWord()
         {
-            return _words.Count > 0 ? _words[0] : null;
+            if (_index < _words.Count)
+            {
+                return _words[_index++];
+            }
+            return null;
         }
-    }
-
-    /// <summary>
-    /// Jcseg词条
-    /// </summary>
-    public class JcsegWord : Word
-    {
-        private readonly string _text;
-
-        public JcsegWord(string text)
-        {
-            _text = text;
-        }
-
-        public override string Text => _text;
     }
 }

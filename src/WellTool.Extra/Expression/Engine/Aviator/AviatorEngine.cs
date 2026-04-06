@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using WellTool.Extra.Expression;
 
 namespace WellTool.Extra.Expression.Engine.Aviator
 {
@@ -9,7 +10,7 @@ namespace WellTool.Extra.Expression.Engine.Aviator
     /// 需要安装 Aviator 或类似 NuGet 包
     /// 项目地址：https://github.com/killme2008/aviatorscript
     /// </summary>
-    public class AviatorEngine : ExpressionEngine
+    public class AviatorEngine : IExpressionEngine
     {
         /// <summary>
         /// 构造
@@ -22,9 +23,10 @@ namespace WellTool.Extra.Expression.Engine.Aviator
         /// 执行表达式
         /// </summary>
         /// <param name="expression">表达式</param>
-        /// <param name="env">环境变量</param>
+        /// <param name="context">上下文</param>
+        /// <param name="allowClassSet">允许的Class白名单</param>
         /// <returns>执行结果</returns>
-        public override object Eval(string expression, IDictionary<string, object> env)
+        public object? Eval(string expression, Dictionary<string, object?> context, HashSet<Type>? allowClassSet = null)
         {
             // TODO: 需要集成 Aviator.NET 或类似库
             return null;
