@@ -293,17 +293,17 @@ namespace WellTool.Core.Tests
         [Fact]
         public void IsEmptyTest()
         {
-            XAssert.True(ArrayUtil.IsEmpty(null));
-            XAssert.True(ArrayUtil.IsEmpty(new int[0]));
-            XAssert.False(ArrayUtil.IsEmpty(new int[] { 1, 2, 3 }));
+            XAssert.True(ArrayUtil.IsEmpty<int>(null));
+            XAssert.True(ArrayUtil.IsEmpty<int>(new int[0]));
+            XAssert.False(ArrayUtil.IsEmpty<int>(new int[] { 1, 2, 3 }));
         }
 
         [Fact]
         public void IsNotEmptyTest()
         {
-            XAssert.False(ArrayUtil.IsNotEmpty(null));
-            XAssert.False(ArrayUtil.IsNotEmpty(new int[0]));
-            XAssert.True(ArrayUtil.IsNotEmpty(new int[] { 1, 2, 3 }));
+            XAssert.False(ArrayUtil.IsNotEmpty<int>(null));
+            XAssert.False(ArrayUtil.IsNotEmpty<int>(new int[0]));
+            XAssert.True(ArrayUtil.IsNotEmpty<int>(new int[] { 1, 2, 3 }));
         }
 
         #endregion

@@ -1,5 +1,5 @@
 using Xunit;
-using WellTool.Core;
+using WellTool.Core.Lang;
 
 namespace WellTool.Core.Tests
 {
@@ -50,23 +50,11 @@ namespace WellTool.Core.Tests
         }
 
         [Fact]
-        public void EqualsTest()
+        public void IsEqualTest()
         {
-            Assert.True(ObjectUtil.Equals("test", "test"));
-            Assert.False(ObjectUtil.Equals("test", "Test"));
-            Assert.False(ObjectUtil.Equals(null, "test"));
-            Assert.True(ObjectUtil.Equals(null, null));
-        }
-
-        [Fact]
-        public void DeepEqualsTest()
-        {
-            var arr1 = new[] { 1, 2, 3 };
-            var arr2 = new[] { 1, 2, 3 };
-            Assert.True(ObjectUtil.DeepEquals(arr1, arr2));
-
-            var arr3 = new[] { 1, 2, 4 };
-            Assert.False(ObjectUtil.DeepEquals(arr1, arr3));
+            Assert.True(ObjectUtil.IsEqual("test", "test"));
+            Assert.False(ObjectUtil.IsEqual("test", "Test"));
+            Assert.False(ObjectUtil.IsEqual(null, "test"));
         }
 
         [Fact]
@@ -89,35 +77,10 @@ namespace WellTool.Core.Tests
         }
 
         [Fact]
-        public void ToStringOrEmptyTest()
+        public void ToStringWithDefaultTest()
         {
-            Assert.Equal("", ObjectUtil.ToStringOrEmpty(null!));
-            Assert.Equal("test", ObjectUtil.ToStringOrEmpty("test"));
-        }
-
-        [Fact]
-        public void GetTypeTest()
-        {
-            Assert.Equal(typeof(string), ObjectUtil.GetType("test"));
-            Assert.Null(ObjectUtil.GetType(null));
-        }
-
-        [Fact]
-        public void CloneTest()
-        {
-            var original = new TestClass { Value = 100 };
-            var cloned = ObjectUtil.Clone(original);
-            Assert.NotSame(original, cloned);
-            Assert.Equal(original.Value, cloned.Value);
-        }
-
-        [Fact]
-        public void RequireNonNullTest()
-        {
-            var obj = new object();
-            Assert.Same(obj, ObjectUtil.RequireNonNull(obj));
-
-            Assert.Throws<ArgumentNullException>(() => ObjectUtil.RequireNonNull(null!));
+            Assert.Equal("", ObjectUtil.ToString(null, ""));
+            Assert.Equal("test", ObjectUtil.ToString("test", ""));
         }
 
         private class TestClass

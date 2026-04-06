@@ -1,5 +1,6 @@
 using WellTool.Core.Collection;
-using WellTool.Core.Map;
+using WellTool.Core.Map.Multi;
+using WellTool.Core.Util;
 using Xunit;
 
 namespace WellTool.Core.Tests;
@@ -43,7 +44,7 @@ public class CollValueMapTest
         entries.PutValue("three", "11");
 
         entries.RemoveValue("one", "22");
-        Assert.Equal(CollUtil.NewHashSet("11", "33"), entries.Get("one"));
+        Assert.Equal(CollUtil.HashSetOf("11", "33"), entries.Get("one"));
 
         entries.RemoveValues("two", CollUtil.NewArrayList("44", "55"));
         Assert.Empty(entries.Get("two"));

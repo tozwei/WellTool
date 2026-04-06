@@ -12,8 +12,8 @@ public class TimeIntervalLastTest
     {
         var timer = new TimeInterval();
         ThreadUtil.Sleep(100);
-        timer.Stop();
-        Assert.True(timer.IntervalMillis >= 100);
+        var interval = timer.IntervalMs();
+        Assert.True(interval >= 100);
     }
 
     [Fact]
@@ -30,7 +30,7 @@ public class TimeIntervalLastTest
     {
         var timer = new TimeInterval();
         ThreadUtil.Sleep(1000);
-        var seconds = timer.IntervalSeconds();
+        var seconds = timer.IntervalSecond();
         Assert.True(seconds >= 1);
     }
 

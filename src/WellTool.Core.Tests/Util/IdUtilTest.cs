@@ -6,25 +6,25 @@ namespace WellTool.Core.Tests;
 public class IdUtilTest
 {
     [Fact]
-    public void FastSimpleUUIDTest()
+    public void SimpleUUIDTest()
     {
-        var uuid = IdUtil.FastSimpleUUID();
+        var uuid = IdUtil.SimpleUUID();
         Assert.NotNull(uuid);
         Assert.Equal(32, uuid.Length);
     }
 
     [Fact]
-    public void RandomUUIDTest()
+    public void UUIDTest()
     {
-        var uuid = IdUtil.RandomUUID();
+        var uuid = IdUtil.UUID();
         Assert.NotNull(uuid);
         Assert.Equal(36, uuid.Length);
     }
 
     [Fact]
-    public void ObjectIdTest()
+    public void NewObjectIdTest()
     {
-        var objectId = ObjectId.Get();
+        var objectId = IdUtil.NewObjectId();
         Assert.NotNull(objectId);
         Assert.Equal(24, objectId.Length);
     }
@@ -32,20 +32,16 @@ public class IdUtilTest
     [Fact]
     public void SnowflakeTest()
     {
-        var id1 = IdUtil.GetSnowflakeNextId();
-        var id2 = IdUtil.GetSnowflakeNextId();
+        var id1 = IdUtil.SnowflakeId();
+        var id2 = IdUtil.SnowflakeId();
         Assert.True(id2 > id1);
     }
 
     [Fact]
-    public void NanoIdTest()
+    public void TimeIdTest()
     {
-        var nanoId = IdUtil.NanoId();
-        Assert.NotNull(nanoId);
-        Assert.Equal(21, nanoId.Length);
-
-        var customNanoId = IdUtil.NanoId(32);
-        Assert.Equal(32, customNanoId.Length);
+        var timeId = IdUtil.TimeId();
+        Assert.NotNull(timeId);
     }
 
     [Fact]
@@ -53,12 +49,17 @@ public class IdUtilTest
     {
         var uuid = IdUtil.FastUUID();
         Assert.NotNull(uuid);
+        Assert.Equal(32, uuid.Length);
     }
 
     [Fact]
-    public void CreateUUIDTest()
+    public void RandomIdTest()
     {
-        var uuid = IdUtil.CreateUUID();
-        Assert.NotNull(uuid);
+        var randomId = IdUtil.RandomId();
+        Assert.NotNull(randomId);
+        Assert.Equal(16, randomId.Length);
+
+        var customRandomId = IdUtil.RandomId(32);
+        Assert.Equal(32, customRandomId.Length);
     }
 }

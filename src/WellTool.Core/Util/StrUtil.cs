@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
 using WellTool.Core.Math;
 
 namespace WellTool.Core.Util;
@@ -520,6 +523,31 @@ public static class StrUtil
 		if (IsEmpty(str))
 			return str;
 		return str.Replace(char.ConvertFromUtf32(oldCodePoint), char.ConvertFromUtf32(newCodePoint));
+	}
+
+	/// <summary>
+	/// 按代码点替换字符串指定范围的字符
+	/// </summary>
+	public static string ReplaceByCodePoint(string str, int start, int end, char replacement)
+	{
+		if (IsEmpty(str))
+			return str;
+		
+		var codePoints = str.EnumerateRunes().ToList();
+		int actualEnd = System.Math.Min(end, codePoints.Count);
+		
+		for (int i = start; i < actualEnd; i++)
+		{
+			codePoints[i] = new Rune(replacement);
+		}
+		
+		var result = new StringBuilder();
+		foreach (var rune in codePoints)
+		{
+			result.Append(rune);
+		}
+		
+		return result.ToString();
 	}
 
 	/// <summary>
