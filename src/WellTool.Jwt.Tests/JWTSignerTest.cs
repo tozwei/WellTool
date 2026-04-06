@@ -1,5 +1,6 @@
 namespace WellTool.Jwt.Tests;
 
+using Xunit;
 using WellTool.JWT;
 using WellTool.JWT.Signers;
 
@@ -41,11 +42,12 @@ public class JWTSignerTest
     public void SignAndVerifyTest()
     {
         var signer = JwtSignerUtil.HS256("secret"u8.ToArray());
-        var data = "test data"u8.ToArray();
-        var signature = signer.Sign(data);
+        var headerBase64 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+        var payloadBase64 = "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ";
+        var signature = signer.Sign(headerBase64, payloadBase64);
         Assert.NotNull(signature);
 
-        var verified = signer.Verify(data, signature);
+        var verified = signer.Verify(headerBase64, payloadBase64, signature);
         Assert.True(verified);
     }
 
@@ -53,7 +55,9 @@ public class JWTSignerTest
     public void SignWithEmptyDataTest()
     {
         var signer = JwtSignerUtil.HS256("secret"u8.ToArray());
-        var signature = signer.Sign(Array.Empty<byte>());
+        var headerBase64 = "";
+        var payloadBase64 = "";
+        var signature = signer.Sign(headerBase64, payloadBase64);
         Assert.NotNull(signature);
     }
 
@@ -61,9 +65,10 @@ public class JWTSignerTest
     public void VerifyWithInvalidSignatureTest()
     {
         var signer = JwtSignerUtil.HS256("secret"u8.ToArray());
-        var data = "test data"u8.ToArray();
-        var invalidSignature = new byte[] { 0, 1, 2, 3 };
-        var verified = signer.Verify(data, invalidSignature);
+        var headerBase64 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+        var payloadBase64 = "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ";
+        var invalidSignature = "invalid";
+        var verified = signer.Verify(headerBase64, payloadBase64, invalidSignature);
         Assert.False(verified);
     }
 

@@ -12,12 +12,38 @@ public class AioClient : IDisposable
 	private readonly AioSession _session;
 
 	/// <summary>
+	/// 默认的 IO Action（空实现）
+	/// </summary>
+	private static readonly IIoAction<byte[]> DefaultIoAction = new DefaultSimpleIoAction();
+
+	/// <summary>
+	/// 私有默认实现类
+	/// </summary>
+	private class DefaultSimpleIoAction : SimpleIoAction
+	{
+		public override void DoAction(AioSession session, byte[] data)
+		{
+			// 空实现
+		}
+	}
+
+	/// <summary>
 	/// 构造
 	/// </summary>
 	/// <param name="address">地址</param>
 	/// <param name="ioAction">IO处理类</param>
 	public AioClient(IPEndPoint address, IIoAction<byte[]> ioAction)
 		: this(address, ioAction, new SocketConfig())
+	{
+	}
+
+	/// <summary>
+	/// 构造（使用默认 IO Action）
+	/// </summary>
+	/// <param name="host">主机地址</param>
+	/// <param name="port">端口</param>
+	public AioClient(string host, int port)
+		: this(new IPEndPoint(IPAddress.Parse(host), port), DefaultIoAction, new SocketConfig())
 	{
 	}
 

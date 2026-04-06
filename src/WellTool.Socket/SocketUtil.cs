@@ -1,5 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
+using WellTool.Socket.Aio;
+using WellTool.Socket.Nio;
 
 namespace WellTool.Socket;
 
@@ -8,6 +10,57 @@ namespace WellTool.Socket;
 /// </summary>
 public static class SocketUtil
 {
+	/// <summary>
+	/// 创建 AIO 服务端
+	/// </summary>
+	/// <returns>AIO 服务端</returns>
+	public static Aio.AioServer CreateServer()
+	{
+		return new Aio.AioServer(0);
+	}
+
+	/// <summary>
+	/// 创建 AIO 服务端
+	/// </summary>
+	/// <param name="port">端口</param>
+	/// <returns>AIO 服务端</returns>
+	public static Aio.AioServer CreateServer(int port)
+	{
+		return new Aio.AioServer(port);
+	}
+
+	/// <summary>
+	/// 创建 AIO 客户端
+	/// </summary>
+	/// <param name="host">主机地址</param>
+	/// <param name="port">端口</param>
+	/// <returns>AIO 客户端</returns>
+	public static Aio.AioClient CreateClient(string host, int port)
+	{
+		return new Aio.AioClient(host, port);
+	}
+
+	/// <summary>
+	/// 创建 NIO 客户端
+	/// </summary>
+	/// <param name="host">主机地址</param>
+	/// <param name="port">端口</param>
+	/// <returns>NIO 客户端</returns>
+	public static NioClient CreateNioClient(string host, int port)
+	{
+		return new NioClient(host, port);
+	}
+
+	/// <summary>
+	/// 创建 NIO 服务端
+	/// </summary>
+	/// <param name="port">端口</param>
+	/// <returns>NIO 服务端</returns>
+	public static NioServer CreateNioServer(int port)
+	{
+		return new NioServer(port);
+	}
+
 	/// <summary>
 	/// 获取远程端的地址信息，包括host和端口
 	/// </summary>

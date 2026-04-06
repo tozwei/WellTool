@@ -27,12 +27,12 @@ namespace WellTool.Crypto.Tests
         {
             // 测试Argon2哈希和验证
             string password = "password123";
-            string hash = Argon2.Hash(password);
+            string salt = "somesalt";
+            string hash = Argon2.HashHex(password, salt);
             
             Assert.NotNull(hash);
-            Assert.True(hash.StartsWith("$argon2"));
             
-            bool isValid = Argon2.Verify(password, hash);
+            bool isValid = Argon2.Verify(password, hash, salt);
             Assert.True(isValid);
         }
     }

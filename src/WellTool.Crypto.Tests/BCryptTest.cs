@@ -28,15 +28,15 @@ namespace WellTool.Crypto.Tests
         {
             // 测试BCrypt哈希和验证
             string password = "password123";
-            string hash = BCrypt.Hash(password);
+            string hash = BCryptUtil.Hash(password);
             
             Assert.NotNull(hash);
             Assert.True(hash.StartsWith("$2"));
             
-            bool isValid = BCrypt.Verify(password, hash);
+            bool isValid = BCryptUtil.Verify(password, hash);
             Assert.True(isValid);
             
-            bool isInvalid = BCrypt.Verify("wrongpassword", hash);
+            bool isInvalid = BCryptUtil.Verify("wrongpassword", hash);
             Assert.False(isInvalid);
         }
     }
