@@ -386,6 +386,38 @@ public class ExcelWriter : IDisposable
     }
 
     /// <summary>
+    /// 写入对象列表到当前工作表（别名方法）
+    /// </summary>
+    /// <typeparam name="T">对象类型</typeparam>
+    /// <param name="data">对象列表</param>
+    public void WriteBeans<T>(List<T> data)
+    {
+        Write(data);
+    }
+
+    /// <summary>
+    /// 写入对象列表到指定工作表（别名方法）
+    /// </summary>
+    /// <typeparam name="T">对象类型</typeparam>
+    /// <param name="sheetIndex">工作表索引</param>
+    /// <param name="data">对象列表</param>
+    public void WriteBeans<T>(int sheetIndex, List<T> data)
+    {
+        Write(sheetIndex, data);
+    }
+
+    /// <summary>
+    /// 写入对象列表到指定工作表（别名方法）
+    /// </summary>
+    /// <typeparam name="T">对象类型</typeparam>
+    /// <param name="sheetName">工作表名称</param>
+    /// <param name="data">对象列表</param>
+    public void WriteBeans<T>(string sheetName, List<T> data)
+    {
+        Write(sheetName, data);
+    }
+
+    /// <summary>
     /// 写入对象列表到指定工作表
     /// </summary>
     /// <typeparam name="T">对象类型</typeparam>

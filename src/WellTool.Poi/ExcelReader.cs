@@ -65,6 +65,15 @@ public class ExcelReader : IDisposable
     }
 
     /// <summary>
+    /// 读取所有数据
+    /// </summary>
+    /// <returns>数据列表</returns>
+    public List<List<object?>> ReadAll()
+    {
+        return Read();
+    }
+
+    /// <summary>
     /// 读取当前工作表的数据
     /// </summary>
     /// <returns>数据列表</returns>

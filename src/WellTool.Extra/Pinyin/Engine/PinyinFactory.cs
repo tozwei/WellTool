@@ -199,5 +199,76 @@ namespace WellTool.Extra.Pinyin.Engine
             }
             return result.ToString();
         }
+
+        /// <summary>
+        /// 获取字符的拼音
+        /// </summary>
+        /// <param name="c">字符</param>
+        /// <param name="tone">是否带声调</param>
+        /// <returns>拼音，如果找不到返回原字符</returns>
+        public string GetPinyin(char c, bool tone)
+        {
+            return GetPinyin(c);
+        }
+
+        /// <summary>
+        /// 获取字符串的拼音
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="separator">分隔符</param>
+        /// <param name="tone">是否带声调</param>
+        /// <returns>拼音</returns>
+        public string GetPinyin(string text, string separator, bool tone)
+        {
+            return GetPinyin(text, separator);
+        }
+
+        /// <summary>
+        /// 获取字符的首字母
+        /// </summary>
+        /// <param name="c">字符</param>
+        /// <returns>首字母</returns>
+        public string GetFirstLetter(char c)
+        {
+            var pinyin = GetPinyin(c);
+            if (!string.IsNullOrEmpty(pinyin))
+            {
+                return char.ToUpper(pinyin[0]).ToString();
+            }
+            return c.ToString();
+        }
+
+        /// <summary>
+        /// 获取字符串的首字母
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="separator">分隔符</param>
+        /// <returns>首字母</returns>
+        public string GetFirstLetter(string text, string separator)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return string.Empty;
+            }
+
+            var result = new System.Text.StringBuilder();
+            foreach (var c in text)
+            {
+                if (result.Length > 0 && separator != null)
+                {
+                    result.Append(separator);
+                }
+                var pinyin = GetPinyin(c);
+                if (!string.IsNullOrEmpty(pinyin))
+                {
+                    result.Append(char.ToUpper(pinyin[0]));
+                }
+                else
+                {
+                    result.Append(c);
+                }
+            }
+            return result.ToString();
+        }
     }
 }

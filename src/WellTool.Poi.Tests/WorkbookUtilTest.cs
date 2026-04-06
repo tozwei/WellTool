@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using NPOI.SS.UserModel;
 using Xunit;
 
 namespace WellTool.Poi.Tests
@@ -12,14 +13,14 @@ namespace WellTool.Poi.Tests
         [Fact]
         public void TestCreateWorkbook()
         {
-            var workbook = WellTool.Poi.WorkbookUtil.Create();
+            var workbook = WellTool.Poi.Excel.WorkbookUtil.Create();
             Assert.NotNull(workbook);
         }
 
         [Fact]
         public void TestCreateSheet()
         {
-            var workbook = WellTool.Poi.WorkbookUtil.Create();
+            var workbook = WellTool.Poi.Excel.WorkbookUtil.Create();
             var sheet = workbook.CreateSheet("TestSheet");
             Assert.NotNull(sheet);
         }
@@ -27,7 +28,7 @@ namespace WellTool.Poi.Tests
         [Fact]
         public void TestGetSheetNames()
         {
-            var workbook = WellTool.Poi.WorkbookUtil.Create();
+            var workbook = WellTool.Poi.Excel.WorkbookUtil.Create();
             workbook.CreateSheet("Sheet1");
             workbook.CreateSheet("Sheet2");
             
@@ -39,7 +40,7 @@ namespace WellTool.Poi.Tests
         [Fact]
         public void TestGetSheetByIndex()
         {
-            var workbook = WellTool.Poi.WorkbookUtil.Create();
+            var workbook = WellTool.Poi.Excel.WorkbookUtil.Create();
             workbook.CreateSheet("First");
             workbook.CreateSheet("Second");
             
@@ -50,7 +51,7 @@ namespace WellTool.Poi.Tests
         [Fact]
         public void TestGetSheetByName()
         {
-            var workbook = WellTool.Poi.WorkbookUtil.Create();
+            var workbook = WellTool.Poi.Excel.WorkbookUtil.Create();
             workbook.CreateSheet("TestSheet");
             
             var sheet = workbook.GetSheet("TestSheet");
@@ -60,7 +61,7 @@ namespace WellTool.Poi.Tests
         [Fact]
         public void TestRemoveSheet()
         {
-            var workbook = WellTool.Poi.WorkbookUtil.Create();
+            var workbook = WellTool.Poi.Excel.WorkbookUtil.Create();
             workbook.CreateSheet("ToRemove");
             
             workbook.RemoveSheet(0);
