@@ -1,5 +1,6 @@
 namespace WellTool.Captcha.Tests;
 
+using System.Drawing;
 using WellTool.Captcha;
 using Xunit;
  

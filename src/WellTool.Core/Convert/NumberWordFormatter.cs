@@ -58,4 +58,44 @@ public static class NumberWordFormatter
 		var upper = new[] { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖" };
 		return upper[n];
 	}
+
+	/// <summary>
+	/// 格式化为中文大写数字
+	/// </summary>
+	/// <param name="number">数字</param>
+	/// <returns>中文大写数字</returns>
+	public static string FormatUpper(long number)
+	{
+		return Format(number, true);
+	}
+
+	/// <summary>
+	/// 格式化为中文数字（支持小数）
+	/// </summary>
+	/// <param name="number">数字</param>
+	/// <param name="isUpper">是否大写</param>
+	/// <returns>中文数字</returns>
+	public static string FormatDecimal(double number, bool isUpper = false)
+	{
+		var parts = number.ToString().Split('.');
+		var integerPart = long.Parse(parts[0]);
+		var result = Format(integerPart, isUpper);
+
+		if (parts.Length > 1 && !string.IsNullOrEmpty(parts[1]))
+		{
+			var decimalPart = parts[1];
+			var decimalSb = new StringBuilder();
+			decimalSb.Append("点");
+
+			foreach (var c in decimalPart)
+			{
+				var digit = int.Parse(c.ToString());
+				decimalSb.Append(isUpper ? ToChineseUpper(digit) : ToChinese(digit));
+			}
+
+			result += decimalSb.ToString();
+		}
+
+		return result;
+	}
 }

@@ -221,5 +221,42 @@ namespace WellTool.Core.Util
         {
             return type.FullName ?? type.Name;
         }
+
+        /// <summary>
+        /// 获取指定类型的指定方法
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <param name="methodName">方法名</param>
+        /// <returns>方法信息</returns>
+        public static MethodInfo GetMethod(Type type, string methodName)
+        {
+            return type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        }
+
+        /// <summary>
+        /// 获取指定类型的指定字段
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <param name="fieldName">字段名</param>
+        /// <returns>字段信息</returns>
+        public static FieldInfo GetField(Type type, string fieldName)
+        {
+            return type.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        }
+
+        /// <summary>
+        /// 检查类型是否可从另一个类型赋值
+        /// </summary>
+        /// <param name="fromType">源类型</param>
+        /// <param name="toType">目标类型</param>
+        /// <returns>是否可赋值</returns>
+        public static bool IsAssignableFrom(Type fromType, Type toType)
+        {
+            if (fromType == null || toType == null)
+            {
+                return false;
+            }
+            return toType.IsAssignableFrom(fromType);
+        }
     }
 }

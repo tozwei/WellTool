@@ -131,10 +131,9 @@ public static class CaptchaUtil
     /// </summary>
     /// <param name="width">图片宽</param>
     /// <param name="height">图片高</param>
-    /// <returns>GifCaptcha（使用 LineCaptcha 实现）</returns>
+    /// <returns>LineCaptcha</returns>
     public static LineCaptcha CreateGifCaptcha(int width, int height)
     {
-        // 简化实现，实际项目中可以实现完整的 GIF 动画验证码
         return new LineCaptcha(width, height);
     }
 
@@ -145,9 +144,31 @@ public static class CaptchaUtil
     /// <param name="height">图片高</param>
     /// <param name="codeCount">字符个数</param>
     /// <param name="frameCount">帧数</param>
-    /// <returns>GifCaptcha（使用 LineCaptcha 实现）</returns>
+    /// <returns>LineCaptcha</returns>
     public static LineCaptcha CreateGifCaptcha(int width, int height, int codeCount, int frameCount)
     {
         return new LineCaptcha(width, height, codeCount, frameCount);
+    }
+
+    /// <summary>
+    /// 创建普通字符验证码（默认5位）
+    /// </summary>
+    /// <param name="width">图片宽</param>
+    /// <param name="height">图片高</param>
+    /// <returns>LineCaptcha</returns>
+    public static LineCaptcha CreateSpecCaptcha(int width, int height)
+    {
+        return new LineCaptcha(width, height);
+    }
+
+    /// <summary>
+    /// 生成随机验证码字符
+    /// </summary>
+    /// <param name="length">长度</param>
+    /// <returns>验证码字符串</returns>
+    public static string GenerateCode(int length)
+    {
+        var generator = new RandomGenerator(length);
+        return generator.Generate();
     }
 }

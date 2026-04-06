@@ -14,12 +14,12 @@ public abstract class AbstractCaptcha : ICaptcha, IDisposable
     /// <summary>
     /// 图片的宽度
     /// </summary>
-    protected int Width;
+    public int Width;
 
     /// <summary>
     /// 图片的高度
     /// </summary>
-    protected int Height;
+    public int Height;
 
     /// <summary>
     /// 验证码干扰元素个数
@@ -195,6 +195,47 @@ public abstract class AbstractCaptcha : ICaptcha, IDisposable
     /// <param name="code">验证码文本</param>
     /// <returns>图片对象</returns>
     public abstract Image? CreateImage(string code);
+
+    /// <summary>
+    /// 创建验证码图片（无参数版本）
+    /// </summary>
+    /// <returns>图片对象</returns>
+    public virtual Image? CreateImage()
+    {
+        if (string.IsNullOrEmpty(_code))
+        {
+            CreateCode();
+        }
+        return CreateImage(_code ?? string.Empty);
+    }
+
+    /// <summary>
+    /// 转换为 Base64 字符串
+    /// </summary>
+    /// <returns>Base64 字符串</returns>
+    public virtual string ToBase64()
+    {
+        if (_imageBytes == null)
+        {
+            CreateCode();
+        }
+        if (_imageBytes == null || _imageBytes.Length == 0)
+        {
+            return string.Empty;
+        }
+        return "data:image/png;base64," + Convert.ToBase64String(_imageBytes);
+    }
+
+    /// <summary>
+    /// 设置字体
+    /// </summary>
+    /// <param name="fonts">字体名称数组</param>
+    /// <returns>this</returns>
+    public virtual AbstractCaptcha SetFonts(string[] fonts)
+    {
+        // 子类可以重写此方法
+        return this;
+    }
 
     /// <summary>
     /// 生成图片字节数组

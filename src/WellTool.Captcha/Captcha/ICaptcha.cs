@@ -1,3 +1,5 @@
+using System.Drawing;
+
 namespace WellTool.Captcha;
 
 /// <summary>
@@ -28,4 +30,16 @@ public interface ICaptcha
     /// </summary>
     /// <param name="outStream">目标流</param>
     void Write(Stream outStream);
+
+    /// <summary>
+    /// 创建验证码图片（无参数版本）
+    /// </summary>
+    /// <returns>图片对象</returns>
+    Image? CreateImage();
+
+    /// <summary>
+    /// 转换为 Base64 字符串
+    /// </summary>
+    /// <returns>Base64 字符串</returns>
+    string ToBase64();
 }

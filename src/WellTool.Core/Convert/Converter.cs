@@ -11,10 +11,7 @@ namespace WellTool.Core.Converter
     /// </summary>
     public static class Converter
     {
-        /// <summary>
-        /// 获取转换器注册表
-        /// </summary>
-        public static ConverterRegistry Registry => ConverterRegistry.Instance;
+
 
         /// <summary>
         /// 转换对象为指定类型
@@ -108,7 +105,7 @@ namespace WellTool.Core.Converter
                 }
             }
 
-            var converter = Registry.GetConverter(sourceType, targetType);
+            var converter = ConverterRegistry.GetConverter(sourceType, targetType);
             if (converter != null)
             {
                 return converter.Convert(value, targetType);

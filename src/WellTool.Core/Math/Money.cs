@@ -231,4 +231,68 @@ public class Money : IComparable<Money>
     {
         return _cent;
     }
+
+    /// <summary>
+    /// 大于运算符
+    /// </summary>
+    public static bool operator >(Money left, Money right)
+    {
+        if (left == null || right == null)
+        {
+            throw new ArgumentNullException();
+        }
+        if (!left._currencyCode.Equals(right._currencyCode, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("Currency code mismatch");
+        }
+        return left._cent > right._cent;
+    }
+
+    /// <summary>
+    /// 小于运算符
+    /// </summary>
+    public static bool operator <(Money left, Money right)
+    {
+        if (left == null || right == null)
+        {
+            throw new ArgumentNullException();
+        }
+        if (!left._currencyCode.Equals(right._currencyCode, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("Currency code mismatch");
+        }
+        return left._cent < right._cent;
+    }
+
+    /// <summary>
+    /// 大于等于运算符
+    /// </summary>
+    public static bool operator >=(Money left, Money right)
+    {
+        if (left == null || right == null)
+        {
+            throw new ArgumentNullException();
+        }
+        if (!left._currencyCode.Equals(right._currencyCode, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("Currency code mismatch");
+        }
+        return left._cent >= right._cent;
+    }
+
+    /// <summary>
+    /// 小于等于运算符
+    /// </summary>
+    public static bool operator <=(Money left, Money right)
+    {
+        if (left == null || right == null)
+        {
+            throw new ArgumentNullException();
+        }
+        if (!left._currencyCode.Equals(right._currencyCode, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("Currency code mismatch");
+        }
+        return left._cent <= right._cent;
+    }
 }

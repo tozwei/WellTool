@@ -1,72 +1,75 @@
 using System;
 using System.Collections.Generic;
-using WellTool.Core.Convert.impl;
 
 namespace WellTool.Core.Convert
 {
     /// <summary>
     /// 转换器注册表
     /// </summary>
-    public class ConverterRegistry
+    public static class ConverterRegistry
     {
-        private static readonly ConverterRegistry _instance = new ConverterRegistry();
-        private readonly Dictionary<Type, Dictionary<Type, IConverter>> _converters;
-
-        /// <summary>
-        /// 单例实例
-        /// </summary>
-        public static ConverterRegistry Instance => _instance;
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        private ConverterRegistry()
-        {
-            _converters = new Dictionary<Type, Dictionary<Type, IConverter>>();
-            RegisterDefaultConverters();
-        }
-
-        /// <summary>
-        /// 注册默认转换器
-        /// </summary>
-        private void RegisterDefaultConverters()
-        {
-            // 注册基本类型转换器
-            Register(new StringConverter());
-            Register(new NumberConverter());
-            Register(new BooleanConverter());
-            Register(new DateConverter());
-            Register(new CollectionConverter());
-            Register(new MapConverter());
-            Register(new EnumConverter());
-            Register(new ArrayConverter());
-            Register(new CharacterConverter());
-            Register(new ClassConverter());
-            Register(new UUIDConverter());
-        }
+        private static readonly Dictionary<Type, Dictionary<Type, IConverter>> _converters = new Dictionary<Type, Dictionary<Type, IConverter>>();
 
         /// <summary>
         /// 注册转换器
         /// </summary>
+        /// <param name="sourceType">源类型</param>
+        /// <param name="targetType">目标类型</param>
         /// <param name="converter">转换器</param>
-        public void Register(IConverter converter)
+        public static void Register(Type sourceType, Type targetType, IConverter converter)
         {
-            var sourceTypes = converter.GetSupportedSourceTypes();
-            var targetTypes = converter.GetSupportedTargetTypes();
-
-            foreach (var sourceType in sourceTypes)
+            if (!_converters.ContainsKey(sourceType))
             {
-                if (!_converters.TryGetValue(sourceType, out var targetConverters))
-                {
-                    targetConverters = new Dictionary<Type, IConverter>();
-                    _converters[sourceType] = targetConverters;
-                }
-
-                foreach (var targetType in targetTypes)
-                {
-                    targetConverters[targetType] = converter;
-                }
+                _converters[sourceType] = new Dictionary<Type, IConverter>();
             }
+            _converters[sourceType][targetType] = converter;
+        }
+
+        /// <summary>
+        /// 注册转换器（泛型版本）
+        /// </summary>
+        /// <typeparam name="TSource">源类型</typeparam>
+        /// <typeparam name="TTarget">目标类型</typeparam>
+        /// <param name="converter">转换函数</param>
+        public static void Register<TSource, TTarget>(Func<TSource, TTarget> converter)
+        {
+            Register(typeof(TSource), typeof(TTarget), new FuncConverter<TSource, TTarget>(converter));
+        }
+
+        /// <summary>
+        /// 检查是否包含转换器
+        /// </summary>
+        /// <typeparam name="TSource">源类型</typeparam>
+        /// <typeparam name="TTarget">目标类型</typeparam>
+        /// <returns>是否包含</returns>
+        public static bool Contains<TSource, TTarget>()
+        {
+            return GetConverter(typeof(TSource), typeof(TTarget)) != null;
+        }
+
+        /// <summary>
+        /// 转换
+        /// </summary>
+        /// <typeparam name="TSource">源类型</typeparam>
+        /// <typeparam name="TTarget">目标类型</typeparam>
+        /// <param name="value">值</param>
+        /// <returns>转换后的值</returns>
+        public static TTarget Convert<TSource, TTarget>(TSource value) where TTarget : class
+        {
+            var converter = GetConverter(typeof(TSource), typeof(TTarget)) as IConverter<TSource, TTarget>;
+            return converter != null ? converter.Convert(value) : default(TTarget);
+        }
+
+        /// <summary>
+        /// 获取转换器
+        /// </summary>
+        /// <typeparam name="TSource">源类型</typeparam>
+        /// <typeparam name="TTarget">目标类型</typeparam>
+        /// <returns>转换器</returns>
+        public static IConverter<TSource, TTarget> GetConverter<TSource, TTarget>()
+        {
+            var converter = GetConverter(typeof(TSource), typeof(TTarget));
+            return converter as IConverter<TSource, TTarget>;
         }
 
         /// <summary>
@@ -75,111 +78,114 @@ namespace WellTool.Core.Convert
         /// <param name="sourceType">源类型</param>
         /// <param name="targetType">目标类型</param>
         /// <returns>转换器</returns>
-        public IConverter GetConverter(Type sourceType, Type targetType)
+        public static IConverter GetConverter(Type sourceType, Type targetType)
         {
-            if (_converters.TryGetValue(sourceType, out var targetConverters))
+            if (_converters.TryGetValue(sourceType, out var targetConverters) && targetConverters.TryGetValue(targetType, out var converter))
             {
-                if (targetConverters.TryGetValue(targetType, out var converter))
-                {
-                    return converter;
-                }
+                return converter;
             }
-
-            // 尝试找到可以处理该类型的转换器
-            foreach (var (srcType, typeConverters) in _converters)
-            {
-                if (srcType.IsAssignableFrom(sourceType))
-                {
-                    foreach (var (tgtType, converter) in typeConverters)
-                    {
-                        if (tgtType.IsAssignableFrom(targetType))
-                        {
-                            return converter;
-                        }
-                    }
-                }
-            }
-
             return null;
         }
 
         /// <summary>
-        /// 移除转换器
+        /// 清除所有转换器
         /// </summary>
-        /// <param name="sourceType">源类型</param>
-        /// <param name="targetType">目标类型</param>
-        public void Remove(Type sourceType, Type targetType)
-        {
-            if (_converters.TryGetValue(sourceType, out var targetConverters))
-            {
-                targetConverters.Remove(targetType);
-            }
-        }
-
-        /// <summary>
-        /// 清空所有转换器
-        /// </summary>
-        public void Clear()
+        public static void Clear()
         {
             _converters.Clear();
         }
+    }
 
+    /// <summary>
+    /// 转换器接口（泛型版本）
+    /// </summary>
+    /// <typeparam name="TSource">源类型</typeparam>
+    /// <typeparam name="TTarget">目标类型</typeparam>
+    public interface IConverter<TSource, TTarget>
+    {
         /// <summary>
-        /// 转换对象为指定类型
+        /// 转换
         /// </summary>
-        /// <typeparam name="T">目标类型</typeparam>
-        /// <param name="value">要转换的值</param>
+        /// <param name="value">值</param>
         /// <returns>转换后的值</returns>
-        public T Convert<T>(object value)
+        TTarget Convert(TSource value);
+    }
+
+    /// <summary>
+    /// 函数转换器
+    /// </summary>
+    /// <typeparam name="TSource">源类型</typeparam>
+    /// <typeparam name="TTarget">目标类型</typeparam>
+    internal class FuncConverter<TSource, TTarget> : IConverter<TSource, TTarget>, IConverter
+    {
+        private readonly Func<TSource, TTarget> _func;
+
+        public FuncConverter(Func<TSource, TTarget> func)
         {
-            var result = Convert(value, typeof(T));
-            if (result is bool boolValue && typeof(T) == typeof(int))
-            {
-                return (T)(object)(boolValue ? 1 : 0);
-            }
-            if (result is bool boolValueLong && typeof(T) == typeof(long))
-            {
-                return (T)(object)(boolValueLong ? 1L : 0L);
-            }
-            return (T)result;
+            _func = func;
         }
 
+        public TTarget Convert(TSource value) => _func(value);
+
+        public object Convert(object value, Type targetType)
+        {
+            if (value is TSource source)
+            {
+                return _func(source);
+            }
+            return default(TTarget);
+        }
+
+        public Type[] GetSupportedSourceTypes() => new[] { typeof(TSource) };
+
+        public Type[] GetSupportedTargetTypes() => new[] { typeof(TTarget) };
+    }
+
+    /// <summary>
+    /// 转换器基类
+    /// </summary>
+    /// <typeparam name="TSource">源类型</typeparam>
+    /// <typeparam name="TTarget">目标类型</typeparam>
+    public abstract class Converter<TSource, TTarget> : IConverter, IConverter<TSource, TTarget>
+    {
         /// <summary>
-        /// 转换对象为指定类型
+        /// 转换
         /// </summary>
-        /// <param name="value">要转换的值</param>
+        /// <param name="value">值</param>
+        /// <returns>转换后的值</returns>
+        public abstract TTarget Convert(TSource value);
+
+        /// <summary>
+        /// 转换
+        /// </summary>
+        /// <param name="value">值</param>
         /// <param name="targetType">目标类型</param>
         /// <returns>转换后的值</returns>
         public object Convert(object value, Type targetType)
         {
-            if (value == null)
+            if (value is TSource source)
             {
-                return GetDefaultValue(targetType);
+                return Convert(source);
             }
-
-            var sourceType = value.GetType();
-            if (targetType.IsAssignableFrom(sourceType))
-            {
-                return value;
-            }
-
-            var converter = GetConverter(sourceType, targetType);
-            if (converter != null)
-            {
-                return converter.Convert(value, targetType);
-            }
-
-            throw new ConvertException($"No converter found for converting from {sourceType.Name} to {targetType.Name}");
+            return default(TTarget);
         }
 
         /// <summary>
-        /// 获取类型的默认值
+        /// 获取支持的源类型
         /// </summary>
-        /// <param name="type">类型</param>
-        /// <returns>默认值</returns>
-        private static object GetDefaultValue(Type type)
+        /// <returns>支持的源类型数组</returns>
+        public Type[] GetSupportedSourceTypes()
         {
-            return type.IsValueType ? Activator.CreateInstance(type) : null;
+            return new[] { typeof(TSource) };
+        }
+
+        /// <summary>
+        /// 获取支持的目标类型
+        /// </summary>
+        /// <returns>支持的目标类型数组</returns>
+        public Type[] GetSupportedTargetTypes()
+        {
+            return new[] { typeof(TTarget) };
         }
     }
 }

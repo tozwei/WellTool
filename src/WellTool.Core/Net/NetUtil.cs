@@ -80,6 +80,16 @@ namespace WellTool.Core.Net
         }
 
         /// <summary>
+        /// 检查端口是否有效
+        /// </summary>
+        /// <param name="port">端口</param>
+        /// <returns>是否有效</returns>
+        public static bool IsValidPort(int port)
+        {
+            return port >= 0 && port <= 65535;
+        }
+
+        /// <summary>
         /// 检查域名是否有效
         /// </summary>
         /// <param name="domain">域名</param>

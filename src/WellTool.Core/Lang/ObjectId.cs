@@ -1,16 +1,65 @@
 using System;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Threading;
 
 namespace WellTool.Core.Lang;
 
 /// <summary>
 /// MongoDB ID生成策略实现
 /// </summary>
-public static class ObjectId
+public class ObjectId : IComparable<ObjectId>
 {
-	private static readonly int NEXT_INC = new Random().Next();
+	private static readonly Random Random = new Random();
 	private static readonly int MACHINE = GetMachinePiece() | GetProcessPiece();
+	private static int _nextInc = Random.Next();
+
+	private readonly string _value;
+	private readonly byte[] _bytes;
+
+	/// <summary>
+	/// 构造函数
+	/// </summary>
+	/// <param name="value">ObjectId字符串</param>
+	private ObjectId(string value)
+	{
+		_value = value;
+		_bytes = HexToBytes(value);
+	}
+
+	/// <summary>
+	/// 构造函数
+	/// </summary>
+	/// <param name="bytes">ObjectId字节数组</param>
+	private ObjectId(byte[] bytes)
+	{
+		_bytes = bytes;
+		_value = BytesToHex(bytes);
+	}
+
+	/// <summary>
+	/// 获取新的ObjectId
+	/// </summary>
+	/// <returns>ObjectId实例</returns>
+	public static ObjectId Get()
+	{
+		return new ObjectId(NextBytes());
+	}
+
+	/// <summary>
+	/// 解析ObjectId字符串
+	/// </summary>
+	/// <param name="s">ObjectId字符串</param>
+	/// <returns>ObjectId实例</returns>
+	public static ObjectId Parse(string s)
+	{
+		if (!IsValid(s))
+		{
+			throw new ArgumentException("Invalid ObjectId string", nameof(s));
+		}
+		s = s.Replace("-", "");
+		return new ObjectId(s);
+	}
 
 	/// <summary>
 	/// 给定的字符串是否为有效的ObjectId
@@ -40,14 +89,78 @@ public static class ObjectId
 	}
 
 	/// <summary>
+	/// 获取时间戳
+	/// </summary>
+	/// <returns>时间戳</returns>
+	public long GetTimestamp()
+	{
+		return (_bytes[0] << 24) | (_bytes[1] << 16) | (_bytes[2] << 8) | _bytes[3];
+	}
+
+	/// <summary>
+	/// 获取机器ID
+	/// </summary>
+	/// <returns>机器ID</returns>
+	public int GetMachineId()
+	{
+		return (_bytes[4] << 24) | (_bytes[5] << 16) | (_bytes[6] << 8) | _bytes[7];
+	}
+
+	/// <summary>
+	/// 比较两个ObjectId
+	/// </summary>
+	/// <param name="other">另一个ObjectId</param>
+	/// <returns>比较结果</returns>
+	public int CompareTo(ObjectId other)
+	{
+		if (other == null)
+		{
+			return 1;
+		}
+		return string.Compare(_value, other._value, StringComparison.Ordinal);
+	}
+
+	/// <summary>
+	/// 比较两个ObjectId是否相等
+	/// </summary>
+	/// <param name="obj">另一个对象</param>
+	/// <returns>是否相等</returns>
+	public override bool Equals(object obj)
+	{
+		if (obj == null || GetType() != obj.GetType())
+		{
+			return false;
+		}
+		return _value == ((ObjectId)obj)._value;
+	}
+
+	/// <summary>
+	/// 获取哈希码
+	/// </summary>
+	/// <returns>哈希码</returns>
+	public override int GetHashCode()
+	{
+		return _value.GetHashCode();
+	}
+
+	/// <summary>
+	/// 转换为字符串
+	/// </summary>
+	/// <returns>ObjectId字符串</returns>
+	public override string ToString()
+	{
+		return _value;
+	}
+
+	/// <summary>
 	/// 获取一个objectId的bytes表现形式
 	/// </summary>
 	/// <returns>objectId字节数组</returns>
-	public static byte[] NextBytes()
+	private static byte[] NextBytes()
 	{
 		var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 		var machine = MACHINE;
-		var inc = NEXT_INC;
+		var inc = Interlocked.Increment(ref _nextInc);
 		return new byte[]
 		{
 			(byte)((timestamp >> 24) & 0xFF),
@@ -66,37 +179,33 @@ public static class ObjectId
 	}
 
 	/// <summary>
-	/// 获取一个objectId用下划线分割
+	/// 字节数组转十六进制字符串
 	/// </summary>
-	/// <returns>objectId</returns>
-	public static string Next()
+	/// <param name="bytes">字节数组</param>
+	/// <returns>十六进制字符串</returns>
+	private static string BytesToHex(byte[] bytes)
 	{
-		return Next(false);
+		var sb = new StringBuilder(24);
+		foreach (var b in bytes)
+		{
+			sb.Append(b.ToString("x2"));
+		}
+		return sb.ToString();
 	}
 
 	/// <summary>
-	/// 获取一个objectId
+	/// 十六进制字符串转字节数组
 	/// </summary>
-	/// <param name="withHyphen">是否包含分隔符</param>
-	/// <returns>objectId</returns>
-	public static string Next(bool withHyphen)
+	/// <param name="hex">十六进制字符串</param>
+	/// <returns>字节数组</returns>
+	private static byte[] HexToBytes(string hex)
 	{
-		byte[] array = NextBytes();
-		var sb = new StringBuilder(withHyphen ? 26 : 24);
-		for (int i = 0; i < array.Length; i++)
+		var bytes = new byte[12];
+		for (int i = 0; i < 12; i++)
 		{
-			if (withHyphen && i % 4 == 0 && i != 0)
-			{
-				sb.Append('-');
-			}
-			int t = array[i] & 0xff;
-			if (t < 16)
-			{
-				sb.Append('0');
-			}
-			sb.Append(t.ToString("x"));
+			bytes[i] = System.Convert.ToByte(hex.Substring(i * 2, 2), 16);
 		}
-		return sb.ToString();
+		return bytes;
 	}
 
 	/// <summary>
@@ -116,7 +225,7 @@ public static class ObjectId
 		}
 		catch
 		{
-			return new Random().Next() << 16;
+			return Random.Next() << 16;
 		}
 	}
 

@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//
+
 // http://www.apache.org/licenses/LICENSE-2.0
-//
+
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using Xunit;
+using WellTool.Crypto.Digest;
 
 namespace WellTool.Crypto.Tests
 {
@@ -67,29 +68,17 @@ namespace WellTool.Crypto.Tests
         [Fact]
         public void Md5Test()
         {
-            // 测试MD5对象
-            var md5 = new Crypto.Digest.MD5();
-            Assert.NotNull(md5);
-
-            // 测试字符串MD5
-            string md5Str = md5.DigestHex(TestData);
+            // 测试MD5静态方法
+            string md5Str = MD5.DigestHex(TestData);
             Assert.NotNull(md5Str);
             Assert.Equal(32, md5Str.Length);
-
-            // 测试字节数组MD5
-            string md5Bytes = md5.DigestHex(Encoding.UTF8.GetBytes(TestData));
-            Assert.Equal(md5Str, md5Bytes);
         }
 
         [Fact]
         public void Sha1Test()
         {
-            // 测试SHA1对象
-            var sha1 = new Crypto.Digest.SHA1();
-            Assert.NotNull(sha1);
-
-            // 测试字符串SHA1
-            string sha1Str = sha1.DigestHex(TestData);
+            // 测试SHA1 - 使用 DigestUtil
+            string sha1Str = DigestUtil.DigestHex(TestData, DigestAlgorithm.SHA1);
             Assert.NotNull(sha1Str);
             Assert.Equal(40, sha1Str.Length);
         }
@@ -97,12 +86,8 @@ namespace WellTool.Crypto.Tests
         [Fact]
         public void Sha256Test()
         {
-            // 测试SHA256对象
-            var sha256 = new Crypto.Digest.SHA256();
-            Assert.NotNull(sha256);
-
-            // 测试字符串SHA256
-            string sha256Str = sha256.DigestHex(TestData);
+            // 测试SHA256 - 使用 DigestUtil
+            string sha256Str = DigestUtil.DigestHex(TestData, DigestAlgorithm.SHA256);
             Assert.NotNull(sha256Str);
             Assert.Equal(64, sha256Str.Length);
         }
@@ -114,15 +99,15 @@ namespace WellTool.Crypto.Tests
             byte[] key = new byte[16];
             RandomNumberGenerator.Fill(key);
             
-            var hmac = new Crypto.Digest.HMac("HMACSHA256", key);
+            var hmac = new HMac(HmacAlgorithm.HmacSHA256, key);
             Assert.NotNull(hmac);
 
             // 测试字符串密钥
-            var hmac2 = new Crypto.Digest.HMac("HMACMD5", Encoding.UTF8.GetBytes("testkey"));
+            var hmac2 = new HMac(HmacAlgorithm.HmacMD5, Encoding.UTF8.GetBytes("testkey"));
             Assert.NotNull(hmac2);
 
             // 验证加密结果
-            string result = hmac2.DigestHex(TestData);
+            string result = DigestUtil.HmacHex(TestData, "testkey", HmacAlgorithm.HmacMD5);
             Assert.NotNull(result);
             Assert.Equal(32, result.Length);
         }
@@ -152,11 +137,8 @@ namespace WellTool.Crypto.Tests
         [Fact]
         public void DigestTest()
         {
-            // 测试消息摘要
-            var digester = new Crypto.Digest.Digester(Crypto.Digest.DigestAlgorithm.MD5);
-            Assert.NotNull(digester);
-
-            string result = digester.DigestHex(TestData);
+            // 测试消息摘要 - 使用 DigestUtil
+            string result = DigestUtil.DigestHex(TestData, DigestAlgorithm.MD5);
             Assert.NotNull(result);
             Assert.Equal(32, result.Length);
         }

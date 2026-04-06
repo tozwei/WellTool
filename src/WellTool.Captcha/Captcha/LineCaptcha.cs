@@ -58,6 +58,17 @@ public class LineCaptcha : AbstractCaptcha
     }
 
     /// <summary>
+    /// 设置字体
+    /// </summary>
+    /// <param name="fonts">字体名称数组</param>
+    /// <returns>this</returns>
+    public override AbstractCaptcha SetFonts(string[] fonts)
+    {
+        // 可以重写以支持自定义字体
+        return this;
+    }
+
+    /// <summary>
     /// 创建验证码图片
     /// </summary>
     /// <param name="code">验证码文本</param>

@@ -82,10 +82,10 @@ public class NumberUtilExtraTest
     }
 
     [Fact]
-    public void RangeTest()
+    public void ClampTest()
     {
-        Assert.Equal(100, NumberUtil.Range(150, 0, 100));
-        Assert.Equal(50, NumberUtil.Range(50, 0, 100));
+        Assert.Equal(100, NumberUtil.Clamp(150, 0, 100));
+        Assert.Equal(50, NumberUtil.Clamp(50, 0, 100));
     }
 
     [Fact]

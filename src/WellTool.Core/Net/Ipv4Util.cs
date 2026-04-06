@@ -157,5 +157,157 @@ namespace WellTool.Core.Net
             var broadcastLong = networkLong | (~maskLong & 0xFFFFFFFF);
             return LongToIp(broadcastLong);
         }
+
+        /// <summary>
+        /// 将 IPv4 地址转换为整数（兼容方法）
+        /// </summary>
+        /// <param name="ip">IPv4 地址</param>
+        /// <returns>整数形式的 IP 地址</returns>
+        public static long Ipv4ToLong(string ip)
+        {
+            return IpToLong(ip);
+        }
+
+        /// <summary>
+        /// 将整数转换为 IPv4 地址（兼容方法）
+        /// </summary>
+        /// <param name="ipLong">整数形式的 IP 地址</param>
+        /// <returns>IPv4 地址</returns>
+        public static string LongToIpv4(long ipLong)
+        {
+            return LongToIp(ipLong);
+        }
+
+        /// <summary>
+        /// 获取子网掩码对应的网络位数
+        /// </summary>
+        /// <param name="subnetMask">子网掩码</param>
+        /// <returns>网络位数</returns>
+        public static int GetMaskBitByMask(string subnetMask)
+        {
+            var maskLong = IpToLong(subnetMask);
+            int bits = 0;
+            while (maskLong > 0)
+            {
+                bits++;
+                maskLong <<= 1;
+            }
+            return bits;
+        }
+
+        /// <summary>
+        /// 根据网络位数获取子网掩码
+        /// </summary>
+        /// <param name="maskBit">网络位数</param>
+        /// <returns>子网掩码</returns>
+        public static string GetMaskByMaskBit(int maskBit)
+        {
+            if (maskBit < 0 || maskBit > 32)
+            {
+                throw new ArgumentException("Mask bit must be between 0 and 32");
+            }
+            long maskLong = maskBit == 0 ? 0 : 0xFFFFFFFF << (32 - maskBit);
+            return LongToIp(maskLong);
+        }
+
+        /// <summary>
+        /// 获取IP范围的结束地址
+        /// </summary>
+        /// <param name="ip">IP地址</param>
+        /// <param name="maskBit">网络位数</param>
+        /// <returns>结束地址</returns>
+        public static string GetEndIpStr(string ip, int maskBit)
+        {
+            var ipLong = IpToLong(ip);
+            long maskLong = maskBit == 0 ? 0 : 0xFFFFFFFF << (32 - maskBit);
+            long networkLong = ipLong & maskLong;
+            long broadcastLong = networkLong | (~maskLong & 0xFFFFFFFF);
+            return LongToIp(broadcastLong);
+        }
+
+        /// <summary>
+        /// 获取IP范围列表
+        /// </summary>
+        /// <param name="ip">IP地址</param>
+        /// <param name="maskBit">网络位数</param>
+        /// <returns>IP范围列表</returns>
+        public static List<string> Ipv4RangeList(string ip, int maskBit)
+        {
+            var result = new List<string>();
+            var startIp = GetNetworkAddress(ip, GetMaskByMaskBit(maskBit));
+            var endIp = GetEndIpStr(ip, maskBit);
+            var startLong = IpToLong(startIp);
+            var endLong = IpToLong(endIp);
+
+            for (long i = startLong; i <= endLong; i++)
+            {
+                result.Add(LongToIp(i));
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 检查子网掩码是否有效
+        /// </summary>
+        /// <param name="mask">子网掩码</param>
+        /// <returns>是否有效</returns>
+        public static bool IsMaskValid(string mask)
+        {
+            try
+            {
+                var maskLong = IpToLong(mask);
+                // 检查是否为连续的1后跟连续的0
+                bool foundZero = false;
+                for (int i = 0; i < 32; i++)
+                {
+                    bool bit = (maskLong & (1L << (31 - i))) != 0;
+                    if (foundZero && bit)
+                    {
+                        return false;
+                    }
+                    if (!bit)
+                    {
+                        foundZero = true;
+                    }
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 检查IP地址是否匹配模式
+        /// </summary>
+        /// <param name="pattern">模式</param>
+        /// <param name="ip">IP地址</param>
+        /// <returns>是否匹配</returns>
+        public static bool Matches(string pattern, string ip)
+        {
+            var patternParts = pattern.Split('.');
+            var ipParts = ip.Split('.');
+
+            if (patternParts.Length != 4 || ipParts.Length != 4)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (patternParts[i] == "*")
+                {
+                    continue;
+                }
+                if (patternParts[i] != ipParts[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

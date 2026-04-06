@@ -23,6 +23,11 @@ namespace WellTool.Crypto.Symmetric
     public class DESede : SymmetricCrypto
     {
         /// <summary>
+        /// 无参构造函数
+        /// </summary>
+        public DESede() : base(SymmetricAlgorithmType.DESede, new byte[24]) { }
+
+        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="key">密钥</param>

@@ -23,6 +23,11 @@ namespace WellTool.Crypto.Symmetric
     public class DES : SymmetricCrypto
     {
         /// <summary>
+        /// 无参构造函数
+        /// </summary>
+        public DES() : base(SymmetricAlgorithmType.DES, new byte[8]) { }
+
+        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="key">密钥</param>

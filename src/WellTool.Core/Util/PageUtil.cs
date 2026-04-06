@@ -157,5 +157,53 @@ namespace WellTool.Core.Util
             int end = pageNo * pageSize;
             return (start, end);
         }
+
+        /// <summary>
+        /// 生成页面大小选择的HTML下拉框
+        /// </summary>
+        public static string ToHtmlSelect(int currentPageSize, params int[] pageSizes)
+        {
+            if (pageSizes == null || pageSizes.Length == 0)
+            {
+                pageSizes = new[] { 10, 20, 30, 50, 100 };
+            }
+
+            var sb = new System.Text.StringBuilder();
+            sb.Append("<select class=\"page-size-select\">");
+
+            foreach (var size in pageSizes)
+            {
+                bool selected = size == currentPageSize;
+                sb.Append($"<option value=\"{size}\"{(selected ? " selected=\"selected\"" : "")}>{size}</option>");
+            }
+
+            sb.Append("</select>");
+            return sb.ToString();
+        }
+        /// <summary>
+        /// 将页码和每页大小转换为起始和结束索引
+        /// </summary>
+        public static (int start, int end) TransToStartEnd(int pageNo, int pageSize)
+        {
+            int start = (pageNo - 1) * pageSize;
+            int end = start + pageSize;
+            return (start, end);
+        }
+
+        /// <summary>
+        /// 获取第一页的页码
+        /// </summary>
+        public static int GetFirstPage()
+        {
+            return 1;
+        }
+
+        /// <summary>
+        /// 计算总页数
+        /// </summary>
+        public static int TotalPage(int total, int pageSize)
+        {
+            return TotalPages(total, pageSize);
+        }
     }
 }

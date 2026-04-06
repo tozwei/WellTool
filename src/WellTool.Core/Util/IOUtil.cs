@@ -462,5 +462,11 @@ namespace WellTool.Core.Util
             }
             return new BufferedStream(stream);
         }
+
+        /// <summary>
+        /// 获取空流
+        /// </summary>
+        /// <returns>空流</returns>
+        public static System.IO.Stream EmptyStream => Stream.Null;
     }
 }

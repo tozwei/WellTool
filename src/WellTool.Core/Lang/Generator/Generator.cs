@@ -1,3 +1,5 @@
+using WellTool.Core.Lang;
+
 namespace WellTool.Core.Lang.Generator;
 
 /// <summary>
@@ -18,7 +20,7 @@ public interface IGenerator
 public class ObjectIdGenerator : IGenerator
 {
 	/// <inheritdoc />
-	public string Next() => ObjectId.Next();
+	public string Next() => ObjectId.Get().ToString();
 }
 
 /// <summary>

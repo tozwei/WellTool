@@ -21,6 +21,31 @@ namespace WellTool.Core.Map
         public static readonly float DEFAULT_LOAD_FACTOR = 0.75f;
 
         /// <summary>
+        /// 获取Map中指定键的值，如果键不存在则返回默认值
+        /// </summary>
+        /// <typeparam name="T">值类型</typeparam>
+        /// <param name="map">字典</param>
+        /// <param name="keys">键列表</param>
+        /// <returns>值</returns>
+        public static T GetAny<T>(this Dictionary<string, object> map, params string[] keys)
+        {
+            if (map == null || keys == null)
+            {
+                return default;
+            }
+            foreach (var key in keys)
+            {
+                if (map.TryGetValue(key, out var value) && value is T tValue)
+                {
+                    return tValue;
+                }
+            }
+            return default;
+        }
+
+
+
+        /// <summary>
         /// 创建一个空的字典
         /// </summary>
         /// <typeparam name="K">键类型</typeparam>
@@ -30,6 +55,8 @@ namespace WellTool.Core.Map
         {
             return new Dictionary<K, V>();
         }
+
+
 
         /// <summary>
         /// 如果提供的字典为null，返回一个空字典，否则返回原字典

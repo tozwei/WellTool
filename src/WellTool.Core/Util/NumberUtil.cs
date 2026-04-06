@@ -207,6 +207,13 @@ public static class NumberUtil
 	}
 
 	/// <summary>
+	/// 获取指定范围内的数字（当start > end时返回end）
+	/// </summary>
+	public static int Clamp(int start, int end, int defaultValue) {
+		return start > end ? end : start;
+	}
+
+	/// <summary>
 	/// 计算百分比
 	/// </summary>
 	public static double PercentOf(double value, double total) => total != 0 ? (value / total) * 100 : 0;
@@ -263,6 +270,16 @@ public static class NumberUtil
 		if (obj == null)
 			return false;
 		return long.TryParse(obj.ToString(), out _);
+	}
+
+	/// <summary>
+	/// 是否为浮点数
+	/// </summary>
+	public static bool IsDouble(object obj)
+	{
+		if (obj == null)
+			return false;
+		return double.TryParse(obj.ToString(), out _);
 	}
 
 	/// <summary>
@@ -367,5 +384,26 @@ public static class NumberUtil
 		foreach (var v in values)
 			if (v < min) min = v;
 		return min;
+	}
+
+	/// <summary>
+	/// 平均值
+	/// </summary>
+	public static double Average(double a, double b, double c, double d, double e)
+	{
+		return (a + b + c + d + e) / 5;
+	}
+
+	/// <summary>
+	/// 平均值（数组）
+	/// </summary>
+	public static double Average(params double[] values)
+	{
+		if (values == null || values.Length == 0)
+			return 0;
+		double sum = 0;
+		foreach (var v in values)
+			sum += v;
+		return sum / values.Length;
 	}
 }

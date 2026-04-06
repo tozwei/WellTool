@@ -5,33 +5,11 @@ using System.Linq;
 namespace WellTool.Core.Convert
 {
     /// <summary>
-    /// 泛型转换器接口
-    /// </summary>
-    /// <typeparam name="T">转换的目标类型</typeparam>
-    public interface IConverter<T>
-    {
-        /// <summary>
-        /// 转换值
-        /// </summary>
-        /// <param name="value">要转换的值</param>
-        /// <returns>转换后的值</returns>
-        T Convert(object value);
-
-        /// <summary>
-        /// 转换值，当转换失败时返回默认值
-        /// </summary>
-        /// <param name="value">要转换的值</param>
-        /// <param name="defaultValue">默认值</param>
-        /// <returns>转换后的值</returns>
-        T Convert(object value, T defaultValue);
-    }
-
-    /// <summary>
     /// 抽象转换器，提供通用的转换逻辑，同时通过convertInternal实现对应类型的专属逻辑
     /// 转换器不会抛出转换异常，转换失败时会返回null
     /// </summary>
     /// <typeparam name="T">转换的目标类型</typeparam>
-    public abstract class AbstractConverter<T> : IConverter<T>, IConverter
+    public abstract class AbstractConverter<T> : IConverter
     {
         private static readonly long serialVersionUID = 1L;
 

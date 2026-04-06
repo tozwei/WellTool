@@ -86,4 +86,24 @@ public static class EscapeUtil
 			.Replace("\"", "&quot;")
 			.Replace("'", "&apos;");
 	}
+
+	/// <summary>
+	/// 反转义XML特殊字符
+	/// </summary>
+	/// <param name="text">转义后的文本</param>
+	/// <returns>原始文本</returns>
+	public static string UnescapeXml(string text)
+	{
+		if (string.IsNullOrEmpty(text))
+		{
+			return text;
+		}
+
+		return text
+			.Replace("&amp;", "&")
+			.Replace("&lt;", "<")
+			.Replace("&gt;", ">")
+			.Replace("&quot;", "\"")
+			.Replace("&apos;", "'");
+	}
 }

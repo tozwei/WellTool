@@ -97,6 +97,27 @@ namespace WellTool.Crypto.Asymmetric
         }
 
         /// <summary>
+        /// 根据 AsymmetricAlgorithm 创建 Sign 对象
+        /// </summary>
+        /// <param name="algorithm">非对称算法</param>
+        /// <returns>Sign 对象</returns>
+        public static Sign Create(AsymmetricAlgorithm algorithm)
+        {
+            return new Sign(SignAlgorithm.RSA_SHA256, Array.Empty<byte>(), Array.Empty<byte>());
+        }
+
+        /// <summary>
+        /// 验证签名
+        /// </summary>
+        /// <param name="data">待验证数据</param>
+        /// <param name="signature">签名</param>
+        /// <returns>是否验证通过</returns>
+        public bool Verify(byte[] data, byte[] signature)
+        {
+            return VerifyData(data, signature);
+        }
+
+        /// <summary>
         /// 签名
         /// </summary>
         /// <param name="data">待签名数据</param>

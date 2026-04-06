@@ -751,7 +751,7 @@ namespace WellTool.Core.Tests
             XAssert.True(baseYear > 0);
 
             long baseDay = WellTool.Core.Date.Chinese.LunarInfo.BASE_DAY;
-            XAssert.True(Math.Abs(baseDay) > 0);
+            XAssert.True(System.Math.Abs(baseDay) > 0);
         }
 
         #endregion

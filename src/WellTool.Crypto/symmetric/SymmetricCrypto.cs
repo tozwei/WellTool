@@ -51,6 +51,43 @@ namespace WellTool.Crypto.Symmetric
         }
 
         /// <summary>
+        /// 加密并返回十六进制字符串
+        /// </summary>
+        /// <param name="data">明文</param>
+        /// <returns>加密后的十六进制字符串</returns>
+        public virtual string EncryptHex(string data)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(data);
+            byte[] encrypted = Encrypt(bytes);
+            return Convert.ToHexString(encrypted).ToLower();
+        }
+
+        /// <summary>
+        /// 解密十六进制字符串
+        /// </summary>
+        /// <param name="encryptedHex">加密的十六进制字符串</param>
+        /// <returns>解密后的字符串</returns>
+        public virtual string DecryptStr(string encryptedHex)
+        {
+            byte[] encrypted = Convert.FromHexString(encryptedHex);
+            byte[] decrypted = Decrypt(encrypted);
+            return Encoding.UTF8.GetString(decrypted);
+        }
+
+        /// <summary>
+        /// 解密十六进制字符串
+        /// </summary>
+        /// <param name="encryptedHex">加密的十六进制字符串</param>
+        /// <param name="encoding">编码格式</param>
+        /// <returns>解密后的字符串</returns>
+        public virtual string DecryptStr(string encryptedHex, Encoding encoding)
+        {
+            byte[] encrypted = Convert.FromHexString(encryptedHex);
+            byte[] decrypted = Decrypt(encrypted);
+            return encoding.GetString(decrypted);
+        }
+
+        /// <summary>
         /// 加密
         /// </summary>
         /// <param name="data">待加密数据</param>

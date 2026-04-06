@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace WellTool.Core.Util;
 
@@ -98,6 +100,231 @@ public static class CollUtil
 			result.Add(current);
 		}
 		return result;
+	}
+
+	/// <summary>
+	/// 分页获取集合元素
+	/// </summary>
+	public static List<T> Page<T>(IList<T> list, int pageIndex, int pageSize)
+	{
+		if (list == null || list.Count == 0 || pageIndex < 0 || pageSize <= 0)
+		{
+			return new List<T>();
+		}
+		var start = pageIndex * pageSize;
+		if (start >= list.Count)
+		{
+			return new List<T>();
+		}
+		var end = System.Math.Min(start + pageSize, list.Count);
+		var result = new List<T>(end - start);
+		for (int i = start; i < end; i++)
+		{
+			result.Add(list[i]);
+		}
+		return result;
+	}
+
+	/// <summary>
+	/// 比较两个集合是否相等
+	/// </summary>
+	public static bool IsEqual<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+	{
+		if (ReferenceEquals(collection1, collection2))
+		{
+			return true;
+		}
+		if (collection1 == null || collection2 == null)
+		{
+			return false;
+		}
+		return collection1.SequenceEqual(collection2);
+	}
+
+	/// <summary>
+	/// 检查集合1是否是集合2的子集
+	/// </summary>
+	public static bool IsSub<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+	{
+		if (collection1 == null)
+		{
+			return true;
+		}
+		if (collection2 == null)
+		{
+			return false;
+		}
+		var set = new HashSet<T>(collection2);
+		return collection1.All(set.Contains);
+	}
+
+	/// <summary>
+	/// 过滤集合
+	/// </summary>
+	public static List<T> Filter<T>(IEnumerable<T> collection, Func<T, bool> predicate)
+	{
+		if (collection == null || predicate == null)
+		{
+			return new List<T>();
+		}
+		return collection.Where(predicate).ToList();
+	}
+
+	/// <summary>
+	/// 映射集合
+	/// </summary>
+	public static List<TResult> Map<TSource, TResult>(IEnumerable<TSource> collection, Func<TSource, TResult> selector)
+	{
+		if (collection == null || selector == null)
+		{
+			return new List<TResult>();
+		}
+		return collection.Select(selector).ToList();
+	}
+
+	/// <summary>
+	/// 根据字段排序
+	/// </summary>
+	public static List<T> SortByField<T>(IList<T> list, string fieldName, bool isAsc = true)
+	{
+		if (list == null || list.Count <= 1 || string.IsNullOrEmpty(fieldName))
+		{
+			return new List<T>(list);
+		}
+		var property = typeof(T).GetProperty(fieldName, BindingFlags.Public | BindingFlags.Instance);
+		if (property == null)
+		{
+			return new List<T>(list);
+		}
+		return list.OrderBy(item => property.GetValue(item)).ToList();
+	}
+
+	/// <summary>
+	/// 将集合转换为数组
+	/// </summary>
+	public static T[] ToArray<T>(IEnumerable<T> collection)
+	{
+		if (collection == null)
+		{
+			return Array.Empty<T>();
+		}
+		return collection.ToArray();
+	}
+
+	/// <summary>
+	/// 将集合转换为数组
+	/// </summary>
+	public static T[] ToArray<T>(IEnumerable<T> collection, int length)
+	{
+		var array = ToArray(collection);
+		if (array.Length >= length)
+		{
+			return array;
+		}
+		var result = new T[length];
+		Array.Copy(array, result, array.Length);
+		return result;
+	}
+
+	/// <summary>
+	/// 创建新的数组集合
+	/// </summary>
+	public static HashSet<T> NewArraySet<T>(params T[] items)
+	{
+		return new HashSet<T>(items);
+	}
+
+	/// <summary>
+	/// 移除最后一个元素
+	/// </summary>
+	public static void RemoveLast<T>(IList<T> list)
+	{
+		if (list != null && list.Count > 0)
+		{
+			list.RemoveAt(list.Count - 1);
+		}
+	}
+
+	/// <summary>
+	/// 获取两个集合的交集
+	/// </summary>
+	public static List<T> GetIntersection<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+	{
+		if (collection1 == null || collection2 == null)
+		{
+			return new List<T>();
+		}
+		var set = new HashSet<T>(collection2);
+		return collection1.Where(set.Contains).ToList();
+	}
+
+	/// <summary>
+	/// 获取两个集合的并集
+	/// </summary>
+	public static List<T> GetUnion<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+	{
+		var result = new HashSet<T>();
+		if (collection1 != null)
+		{
+			foreach (var item in collection1)
+			{
+				result.Add(item);
+			}
+		}
+		if (collection2 != null)
+		{
+			foreach (var item in collection2)
+			{
+				result.Add(item);
+			}
+		}
+		return result.ToList();
+	}
+
+	/// <summary>
+	/// 获取两个集合的差集
+	/// </summary>
+	public static List<T> GetDisjunction<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+	{
+		if (collection1 == null)
+		{
+			return new List<T>();
+		}
+		if (collection2 == null)
+		{
+			return collection1.ToList();
+		}
+		var set = new HashSet<T>(collection2);
+		return collection1.Where(item => !set.Contains(item)).ToList();
+	}
+
+	/// <summary>
+	/// 扁平化映射
+	/// </summary>
+	public static List<TResult> FlatMap<TSource, TResult>(IEnumerable<TSource> collection, Func<TSource, IEnumerable<TResult>> selector)
+	{
+		if (collection == null || selector == null)
+		{
+			return new List<TResult>();
+		}
+		var result = new List<TResult>();
+		foreach (var item in collection)
+		{
+			var mapped = selector(item);
+			if (mapped != null)
+			{
+				result.AddRange(mapped);
+			}
+		}
+		return result;
+	}
+
+	/// <summary>
+	/// 获取两个集合的差集
+	/// </summary>
+	public static List<T> Disjunction<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+	{
+		return GetDisjunction(collection1, collection2);
 	}
 }
 

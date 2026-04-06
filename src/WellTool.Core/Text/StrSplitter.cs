@@ -160,4 +160,69 @@ public class StrSplitter
         }
         return result;
     }
+
+    /// <summary>
+    /// 按字符分割
+    /// </summary>
+    /// <param name="text">要分割的文本</param>
+    /// <param name="separator">分隔符</param>
+    /// <returns>分割后的字符串数组</returns>
+    public static string[] SplitByChar(string text, char separator)
+    {
+        return text.Split(separator);
+    }
+
+    /// <summary>
+    /// 按字符分割
+    /// </summary>
+    /// <param name="text">要分割的文本</param>
+    /// <param name="separator">分隔符</param>
+    /// <param name="options">分割选项</param>
+    /// <returns>分割后的字符串数组</returns>
+    public static string[] SplitByChar(string text, char separator, StringSplitOptions options)
+    {
+        return text.Split(new[] { separator }, options);
+    }
+
+    /// <summary>
+    /// 按字符分割
+    /// </summary>
+    /// <param name="text">要分割的文本</param>
+    /// <param name="separator">分隔符</param>
+    /// <param name="limit">分割限制</param>
+    /// <param name="trim">是否修剪每个分割后的字符串</param>
+    /// <returns>分割后的字符串数组</returns>
+    public static string[] SplitByChar(string text, char separator, int limit, bool trim)
+    {
+        var result = text.Split(separator);
+        if (limit > 0 && limit < result.Length)
+        {
+            var limitedResult = new string[limit];
+            Array.Copy(result, limitedResult, limit - 1);
+            limitedResult[limit - 1] = string.Join(separator.ToString(), result.Skip(limit - 1));
+            result = limitedResult;
+        }
+        if (trim)
+        {
+            result = result.Select(s => s.Trim()).ToArray();
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// 按字符串分割
+    /// </summary>
+    /// <param name="text">要分割的文本</param>
+    /// <param name="separator">分隔符</param>
+    /// <param name="trim">是否修剪每个分割后的字符串</param>
+    /// <returns>分割后的字符串数组</returns>
+    public static string[] SplitByString(string text, string separator, bool trim)
+    {
+        var result = Split(text, separator);
+        if (trim)
+        {
+            result = result.Select(s => s.Trim()).ToArray();
+        }
+        return result;
+    }
 }

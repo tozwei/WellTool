@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//
+
 // http://www.apache.org/licenses/LICENSE-2.0
-//
+
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,8 +26,8 @@ namespace WellTool.Crypto.Tests
         [Fact]
         public void CreateSignTest()
         {
-            // 测试Sign实例创建
-            var sign = SignUtil.CreateSign(AsymmetricAlgorithm.RSA);
+            // 测试Sign静态Create方法
+            var sign = Sign.Create(AsymmetricAlgorithm.RSA);
             Assert.NotNull(sign);
         }
 
@@ -36,7 +36,7 @@ namespace WellTool.Crypto.Tests
         {
             // 测试签名和验签
             var (publicKey, privateKey) = KeyUtil.GenerateRsaKeyPair(2048);
-            var sign = new Sign(AsymmetricAlgorithm.RSA, privateKey, publicKey);
+            var sign = new Sign(SignAlgorithm.RSA_SHA256, privateKey, publicKey);
             
             byte[] data = System.Text.Encoding.UTF8.GetBytes("test data");
             byte[] signature = sign.Sign(data);

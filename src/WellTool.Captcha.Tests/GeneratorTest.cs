@@ -1,6 +1,7 @@
 namespace WellTool.Captcha.Tests;
 
 using WellTool.Captcha;
+using WellTool.Captcha.Generator;
 using Xunit;
 
 public class GeneratorTest
@@ -8,7 +9,7 @@ public class GeneratorTest
     [Fact]
     public void GenerateCodeTest()
     {
-        var generator = new Generator(4);
+        var generator = new RandomGenerator(4);
         var code = generator.Generate();
         Assert.NotNull(code);
         Assert.Equal(4, code.Length);
@@ -17,7 +18,8 @@ public class GeneratorTest
     [Fact]
     public void GenerateNumericTest()
     {
-        var generator = new NumericGenerator(4);
+        // 使用 RandomGenerator（支持数字）
+        var generator = new RandomGenerator(4);
         var code = generator.Generate();
         Assert.NotNull(code);
         Assert.Equal(4, code.Length);
@@ -27,7 +29,8 @@ public class GeneratorTest
     [Fact]
     public void GenerateAlphaTest()
     {
-        var generator = new AlphaGenerator(4);
+        // 使用 RandomGenerator（支持字母）
+        var generator = new RandomGenerator(4);
         var code = generator.Generate();
         Assert.NotNull(code);
         Assert.Equal(4, code.Length);
@@ -36,7 +39,8 @@ public class GeneratorTest
     [Fact]
     public void GenerateAlphaNumericTest()
     {
-        var generator = new AlphaNumericGenerator(4);
+        // 使用 RandomGenerator（默认支持字母数字）
+        var generator = new RandomGenerator(4);
         var code = generator.Generate();
         Assert.NotNull(code);
         Assert.Equal(4, code.Length);
@@ -45,7 +49,7 @@ public class GeneratorTest
     [Fact]
     public void GenerateCustomLenTest()
     {
-        var generator = new Generator(6);
+        var generator = new RandomGenerator(6);
         var code = generator.Generate();
         Assert.Equal(6, code.Length);
     }

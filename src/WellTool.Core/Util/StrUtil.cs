@@ -459,7 +459,7 @@ public static class StrUtil
 	}
 
 	/// <summary>
-	/// 是否以指定字符串结尾
+	/// 检查字符串是否以指定后缀结尾
 	/// </summary>
 	public static bool EndsWith(string str, string suffix)
 	{
@@ -467,6 +467,92 @@ public static class StrUtil
 			return false;
 		return str.EndsWith(suffix);
 	}
+
+
+
+	/// <summary>
+	/// 将字符串分割为长整型数组
+	/// </summary>
+	public static long[] SplitToLong(string str, char separator)
+	{
+		if (IsEmpty(str))
+			return Array.Empty<long>();
+		return str.Split(separator).Select(s => long.TryParse(s.Trim(), out long result) ? result : 0).ToArray();
+	}
+
+	/// <summary>
+	/// 将字符串分割为长整型数组
+	/// </summary>
+	public static long[] SplitToLong(string str, string separator)
+	{
+		if (IsEmpty(str))
+			return Array.Empty<long>();
+		return str.Split(new[] { separator }, StringSplitOptions.None).Select(s => long.TryParse(s.Trim(), out long result) ? result : 0).ToArray();
+	}
+
+	/// <summary>
+	/// 将字符串分割为整型数组
+	/// </summary>
+	public static int[] SplitToInt(string str, char separator)
+	{
+		if (IsEmpty(str))
+			return Array.Empty<int>();
+		return str.Split(separator).Select(s => int.TryParse(s.Trim(), out int result) ? result : 0).ToArray();
+	}
+
+	/// <summary>
+	/// 将字符串分割为整型数组
+	/// </summary>
+	public static int[] SplitToInt(string str, string separator)
+	{
+		if (IsEmpty(str))
+			return Array.Empty<int>();
+		return str.Split(new[] { separator }, StringSplitOptions.None).Select(s => int.TryParse(s.Trim(), out int result) ? result : 0).ToArray();
+	}
+
+
+
+	/// <summary>
+	/// 按代码点替换字符串
+	/// </summary>
+	public static string ReplaceByCodePoint(string str, int oldCodePoint, int newCodePoint)
+	{
+		if (IsEmpty(str))
+			return str;
+		return str.Replace(char.ConvertFromUtf32(oldCodePoint), char.ConvertFromUtf32(newCodePoint));
+	}
+
+	/// <summary>
+	/// 获取字符串中指定字符的索引
+	/// </summary>
+	public static int IndexOf(string str, char value, int startIndex)
+	{
+		if (IsEmpty(str))
+			return -1;
+		return str.IndexOf(value, startIndex);
+	}
+
+	/// <summary>
+	/// 获取字符串中指定字符串的索引
+	/// </summary>
+	public static int IndexOf(string str, string value, int startIndex)
+	{
+		if (IsEmpty(str) || IsEmpty(value))
+			return -1;
+		return str.IndexOf(value, startIndex);
+	}
+
+	/// <summary>
+	/// 获取字符串中指定字符的最后索引
+	/// </summary>
+	public static int LastIndexOf(string str, char value)
+	{
+		if (IsEmpty(str))
+			return -1;
+		return str.LastIndexOf(value);
+	}
+
+
 
 	/// <summary>
 	/// 是否相等（忽略大小写）
@@ -676,12 +762,52 @@ public static class StrUtil
 	}
 
 	/// <summary>
+	/// 如果缺少后缀则追加
+	/// </summary>
+	public static string AppendIfMissing(string str, string suffix, bool ignoreCase)
+	{
+		if (IsEmpty(str))
+			return str;
+		if (ignoreCase)
+		{
+			if (str.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
+				return str;
+		}
+		else
+		{
+			if (str.EndsWith(suffix))
+				return str;
+		}
+		return str + suffix;
+	}
+
+	/// <summary>
 	/// 如果缺少前缀则前置
 	/// </summary>
 	public static string PrependIfMissing(string str, string prefix)
 	{
 		if (IsEmpty(str) || str.StartsWith(prefix))
 			return str;
+		return prefix + str;
+	}
+
+	/// <summary>
+	/// 如果缺少前缀则前置
+	/// </summary>
+	public static string PrependIfMissing(string str, string prefix, bool ignoreCase)
+	{
+		if (IsEmpty(str))
+			return str;
+		if (ignoreCase)
+		{
+			if (str.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+				return str;
+		}
+		else
+		{
+			if (str.StartsWith(prefix))
+				return str;
+		}
 		return prefix + str;
 	}
 

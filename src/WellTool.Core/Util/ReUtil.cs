@@ -151,18 +151,43 @@ public static class ReUtil
 	}
 
 	/// <summary>
-	/// 获取所有匹配项（GetAll 的别名）
+	/// 执行正则表达式匹配
 	/// </summary>
-	/// <param name="text">文本</param>
 	/// <param name="pattern">正则表达式</param>
-	/// <returns>匹配的值列表</returns>
-	public static List<string> GetMatchs(string text, string pattern)
+	/// <param name="text">文本</param>
+	/// <returns>匹配结果</returns>
+	public static Match Match(string pattern, string text)
 	{
-		return GetAll(text, pattern);
+		if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(pattern))
+		{
+			return null;
+		}
+		return Regex.Match(text, pattern);
 	}
 
 	/// <summary>
-	/// 替换所有匹配项（Replace 的别名）
+	/// 执行正则表达式匹配，获取所有匹配结果
+	/// </summary>
+	/// <param name="pattern">正则表达式</param>
+	/// <param name="text">文本</param>
+	/// <returns>匹配结果列表</returns>
+	public static List<Match> GetMatchs(string pattern, string text)
+	{
+		var result = new List<Match>();
+		if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(pattern))
+		{
+			return result;
+		}
+		var matches = Regex.Matches(text, pattern);
+		foreach (Match match in matches)
+		{
+			result.Add(match);
+		}
+		return result;
+	}
+
+	/// <summary>
+	/// 替换所有匹配的文本
 	/// </summary>
 	/// <param name="text">文本</param>
 	/// <param name="pattern">正则表达式</param>
@@ -174,7 +199,7 @@ public static class ReUtil
 	}
 
 	/// <summary>
-	/// 只替换第一个匹配项
+	/// 替换第一个匹配的文本
 	/// </summary>
 	/// <param name="text">文本</param>
 	/// <param name="pattern">正则表达式</param>
@@ -190,33 +215,33 @@ public static class ReUtil
 	}
 
 	/// <summary>
-	/// 删除第一个匹配项
+	/// 删除第一个匹配的文本
 	/// </summary>
-	/// <param name="text">文本</param>
 	/// <param name="pattern">正则表达式</param>
+	/// <param name="text">文本</param>
 	/// <returns>删除后的文本</returns>
-	public static string DelFirst(string text, string pattern)
+	public static string DelFirst(string pattern, string text)
 	{
 		return ReplaceFirst(text, pattern, string.Empty);
 	}
 
 	/// <summary>
-	/// 删除所有匹配项
+	/// 删除所有匹配的文本
 	/// </summary>
-	/// <param name="text">文本</param>
 	/// <param name="pattern">正则表达式</param>
+	/// <param name="text">文本</param>
 	/// <returns>删除后的文本</returns>
-	public static string DelAll(string text, string pattern)
+	public static string DelAll(string pattern, string text)
 	{
-		return Replace(text, pattern, string.Empty);
+		return ReplaceAll(text, pattern, string.Empty);
 	}
 
 	/// <summary>
-	/// 检查文本是否包含匹配项
+	/// 检查文本是否包含匹配的内容
 	/// </summary>
 	/// <param name="text">文本</param>
 	/// <param name="pattern">正则表达式</param>
-	/// <returns>是否包含匹配项</returns>
+	/// <returns>是否包含</returns>
 	public static bool Contains(string text, string pattern)
 	{
 		return IsMatch(text, pattern);

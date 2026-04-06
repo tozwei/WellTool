@@ -23,6 +23,11 @@ namespace WellTool.Crypto.Symmetric
     public class AES : SymmetricCrypto
     {
         /// <summary>
+        /// 无参构造函数
+        /// </summary>
+        public AES() : base(SymmetricAlgorithmType.AES, new byte[32]) { }
+
+        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="key">密钥</param>
