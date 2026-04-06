@@ -31,7 +31,7 @@ namespace WellTool.Crypto
         /// </summary>
         public static Symmetric.SM4 CreateSM4(string key)
         {
-            return new Symmetric.SM4(key);
+            return new Symmetric.SM4(System.Text.Encoding.UTF8.GetBytes(key));
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace WellTool.Crypto
         /// </summary>
         public static string SM3(string data)
         {
-            return Digest.SM3.DigestHex(data);
+            return new Digest.SM3().DigestHex(data);
         }
     }
 }

@@ -15,7 +15,6 @@ namespace WellTool.Core.Tests
             var obj = new object();
             var softRef = ReferenceUtil.CreateSoftReference(obj);
             Assert.NotNull(softRef);
-            GC.TryGet allocatable Bytes(out _, out _);
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();

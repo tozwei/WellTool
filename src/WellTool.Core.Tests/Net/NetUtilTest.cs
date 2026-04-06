@@ -75,8 +75,8 @@ public class NetUtilTest
     public void GetUrlParametersTest()
     {
         var url = "http://example.com?a=1&b=2";
-        var params = NetUtil.GetUrlParameters(url);
-        Assert.Equal("1", params["a"]);
-        Assert.Equal("2", params["b"]);
+        var parameters = NetUtil.GetUrlParameters(url);
+        Assert.Equal("1", parameters["a"]);
+        Assert.Equal("2", parameters["b"]);
     }
 }

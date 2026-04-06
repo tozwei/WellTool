@@ -6,7 +6,7 @@ namespace WellTool.Core.Tests;
 public class WeightRandomTest
 {
     [Fact]
-    public void WeightRandomTest()
+    public void WeightRandomBasicTest()
     {
         var random = new WeightRandom<string>();
         random.Add("A", 10);

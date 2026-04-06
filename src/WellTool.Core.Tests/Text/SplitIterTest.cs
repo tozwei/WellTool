@@ -6,7 +6,7 @@ namespace WellTool.Core.Tests;
 public class SplitIterTest
 {
     [Fact]
-    public void SplitIterTest()
+    public void SplitIterBasicTest()
     {
         var text = "a,b,c,d";
         var splitIter = new SplitIter(text, ',');

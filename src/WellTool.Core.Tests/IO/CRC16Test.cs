@@ -26,7 +26,7 @@ public class CRC16Test
     [Fact]
     public void Crc16WithModelTest()
     {
-        var data = "123456789" u8.ToArray();
+        var data = "123456789"u8.ToArray();
 
         // Test with different models
         var crcIBM = CRC16Util.Calculate(data, CRC16Util.MODEL_IBM);
