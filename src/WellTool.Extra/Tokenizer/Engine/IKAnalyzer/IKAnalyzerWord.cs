@@ -55,5 +55,20 @@ namespace WellTool.Extra.Tokenizer.Engine.IKAnalyzer
         /// 返回文本表示
         /// </summary>
         public override string ToString() => GetText();
+
+        /// <summary>
+        /// 比较两个单词
+        /// </summary>
+        /// <param name="obj">要比较的对象</param>
+        /// <returns>比较结果</returns>
+        public int CompareTo(object? obj)
+        {
+            if (obj == null) return 1;
+            if (obj is WellTool.Extra.Tokenizer.Word otherWord)
+            {
+                return string.Compare(this.GetText(), otherWord.GetText(), StringComparison.Ordinal);
+            }
+            throw new ArgumentException("Object is not a Word");
+        }
     }
 }

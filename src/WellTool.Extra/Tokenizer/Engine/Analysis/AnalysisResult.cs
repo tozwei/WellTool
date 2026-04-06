@@ -30,7 +30,7 @@ namespace WellTool.Extra.Tokenizer.Engine.Analysis
         /// 获取下一个单词
         /// </summary>
         /// <returns>下一个单词或null</returns>
-        protected override Word NextWord()
+        protected override WellTool.Extra.Tokenizer.Word NextWord()
         {
             if (_stream.IncrementToken())
             {
@@ -42,10 +42,9 @@ namespace WellTool.Extra.Tokenizer.Engine.Analysis
         /// <summary>
         /// 释放资源
         /// </summary>
-        public override void Dispose()
+        public void Dispose()
         {
             _stream?.Dispose();
-            base.Dispose();
         }
     }
 }
