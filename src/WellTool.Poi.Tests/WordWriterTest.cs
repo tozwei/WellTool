@@ -15,8 +15,8 @@ namespace WellTool.Poi.Tests
             try
             {
                 using var writer = WellTool.Poi.Word.WordUtil.GetWriter(tempFile);
-                writer.Write("Hello World!");
-                writer.Save();
+                writer.AddText(null, null, "Hello World!");
+                writer.Flush();
                 
                 Assert.True(File.Exists(tempFile));
             }
@@ -34,10 +34,10 @@ namespace WellTool.Poi.Tests
             try
             {
                 using var writer = WellTool.Poi.Word.WordUtil.GetWriter(tempFile);
-                writer.Write("Line 1");
-                writer.Write("Line 2");
-                writer.Write("Line 3");
-                writer.Save();
+                writer.AddText(null, null, "Line 1");
+                writer.AddText(null, null, "Line 2");
+                writer.AddText(null, null, "Line 3");
+                writer.Flush();
                 
                 Assert.True(File.Exists(tempFile));
             }
@@ -55,7 +55,7 @@ namespace WellTool.Poi.Tests
             try
             {
                 using var writer = WellTool.Poi.Word.WordUtil.GetWriter(tempFile);
-                writer.Save();
+                writer.Flush();
                 
                 Assert.True(File.Exists(tempFile));
             }
@@ -73,8 +73,8 @@ namespace WellTool.Poi.Tests
             try
             {
                 using var writer = WellTool.Poi.Word.WordUtil.GetWriter(tempFile);
-                writer.Write("Special chars: <>&\"'中文测试");
-                writer.Save();
+                writer.AddText(null, null, "Special chars: <>&\"'中文测试");
+                writer.Flush();
                 
                 Assert.True(File.Exists(tempFile));
             }
@@ -94,8 +94,8 @@ namespace WellTool.Poi.Tests
                 using var writer = WellTool.Poi.Word.WordUtil.GetWriter(tempFile);
                 
                 var content = new string('A', 10000);
-                writer.Write(content);
-                writer.Save();
+                writer.AddText(null, null, content);
+                writer.Flush();
                 
                 Assert.True(File.Exists(tempFile));
                 Assert.True(new FileInfo(tempFile).Length > 0);

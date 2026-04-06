@@ -13,14 +13,14 @@ namespace WellTool.Poi.Tests
         [Fact]
         public void TestCreateWorkbook()
         {
-            var workbook = WellTool.Poi.Excel.WorkbookUtil.Create();
+            var workbook = WellTool.Poi.Excel.WorkbookUtil.CreateBook(true);
             Assert.NotNull(workbook);
         }
 
         [Fact]
         public void TestCreateSheet()
         {
-            var workbook = WellTool.Poi.Excel.WorkbookUtil.Create();
+            var workbook = WellTool.Poi.Excel.WorkbookUtil.CreateBook(true);
             var sheet = workbook.CreateSheet("TestSheet");
             Assert.NotNull(sheet);
         }
@@ -28,30 +28,30 @@ namespace WellTool.Poi.Tests
         [Fact]
         public void TestGetSheetNames()
         {
-            var workbook = WellTool.Poi.Excel.WorkbookUtil.Create();
+            var workbook = WellTool.Poi.Excel.WorkbookUtil.CreateBook(true);
             workbook.CreateSheet("Sheet1");
             workbook.CreateSheet("Sheet2");
             
-            var sheetNames = workbook.GetSheetNames();
-            Assert.NotNull(sheetNames);
-            Assert.Equal(2, sheetNames.Count);
+            var sheetCount = workbook.NumberOfSheets;
+            Assert.True(sheetCount > 0);
+            Assert.Equal(2, sheetCount);
         }
 
         [Fact]
         public void TestGetSheetByIndex()
         {
-            var workbook = WellTool.Poi.Excel.WorkbookUtil.Create();
+            var workbook = WellTool.Poi.Excel.WorkbookUtil.CreateBook(true);
             workbook.CreateSheet("First");
             workbook.CreateSheet("Second");
             
-            var sheet = workbook.GetSheet(1);
+            var sheet = workbook.GetSheetAt(1);
             Assert.NotNull(sheet);
         }
 
         [Fact]
         public void TestGetSheetByName()
         {
-            var workbook = WellTool.Poi.Excel.WorkbookUtil.Create();
+            var workbook = WellTool.Poi.Excel.WorkbookUtil.CreateBook(true);
             workbook.CreateSheet("TestSheet");
             
             var sheet = workbook.GetSheet("TestSheet");
@@ -61,12 +61,12 @@ namespace WellTool.Poi.Tests
         [Fact]
         public void TestRemoveSheet()
         {
-            var workbook = WellTool.Poi.Excel.WorkbookUtil.Create();
+            var workbook = WellTool.Poi.Excel.WorkbookUtil.CreateBook(true);
             workbook.CreateSheet("ToRemove");
             
-            workbook.RemoveSheet(0);
-            var sheetNames = workbook.GetSheetNames();
-            Assert.Equal(0, sheetNames.Count);
+            workbook.RemoveSheetAt(0);
+            var sheetCount = workbook.NumberOfSheets;
+            Assert.Equal(0, sheetCount);
         }
     }
 }

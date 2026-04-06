@@ -14,8 +14,8 @@
 using System;
 using System.Security.Cryptography;
 using Xunit;
-using WellTool.Crypto;
 using WellTool.Crypto.Symmetric;
+using DES = WellTool.Crypto.Symmetric.DES;
 
 namespace WellTool.Crypto.Tests
 {

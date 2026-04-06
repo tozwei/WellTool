@@ -24,6 +24,38 @@ namespace WellTool.Crypto.Digest
     public class MD5
     {
         /// <summary>
+        /// 构造函数
+        /// </summary>
+        public MD5()
+        {
+        }
+
+        /// <summary>
+        /// 计算MD5消息摘要（实例方法）
+        /// </summary>
+        /// <param name="data">待计算的数据</param>
+        /// <returns>消息摘要</returns>
+        public byte[] Digest(byte[] data)
+        {
+            using (var md5 = new System.Security.Cryptography.MD5CryptoServiceProvider())
+            {
+                return md5.ComputeHash(data);
+            }
+        }
+
+        /// <summary>
+        /// 计算MD5消息摘要（实例方法）
+        /// </summary>
+        /// <param name="data">待计算的数据</param>
+        /// <returns>消息摘要（十六进制字符串）</returns>
+        public string DigestHex(string data)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(data);
+            byte[] digest = Digest(bytes);
+            return BitConverter.ToString(digest).Replace("-", "").ToLower();
+        }
+
+        /// <summary>
         /// 计算MD5消息摘要
         /// </summary>
         /// <param name="data">待计算的数据</param>

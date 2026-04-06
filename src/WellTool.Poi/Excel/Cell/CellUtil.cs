@@ -449,6 +449,59 @@ namespace WellTool.Poi.Excel.Cell
             cell.CellComment = comment;
         }
 
+        /// <summary>
+        /// 根据列号和行号获取单元格地址
+        /// </summary>
+        /// <param name="column">列号，从0开始</param>
+        /// <param name="row">行号，从0开始</param>
+        /// <returns>单元格地址，如"A1"</returns>
+        public static string GetCellAddress(int column, int row)
+        {
+            var columnName = string.Empty;
+            while (column >= 0)
+            {
+                columnName = ((char)('A' + column % 26)) + columnName;
+                column = column / 26 - 1;
+            }
+            return columnName + (row + 1);
+        }
+
+        /// <summary>
+        /// 根据单元格地址获取列号
+        /// </summary>
+        /// <param name="address">单元格地址，如"A1"</param>
+        /// <returns>列号，从0开始</returns>
+        public static int GetCellColumn(string address)
+        {
+            int column = 0;
+            int i = 0;
+            while (i < address.Length && char.IsLetter(address[i]))
+            {
+                column = column * 26 + (char.ToUpper(address[i]) - 'A' + 1);
+                i++;
+            }
+            return column - 1;
+        }
+
+        /// <summary>
+        /// 根据单元格地址获取行号
+        /// </summary>
+        /// <param name="address">单元格地址，如"A1"</param>
+        /// <returns>行号，从0开始</returns>
+        public static int GetCellRow(string address)
+        {
+            int i = 0;
+            while (i < address.Length && char.IsLetter(address[i]))
+            {
+                i++;
+            }
+            if (i < address.Length && int.TryParse(address.Substring(i), out int row))
+            {
+                return row - 1;
+            }
+            return -1;
+        }
+
         // -------------------------------------------------------------------------------------------------------------- Private method start
 
         /// <summary>

@@ -59,7 +59,7 @@ namespace WellTool.Poi.Tests
                 // Then open it with FileUtil
                 using var workbook = WellTool.Poi.Excel.ExcelFileUtil.Open(tempFile);
                 Assert.NotNull(workbook);
-                Assert.True(workbook.GetSheetNames().Count > 0);
+                Assert.True(workbook.NumberOfSheets > 0);
             }
             finally
             {

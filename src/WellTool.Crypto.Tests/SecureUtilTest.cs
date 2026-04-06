@@ -17,6 +17,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Xunit;
 using WellTool.Crypto.Digest;
+using MD5 = WellTool.Crypto.Digest.MD5;
 
 namespace WellTool.Crypto.Tests
 {

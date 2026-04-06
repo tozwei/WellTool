@@ -1,3 +1,5 @@
+using WellTool.Core.Util;
+
 namespace WellTool.Core.Tests;
 
 
@@ -52,8 +54,8 @@ public class ArrayUtilTest
     [Fact]
     public void CloneTest()
     {
-        Integer[] b = { 1, 2, 3 };
-        Integer[] cloneB = ArrayUtil.Clone(b);
+        int[] b = { 1, 2, 3 };
+        int[] cloneB = ArrayUtil.Clone(b);
         Assert.Equal(b, cloneB);
 
         int[] a = { 1, 2, 3 };

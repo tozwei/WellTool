@@ -119,3 +119,4 @@
 /src/nupkg
 
 .fake
+/build_crypto.txt

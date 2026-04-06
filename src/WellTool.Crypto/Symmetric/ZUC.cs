@@ -7,6 +7,68 @@ namespace WellTool.Crypto.Symmetric
     /// </summary>
     public class ZUC
     {
+        private readonly byte[] _key;
+        private readonly byte[] _iv;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="key">密钥</param>
+        /// <param name="iv">初始化向量</param>
+        public ZUC(byte[] key, byte[] iv)
+        {
+            _key = key;
+            _iv = iv;
+        }
+
+        /// <summary>
+        /// 加密
+        /// </summary>
+        /// <param name="plaintext">明文</param>
+        /// <returns>密文</returns>
+        public byte[] Encrypt(byte[] plaintext)
+        {
+            return Encrypt(plaintext, _key, _iv);
+        }
+
+        /// <summary>
+        /// 解密
+        /// </summary>
+        /// <param name="ciphertext">密文</param>
+        /// <returns>明文</returns>
+        public byte[] Decrypt(byte[] ciphertext)
+        {
+            return Decrypt(ciphertext, _key, _iv);
+        }
+
+        /// <summary>
+        /// 加密字符串并返回十六进制
+        /// </summary>
+        /// <param name="data">明文</param>
+        /// <returns>密文（十六进制）</returns>
+        public string EncryptHex(string data)
+        {
+            var bytes = System.Text.Encoding.UTF8.GetBytes(data);
+            var encrypted = Encrypt(bytes);
+            return BitConverter.ToString(encrypted).Replace("-", "").ToLower();
+        }
+
+        /// <summary>
+        /// 解密十六进制字符串
+        /// </summary>
+        /// <param name="hexData">密文（十六进制）</param>
+        /// <returns>明文</returns>
+        public string DecryptStr(string hexData)
+        {
+            var bytes = new byte[hexData.Length / 2];
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                bytes[i] = Convert.ToByte(hexData.Substring(i * 2, 2), 16);
+            }
+            var decrypted = Decrypt(bytes);
+            return System.Text.Encoding.UTF8.GetString(decrypted);
+        }
+
         /// <summary>
         /// 加密
         /// </summary>

@@ -107,6 +107,16 @@ namespace WellTool.Crypto.Asymmetric
         }
 
         /// <summary>
+        /// 根据 SignAlgorithm 创建 Sign 对象
+        /// </summary>
+        /// <param name="algorithm">签名算法</param>
+        /// <returns>Sign 对象</returns>
+        public static Sign Create(SignAlgorithm algorithm)
+        {
+            return new Sign(algorithm, Array.Empty<byte>(), Array.Empty<byte>());
+        }
+
+        /// <summary>
         /// 验证签名
         /// </summary>
         /// <param name="data">待验证数据</param>
@@ -115,6 +125,16 @@ namespace WellTool.Crypto.Asymmetric
         public bool Verify(byte[] data, byte[] signature)
         {
             return VerifyData(data, signature);
+        }
+
+        /// <summary>
+        /// 签名（别名方法）
+        /// </summary>
+        /// <param name="data">待签名数据</param>
+        /// <returns>签名</returns>
+        public byte[] Sign(byte[] data)
+        {
+            return SignData(data);
         }
 
         /// <summary>

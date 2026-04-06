@@ -128,14 +128,14 @@ public class WordUtilTests
         try
         {
             // 创建Word写入器
-            using var writer = WellTool.Poi.WordUtil.GetWriter(tempFile);
+            using var writer = WellTool.Poi.Word.WordUtil.GetWriter(tempFile);
             
             // 写入文本
-            writer.Write("Hello, WellTool!");
-            writer.Write("This is a test document.");
+            writer.AddText(null, null, "Hello, WellTool!");
+            writer.AddText(null, null, "This is a test document.");
             
             // 保存文件
-            writer.Save();
+            writer.Flush();
             
             // 验证文件已创建
             Assert.True(File.Exists(tempFile));
