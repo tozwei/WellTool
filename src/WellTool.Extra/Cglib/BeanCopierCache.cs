@@ -12,11 +12,56 @@ namespace WellTool.Extra.Cglib
     public static class BeanCopierCache
     {
         /// <summary>
-        /// 获取单例实例（返回静态类本身）
+        /// 获取单例实例
         /// </summary>
-        public static BeanCopierCache Instance => default;
+        public static BeanCopierCacheAccessor Instance { get; } = new BeanCopierCacheAccessor();
 
         private static readonly ConcurrentDictionary<string, Delegate> Cache = new ConcurrentDictionary<string, Delegate>();
+
+        /// <summary>
+        /// 访问器类，用于提供 Instance 属性
+        /// </summary>
+        public class BeanCopierCacheAccessor
+        {
+            /// <summary>
+            /// 获得类与转换器生成的key对应的BeanCopier（非泛型版本）
+            /// </summary>
+            public Action<object, object> Get(Type sourceType, Type targetType)
+            {
+                var key = $"{sourceType.FullName}#{targetType.FullName}#0";
+                var result = BeanCopierCache.Get<object, object>(false);
+                return (src, tgt) =>
+                {
+                    var source = Activator.CreateInstance(sourceType);
+                    var target = Activator.CreateInstance(targetType);
+                    result(source, target);
+                };
+            }
+
+            /// <summary>
+            /// 获得类与转换器生成的key对应的BeanCopier
+            /// </summary>
+            public Action<TSource, TTarget> Get<TSource, TTarget>() where TSource : new() where TTarget : new()
+            {
+                return BeanCopierCache.Get<TSource, TTarget>(false);
+            }
+
+            /// <summary>
+            /// 获得类与转换器生成的key对应的BeanCopier
+            /// </summary>
+            public Action<TSource, TTarget> Get<TSource, TTarget>(bool useConverter) where TSource : new() where TTarget : new()
+            {
+                return BeanCopierCache.Get<TSource, TTarget>(useConverter);
+            }
+
+            /// <summary>
+            /// 获得类与转换器生成的key对应的BeanCopier
+            /// </summary>
+            public Action<TSource, TTarget> Get<TSource, TTarget>(Func<object, object, object> converter) where TSource : new() where TTarget : new()
+            {
+                return BeanCopierCache.Get<TSource, TTarget>(converter);
+            }
+        }
 
         /// <summary>
         /// 获得类与转换器生成的key对应的BeanCopier

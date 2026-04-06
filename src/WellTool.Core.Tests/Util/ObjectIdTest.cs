@@ -9,15 +9,15 @@ public class ObjectIdTest
     {
         var objectId = WellTool.Core.Lang.ObjectId.Get();
         Assert.NotNull(objectId);
-        Assert.Equal(24, objectId.Length);
+        Assert.Equal(24, objectId.ToString().Length);
     }
 
     [Fact]
     public void ParseTest()
     {
         var objectId = WellTool.Core.Lang.ObjectId.Get();
-        var parsed = WellTool.Core.Lang.ObjectId.Parse(objectId);
-        Assert.Equal(objectId, parsed.ToString());
+        var parsed = WellTool.Core.Lang.ObjectId.Parse(objectId.ToString());
+        Assert.Equal(objectId.ToString(), parsed.ToString());
     }
 
     [Fact]
@@ -53,3 +53,4 @@ public class ObjectIdTest
         Assert.Equal(objectId1, objectId2);
     }
 }
+

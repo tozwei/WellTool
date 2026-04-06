@@ -32,7 +32,7 @@ public static class EnableSpringUtil
     /// <typeparam name="T">Bean类型</typeparam>
     /// <param name="name">Bean名称</param>
     /// <returns>Bean实例</returns>
-    public static T GetBean<T>(string name)
+    public static T GetBean<T>(string name) where T : class
     {
         try
         {
@@ -40,7 +40,7 @@ public static class EnableSpringUtil
         }
         catch
         {
-            return null;
+            return default;
         }
     }
 

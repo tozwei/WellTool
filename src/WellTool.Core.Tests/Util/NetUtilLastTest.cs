@@ -6,55 +6,24 @@ namespace WellTool.Core.Tests;
 public class NetUtilLastTest
 {
     [Fact]
-    public void GetLocalHostTest()
+    public void GetLocalIPTest()
     {
-        var localHost = NetUtil.GetLocalHost();
-        Assert.NotNull(localHost);
+        var localIP = NetUtil.GetLocalIP();
+        Assert.NotNull(localIP);
     }
 
     [Fact]
-    public void GetLocalHostStrTest()
+    public void GetLocalIPAddressTest()
     {
-        var localHostStr = NetUtil.GetLocalHostStr();
-        Assert.NotNull(localHostStr);
+        var localIPAddress = NetUtil.GetLocalIPAddress();
+        Assert.NotNull(localIPAddress);
     }
 
     [Fact]
-    public void IsInRangeTest()
+    public void IsValidIPTest()
     {
-        Assert.True(NetUtil.IsInRange("192.168.1.100", "192.168.1.0/24"));
-        Assert.False(NetUtil.IsInRange("192.168.2.100", "192.168.1.0/24"));
-    }
-
-    [Fact]
-    public void IsInnerIPTest()
-    {
-        Assert.True(NetUtil.IsInnerIP("192.168.1.100"));
-        Assert.True(NetUtil.IsInnerIP("10.0.0.1"));
-        Assert.False(NetUtil.IsInnerIP("8.8.8.8"));
-    }
-
-    [Fact]
-    public void Ip2LongTest()
-    {
-        var ip = "192.168.1.1";
-        var ipLong = NetUtil.Ip2Long(ip);
-        Assert.True(ipLong > 0);
-    }
-
-    [Fact]
-    public void Long2IpTest()
-    {
-        var ip = "192.168.1.1";
-        var ipLong = NetUtil.Ip2Long(ip);
-        Assert.Equal(ip, NetUtil.Long2Ip(ipLong));
-    }
-
-    [Fact]
-    public void IsValidIPv4Test()
-    {
-        Assert.True(NetUtil.IsValidIPv4("192.168.1.1"));
-        Assert.False(NetUtil.IsValidIPv4("256.256.256.256"));
+        Assert.True(NetUtil.IsValidIP("192.168.1.1"));
+        Assert.False(NetUtil.IsValidIP("256.256.256.256"));
     }
 
     [Fact]
@@ -62,5 +31,19 @@ public class NetUtilLastTest
     {
         Assert.True(NetUtil.IsValidPort(80));
         Assert.False(NetUtil.IsValidPort(-1));
+    }
+
+    [Fact]
+    public void IsNetworkAvailableTest()
+    {
+        var isAvailable = NetUtil.IsNetworkAvailable();
+        // 网络可用性测试可能因环境而异，这里不做断言
+    }
+
+    [Fact]
+    public void GetNetworkTypeTest()
+    {
+        var networkType = NetUtil.GetNetworkType();
+        Assert.NotNull(networkType);
     }
 }

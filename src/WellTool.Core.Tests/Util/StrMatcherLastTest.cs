@@ -6,21 +6,41 @@ namespace WellTool.Core.Tests;
 public class StrMatcherLastTest
 {
     [Fact]
-    public void IsMatchTest()
-    {
-        Assert.True(StrMatcher.IsMatch("hello", "h*"));
-        Assert.False(StrMatcher.IsMatch("world", "hello"));
-    }
-
-    [Fact]
     public void MatchTest()
     {
-        Assert.True(StrMatcher.Match("test", "t*"));
+        var matcher = StrMatcher.Of("test");
+        var result = matcher.Match("test string", 0);
+        Assert.Equal(0, result);
     }
 
     [Fact]
-    public void LikeTest()
+    public void MatchCharTest()
     {
-        Assert.True(StrMatcher.Like("test", "*est"));
+        var matcher = StrMatcher.Of('t');
+        var result = matcher.Match("test", 0);
+        Assert.Equal(0, result);
+    }
+
+    [Fact]
+    public void MatchNotFoundTest()
+    {
+        var matcher = StrMatcher.Of("not found");
+        var result = matcher.Match("test string", 0);
+        Assert.Equal(-1, result);
+    }
+
+    [Fact]
+    public void LengthTest()
+    {
+        var matcher = StrMatcher.Of("test");
+        Assert.Equal(4, matcher.Length);
+    }
+
+    [Fact]
+    public void MatcherTest()
+    {
+        var matcher = StrMatcher.Of("test");
+        Assert.Equal("test", matcher.Matcher);
     }
 }
+

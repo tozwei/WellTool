@@ -80,10 +80,11 @@ public class ExtraUtil
     /// <summary>
     /// 获取二维码工具
     /// </summary>
-    /// <returns>二维码工具</returns>
-    public QrCodeUtil QrCode()
+    /// <returns>二维码工具（静态类返回null）</returns>
+    public object QrCode()
     {
-        return QrCodeUtil.Instance;
+        // 静态类没有实例
+        return null;
     }
 
     /// <summary>

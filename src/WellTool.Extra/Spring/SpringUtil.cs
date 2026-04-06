@@ -376,6 +376,13 @@ namespace WellTool.Extra.Spring
         object GetBean(string name, Type type);
 
         /// <summary>
+        /// 通过类型获取Bean
+        /// </summary>
+        /// <param name="type">Bean类型</param>
+        /// <returns>Bean</returns>
+        object GetBean(Type type);
+
+        /// <summary>
         /// 获取指定类型对应的所有Bean
         /// </summary>
         /// <typeparam name="T">Bean类型</typeparam>

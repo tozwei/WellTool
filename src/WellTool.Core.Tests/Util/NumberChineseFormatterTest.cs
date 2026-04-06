@@ -17,15 +17,15 @@ public class NumberChineseFormatterTest2
     [Fact]
     public void FormatUpperTest()
     {
-        Assert.Equal("零", NumberChineseFormatter.FormatUpper(0));
-        Assert.Equal("壹", NumberChineseFormatter.FormatUpper(1));
-        Assert.Equal("拾", NumberChineseFormatter.FormatUpper(10));
+        Assert.Equal("零", NumberChineseFormatter.Format(0, true));
+        Assert.Equal("壹", NumberChineseFormatter.Format(1, true));
+        Assert.Equal("拾", NumberChineseFormatter.Format(10, true));
     }
 
     [Fact]
-    public void FormatDecimalTest()
+    public void FormatDoubleTest()
     {
-        var result = NumberChineseFormatter.FormatDecimal(123.45m);
+        var result = NumberChineseFormatter.Format(123.45, true, true);
         Assert.NotNull(result);
     }
 
@@ -35,3 +35,4 @@ public class NumberChineseFormatterTest2
         Assert.Contains("负", NumberChineseFormatter.Format(-1));
     }
 }
+

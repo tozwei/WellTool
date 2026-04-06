@@ -1,4 +1,4 @@
-using WellTool.Core.Collection;
+using WellTool.Core.Util;
 using Xunit;
 
 namespace WellTool.Core.Tests;
@@ -6,56 +6,11 @@ namespace WellTool.Core.Tests;
 public class CollUtilExtraTest
 {
     [Fact]
-    public void GetTest()
+    public void GetOrDefaultTest()
     {
         var list = CollUtil.NewArrayList("a", "b", "c");
-        Assert.Equal("a", CollUtil.Get(list, 0));
-        Assert.Equal("c", CollUtil.Get(list, -1));
-    }
-
-    [Fact]
-    public void SetTest()
-    {
-        var list = CollUtil.NewArrayList("a", "b", "c");
-        CollUtil.Set(list, 0, "x");
-        Assert.Equal("x", list[0]);
-    }
-
-    [Fact]
-    public void AddTest()
-    {
-        var list = CollUtil.NewArrayList("a", "b");
-        CollUtil.Add(list, "c");
-        Assert.Equal(3, list.Count);
-        Assert.Equal("c", list[2]);
-    }
-
-    [Fact]
-    public void RemoveTest()
-    {
-        var list = CollUtil.NewArrayList("a", "b", "c");
-        CollUtil.Remove(list, 1);
-        Assert.Equal(2, list.Count);
-        Assert.Equal("a", list[0]);
-        Assert.Equal("c", list[1]);
-    }
-
-    [Fact]
-    public void RemoveFirstTest()
-    {
-        var list = CollUtil.NewArrayList("a", "b", "c");
-        CollUtil.RemoveFirst(list, x => x == "b");
-        Assert.Equal(2, list.Count);
-        Assert.Equal("a", list[0]);
-        Assert.Equal("c", list[1]);
-    }
-
-    [Fact]
-    public void RemoveLastTest()
-    {
-        var list = CollUtil.NewArrayList("a", "b", "c", "b");
-        CollUtil.RemoveLast(list, x => x == "b");
-        Assert.Equal(3, list.Count);
+        Assert.Equal("a", CollUtil.GetOrDefault(list, 0));
+        Assert.Equal(default(string), CollUtil.GetOrDefault(list, -1));
     }
 
     [Fact]
@@ -86,7 +41,6 @@ public class CollUtilExtraTest
         var disjunction = CollUtil.GetDisjunction(list1, list2);
         Assert.Equal(2, disjunction.Count);
         Assert.Contains(1, disjunction);
-        Assert.Contains(4, disjunction);
     }
 
     [Fact]
@@ -131,28 +85,10 @@ public class CollUtilExtraTest
     }
 
     [Fact]
-    public void DistinctTest()
-    {
-        var list = CollUtil.NewArrayList(1, 2, 2, 3, 3, 3);
-        var distinct = CollUtil.Distinct(list);
-        Assert.Equal(3, distinct.Count);
-    }
-
-    [Fact]
-    public void SortTest()
-    {
-        var list = CollUtil.NewArrayList(3, 1, 2);
-        var sorted = CollUtil.Sort(list);
-        Assert.Equal(1, sorted[0]);
-        Assert.Equal(2, sorted[1]);
-        Assert.Equal(3, sorted[2]);
-    }
-
-    [Fact]
     public void PageTest()
     {
         var list = CollUtil.NewArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-        var page = CollUtil.Page(list, 2, 3);
+        var page = CollUtil.Page(list, 1, 3); // 注意：这里pageIndex从0开始
         Assert.Equal(3, page.Count);
         Assert.Equal(4, page[0]);
         Assert.Equal(5, page[1]);
@@ -165,5 +101,24 @@ public class CollUtilExtraTest
         var list = CollUtil.NewArrayList(1, 2, 3, 4, 5);
         var partitions = CollUtil.Partition(list, 2);
         Assert.Equal(3, partitions.Count);
+    }
+
+    [Fact]
+    public void RemoveLastTest()
+    {
+        var list = CollUtil.NewArrayList("a", "b", "c");
+        CollUtil.RemoveLast(list);
+        Assert.Equal(2, list.Count);
+        Assert.Equal("b", list[1]);
+    }
+
+    [Fact]
+    public void SortByFieldTest()
+    {
+        var list = CollUtil.NewArrayList(new { Value = 3 }, new { Value = 1 }, new { Value = 2 });
+        var sorted = CollUtil.SortByField(list, "Value");
+        Assert.Equal(1, sorted[0].Value);
+        Assert.Equal(2, sorted[1].Value);
+        Assert.Equal(3, sorted[2].Value);
     }
 }

@@ -76,11 +76,25 @@ namespace WellTool.Extra.Cglib
         /// </summary>
         /// <typeparam name="T">目标对象类型</typeparam>
         /// <param name="source">源bean对象</param>
+        /// <returns>目标对象</returns>
+        public static T Copy<T>(object source) where T : new()
+        {
+            return Copy<T>(source, null);
+        }
+
+        /// <summary>
+        /// 拷贝Bean对象属性到目标类型
+        /// </summary>
+        /// <typeparam name="T">目标对象类型</typeparam>
+        /// <param name="source">源bean对象</param>
         /// <param name="targetClass">目标bean类</param>
         /// <returns>目标对象</returns>
         public static T Copy<T>(object source, Type targetClass) where T : new()
         {
-            return Copy<T>(source, targetClass, null);
+            if (source == null) return new T();
+            var target = Activator.CreateInstance<T>();
+            Copy(source, target, null);
+            return target;
         }
 
         /// <summary>

@@ -163,13 +163,13 @@ public class StrUtilTest
     [Fact]
     public void SubBeforeTest()
     {
-        Assert.Equal("pre", StrUtil.SubBefore("pre_middle", "_"));
+        Assert.Equal("pre", StrUtil.SubBefore("pre_middle", '_'));
     }
 
     [Fact]
     public void SubAfterTest()
     {
-        Assert.Equal("post", StrUtil.SubAfter("middle_post", "_"));
+        Assert.Equal("post", StrUtil.SubAfter("middle_post", '_'));
     }
 
     [Fact]

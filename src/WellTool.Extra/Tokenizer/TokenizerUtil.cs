@@ -1,6 +1,9 @@
 namespace WellTool.Extra.Tokenizer
 {
+    using System.Collections;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// 分词工具类
@@ -25,6 +28,15 @@ namespace WellTool.Extra.Tokenizer
         }
 
         /// <summary>
+        /// 引擎类型枚举
+        /// </summary>
+        public static class EngineType
+        {
+            public const string EN = "en";
+            public const string CN = "cn";
+        }
+
+        /// <summary>
         /// 根据用户引入的分词引擎，自动创建对应的分词引擎对象
         /// </summary>
         /// <returns>分词引擎</returns>
@@ -42,7 +54,7 @@ namespace WellTool.Extra.Tokenizer
         {
             if (string.IsNullOrEmpty(text))
             {
-                return new Result();
+                return null;
             }
 
             var engine = CreateEngine();
@@ -61,15 +73,71 @@ namespace WellTool.Extra.Tokenizer
         }
 
         /// <summary>
+        /// 创建分词器（返回实现了 IDisposable 的结果对象）
+        /// </summary>
+        /// <param name="text">要分词的文本</param>
+        /// <returns>分词结果</returns>
+        public static IResult Create(string text)
+        {
+            return new ResultAdapter(Tokenize(text));
+        }
+
+        /// <summary>
+        /// 创建分词器（带引擎类型）
+        /// </summary>
+        /// <param name="text">要分词的文本</param>
+        /// <param name="engine">引擎类型</param>
+        /// <returns>分词结果</returns>
+        public static IResult Create(string text, string engine)
+        {
+            return new ResultAdapter(Tokenize(text, engine));
+        }
+
+        /// <summary>
+        /// 包装 Result 接口的适配器，使其实现 IDisposable
+        /// </summary>
+        private class ResultAdapter : IResult
+        {
+            private readonly Result _inner;
+
+            public ResultAdapter(Result inner)
+            {
+                _inner = inner;
+            }
+
+            public IEnumerator<Word> GetEnumerator()
+            {
+                return _inner?.GetEnumerator() ?? Enumerable.Empty<Word>().GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+
+            public void Dispose()
+            {
+                // Result 接口不需要释放资源
+            }
+        }
+
+        /// <summary>
+        /// 可释放的分词结果接口
+        /// </summary>
+        public interface IResult : Result, IDisposable
+        {
+        }
+
+        /// <summary>
         /// 创建目录
         /// </summary>
         /// <param name="path">目录路径</param>
-        public static void Create(string path)
+        public static void CreateDirectory(string path)
         {
             // 简化实现
-            if (!System.IO.Directory.Exists(path))
+            if (!Directory.Exists(path))
             {
-                System.IO.Directory.CreateDirectory(path);
+                Directory.CreateDirectory(path);
             }
         }
     }

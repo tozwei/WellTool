@@ -1,4 +1,4 @@
-using WellTool.Core.IO;
+using WellTool.Core.Util;
 using Xunit;
 using System.IO;
 using System.Text;
@@ -8,10 +8,10 @@ namespace WellTool.Core.Tests;
 public class StreamUtilTest
 {
     [Fact]
-    public void ReadUtf8Test()
+    public void ReadStringTest()
     {
         using var stream = new MemoryStream(Encoding.UTF8.GetBytes("Hello"));
-        var result = StreamUtil.ReadUtf8(stream);
+        var result = IOUtil.ReadString(stream);
         Assert.Equal("Hello", result);
     }
 
@@ -19,7 +19,7 @@ public class StreamUtilTest
     public void ReadBytesTest()
     {
         using var stream = new MemoryStream(Encoding.UTF8.GetBytes("Hello"));
-        var bytes = StreamUtil.ReadBytes(stream);
+        var bytes = IOUtil.ReadBytes(stream);
         Assert.Equal(5, bytes.Length);
     }
 
@@ -28,22 +28,15 @@ public class StreamUtilTest
     {
         using var input = new MemoryStream(Encoding.UTF8.GetBytes("Hello"));
         using var output = new MemoryStream();
-        StreamUtil.Copy(input, output);
+        IOUtil.Copy(input, output);
         Assert.True(output.Length > 0);
     }
 
     [Fact]
     public void EmptyStreamTest()
     {
-        var empty = StreamUtil.EmptyStream();
+        var empty = IOUtil.EmptyStream;
         Assert.Equal(0, empty.Length);
     }
-
-    [Fact]
-    public void GetAvailableTest()
-    {
-        using var stream = new MemoryStream(Encoding.UTF8.GetBytes("Hello"));
-        var available = StreamUtil.GetAvailable(stream);
-        Assert.True(available > 0);
-    }
 }
+

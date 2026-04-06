@@ -68,17 +68,21 @@ public class MapUtilExtraTest
     [Fact]
     public void IsEmptyTest()
     {
-        Assert.True(MapUtil.IsEmpty(null));
-        Assert.True(MapUtil.IsEmpty(new System.Collections.Generic.Dictionary<string, object>()));
-        Assert.False(MapUtil.IsEmpty(MapUtil.NewHashMap<string, object>().Set("k", "v")));
+        Assert.True(MapUtil.IsEmpty<string, object>(null));
+        Assert.True(MapUtil.IsEmpty<string, object>(new System.Collections.Generic.Dictionary<string, object>()));
+        var map = MapUtil.NewHashMap<string, object>();
+        map["k"] = "v";
+        Assert.False(MapUtil.IsEmpty<string, object>(map));
     }
 
     [Fact]
     public void IsNotEmptyTest()
     {
-        Assert.False(MapUtil.IsNotEmpty(null));
-        Assert.False(MapUtil.IsNotEmpty(new System.Collections.Generic.Dictionary<string, object>()));
-        Assert.True(MapUtil.IsNotEmpty(MapUtil.NewHashMap<string, object>().Set("k", "v")));
+        Assert.False(MapUtil.IsNotEmpty<string, object>(null));
+        Assert.False(MapUtil.IsNotEmpty<string, object>(new System.Collections.Generic.Dictionary<string, object>()));
+        var map = MapUtil.NewHashMap<string, object>();
+        map["k"] = "v";
+        Assert.True(MapUtil.IsNotEmpty<string, object>(map));
     }
 
     [Fact]
@@ -98,7 +102,7 @@ public class MapUtilExtraTest
         var map = MapUtil.NewHashMap<string, int>();
         map["a"] = 1;
         map["b"] = 2;
-        var mapped = MapUtil.Map(map, kvp => kvp.Value * 2);
+        var mapped = MapUtil.Map<string, int, int>(map, (k, v) => v * 2);
         Assert.Equal(2, mapped["a"]);
         Assert.Equal(4, mapped["b"]);
     }

@@ -89,11 +89,34 @@ namespace WellTool.Extra.Template
         /// </summary>
         /// <param name="name">引擎名称</param>
         /// <param name="engine">引擎实例</param>
-        public static void Register(string name, TemplateEngine engine)
+        public static void Register(string name, Template engine)
         {
             if (!string.IsNullOrEmpty(name) && engine != null)
             {
-                _engines[name] = engine;
+                _engines[name] = new TemplateEngineAdapter(engine);
+            }
+        }
+
+        /// <summary>
+        /// 内部适配器类：将 Template 适配为 TemplateEngine
+        /// </summary>
+        private class TemplateEngineAdapter : TemplateEngine
+        {
+            private readonly Template _template;
+
+            public TemplateEngineAdapter(Template template)
+            {
+                _template = template;
+            }
+
+            public TemplateEngine Init(TemplateConfig config)
+            {
+                return this;
+            }
+
+            public Template GetTemplate(string resource)
+            {
+                return _template;
             }
         }
 

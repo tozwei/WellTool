@@ -27,14 +27,16 @@ public class SnowflakeTest
     public void GetWorkerIdTest()
     {
         var snowflake = new Snowflake(1, 1);
-        Assert.Equal(1, snowflake.WorkerId);
+        var id = snowflake.NextId();
+        Assert.Equal(1, snowflake.GetWorkerId(id));
     }
 
     [Fact]
     public void GetDataCenterIdTest()
     {
         var snowflake = new Snowflake(1, 2);
-        Assert.Equal(2, snowflake.DataCenterId);
+        var id = snowflake.NextId();
+        Assert.Equal(2, snowflake.GetDataCenterId(id));
     }
 
     [Fact]
@@ -50,3 +52,4 @@ public class SnowflakeTest
         Assert.Equal(1000, ids.Distinct().Count());
     }
 }
+

@@ -28,7 +28,7 @@ public class MapUtilLastTest
     {
         var map = MapUtil.NewHashMap<string, object>();
         map["count"] = 100;
-        Assert.Equal(100, map.GetInt("count"));
+        Assert.Equal(100, MapUtil.GetInt(map, "count"));
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class MapUtilLastTest
     {
         var map = MapUtil.NewHashMap<string, object>();
         map["name"] = "John";
-        Assert.Equal("John", map.GetStr("name"));
+        Assert.Equal("John", MapUtil.GetStr(map, "name"));
     }
 
     [Fact]
@@ -44,22 +44,23 @@ public class MapUtilLastTest
     {
         var map = MapUtil.NewHashMap<string, object>();
         map["enabled"] = true;
-        Assert.True(map.GetBool("enabled"));
+        Assert.True(MapUtil.GetBool(map, "enabled"));
     }
 
     [Fact]
     public void IsEmptyTest()
     {
-        Assert.True(MapUtil.IsEmpty(null));
-        Assert.True(MapUtil.IsEmpty(new System.Collections.Generic.Dictionary<string, object>()));
+        Assert.True(MapUtil.IsEmpty<string, object>(null));
+        Assert.True(MapUtil.IsEmpty<string, object>(new System.Collections.Generic.Dictionary<string, object>()));
     }
 
     [Fact]
     public void IsNotEmptyTest()
     {
-        Assert.False(MapUtil.IsNotEmpty(null));
+        Assert.False(MapUtil.IsNotEmpty<string, object>(null));
         var map = MapUtil.NewHashMap<string, object>();
         map["k"] = "v";
-        Assert.True(MapUtil.IsNotEmpty(map));
+        Assert.True(MapUtil.IsNotEmpty<string, object>(map));
     }
 }
+

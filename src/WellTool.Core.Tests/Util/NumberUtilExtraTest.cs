@@ -58,7 +58,7 @@ public class NumberUtilExtraTest
     {
         Assert.Equal(3.14, NumberUtil.Round(3.14159, 2), 0.001);
         Assert.Equal(3.1, NumberUtil.Round(3.14, 1), 0.001);
-        Assert.Equal(3, NumberUtil.Round(3.5), 0.001);
+        Assert.Equal(4, NumberUtil.Round(3.5, 0), 0.001);
     }
 
     [Fact]

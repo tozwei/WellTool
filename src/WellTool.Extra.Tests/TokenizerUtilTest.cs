@@ -35,35 +35,35 @@ public class TokenizerUtilTest
     [Fact]
     public void CreateTest()
     {
-        using var tokenizer = TokenizerUtil.Create("Java编程");
+        var tokenizer = TokenizerUtil.Create("Java编程");
         Assert.NotNull(tokenizer);
     }
 
     [Fact]
     public void CreateForChineseTest()
     {
-        using var tokenizer = TokenizerUtil.Create("中文分词测试");
+        var tokenizer = TokenizerUtil.Create("中文分词测试");
         Assert.NotNull(tokenizer);
     }
 
     [Fact]
     public void CreateForMixedTest()
     {
-        using var tokenizer = TokenizerUtil.Create("Hello你好World世界");
+        var tokenizer = TokenizerUtil.Create("Hello你好World世界");
         Assert.NotNull(tokenizer);
     }
 
     [Fact]
     public void CreateWithEnglishEngineTest()
     {
-        using var tokenizer = TokenizerUtil.Create("test text", TokenizerUtil.Engine.EN);
+        var tokenizer = TokenizerUtil.Create("test text", TokenizerUtil.EngineType.EN);
         Assert.NotNull(tokenizer);
     }
 
     [Fact]
     public void CreateWithChineseEngineTest()
     {
-        using var tokenizer = TokenizerUtil.Create("测试中文", TokenizerUtil.Engine.CN);
+        var tokenizer = TokenizerUtil.Create("测试中文", TokenizerUtil.EngineType.CN);
         Assert.NotNull(tokenizer);
     }
 }
