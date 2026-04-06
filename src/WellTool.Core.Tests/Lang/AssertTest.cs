@@ -3,81 +3,84 @@ using Xunit;
 
 namespace WellTool.Core.Tests;
 
+// 使用别名解决命名冲突
+using XAssert = Xunit.Assert;
+
 public class AssertTest
 {
     [Fact]
     public void IsNullTest()
     {
         string? a = null;
-        Assert.IsNull(a);
+        XAssert.True(Assert.IsNull(a));
     }
 
     [Fact]
     public void NotNullTest()
     {
         string? a = "test";
-        Assert.NotNull(a);
+        XAssert.True(Assert.NotNull(a));
     }
 
     [Fact]
     public void NotNullFailTest()
     {
         string? a = null;
-        Assert.Throws<ArgumentNullException>(() => Assert.NotNull(a));
+        XAssert.Throws<ArgumentNullException>(() => Assert.NotNull(a));
     }
 
     [Fact]
     public void IsTrueTest()
     {
         int i = 1;
-        Assert.IsTrue(i > 0);
+        XAssert.True(Assert.IsTrue(i > 0));
     }
 
     [Fact]
     public void IsTrueFailTest()
     {
         int i = 0;
-        Assert.Throws<IllegalArgumentException>(() => Assert.IsTrue(i > 0, IllegalArgumentException.New));
+        XAssert.Throws<IllegalArgumentException>(() => Assert.IsTrue(i > 0, IllegalArgumentException.New));
     }
 
     [Fact]
     public void IsFalseTest()
     {
         int i = 0;
-        Assert.IsFalse(i > 0);
+        XAssert.True(Assert.IsFalse(i > 0));
     }
 
     [Fact]
     public void IsFalseFailTest()
     {
         int i = 1;
-        Assert.Throws<IllegalArgumentException>(() => Assert.IsFalse(i > 0, IllegalArgumentException.New));
+        XAssert.Throws<IllegalArgumentException>(() => Assert.IsFalse(i > 0, IllegalArgumentException.New));
     }
 
     [Fact]
     public void NotEmptyTest()
     {
         var list = new List<string> { "a", "b" };
-        Assert.NotEmpty(list);
+        XAssert.True(Assert.NotEmpty(list));
     }
 
     [Fact]
     public void NotEmptyFailTest()
     {
         var list = new List<string>();
-        Assert.Throws<ArgumentException>(() => Assert.NotEmpty(list));
+        XAssert.Throws<ArgumentException>(() => Assert.NotEmpty(list));
     }
 
     [Fact]
     public void EmptyTest()
     {
         var list = new List<string>();
-        Assert.Empty(list);
+        XAssert.True(Assert.Empty(list));
     }
 
     [Fact]
     public void EmptyNullTest()
     {
-        Assert.Empty(null);
+        XAssert.True(Assert.Empty(null));
     }
 }

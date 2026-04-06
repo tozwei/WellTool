@@ -1,5 +1,6 @@
 using Xunit;
 using WellTool.Core;
+using WellTool.Core.Util;
 
 namespace WellTool.Core.Tests
 {

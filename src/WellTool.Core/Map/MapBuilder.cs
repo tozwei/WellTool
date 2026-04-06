@@ -8,7 +8,7 @@ namespace WellTool.Core.Map
     /// </summary>
     /// <typeparam name="K">键类型</typeparam>
     /// <typeparam name="V">值类型</typeparam>
-    public class MapBuilder<K, V>
+    public class MapBuilderImpl<K, V>
     {
         private readonly Dictionary<K, V> _map;
 
@@ -126,6 +126,51 @@ namespace WellTool.Core.Map
             return new Dictionary<K, V>(_map);
         }
 
+        /// <summary>
+        /// 创建 MapBuilder 实例
+        /// </summary>
+        /// <returns>MapBuilder 实例</returns>
+        public static MapBuilder<K, V> Create()
+        {
+            return new MapBuilder<K, V>();
+        }
+
+        /// <summary>
+        /// 创建 MapBuilder 实例
+        /// </summary>
+        /// <param name="capacity">初始容量</param>
+        /// <returns>MapBuilder 实例</returns>
+        public static MapBuilder<K, V> Create(int capacity)
+        {
+            return new MapBuilder<K, V>(capacity);
+        }
+
+        /// <summary>
+        /// 创建 MapBuilder 实例
+        /// </summary>
+        /// <param name="comparer">键比较器</param>
+        /// <returns>MapBuilder 实例</returns>
+        public static MapBuilder<K, V> Create(IEqualityComparer<K> comparer)
+        {
+            return new MapBuilder<K, V>(comparer);
+        }
+
+        /// <summary>
+        /// 创建 MapBuilder 实例
+        /// </summary>
+        /// <param name="dictionary">字典</param>
+        /// <returns>MapBuilder 实例</returns>
+        public static MapBuilder<K, V> Create(IDictionary<K, V> dictionary)
+        {
+            return new MapBuilder<K, V>(dictionary);
+        }
+    }
+
+    /// <summary>
+    /// MapBuilder 静态工厂类
+    /// </summary>
+    public static class MapBuilder
+    {
         /// <summary>
         /// 创建 MapBuilder 实例
         /// </summary>
