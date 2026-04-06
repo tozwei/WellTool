@@ -30,4 +30,21 @@ public static class PoiChecker
 			throw new InvalidOperationException(NoPoiErrorMsg, e);
 		}
 	}
+
+	/// <summary>
+	/// 检查NPOI是否可用
+	/// </summary>
+	/// <returns>是否可用</returns>
+	public static bool IsPoiAvailable()
+	{
+		try
+		{
+			var type = Type.GetType("NPOI.SS.UserModel.Workbook, NPOI");
+			return type != null;
+		}
+		catch
+		{
+			return false;
+		}
+	}
 }

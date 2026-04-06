@@ -66,5 +66,13 @@ namespace WellTool.Extra.Compress.Extractor
         public override void SetLength(long value)
         {
         }
+
+        /// <summary>
+        /// 写入
+        /// </summary>
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            throw new NotSupportedException("Seven7EntryInputStream does not support writing.");
+        }
     }
 }

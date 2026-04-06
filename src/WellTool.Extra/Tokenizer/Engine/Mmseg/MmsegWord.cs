@@ -3,7 +3,7 @@ namespace WellTool.Extra.Tokenizer.Engine.Mmseg
     /// <summary>
     /// Mmseg分词中的一个单词包装
     /// </summary>
-    public class MmsegWord : Word
+    public class MmsegWord : WellTool.Extra.Tokenizer.Word
     {
         /// <summary>
         /// 词文本

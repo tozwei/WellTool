@@ -3,7 +3,7 @@ namespace WellTool.Extra.Tokenizer.Engine.MyNlp
     /// <summary>
     /// MyNlp分词中的一个单词包装
     /// </summary>
-    public class MyNlpWord : Word
+    public class MyNlpWord : WellTool.Extra.Tokenizer.Word
     {
         /// <summary>
         /// 词文本

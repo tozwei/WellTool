@@ -3,7 +3,7 @@ namespace WellTool.Extra.Tokenizer.Engine.Word
     /// <summary>
     /// Word分词中的一个单词包装
     /// </summary>
-    public class WordWord : Word
+    public class WordWord : WellTool.Extra.Tokenizer.Word
     {
         /// <summary>
         /// 词文本

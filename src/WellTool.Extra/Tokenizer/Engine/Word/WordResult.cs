@@ -8,7 +8,7 @@ namespace WellTool.Extra.Tokenizer.Engine.Word
     /// </summary>
     public class WordResult : AbstractResult
     {
-        private readonly List<Word> _words;
+        private readonly List<WellTool.Extra.Tokenizer.Word> _words;
         private int _index;
 
         public WordResult(string text)
@@ -23,7 +23,7 @@ namespace WellTool.Extra.Tokenizer.Engine.Word
             }
         }
 
-        protected override Word NextWord()
+        protected override WellTool.Extra.Tokenizer.Word NextWord()
         {
             if (_index < _words.Count)
             {

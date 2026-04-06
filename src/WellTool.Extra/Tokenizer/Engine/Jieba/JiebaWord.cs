@@ -3,7 +3,7 @@ namespace WellTool.Extra.Tokenizer.Engine.Jieba
     /// <summary>
     /// Jieba分词中的一个单词包装
     /// </summary>
-    public class JiebaWord : Word
+    public class JiebaWord : WellTool.Extra.Tokenizer.Word
     {
         /// <summary>
         /// 词文本
