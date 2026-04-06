@@ -3,7 +3,7 @@ namespace WellTool.Extra.Tokenizer.Engine.Jcseg
     /// <summary>
     /// Jcseg分词中的一个单词包装
     /// </summary>
-    public class JcsegWord : Word
+    public class JcsegWord : WellTool.Extra.Tokenizer.Word
     {
         /// <summary>
         /// 词文本

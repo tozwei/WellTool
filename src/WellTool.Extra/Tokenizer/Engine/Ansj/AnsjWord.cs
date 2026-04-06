@@ -3,7 +3,7 @@ namespace WellTool.Extra.Tokenizer.Engine.Ansj
     /// <summary>
     /// Ansj分词中的一个单词包装
     /// </summary>
-    public class AnsjWord : Word
+    public class AnsjWord : WellTool.Extra.Tokenizer.Word
     {
         /// <summary>
         /// 词文本

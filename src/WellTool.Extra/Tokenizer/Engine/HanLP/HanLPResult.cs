@@ -8,7 +8,7 @@ namespace WellTool.Extra.Tokenizer.Engine.HanLP
     /// </summary>
     public class HanLPResult : AbstractResult
     {
-        private readonly List<Word> _words;
+        private readonly List<WellTool.Extra.Tokenizer.Word> _words;
         private int _index;
 
         public HanLPResult(string text)
@@ -23,7 +23,7 @@ namespace WellTool.Extra.Tokenizer.Engine.HanLP
             }
         }
 
-        protected override Word NextWord()
+        protected override WellTool.Extra.Tokenizer.Word NextWord()
         {
             if (_index < _words.Count)
             {

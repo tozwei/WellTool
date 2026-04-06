@@ -56,7 +56,7 @@ public class JWTTest
             .SetPayload("sub", "1234567890")
             .SetPayload("name", "looly")
             .SetPayload("admin", true)
-            .SetSigner(JWTSignerUtil.None());
+            .SetSigner(JwtSignerUtil.None());
 
         var token = jwt.Sign();
         Assert.NotNull(token);

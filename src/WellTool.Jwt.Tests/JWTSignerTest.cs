@@ -8,7 +8,7 @@ public class JWTSignerTest
     [Fact]
     public void HS256Test()
     {
-        var signer = JWTSignerUtil.HS256("123456"u8.ToArray());
+        var signer = WellTool.JWT.Signers.JwtSignerUtil.HS256("123456"u8.ToArray());
         Assert.NotNull(signer);
         Assert.Equal("HS256", signer.GetAlgorithm());
     }
@@ -16,7 +16,7 @@ public class JWTSignerTest
     [Fact]
     public void HS384Test()
     {
-        var signer = JWTSignerUtil.HS384("123456"u8.ToArray());
+        var signer = JwtSignerUtil.HS384("123456"u8.ToArray());
         Assert.NotNull(signer);
         Assert.Equal("HS384", signer.GetAlgorithm());
     }
@@ -24,7 +24,7 @@ public class JWTSignerTest
     [Fact]
     public void HS512Test()
     {
-        var signer = JWTSignerUtil.HS512("123456"u8.ToArray());
+        var signer = JwtSignerUtil.HS512("123456"u8.ToArray());
         Assert.NotNull(signer);
         Assert.Equal("HS512", signer.GetAlgorithm());
     }
@@ -32,7 +32,7 @@ public class JWTSignerTest
     [Fact]
     public void NoneTest()
     {
-        var signer = JWTSignerUtil.None();
+        var signer = JwtSignerUtil.None();
         Assert.NotNull(signer);
         Assert.Equal("none", signer.GetAlgorithm());
     }
@@ -40,7 +40,7 @@ public class JWTSignerTest
     [Fact]
     public void SignAndVerifyTest()
     {
-        var signer = JWTSignerUtil.HS256("secret"u8.ToArray());
+        var signer = JwtSignerUtil.HS256("secret"u8.ToArray());
         var data = "test data"u8.ToArray();
         var signature = signer.Sign(data);
         Assert.NotNull(signature);
@@ -52,7 +52,7 @@ public class JWTSignerTest
     [Fact]
     public void SignWithEmptyDataTest()
     {
-        var signer = JWTSignerUtil.HS256("secret"u8.ToArray());
+        var signer = JwtSignerUtil.HS256("secret"u8.ToArray());
         var signature = signer.Sign(Array.Empty<byte>());
         Assert.NotNull(signature);
     }
@@ -60,7 +60,7 @@ public class JWTSignerTest
     [Fact]
     public void VerifyWithInvalidSignatureTest()
     {
-        var signer = JWTSignerUtil.HS256("secret"u8.ToArray());
+        var signer = JwtSignerUtil.HS256("secret"u8.ToArray());
         var data = "test data"u8.ToArray();
         var invalidSignature = new byte[] { 0, 1, 2, 3 };
         var verified = signer.Verify(data, invalidSignature);
@@ -70,7 +70,7 @@ public class JWTSignerTest
     [Fact]
     public void CreateSignerByAlgorithmTest()
     {
-        var signer = JWTSignerUtil.CreateSigner("HS256", "secret"u8.ToArray());
+        var signer = JwtSignerUtil.CreateSigner("HS256", "secret"u8.ToArray());
         Assert.NotNull(signer);
     }
 }

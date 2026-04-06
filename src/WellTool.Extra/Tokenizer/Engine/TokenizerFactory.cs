@@ -78,59 +78,32 @@ namespace WellTool.Extra.Tokenizer.Engine
     /// <summary>
     /// 简单分词结果
     /// </summary>
-    public class SimpleResult : Result
+    public class SimpleResult : WellTool.Extra.Tokenizer.AbstractResult
     {
         private readonly string[] _words;
-        private int _index = -1;
+        private int _index;
 
         public SimpleResult()
         {
             _words = Array.Empty<string>();
+            _index = 0;
         }
 
         public SimpleResult(string[] words)
         {
             _words = words;
+            _index = 0;
         }
 
-        public bool HasNext()
+        protected override WellTool.Extra.Tokenizer.Word NextWord()
         {
-            return _index < _words.Length - 1;
-        }
-
-        public Word Next()
-        {
-            if (HasNext())
+            if (_index < _words.Length)
             {
-                _index++;
-                return new Word(_words[_index]);
+                return new Word(_words[_index++]);
             }
             return null;
         }
-
-        public void Reset()
-        {
-            _index = -1;
-        }
     }
 
-    /// <summary>
-    /// 分词结果单词
-    /// </summary>
-    public class Word
-    {
-        public string Text { get; }
-        public int StartOffset { get; set; }
-        public int EndOffset { get; set; }
 
-        public Word(string text)
-        {
-            Text = text;
-        }
-
-        public override string ToString()
-        {
-            return Text;
-        }
-    }
 }

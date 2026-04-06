@@ -3,7 +3,7 @@ namespace WellTool.Extra.Tokenizer.Engine.HanLP
     /// <summary>
     /// HanLP分词中的一个单词包装
     /// </summary>
-    public class HanLPWord : Word
+    public class HanLPWord : WellTool.Extra.Tokenizer.Word
     {
         /// <summary>
         /// 词文本

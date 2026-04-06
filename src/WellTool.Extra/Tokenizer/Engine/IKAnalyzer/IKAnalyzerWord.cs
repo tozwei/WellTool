@@ -3,7 +3,7 @@ namespace WellTool.Extra.Tokenizer.Engine.IKAnalyzer
     /// <summary>
     /// IKAnalyzer分词中的一个单词包装
     /// </summary>
-    public class IKAnalyzerWord : Word
+    public class IKAnalyzerWord : WellTool.Extra.Tokenizer.Word
     {
         /// <summary>
         /// 词文本
