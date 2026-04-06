@@ -239,7 +239,15 @@ namespace WellTool.Json
                 {
                     if (property.CanWrite)
                     {
+                        // 尝试直接使用属性名获取值
                         var value = jsonObj[property.Name];
+                        
+                        // 如果没有找到，尝试使用小写的属性名获取值
+                        if (value == null || value == JSONNull.NULL)
+                        {
+                            value = jsonObj[property.Name.ToLower()];
+                        }
+                        
                         if (value != null && value != JSONNull.NULL)
                         {
                             var propertyType = property.PropertyType;
