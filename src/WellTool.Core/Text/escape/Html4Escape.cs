@@ -13,6 +13,7 @@
 
 using System.Collections.Generic;
 using System.Text;
+using WellTool.Core.Text.Replacer;
 
 namespace WellTool.Core.Text.Escape;
 
@@ -27,7 +28,7 @@ public class Html4Escape : ReplacerChain
         new[] { ">", "&gt;" }
     };
 
-    private static readonly string[][] ISO8859_1_ESCAPE = {
+    public static readonly string[][] ISO8859_1_ESCAPE = {
         new[] { "\u00C0", "&Agrave;" }, new[] { "\u00E0", "&agrave;" },
         new[] { "\u00C1", "&Aacute;" }, new[] { "\u00E1", "&aacute;" },
         new[] { "\u00C2", "&Acirc;" }, new[] { "\u00E2", "&acirc;" },
@@ -61,7 +62,7 @@ public class Html4Escape : ReplacerChain
         new[] { "\u00DF", "&szlig;" }, new[] { "\u00FF", "&yuml;" }
     };
 
-    private static readonly string[][] HTML40_EXTENDED_ESCAPE = {
+    public static readonly string[][] HTML40_EXTENDED_ESCAPE = {
         new[] { "\u0192", "&fnof;" }, new[] { "\u0391", "&Alpha;" }, new[] { "\u03B1", "&alpha;" },
         new[] { "\u0392", "&Beta;" }, new[] { "\u03B2", "&beta;" }, new[] { "\u0393", "&Gamma;" },
         new[] { "\u03B3", "&gamma;" }, new[] { "\u0394", "&Delta;" }, new[] { "\u03B4", "&delta;" },
@@ -95,93 +96,9 @@ public class Html4Escape : ReplacerChain
     /// </summary>
     public Html4Escape()
     {
-        AddReplace(new LookupReplacer(BASIC_ESCAPE));
-        AddReplace(new LookupReplacer(ISO8859_1_ESCAPE));
-        AddReplace(new LookupReplacer(HTML40_EXTENDED_ESCAPE));
+        AddChain(new LookupReplacer(BASIC_ESCAPE));
+        AddChain(new LookupReplacer(ISO8859_1_ESCAPE));
+        AddChain(new LookupReplacer(HTML40_EXTENDED_ESCAPE));
     }
 }
 
-/// <summary>
-/// 查找替换器
-/// </summary>
-public class LookupReplacer : StrReplacer
-{
-    private readonly Dictionary<string, string> _replaceMap;
-
-    /// <summary>
-    /// 构造
-    /// </summary>
-    /// <param name="replaceMap">替换映射</param>
-    public LookupReplacer(string[][] replaceMap)
-    {
-        _replaceMap = new Dictionary<string, string>();
-        foreach (var pair in replaceMap)
-        {
-            _replaceMap[pair[0]] = pair[1];
-        }
-    }
-
-    /// <summary>
-    /// 替换文本
-    /// </summary>
-    /// <param name="text">文本</param>
-    /// <param name="textBuilder">文本构建器</param>
-    /// <returns>替换后的文本</returns>
-    public override string Replace(string text, StringBuilder textBuilder)
-    {
-        if (_replaceMap.TryGetValue(text, out var replacement))
-        {
-            return replacement;
-        }
-        return text;
-    }
-}
-
-/// <summary>
-/// 文本替换器基类
-/// </summary>
-public abstract class StrReplacer
-{
-    /// <summary>
-    /// 替换文本
-    /// </summary>
-    /// <param name="text">文本</param>
-    /// <param name="textBuilder">文本构建器</param>
-    /// <returns>替换后的文本</returns>
-    public virtual string Replace(string text, StringBuilder textBuilder)
-    {
-        return text;
-    }
-}
-
-/// <summary>
-/// 替换器链
-/// </summary>
-public class ReplacerChain
-{
-    private readonly List<StrReplacer> _replacers = new();
-
-    /// <summary>
-    /// 添加替换器
-    /// </summary>
-    /// <param name="replacer">替换器</param>
-    public void AddReplace(StrReplacer replacer)
-    {
-        _replacers.Add(replacer);
-    }
-
-    /// <summary>
-    /// 替换文本
-    /// </summary>
-    /// <param name="text">文本</param>
-    /// <returns>替换后的文本</returns>
-    public virtual string Replace(string text)
-    {
-        var result = text;
-        foreach (var replacer in _replacers)
-        {
-            result = replacer.Replace(result, new StringBuilder());
-        }
-        return result;
-    }
-}

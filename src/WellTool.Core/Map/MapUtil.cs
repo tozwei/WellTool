@@ -1413,7 +1413,7 @@ namespace WellTool.Core.Map
         /// <typeparam name="K">Key类型</typeparam>
         /// <typeparam name="V">Value类型</typeparam>
         /// <returns>map创建类</returns>
-        public static MapBuilder<K, V> Builder<K, V>()
+        public static MapBuilder<K, V> Builder<K, V>() where K : notnull
         {
             return Builder(new Dictionary<K, V>());
         }

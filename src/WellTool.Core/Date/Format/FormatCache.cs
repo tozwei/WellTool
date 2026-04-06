@@ -75,7 +75,7 @@ public abstract class FormatCache<T> where T : class
 	{
 		timeZone ??= SystemTimeZone.CurrentTimeZone;
 		locale ??= CultureInfo.CurrentCulture;
-		var key = $"{pattern}|{timeZone.Id}|{locale.Name}";
+		var key = $"{pattern}|{timeZone.StandardName}|{locale.Name}";
 
 		return Cache.GetOrAdd(key, _ => CreateInstance(pattern, timeZone, locale));
 	}

@@ -166,7 +166,7 @@ namespace WellTool.Core.Net.Multipart
                     Path = StrUtil.EMPTY;
                     FileName = StrUtil.EMPTY;
                 }
-                int ls = FileUtil.LastIndexOfSeparator(FormFileName);
+                int ls = WellTool.Core.IO.FileUtil.LastIndexOfSeparator(FormFileName);
                 if (ls == -1)
                 {
                     Path = StrUtil.EMPTY;

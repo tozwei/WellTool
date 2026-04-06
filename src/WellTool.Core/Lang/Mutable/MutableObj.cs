@@ -7,12 +7,12 @@ namespace WellTool.Core.Lang.Mutable
     /// </summary>
     public class MutableObj<T>
     {
-        private T _value;
+        private T? _value;
 
         /// <summary>
         /// 值
         /// </summary>
-        public T Value
+        public T? Value
         {
             get => _value;
             set => _value = value;
@@ -36,7 +36,7 @@ namespace WellTool.Core.Lang.Mutable
         /// <summary>
         /// 获取值
         /// </summary>
-        public T Get()
+        public T? Get()
         {
             return _value;
         }
@@ -44,7 +44,7 @@ namespace WellTool.Core.Lang.Mutable
         /// <summary>
         /// 设置值
         /// </summary>
-        public void Set(T value)
+        public void Set(T? value)
         {
             _value = value;
         }
@@ -68,7 +68,7 @@ namespace WellTool.Core.Lang.Mutable
         /// <summary>
         /// 如果为null则设置值
         /// </summary>
-        public void SetIfNull(T value)
+        public void SetIfNull(T? value)
         {
             if (_value == null)
             {
@@ -79,7 +79,7 @@ namespace WellTool.Core.Lang.Mutable
         /// <summary>
         /// 如果为null则使用工厂方法设置值
         /// </summary>
-        public void SetIfNull(System.Func<T> factory)
+        public void SetIfNull(System.Func<T?> factory)
         {
             if (_value == null)
             {

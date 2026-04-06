@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
+using WellTool.Core.Text;
 
 namespace WellTool.Core.Text.Replacer
 {
@@ -16,71 +16,54 @@ namespace WellTool.Core.Text.Replacer
     }
 
     /// <summary>
-    /// 查找替换器
+    /// 字符串替换器抽象基类
     /// </summary>
-    public class LookupReplacer : IReplacer
+    public abstract class StrReplacer : IReplacer
     {
-        private readonly Dictionary<string, string> _replacements;
-
-        public LookupReplacer()
+        /// <summary>
+        /// 替换文本
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <param name="textBuilder">文本构建器</param>
+        /// <returns>替换后的文本</returns>
+        public virtual string Replace(string text, StringBuilder textBuilder)
         {
-            _replacements = new Dictionary<string, string>();
-        }
-
-        public LookupReplacer(Dictionary<string, string> replacements)
-        {
-            _replacements = new Dictionary<string, string>(replacements);
-        }
-
-        public void Add(string oldValue, string newValue)
-        {
-            _replacements[oldValue] = newValue;
-        }
-
-        public void Remove(string oldValue)
-        {
-            _replacements.Remove(oldValue);
-        }
-
-        public string Replace(string text)
-        {
-            if (string.IsNullOrEmpty(text)) return text;
-
-            var sb = new StringBuilder(text);
-            foreach (var kvp in _replacements)
-            {
-                sb.Replace(kvp.Key, kvp.Value);
-            }
-            return sb.ToString();
-        }
-    }
-
-    /// <summary>
-    /// 替换器链
-    /// </summary>
-    public class ReplacerChain : IReplacer
-    {
-        private readonly List<IReplacer> _replacers = new List<IReplacer>();
-
-        public void Add(IReplacer replacer)
-        {
-            _replacers.Add(replacer);
-        }
-
-        public void Add(string oldValue, string newValue)
-        {
-            _replacers.Add(new LookupReplacer(new Dictionary<string, string> { { oldValue, newValue } }));
-        }
-
-        public string Replace(string text)
-        {
-            foreach (var replacer in _replacers)
-            {
-                text = replacer.Replace(text);
-            }
             return text;
         }
 
-        public int Count => _replacers.Count;
+        /// <summary>
+        /// 替换文本
+        /// </summary>
+        /// <param name="str">文本</param>
+        /// <param name="pos">位置</param>
+        /// <param name="outBuilder">输出构建器</param>
+        /// <returns>替换的字符数</returns>
+        public abstract int Replace(string str, int pos, StrBuilder outBuilder);
+
+        /// <summary>
+        /// 替换文本
+        /// </summary>
+        /// <param name="text">文本</param>
+        /// <returns>替换后的文本</returns>
+        public string Replace(string text)
+        {
+            var outBuilder = new StrBuilder();
+            int pos = 0;
+            int consumed;
+            while (pos < text.Length)
+            {
+                consumed = Replace(text, pos, outBuilder);
+                if (consumed == 0)
+                {
+                    outBuilder.Append(text[pos]);
+                    pos++;
+                }
+                else
+                {
+                    pos += consumed;
+                }
+            }
+            return outBuilder.ToString();
+        }
     }
 }

@@ -133,7 +133,7 @@ namespace WellTool.Core.Net
 
                 return sslStream;
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 throw new IORuntimeException(e);
             }

@@ -1,6 +1,6 @@
 namespace WellTool.Extra.Tests;
 
-using Well.Extra.Validation;
+using WellTool.Extra.Validation;
 
 public class BeanValidatorUtilTest
 {

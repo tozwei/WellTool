@@ -1,6 +1,6 @@
 namespace WellTool.Extra.Tests;
 
-using Well.Extra.Ftp;
+using WellTool.Extra.Ftp;
 
 public class FtpUtilTest
 {

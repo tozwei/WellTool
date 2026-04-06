@@ -193,7 +193,7 @@ namespace WellTool.Core.Net.Multipart
             using (var output = new FastByteArrayOutputStream())
             {
                 Copy(output);
-                return output.ToString(encoding);
+                return encoding == null ? Encoding.Default.GetString(output.ToByteArray()) : encoding.GetString(output.ToByteArray());
             }
         }
 

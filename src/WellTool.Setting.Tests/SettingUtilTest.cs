@@ -1,6 +1,6 @@
 namespace WellTool.Setting.Tests;
 
-using Well.Setting;
+using WellTool.Setting;
 using Xunit;
 
 public class SettingUtilTest

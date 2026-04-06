@@ -15,9 +15,9 @@ public interface IFunction<T, R>
 /// </summary>
 public class Function<T, R> : IFunction<T, R>
 {
-	private readonly Func<T, R> _func;
+	private readonly System.Func<T, R> _func;
 
-	public Function(Func<T, R> func)
+	public Function(System.Func<T, R> func)
 	{
 		_func = func;
 	}

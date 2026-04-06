@@ -1,5 +1,6 @@
 using System.Text;
 using WellTool.Core.Util;
+using WellTool.Core.Text.Replacer;
 
 namespace WellTool.Core.Text.Escape;
 
@@ -11,25 +12,22 @@ public class NumericEntityUnescaper : StrReplacer
     /// <summary>
     /// 替换文本
     /// </summary>
-    /// <param name="text">文本</param>
-    /// <param name="textBuilder">文本构建器</param>
-    /// <returns>替换后的文本</returns>
-    public override string Replace(string text, StringBuilder textBuilder)
+    /// <param name="str">文本</param>
+    /// <param name="pos">位置</param>
+    /// <param name="outBuilder">输出构建器</param>
+    /// <returns>替换的字符数</returns>
+    public override int Replace(string str, int pos, StrBuilder outBuilder)
     {
-        if (string.IsNullOrEmpty(text))
-            return text;
-
-        int pos = 0;
-        int len = text.Length;
+        int len = str.Length;
         
-        while (pos < len)
+        // 检查以确保以&#开头
+        if (str[pos] == '&' && pos < len - 2 && str[pos + 1] == '#')
         {
-            // 检查以确保以&#开头
-            if (text[pos] == '&' && pos < len - 2 && text[pos + 1] == '#')
+            int start = pos + 2;
+            bool isHex = false;
+            if (start < len)
             {
-                int start = pos + 2;
-                bool isHex = false;
-                char firstChar = text[start];
+                char firstChar = str[start];
                 if (firstChar == 'x' || firstChar == 'X')
                 {
                     start++;
@@ -40,11 +38,11 @@ public class NumericEntityUnescaper : StrReplacer
                 if (start < len)
                 {
                     int end = start;
-                    while (end < len && CharUtil.IsHexChar(text[end]))
+                    while (end < len && CharUtil.IsHexChar(str[end]))
                     {
                         end++;
                     }
-                    bool isSemiNext = end != len && text[end] == ';';
+                    bool isSemiNext = end != len && str[end] == ';';
                     if (isSemiNext)
                     {
                         int entityValue;
@@ -52,28 +50,35 @@ public class NumericEntityUnescaper : StrReplacer
                         {
                             if (isHex)
                             {
-                                entityValue = System.Convert.ToInt32(text.Substring(start, end - start), 16);
+                                entityValue = System.Convert.ToInt32(str.Substring(start, end - start), 16);
                             }
                             else
                             {
-                                entityValue = int.Parse(text.Substring(start, end - start));
+                                entityValue = int.Parse(str.Substring(start, end - start));
                             }
-                            textBuilder.Append((char)entityValue);
-                            pos = end + 1;
-                            continue;
+                            outBuilder.Append((char)entityValue);
+                            return end + 1 - pos;
                         }
                         catch (System.FormatException)
                         {
-                            // 解析失败，直接添加原字符
+                            // 解析失败，直接返回0
+                            return 0;
                         }
                     }
                 }
             }
-            
-            textBuilder.Append(text[pos]);
-            pos++;
         }
         
-        return textBuilder.ToString();
+        return 0;
+    }
+
+    /// <summary>
+    /// 替换文本
+    /// </summary>
+    /// <param name="text">文本</param>
+    /// <returns>替换后的文本</returns>
+    public new string Replace(string text)
+    {
+        return base.Replace(text);
     }
 }

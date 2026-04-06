@@ -1,6 +1,6 @@
 namespace WellTool.Extra.Tests;
 
-using Well.Extra.Ssh;
+using WellTool.Extra.Ssh;
 
 public class SftpUtilTest
 {

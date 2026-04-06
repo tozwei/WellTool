@@ -174,7 +174,10 @@ namespace WellTool.Core.Text
         /// </summary>
         public StrBuilder Reverse()
         {
-            _sb.Reverse();
+            var text = _sb.ToString();
+            var reversed = new string(text.Reverse().ToArray());
+            _sb.Clear();
+            _sb.Append(reversed);
             return this;
         }
 
@@ -201,11 +204,12 @@ namespace WellTool.Core.Text
         /// </summary>
         public string Substring(int startIndex, int length = -1)
         {
+            var text = _sb.ToString();
             if (length < 0)
             {
-                return _sb.ToString(startIndex);
+                return text.Substring(startIndex);
             }
-            return _sb.ToString(startIndex, length);
+            return text.Substring(startIndex, length);
         }
 
         /// <summary>

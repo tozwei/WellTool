@@ -26,6 +26,7 @@
 		<!-- For netstandard2.1, use a compatible version -->
 		<PackageReference Include="System.Drawing.Common" Version="4.7.2" />
 		<PackageReference Include="System.CodeDom" Version="4.7.0" />
+		<PackageReference Include="System.Text.Json" Version="4.7.2" />
 	</ItemGroup>
 
 	<ItemGroup>

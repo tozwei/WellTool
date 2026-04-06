@@ -12,6 +12,7 @@ public class WatchServer : IDisposable
 {
     private readonly FileSystemWatcher _watcher;
     private readonly Watcher _watch;
+    private readonly string _rootPath;
     private CancellationTokenSource? _cts;
     private Task? _task;
     private bool _disposed;
@@ -23,6 +24,7 @@ public class WatchServer : IDisposable
     /// <param name="watcher">监听器</param>
     public WatchServer(string path, Watcher watcher)
     {
+        _rootPath = path;
         _watcher = new FileSystemWatcher(path);
         _watch = watcher ?? throw new ArgumentNullException(nameof(watcher));
     }
@@ -83,27 +85,27 @@ public class WatchServer : IDisposable
 
     private void OnCreated(object sender, FileSystemEventArgs e)
     {
-        _watch.OnCreate(e.FullPath);
+        _watch.OnCreate(e, e.FullPath);
     }
 
     private void OnChanged(object sender, FileSystemEventArgs e)
     {
-        _watch.OnChange(e.FullPath);
+        _watch.OnModify(e, e.FullPath);
     }
 
     private void OnDeleted(object sender, FileSystemEventArgs e)
     {
-        _watch.OnDelete(e.FullPath);
+        _watch.OnDelete(e, e.FullPath);
     }
 
     private void OnRenamed(object sender, RenamedEventArgs e)
     {
-        _watch.OnRename(e.OldFullPath, e.FullPath);
+        // 接口中没有OnRename方法，暂时不处理
     }
 
     private void OnError(object sender, ErrorEventArgs e)
     {
-        _watch.OnError(e.GetException());
+        _watch.OnError(e, _rootPath);
     }
 
     public void Dispose()

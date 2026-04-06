@@ -50,7 +50,7 @@ public class Simhash
         int[] weight = new int[_bitNum];
         foreach (var seg in segList)
         {
-            long wordHash = MurmurHash.Hash64(seg);
+            long wordHash = MurmurHash.Hash64(System.Text.Encoding.UTF8.GetBytes(seg));
             for (int i = 0; i < _bitNum; i++)
             {
                 if (((wordHash >> i) & 1) == 1)

@@ -1,6 +1,6 @@
 namespace WellTool.Extra.Tests;
 
-using Well.Extra.Mail;
+using WellTool.Extra.Mail;
 
 public class MailAccountUtilTest
 {

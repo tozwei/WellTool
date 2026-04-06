@@ -58,7 +58,7 @@ namespace WellTool.Core.Map.Multi
 			return values;
 		}
 
-		private ICollection<V> values;
+		private ICollection<V>? values;
 		private class ValuesCollection : ICollection<V>
 		{
 			private readonly AbsTable<R, C, V> table;
@@ -126,7 +126,7 @@ namespace WellTool.Core.Map.Multi
 			return cellSet;
 		}
 
-		private ISet<Table<R, C, V>.Cell> cellSet;
+		private ISet<Table<R, C, V>.Cell>? cellSet;
 
 		private class CellSetImpl : ISet<Table<R, C, V>.Cell>
 		{

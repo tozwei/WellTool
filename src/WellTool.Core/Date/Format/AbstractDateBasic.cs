@@ -78,5 +78,5 @@ public abstract class AbstractDateBasic : DateBasic
 	/// <summary>
 	/// 返回字符串
 	/// </summary>
-	public override string ToString() => $"FastDatePrinter[{Pattern},{Locale},{TimeZone.Id}]";
+	public override string ToString() => $"FastDatePrinter[{Pattern},{Locale},{TimeZone.StandardName}]";
 }

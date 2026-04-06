@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.Json;
 
 namespace WellTool.Core.Util;
 
@@ -21,10 +22,7 @@ public static class SerializeUtil
 			return null;
 		}
 
-		using var ms = new MemoryStream();
-		var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-		formatter.Serialize(ms, obj);
-		return ms.ToArray();
+		return JsonSerializer.SerializeToUtf8Bytes(obj);
 	}
 
 	/// <summary>
@@ -40,9 +38,14 @@ public static class SerializeUtil
 			return default;
 		}
 
-		using var ms = new MemoryStream(data);
-		var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-		return formatter.Deserialize(ms) as T;
+		try
+		{
+			return JsonSerializer.Deserialize<T>(data);
+		}
+		catch
+		{
+			return default;
+		}
 	}
 
 	/// <summary>

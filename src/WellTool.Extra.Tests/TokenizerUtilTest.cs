@@ -1,6 +1,6 @@
 namespace WellTool.Extra.Tests;
 
-using Well.Extra.Tokenizer;
+using WellTool.Extra.Tokenizer;
 
 public class TokenizerUtilTest
 {

@@ -1,6 +1,6 @@
 namespace WellTool.Extra.Tests;
 
-using Well.Extra.Emoji;
+using WellTool.Extra.Emoji;
 
 public class EmojiUtilTest
 {

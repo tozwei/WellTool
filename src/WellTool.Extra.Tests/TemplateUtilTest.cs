@@ -1,6 +1,6 @@
 namespace WellTool.Extra.Tests;
 
-using Well.Extra.Template;
+using WellTool.Extra.Template;
 
 public class TemplateUtilTest
 {

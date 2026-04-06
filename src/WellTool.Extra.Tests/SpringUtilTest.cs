@@ -1,6 +1,6 @@
 namespace WellTool.Extra.Tests;
 
-using Well.Extra.Spring;
+using WellTool.Extra.Spring;
 
 public class SpringUtilTest
 {

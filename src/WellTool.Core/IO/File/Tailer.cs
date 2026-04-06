@@ -197,7 +197,7 @@ public class Tailer : IDisposable
             string? line;
             while ((line = reader.ReadLine()) != null)
             {
-                _lineHandler.Handle(line);
+                _lineHandler(line);
             }
         }
         catch (Exception)

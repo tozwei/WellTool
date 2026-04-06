@@ -320,7 +320,7 @@ public class AnimatedGifEncoder
         }
         else
         {
-            _out?.WriteByte(0x80 | _palSize);
+            _out?.WriteByte((byte)(0x80 | _palSize));
         }
     }
 

@@ -13,7 +13,7 @@ namespace WellTool.Core.Lang
     {
         private readonly string _packageName;
         private readonly string _packagePath;
-        private readonly Func<Type, bool> _filter;
+        private readonly System.Func<Type, bool> _filter;
         private readonly bool _initialize;
         private readonly List<Type> _classes = new List<Type>();
         private readonly List<string> _loadErrors = new List<string>();
@@ -24,7 +24,7 @@ namespace WellTool.Core.Lang
         /// <param name="packageName">包名</param>
         /// <param name="filter">过滤器</param>
         /// <param name="initialize">是否初始化类</param>
-        public ClassScanner(string packageName, Func<Type, bool> filter = null, bool initialize = false)
+        public ClassScanner(string packageName, System.Func<Type, bool> filter = null, bool initialize = false)
         {
             _packageName = packageName;
             _packagePath = packageName?.Replace('.', Path.DirectorySeparatorChar) ?? "";

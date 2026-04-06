@@ -122,5 +122,24 @@ namespace WellTool.Core.Util
             }
             return sb.ToString();
         }
+
+        /// <summary>
+        /// 计算 FNV-1 哈希
+        /// </summary>
+        /// <param name="input">输入字符串</param>
+        /// <returns>哈希值</returns>
+        public static int FnvHash(string input)
+        {
+            const uint FNV1_32_INIT = 0x811C9DC5;
+            const int FNV1_PRIME = 0x01000193;
+
+            uint hash = FNV1_32_INIT;
+            foreach (var c in input)
+            {
+                hash ^= c;
+                hash *= FNV1_PRIME;
+            }
+            return (int)hash;
+        }
     }
 }

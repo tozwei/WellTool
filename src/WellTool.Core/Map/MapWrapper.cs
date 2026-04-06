@@ -46,6 +46,18 @@ public class MapWrapper<K, V> : IDictionary<K, V>, IEnumerable<KeyValuePair<K, V
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+    /// <summary>
+    /// 批量添加键值对
+    /// </summary>
+    /// <param name="other">其他Map</param>
+    public void AddRange(IDictionary<K, V> other)
+    {
+        foreach (var item in other)
+        {
+            _raw.Add(item);
+        }
+    }
+
     public override bool Equals(object? obj)
     {
         if (obj is MapWrapper<K, V> other)

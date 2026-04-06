@@ -54,7 +54,7 @@ public class Dict : Dictionary<string, object>
 		{
 			if (i % 2 == 0)
 			{
-				key = Convert.ToStr(keysAndValues[i]);
+				key = WellTool.Core.Convert.Convert.ToStr(keysAndValues[i]);
 			}
 			else
 			{
@@ -157,7 +157,7 @@ public class Dict : Dictionary<string, object>
 	/// <returns>字段值</returns>
 	public T Get<T>(string attr)
 	{
-		return TryGetValue(CustomKey(attr), out var result) ? Convert.To<T>(result) : default;
+		return TryGetValue(CustomKey(attr), out var result) ? WellTool.Core.Convert.Convert.To<T>(result) : default;
 	}
 
 	/// <summary>
@@ -181,7 +181,7 @@ public class Dict : Dictionary<string, object>
 	/// <returns>对象</returns>
 	public T GetByPath<T>(string expression)
 	{
-		return Convert.To<T>(BeanPath.Create(expression).Get(this));
+		return WellTool.Core.Convert.Convert.To<T>(BeanPath.Create(expression).Get(this));
 	}
 
 	/// <summary>
@@ -193,7 +193,7 @@ public class Dict : Dictionary<string, object>
 	/// <returns>对象</returns>
 	public T GetByPath<T>(string expression, Type resultType)
 	{
-		return Convert.ConvertTo<T>(GetByPath<object>(expression));
+		return WellTool.Core.Convert.Convert.ConvertTo<T>(GetByPath<object>(expression));
 	}
 
 	/// <summary>

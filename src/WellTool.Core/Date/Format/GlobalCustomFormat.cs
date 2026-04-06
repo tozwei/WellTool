@@ -31,8 +31,8 @@ public class GlobalCustomFormat
 		ParserMap = new ConcurrentDictionary<string, Func<string, DateTime>>();
 
 		// 预设的几种自定义格式
-		PutFormatter(FORMAT_SECONDS, date => DateTimeUtil.Date.CreateDateTime(Math.DivRem(date.Ticks, 1000).Quotient, 0).Ticks.ToString());
-		PutParser(FORMAT_SECONDS, dateStr => DateTimeUtil.Date.CreateDateTime(long.Parse(dateStr) * 1000, 0));
+		PutFormatter(FORMAT_SECONDS, date => (date.Ticks / 1000).ToString());
+		PutParser(FORMAT_SECONDS, dateStr => new DateTime(long.Parse(dateStr) * 1000));
 
 		PutFormatter(FORMAT_MILLISECONDS, date => date.Ticks.ToString());
 		PutParser(FORMAT_MILLISECONDS, dateStr => new DateTime(long.Parse(dateStr)));

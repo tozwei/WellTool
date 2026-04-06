@@ -9,7 +9,7 @@ public class DefaultSegment<T> : Segment<T> where T : struct
 	private readonly T _startIndex;
 	private readonly T _endIndex;
 
-	public DefaultSegment(T startIndex, T endIndex)
+	public DefaultSegment(T startIndex, T endIndex) : base(startIndex, endIndex)
 	{
 		_startIndex = startIndex;
 		_endIndex = endIndex;

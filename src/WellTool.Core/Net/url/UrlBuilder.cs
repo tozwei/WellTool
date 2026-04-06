@@ -466,7 +466,7 @@ namespace WellTool.Core.Net.Url
         public string GetFragmentEncoded()
         {
             char[] safeChars = _needEncodePercent ? null : new char[] { '%' };
-            return RFC3986.Fragment.Encode(_fragment, _charset, safeChars);
+            return RFC3986.Unreserved.Encode(_fragment, _charset, safeChars);
         }
 
         /// <summary>

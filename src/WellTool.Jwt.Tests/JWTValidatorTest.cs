@@ -1,6 +1,6 @@
 namespace WellTool.Jwt.Tests;
 
-using Well.Jwt;
+using WellTool.Jwt;
 
 public class JWTValidatorTest
 {

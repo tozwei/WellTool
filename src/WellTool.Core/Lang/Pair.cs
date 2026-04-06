@@ -12,12 +12,12 @@ public class Pair<K, V>
 	/// <summary>
 	/// 键
 	/// </summary>
-	public K Key { get; set; }
+	public K? Key { get; set; }
 
 	/// <summary>
 	/// 值
 	/// </summary>
-	public V Value { get; set; }
+	public V? Value { get; set; }
 
 	/// <summary>
 	/// 构造

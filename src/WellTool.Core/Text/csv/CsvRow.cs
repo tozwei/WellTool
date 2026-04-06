@@ -95,7 +95,7 @@ namespace WellTool.Core.Text.Csv
                     {
                         try
                         {
-                            var converted = Convert.ChangeType(value, prop.PropertyType);
+                            var converted = System.Convert.ChangeType(value, prop.PropertyType);
                             prop.SetValue(result, converted);
                         }
                         catch

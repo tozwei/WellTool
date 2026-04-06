@@ -5,7 +5,7 @@ namespace WellTool.Core.Map
     /// <summary>
     /// 使用Func作为Key的Map
     /// </summary>
-    public class FuncKeyMap<V> : Dictionary<Func<object>, V>
+    public class FuncKeyMap<V> : Dictionary<Func<object, bool>, V>
     {
         /// <summary>
         /// 构造函数

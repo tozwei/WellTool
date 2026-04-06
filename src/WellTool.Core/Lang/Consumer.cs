@@ -15,9 +15,9 @@ public interface IConsumer<T>
 /// </summary>
 public class Consumer<T> : IConsumer<T>
 {
-	private readonly Action<T> _action;
+	private readonly System.Action<T> _action;
 
-	public Consumer(Action<T> action)
+	public Consumer(System.Action<T> action)
 	{
 		_action = action;
 	}

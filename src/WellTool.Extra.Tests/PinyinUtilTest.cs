@@ -1,6 +1,6 @@
 namespace WellTool.Extra.Tests;
 
-using Well.Extra.Pinyin;
+using WellTool.Extra.Pinyin;
 
 public class PinyinUtilTest
 {

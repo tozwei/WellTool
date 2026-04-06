@@ -38,7 +38,7 @@ namespace WellTool.Core.Swing
             }
             catch (System.Exception e)
             {
-                throw new WellToolException(e);
+                throw new WellTool.Core.Exceptions.UtilException(e);
             }
         }
 
@@ -58,7 +58,7 @@ namespace WellTool.Core.Swing
             }
             catch (System.Exception e)
             {
-                throw new WellToolException(e);
+                throw new WellTool.Core.Exceptions.UtilException(e);
             }
         }
 
@@ -79,7 +79,7 @@ namespace WellTool.Core.Swing
             }
             catch (System.Exception e)
             {
-                throw new WellToolException(e);
+                throw new WellTool.Core.Exceptions.UtilException(e);
             }
         }
 
@@ -100,7 +100,7 @@ namespace WellTool.Core.Swing
             }
             catch (System.Exception e)
             {
-                throw new WellToolException(e);
+                throw new WellTool.Core.Exceptions.UtilException(e);
             }
         }
 
@@ -120,7 +120,7 @@ namespace WellTool.Core.Swing
             }
             catch (System.Exception e)
             {
-                throw new WellToolException(e);
+                throw new WellTool.Core.Exceptions.UtilException(e);
             }
         }
     }

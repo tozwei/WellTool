@@ -127,11 +127,11 @@ public class Opt<T>
 	/// </summary>
 	/// <param name="predicate">给定的条件</param>
 	/// <returns>Opt</returns>
-	public Opt<T> Filter(System.Predicate<T> predicate)
+	public Opt<T?> Filter(System.Predicate<T> predicate)
 	{
 		if (IsEmpty)
-			return this;
-		return predicate(_value!) ? this : Empty();
+			return this as Opt<T?> ?? Empty();
+		return predicate(_value!) ? this as Opt<T?> ?? new Opt<T?>(_value) : Empty();
 	}
 
 	/// <summary>
@@ -140,7 +140,7 @@ public class Opt<T>
 	/// <typeparam name="U">操作返回值的类型</typeparam>
 	/// <param name="mapper">值存在时执行的操作</param>
 	/// <returns>Opt</returns>
-	public Opt<U> Map<U>(System.Func<T, U> mapper)
+	public Opt<U?> Map<U>(System.Func<T, U> mapper)
 	{
 		if (IsEmpty)
 			return Empty<U>();
@@ -245,7 +245,7 @@ public static class Opt
 	/// <summary>
 	/// 尝试执行操作并返回结果
 	/// </summary>
-	public static Opt<T> OfTry<T>(System.Func<T> supplier)
+	public static Opt<T?> OfTry<T>(System.Func<T> supplier)
 	{
 		try
 		{
@@ -253,7 +253,7 @@ public static class Opt
 		}
 		catch (System.Exception e)	
 		{
-			var opt = new Opt<T>(default);
+			var opt = new Opt<T?>(default);
 			opt.SetException(e);
 			return opt;
 		}

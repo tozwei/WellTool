@@ -1,6 +1,6 @@
 namespace WellTool.Extra.Tests;
 
-using Well.Extra.Expression;
+using WellTool.Extra.Expression;
 
 public class AviatorTest
 {

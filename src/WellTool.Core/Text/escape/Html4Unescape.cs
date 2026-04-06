@@ -1,4 +1,5 @@
 using System.Text;
+using WellTool.Core.Text.Replacer;
 
 namespace WellTool.Core.Text.Escape;
 

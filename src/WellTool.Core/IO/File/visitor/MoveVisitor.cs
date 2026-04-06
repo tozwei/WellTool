@@ -50,7 +50,7 @@ public class MoveVisitor : SimpleFileVisitor
         {
             File.Delete(targetPath);
         }
-        File.Move(file, targetPath, _overwrite);
+        File.Move(file, targetPath);
         return true;
     }
 }

@@ -1,7 +1,5 @@
 namespace WellTool.Core.Tests;
 
-using Well.Const;
-using Well.Utility;
 
 public class ArrayUtilTest
 {

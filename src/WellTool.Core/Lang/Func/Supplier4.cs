@@ -31,7 +31,7 @@ namespace WellTool.Core.Lang.Func
         /// <param name="p3">参数3</param>
         /// <param name="p4">参数4</param>
         /// <returns>无参Func</returns>
-        public static Func<T> ToSupplier<T, P1, P2, P3, P4>(this Supplier4<T, P1, P2, P3, P4> supplier, P1 p1, P2 p2, P3 p3, P4 p4)
+        public static System.Func<T> ToSupplier<T, P1, P2, P3, P4>(this Supplier4<T, P1, P2, P3, P4> supplier, P1 p1, P2 p2, P3 p3, P4 p4)
         {
             return () => supplier(p1, p2, p3, p4);
         }

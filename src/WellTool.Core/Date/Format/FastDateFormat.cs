@@ -256,7 +256,18 @@ public class FastDateFormat : AbstractDateBasic, DateParser, DatePrinter
     /// <returns>格式化后的字符串</returns>
     public StringBuilder Format(object obj, StringBuilder toAppendTo, ref int pos)
     {
-        toAppendTo.Append(Printer.Format(obj));
+        if (obj is long millis)
+        {
+            toAppendTo.Append(Printer.Format(millis));
+        }
+        else if (obj is DateTime date)
+        {
+            toAppendTo.Append(Printer.Format(date));
+        }
+        else if (obj is Calendar calendar)
+        {
+            toAppendTo.Append(Printer.Format(calendar));
+        }
         return toAppendTo;
     }
 
@@ -416,5 +427,5 @@ public class FastDateFormat : AbstractDateBasic, DateParser, DatePrinter
 	/// <summary>
 	/// 返回字符串
 	/// </summary>
-	public override string ToString() => $"FastDateFormat[{Printer.GetPattern()},{Printer.GetLocale()},{Printer.GetTimeZone().Id}]";
+	public override string ToString() => $"FastDateFormat[{Printer.GetPattern()},{Printer.GetLocale()},{Printer.GetTimeZone().StandardName}]";
 }

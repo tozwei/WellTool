@@ -1,6 +1,6 @@
 namespace WellTool.Extra.Tests;
 
-using Well.Extra.Compress;
+using WellTool.Extra.Compress;
 
 public class ArchiverTest
 {

@@ -14,7 +14,7 @@ internal class LZWEncoder
     private readonly int _imgH;
     private readonly byte[] _pixAry;
     private readonly int _initCodeSize;
-    private readonly int _remaining;
+    private int _remaining;
     private int _curPixel;
 
     private static readonly int BITS = 12;
@@ -61,6 +61,7 @@ internal class LZWEncoder
         new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 },
         new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 },
     };
+    private Stream _outputStream;
 
     public LZWEncoder(int width, int height, byte[] pixels, int colorDepth)
     {
@@ -68,16 +69,79 @@ internal class LZWEncoder
         _imgH = height;
         _pixAry = pixels;
         _initCodeSize = Math.Max(2, colorDepth);
-        _remaining = _imgW * _imgH;
-        _curPixel = 0;
-        _hSize = HSIZE;
+    }
+
+    private void Output(int code)
+    {
+        _curAccum &= _masks[_curBits];
+
+        if (_curBits > 0)
+            _curAccum |= (code << _curBits);
+        else
+            _curAccum = code;
+
+        _curBits += _nBits;
+
+        while (_curBits >= 8)
+        {
+            OutputByte((byte)(_curAccum & 0xff));
+            _curAccum >>= 8;
+            _curBits -= 8;
+        }
+
+        if (_freeEnt > _maxCode || _clearFlag)
+        {
+            if (_clearFlag)
+            {
+                _maxCode = MaxCode(_nBits = _gInitBits);
+                _clearFlag = false;
+            }
+            else
+            {
+                ++_nBits;
+                if (_nBits == _maxBits)
+                    _maxCode = _maxMaxCode;
+                else
+                    _maxCode = MaxCode(_nBits);
+            }
+        }
+
+        if (code == _eofCode)
+        {
+            while (_curBits > 0)
+            {
+                OutputByte((byte)(_curAccum & 0xff));
+                _curAccum >>= 8;
+                _curBits -= 8;
+            }
+
+            Flush();
+        }
+    }
+
+    private void OutputByte(byte b)
+    {
+        _outputStream.WriteByte(b);
+        if (++_aCount >= 254)
+            Flush();
+    }
+
+    private void Flush()
+    {
+        if (_aCount > 0)
+        {
+            _outputStream.WriteByte((byte)_aCount);
+            _aCount = 0;
+        }
     }
 
     public void Encode(Stream outs)
     {
+        _outputStream = outs;
         outs.WriteByte((byte)_initCodeSize);
         _remaining = _imgW * _imgH;
         _curPixel = 0;
+        _hSize = HSIZE;
         Compress(_initCodeSize + 1, outs);
         outs.WriteByte(0);
     }

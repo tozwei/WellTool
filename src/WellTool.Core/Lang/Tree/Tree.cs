@@ -19,17 +19,39 @@ namespace WellTool.Core.Lang.Tree
         /// <summary>
         /// 构造
         /// </summary>
-        public Tree() : this(null)
+        public Tree()
         {
+            _config = TreeNodeConfig.DEFAULT_CONFIG;
         }
 
         /// <summary>
         /// 构造
         /// </summary>
         /// <param name="config">节点配置</param>
-        public Tree(TreeNodeConfig? config)
+        public Tree(TreeNodeConfig config)
         {
             _config = config ?? TreeNodeConfig.DEFAULT_CONFIG;
+        }
+
+        /// <summary>
+        /// 构造
+        /// </summary>
+        /// <param name="node">节点</param>
+        public Tree(Node<T> node)
+        {
+            _config = TreeNodeConfig.DEFAULT_CONFIG;
+            SetId(node.GetId());
+            SetParentId(node.GetParentId()!);
+            this[_config.NameKey] = node.GetName();
+            this[_config.WeightKey] = node.GetWeight();
+            var children = node.GetChildren();
+            if (children != null && children.Count > 0)
+            {
+                foreach (var child in children)
+                {
+                    AddChild(child);
+                }
+            }
         }
 
         /// <summary>

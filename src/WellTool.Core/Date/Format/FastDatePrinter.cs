@@ -48,7 +48,7 @@ public class FastDatePrinter : AbstractDateBasic, DatePrinter
 	private Rule[] ParsePattern()
 	{
 		var rules = new System.Collections.Generic.List<Rule>();
-		var symbols = new DateTimeFormatInfo(Locale);
+		var symbols = Locale.DateTimeFormat;
 		var length = Pattern.Length;
 		var index = 0;
 

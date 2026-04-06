@@ -1,6 +1,6 @@
 namespace WellTool.Extra.Tests;
 
-using Well.Extra.Servlet;
+using WellTool.Extra.Servlet;
 
 public class ServletUtilTest
 {
