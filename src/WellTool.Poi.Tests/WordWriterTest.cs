@@ -14,7 +14,7 @@ namespace WellTool.Poi.Tests
             var tempFile = Path.GetTempFileName() + ".docx";
             try
             {
-                using var writer = WellTool.Poi.WordUtil.GetWriter(tempFile);
+                using var writer = WellTool.Poi.Word.WordUtil.GetWriter(tempFile);
                 writer.Write("Hello World!");
                 writer.Save();
                 
@@ -33,7 +33,7 @@ namespace WellTool.Poi.Tests
             var tempFile = Path.GetTempFileName() + ".docx";
             try
             {
-                using var writer = WellTool.Poi.WordUtil.GetWriter(tempFile);
+                using var writer = WellTool.Poi.Word.WordUtil.GetWriter(tempFile);
                 writer.Write("Line 1");
                 writer.Write("Line 2");
                 writer.Write("Line 3");
@@ -54,7 +54,7 @@ namespace WellTool.Poi.Tests
             var tempFile = Path.GetTempFileName() + ".docx";
             try
             {
-                using var writer = WellTool.Poi.WordUtil.GetWriter(tempFile);
+                using var writer = WellTool.Poi.Word.WordUtil.GetWriter(tempFile);
                 writer.Save();
                 
                 Assert.True(File.Exists(tempFile));
@@ -72,7 +72,7 @@ namespace WellTool.Poi.Tests
             var tempFile = Path.GetTempFileName() + ".docx";
             try
             {
-                using var writer = WellTool.Poi.WordUtil.GetWriter(tempFile);
+                using var writer = WellTool.Poi.Word.WordUtil.GetWriter(tempFile);
                 writer.Write("Special chars: <>&\"'中文测试");
                 writer.Save();
                 
@@ -91,7 +91,7 @@ namespace WellTool.Poi.Tests
             var tempFile = Path.GetTempFileName() + ".docx";
             try
             {
-                using var writer = WellTool.Poi.WordUtil.GetWriter(tempFile);
+                using var writer = WellTool.Poi.Word.WordUtil.GetWriter(tempFile);
                 
                 var content = new string('A', 10000);
                 writer.Write(content);

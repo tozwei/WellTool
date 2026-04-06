@@ -15,7 +15,7 @@ namespace WellTool.Poi.Tests
             var tempFile = Path.GetTempFileName() + ".xlsx";
             try
             {
-                WellTool.Poi.ExcelFileUtil.Create(tempFile);
+                WellTool.Poi.Excel.ExcelFileUtil.Create(tempFile);
                 Assert.True(File.Exists(tempFile));
             }
             finally
@@ -32,7 +32,7 @@ namespace WellTool.Poi.Tests
             try
             {
                 var sheetNames = new List<string> { "Sheet1", "Sheet2", "Sheet3" };
-                WellTool.Poi.ExcelFileUtil.Create(tempFile, sheetNames);
+                WellTool.Poi.Excel.ExcelFileUtil.Create(tempFile, sheetNames);
                 
                 Assert.True(File.Exists(tempFile));
             }
@@ -57,7 +57,7 @@ namespace WellTool.Poi.Tests
                 }
                 
                 // Then open it with FileUtil
-                using var workbook = WellTool.Poi.ExcelFileUtil.Open(tempFile);
+                using var workbook = WellTool.Poi.Excel.ExcelFileUtil.Open(tempFile);
                 Assert.NotNull(workbook);
                 Assert.True(workbook.GetSheetNames().Count > 0);
             }
