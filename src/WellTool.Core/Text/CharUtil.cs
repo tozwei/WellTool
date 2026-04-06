@@ -127,4 +127,14 @@ public static class CharUtil
     {
         return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
     }
+
+    /// <summary>
+    /// 判断是否为ASCII可打印字符
+    /// </summary>
+    /// <param name="c">字符</param>
+    /// <returns>是否为ASCII可打印字符</returns>
+    public static bool IsAsciiPrintable(char c)
+    {
+        return c >= 32 && c <= 126;
+    }
 }

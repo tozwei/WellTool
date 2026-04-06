@@ -9,7 +9,7 @@ public class AnnotationUtilTest
     public void GetAnnotationTest()
     {
         var type = typeof(TestClass);
-        var annotation = AnnotationUtil.GetAnnotation<MyAnnotation>(type);
+        var annotation = AnnotationUtil.GetAttribute<MyAnnotation>(type);
         Assert.NotNull(annotation);
     }
 
@@ -17,7 +17,7 @@ public class AnnotationUtilTest
     public void GetAnnotationsTest()
     {
         var type = typeof(TestClass);
-        var annotations = AnnotationUtil.GetAnnotations(type);
+        var annotations = AnnotationUtil.GetAnnotations(type, true);
         Assert.NotNull(annotations);
     }
 
@@ -25,8 +25,8 @@ public class AnnotationUtilTest
     public void HasAnnotationTest()
     {
         var type = typeof(TestClass);
-        Assert.True(AnnotationUtil.HasAnnotation<MyAnnotation>(type));
-        Assert.False(AnnotationUtil.HasAnnotation<NotExistAnnotation>(type));
+        Assert.True(AnnotationUtil.HasAttribute<MyAnnotation>(type));
+        Assert.False(AnnotationUtil.HasAttribute<NotExistAnnotation>(type));
     }
 
     [Fact]

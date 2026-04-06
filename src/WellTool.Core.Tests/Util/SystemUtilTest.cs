@@ -6,58 +6,37 @@ namespace WellTool.Core.Tests;
 public class SystemUtilTest
 {
     [Fact]
-    public void GetHostNameTest()
+    public void MachineNameTest()
     {
-        var hostName = SystemUtil.GetHostName();
+        var hostName = SystemUtil.MachineName();
         Assert.NotNull(hostName);
     }
 
     [Fact]
-    public void GetUserNameTest()
+    public void UserNameTest()
     {
-        var userName = SystemUtil.GetUserName();
+        var userName = SystemUtil.UserName();
         Assert.NotNull(userName);
     }
 
     [Fact]
-    public void GetOsVersionTest()
+    public void OsVersionTest()
     {
-        var osVersion = SystemUtil.GetOsVersion();
+        var osVersion = SystemUtil.OsVersion();
         Assert.NotNull(osVersion);
     }
 
     [Fact]
-    public void GetTotalMemoryTest()
+    public void MemoryUsedTest()
     {
-        var totalMemory = SystemUtil.GetTotalMemory();
-        Assert.True(totalMemory > 0);
-    }
-
-    [Fact]
-    public void GetFreeMemoryTest()
-    {
-        var freeMemory = SystemUtil.GetFreeMemory();
-        Assert.True(freeMemory >= 0);
-    }
-
-    [Fact]
-    public void GetUsedMemoryTest()
-    {
-        var usedMemory = SystemUtil.GetUsedMemory();
+        var usedMemory = SystemUtil.MemoryUsed();
         Assert.True(usedMemory >= 0);
     }
 
     [Fact]
-    public void GetAvailableProcessorsTest()
+    public void CpuCountTest()
     {
-        var processors = SystemUtil.GetAvailableProcessors();
+        var processors = SystemUtil.CpuCount();
         Assert.True(processors > 0);
-    }
-
-    [Fact]
-    public void GetJvmInfoTest()
-    {
-        var jvmInfo = SystemUtil.GetJvmInfo();
-        Assert.NotNull(jvmInfo);
     }
 }

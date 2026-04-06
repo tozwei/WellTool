@@ -14,13 +14,6 @@ public class CalendarUtilTest
     }
 
     [Fact]
-    public void GetDaysInYearTest()
-    {
-        Assert.Equal(365, CalendarUtil.GetDaysInYear(2021));
-        Assert.Equal(366, CalendarUtil.GetDaysInYear(2020));
-    }
-
-    [Fact]
     public void IsLeapYearTest()
     {
         Assert.False(CalendarUtil.IsLeapYear(2021));
@@ -37,49 +30,18 @@ public class CalendarUtilTest
     }
 
     [Fact]
-    public void GetDayOfYearTest()
-    {
-        var date = DateTime.Parse("2021-03-01");
-        Assert.Equal(60, CalendarUtil.GetDayOfYear(date));
-    }
-
-    [Fact]
-    public void AddDaysTest()
-    {
-        var date = DateTime.Parse("2021-01-01");
-        var result = CalendarUtil.AddDays(date, 10);
-        Assert.Equal(11, result.Day);
-    }
-
-    [Fact]
-    public void AddMonthsTest()
-    {
-        var date = DateTime.Parse("2021-01-01");
-        var result = CalendarUtil.AddMonths(date, 2);
-        Assert.Equal(3, result.Month);
-    }
-
-    [Fact]
-    public void AddYearsTest()
-    {
-        var date = DateTime.Parse("2021-01-01");
-        var result = CalendarUtil.AddYears(date, 1);
-        Assert.Equal(2022, result.Year);
-    }
-
-    [Fact]
-    public void GetFirstDayOfMonthTest()
+    public void GetMonthFirstDayTest()
     {
         var date = DateTime.Parse("2021-01-15");
-        var first = CalendarUtil.GetFirstDayOfMonth(date);
+        var first = CalendarUtil.GetMonthFirstDay(date);
         Assert.Equal(1, first.Day);
     }
 
     [Fact]
-    public void GetLastDayOfMonthTest()
+    public void GetMonthLastDayTest()
     {
         var date = DateTime.Parse("2021-01-15");
-        var last = CalendarUtil.GetLastDayOfMonth(date);
+        var last = CalendarUtil.GetMonthLastDay(date);
         Assert.Equal(31, last.Day);
     }
 

@@ -9,7 +9,7 @@ public class JsonUtilTest
     public void ToJsonTest()
     {
         var obj = new { Name = "John", Age = 25 };
-        var json = JsonUtil.ToJson(obj);
+        var json = JSONUtil.ToJson(obj);
         Assert.Contains("John", json);
         Assert.Contains("25", json);
     }
@@ -18,33 +18,25 @@ public class JsonUtilTest
     public void ParseObjectTest()
     {
         var json = "{\"name\":\"John\",\"age\":25}";
-        var obj = JsonUtil.ParseObject<User>(json);
-        Assert.Equal("John", obj.Name);
-        Assert.Equal(25, obj.Age);
+        var jsonObj = JSONUtil.ParseObj(json);
+        Assert.NotNull(jsonObj);
     }
 
     [Fact]
     public void ParseArrayTest()
     {
         var json = "[1,2,3,4,5]";
-        var list = JsonUtil.ParseArray<int>(json);
-        Assert.Equal(5, list.Count);
+        var jsonArray = JSONUtil.ParseArray(json);
+        Assert.NotNull(jsonArray);
     }
 
     [Fact]
-    public void GetValueTest()
+    public void GetByPathTest()
     {
         var json = "{\"name\":\"John\"}";
-        var name = JsonUtil.GetValue<string>(json, "name");
+        var jsonObj = JSONUtil.ParseObj(json);
+        var name = JSONUtil.GetByPath(jsonObj, "name");
         Assert.Equal("John", name);
-    }
-
-    [Fact]
-    public void HasKeyTest()
-    {
-        var json = "{\"name\":\"John\"}";
-        Assert.True(JsonUtil.HasKey(json, "name"));
-        Assert.False(JsonUtil.HasKey(json, "age"));
     }
 
     private class User

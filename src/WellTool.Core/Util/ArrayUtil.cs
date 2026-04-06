@@ -148,7 +148,7 @@ public static class ArrayUtil
             throw new IndexOutOfRangeException("startIndex is out of range");
         }
 
-        int actualLength = Math.Min(length, array.Length - startIndex);
+        int actualLength = System.Math.Min(length, array.Length - startIndex);
         T[] result = new T[actualLength];
         Array.Copy(array, startIndex, result, 0, actualLength);
         return result;
@@ -287,5 +287,48 @@ public static class ArrayUtil
         result[index] = value;
         Array.Copy(array, index, result, index + 1, array.Length - index);
         return result;
+    }
+
+    /// <summary>
+    /// 截取数组的一部分
+    /// </summary>
+    /// <typeparam name="T">数组类型</typeparam>
+    /// <param name="array">数组</param>
+    /// <param name="start">起始索引</param>
+    /// <param name="end">结束索引</param>
+    /// <param name="step">步长</param>
+    /// <returns>截取后的数组</returns>
+    public static T[] Sub<T>(T[] array, int start, int end, int step)
+    {
+        if (array == null)
+        {
+            return null;
+        }
+
+        int length = array.Length;
+        if (start < 0)
+        {
+            start = length + start;
+        }
+        if (end < 0)
+        {
+            end = length + end;
+        }
+
+        start = System.Math.Max(0, start);
+        end = System.Math.Min(length, end);
+
+        if (start >= end || step <= 0)
+        {
+            return Array.Empty<T>();
+        }
+
+        List<T> result = new List<T>();
+        for (int i = start; i < end; i += step)
+        {
+            result.Add(array[i]);
+        }
+
+        return result.ToArray();
     }
 }

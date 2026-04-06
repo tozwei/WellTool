@@ -1,4 +1,4 @@
-using WellTool.Core.Bean;
+using WellTool.Core.Bean.Copier;
 using Xunit;
 
 namespace WellTool.Core.Tests;
