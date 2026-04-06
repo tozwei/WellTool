@@ -440,7 +440,11 @@ namespace WellTool.Json
         public static string ToJsonPrettyStr(object obj)
         {
             var json = Parse(obj);
-            return ToJsonPrettyStr(json);
+            if (json is JSONBase jsonBase)
+            {
+                return ToJsonPrettyStr(jsonBase);
+            }
+            return null;
         }
 
         /// <summary>

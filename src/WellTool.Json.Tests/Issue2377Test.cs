@@ -15,7 +15,8 @@ namespace WellTool.Json.Tests
             var bean = JSONUtil.ToBean<EmptyArrayBean>(jsonStr);
             Assert.NotNull(bean);
             Assert.NotNull(bean.Items);
-            Assert.Empty(bean.Items);
+            var items = (System.Collections.IEnumerable)bean.Items;
+            Assert.Empty(items);
         }
 
         [Fact]

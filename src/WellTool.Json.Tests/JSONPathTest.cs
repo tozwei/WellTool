@@ -25,7 +25,8 @@ namespace WellTool.Json.Tests
         {
             var str = "{'accountId':111}";
             var json = JSONUtil.Parse(str);
-            var accountId = JSONUtil.GetByPath(json, "$.accountId", 0L);
+            var jsonBase = (JSONBase)json;
+            var accountId = JSONUtil.GetByPath(jsonBase, "$.accountId", 0L);
             Assert.Equal(111L, accountId);
         }
 
@@ -34,7 +35,8 @@ namespace WellTool.Json.Tests
         {
             var str = "[{'accountId':1},{'accountId':2},{'accountId':3}]";
             var json = JSONUtil.Parse(str);
-            var accountIds = json.GetByPath<List<long>>("$.accountId");
+            var jsonBase = (JSONBase)json;
+            var accountIds = JSONUtil.GetByPath<List<long>>(jsonBase, "$.accountId", null);
             Assert.NotNull(accountIds);
             Assert.Equal(3, accountIds.Count);
             Assert.Equal(1L, accountIds[0]);

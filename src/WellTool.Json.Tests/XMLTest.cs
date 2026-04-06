@@ -46,7 +46,8 @@ namespace WellTool.Json.Tests
         {
             var xml = new System.Xml.XmlDocument();
             xml.LoadXml(xmlStr);
-            return JSONUtil.ParseJson(Newtonsoft.Json.JsonConvert.SerializeXmlNode(xml.DocumentElement));
+            var json = JSONUtil.ParseJson(Newtonsoft.Json.JsonConvert.SerializeXmlNode(xml.DocumentElement));
+            return (JSONObject)json;
         }
 
         private static string JSONToXML(string jsonStr)

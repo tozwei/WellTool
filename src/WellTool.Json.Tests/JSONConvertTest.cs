@@ -32,8 +32,9 @@ namespace WellTool.Json.Tests
             var jsonStr = "{\"id\":1,\"name\":\"test\"}";
             var json = JSONUtil.Parse(jsonStr);
             Assert.NotNull(json);
-            Assert.Equal(1L, json["id"]);
-            Assert.Equal("test", json["name"]);
+            var jsonObject = (JSONObject)json;
+            Assert.Equal(1L, jsonObject["id"]);
+            Assert.Equal("test", jsonObject["name"]);
         }
 
         [Fact]
