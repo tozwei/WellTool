@@ -1,13 +1,14 @@
 using WellTool.Core.IO;
 using Xunit;
 using System.IO;
+using System.Text;
 
 namespace WellTool.Core.Tests;
 
 public class FileReaderUtilTest
 {
     [Fact]
-    public void ReadUtf8Test()
+    public async Task ReadUtf8Test()
     {
         var tempFile = Path.GetTempFileName();
         try
@@ -23,7 +24,7 @@ public class FileReaderUtilTest
     }
 
     [Fact]
-    public void ReadLinesTest()
+    public async Task ReadLinesTest()
     {
         var tempFile = Path.GetTempFileName();
         try
@@ -39,7 +40,7 @@ public class FileReaderUtilTest
     }
 
     [Fact]
-    public void ReadBytesTest()
+    public async Task ReadBytesTest()
     {
         var tempFile = Path.GetTempFileName();
         try

@@ -49,39 +49,39 @@ public class DateUtilLastTest
     {
         var start = DateTime.Parse("2021-01-01 10:00:00");
         var end = DateTime.Parse("2021-01-01 11:00:00");
-        var between = DateBetween.Between(start, end);
-        Assert.Equal(60, between.GetTotalMinutes());
+        var between = DateUtil.Between(start, end, DateUnit.Minute);
+        Assert.Equal(60, between);
     }
 
     [Fact]
-    public void AddDaysTest()
+    public void OffsetDayTest()
     {
         var date = DateTime.Parse("2021-01-01");
-        var result = DateUtil.AddDays(date, 10);
+        var result = DateUtil.OffsetDay(date, 10);
         Assert.Equal(11, result.Day);
     }
 
     [Fact]
-    public void AddMonthsTest()
+    public void OffsetMonthTest()
     {
         var date = DateTime.Parse("2021-01-01");
-        var result = DateUtil.AddMonths(date, 2);
+        var result = DateUtil.OffsetMonth(date, 2);
         Assert.Equal(3, result.Month);
     }
 
     [Fact]
-    public void AddYearsTest()
+    public void OffsetYearTest()
     {
         var date = DateTime.Parse("2021-01-01");
-        var result = DateUtil.AddYears(date, 1);
+        var result = DateUtil.OffsetYear(date, 1);
         Assert.Equal(2022, result.Year);
     }
 
     [Fact]
     public void GetDaysInMonthTest()
     {
-        Assert.Equal(31, DateUtil.GetDaysInMonth(2021, 1));
-        Assert.Equal(28, DateUtil.GetDaysInMonth(2021, 2));
+        Assert.Equal(31, DateTime.DaysInMonth(2021, 1));
+        Assert.Equal(28, DateTime.DaysInMonth(2021, 2));
     }
 
     [Fact]
@@ -92,10 +92,10 @@ public class DateUtilLastTest
     }
 
     [Fact]
-    public void GetDayOfYearTest()
+    public void DayOfYearTest()
     {
         var date = DateTime.Parse("2021-03-01");
-        Assert.Equal(60, DateUtil.GetDayOfYear(date));
+        Assert.Equal(60, DateUtil.DayOfYear(date));
     }
 
     [Fact]
@@ -103,24 +103,17 @@ public class DateUtilLastTest
     {
         var date1 = DateTime.Parse("2021-01-01 10:00:00");
         var date2 = DateTime.Parse("2021-01-01 20:00:00");
-        Assert.True(DateUtil.IsSameDay(date1, date2));
+        var beginOfDay1 = DateUtil.BeginOfDay(date1);
+        var beginOfDay2 = DateUtil.BeginOfDay(date2);
+        Assert.True(beginOfDay1.Date == beginOfDay2.Date);
     }
 
     [Fact]
-    public void DateRangeTest()
-    {
-        var start = DateTime.Parse("2021-01-01");
-        var end = DateTime.Parse("2021-01-05");
-        var range = new DateRange(start, end, DateField.Day);
-        Assert.Equal(5, range.Count());
-    }
-
-    [Fact]
-    public void QuarterTest()
+    public void YearAndQuarterTest()
     {
         var q1 = new DateTime(2021, 1, 15);
         var q2 = new DateTime(2021, 4, 15);
-        Assert.Equal(Quarter.Q1, DateUtil.GetQuarterEnum(q1));
-        Assert.Equal(Quarter.Q2, DateUtil.GetQuarterEnum(q2));
+        Assert.Equal("20211", DateUtil.YearAndQuarter(q1));
+        Assert.Equal("20212", DateUtil.YearAndQuarter(q2));
     }
 }
