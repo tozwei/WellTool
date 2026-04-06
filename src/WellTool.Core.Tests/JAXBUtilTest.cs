@@ -1,5 +1,4 @@
 using Xunit;
-using WellTool.Core;
 using WellTool.Core.Util;
 using System.IO;
 using System.Text;

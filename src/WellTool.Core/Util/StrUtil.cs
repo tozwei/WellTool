@@ -345,4 +345,404 @@ public static class StrUtil
 			return false;
 		return double.TryParse(str, out _);
 	}
+
+	/// <summary>
+	/// 去除空字符串或返回null
+	/// </summary>
+	public static string TrimToNull(string str)
+	{
+		if (IsBlank(str))
+			return null;
+		return str.Trim();
+	}
+
+	/// <summary>
+	/// 去除空字符串或返回空字符串
+	/// </summary>
+	public static string TrimToEmpty(string str)
+	{
+		return str?.Trim() ?? string.Empty;
+	}
+
+	/// <summary>
+	/// 切割字符串为指定长度的片段
+	/// </summary>
+	public static string[] Cut(string str, int length)
+	{
+		if (IsEmpty(str) || length <= 0)
+			return Array.Empty<string>();
+		var list = new System.Collections.Generic.List<string>();
+		for (int i = 0; i < str.Length; i += length)
+		{
+			int end = Math.Min(i + length, str.Length);
+			list.Add(str.Substring(i, end - i));
+		}
+		return list.ToArray();
+	}
+
+	/// <summary>
+	/// 获取指定字符串之前的内容
+	/// </summary>
+	public static string SubBefore(string str, char separator)
+	{
+		if (IsEmpty(str))
+			return str;
+		int index = str.IndexOf(separator);
+		return index < 0 ? str : str.Substring(0, index);
+	}
+
+	/// <summary>
+	/// 获取指定字符串之后的内容
+	/// </summary>
+	public static string SubAfter(string str, char separator)
+	{
+		if (IsEmpty(str))
+			return str;
+		int index = str.IndexOf(separator);
+		return index < 0 ? str : str.Substring(index + 1);
+	}
+
+	/// <summary>
+	/// 获取两个字符串之间的内容
+	/// </summary>
+	public static string SubBetween(string str, string prefix, string suffix)
+	{
+		if (IsEmpty(str))
+			return str;
+		int start = str.IndexOf(prefix);
+		if (start < 0)
+			return str;
+		int end = str.IndexOf(suffix, start + prefix.Length);
+		if (end < 0)
+			return str;
+		return str.Substring(start + prefix.Length, end - start - prefix.Length);
+	}
+
+	/// <summary>
+	/// 是否包含（忽略大小写）
+	/// </summary>
+	public static bool ContainsIgnoreCase(string str, string search)
+	{
+		if (IsEmpty(str) || IsEmpty(search))
+			return false;
+		return str.Contains(search, StringComparison.OrdinalIgnoreCase);
+	}
+
+	/// <summary>
+	/// 查找子字符串位置
+	/// </summary>
+	public static int IndexOf(string str, string search)
+	{
+		if (IsEmpty(str) || IsEmpty(search))
+			return -1;
+		return str.IndexOf(search, StringComparison.Ordinal);
+	}
+
+	/// <summary>
+	/// 从末尾查找子字符串位置
+	/// </summary>
+	public static int LastIndexOf(string str, string search)
+	{
+		if (IsEmpty(str) || IsEmpty(search))
+			return -1;
+		return str.LastIndexOf(search, StringComparison.Ordinal);
+	}
+
+	/// <summary>
+	/// 是否以指定字符串开头
+	/// </summary>
+	public static bool StartsWith(string str, string prefix)
+	{
+		if (IsEmpty(str) || IsEmpty(prefix))
+			return false;
+		return str.StartsWith(prefix);
+	}
+
+	/// <summary>
+	/// 是否以指定字符串结尾
+	/// </summary>
+	public static bool EndsWith(string str, string suffix)
+	{
+		if (IsEmpty(str) || IsEmpty(suffix))
+			return false;
+		return str.EndsWith(suffix);
+	}
+
+	/// <summary>
+	/// 是否相等（忽略大小写）
+	/// </summary>
+	public static bool EqualsIgnoreCase(string str1, string str2)
+	{
+		if (str1 == null && str2 == null)
+			return true;
+		if (str1 == null || str2 == null)
+			return false;
+		return str1.Equals(str2, StringComparison.OrdinalIgnoreCase);
+	}
+
+	/// <summary>
+	/// 是否相等
+	/// </summary>
+	public static bool Equals(string str1, string str2)
+	{
+		if (str1 == null && str2 == null)
+			return true;
+		if (str1 == null || str2 == null)
+			return false;
+		return str1.Equals(str2);
+	}
+
+	/// <summary>
+	/// 首字母大写
+	/// </summary>
+	public static string UpperFirst(string str)
+	{
+		if (IsEmpty(str))
+			return str;
+		return char.ToUpper(str[0]) + str.Substring(1);
+	}
+
+	/// <summary>
+	/// 首字母小写
+	/// </summary>
+	public static string LowerFirst(string str)
+	{
+		if (IsEmpty(str))
+			return str;
+		return char.ToLower(str[0]) + str.Substring(1);
+	}
+
+	/// <summary>
+	/// 驼峰命名
+	/// </summary>
+	public static string ToCamelCase(string str)
+	{
+		if (IsEmpty(str))
+			return str;
+		var sb = new System.Text.StringBuilder();
+		var capitalizeNext = false;
+		foreach (char c in str)
+		{
+			if (c == '_' || c == '-')
+			{
+				capitalizeNext = true;
+			}
+			else if (capitalizeNext)
+			{
+				sb.Append(char.ToUpper(c));
+				capitalizeNext = false;
+			}
+			else
+			{
+				sb.Append(c);
+			}
+		}
+		return UpperFirst(sb.ToString());
+	}
+
+	/// <summary>
+	/// 下划线命名
+	/// </summary>
+	public static string ToUnderScoreCase(string str)
+	{
+		if (IsEmpty(str))
+			return str;
+		var sb = new System.Text.StringBuilder();
+		for (int i = 0; i < str.Length; i++)
+		{
+			char c = str[i];
+			if (char.IsUpper(c))
+			{
+				if (i > 0)
+					sb.Append('_');
+				sb.Append(char.ToLower(c));
+			}
+			else
+			{
+				sb.Append(c);
+			}
+		}
+		return sb.ToString();
+	}
+
+	/// <summary>
+	/// 是否为字母
+	/// </summary>
+	public static bool IsAlpha(string str)
+	{
+		if (IsEmpty(str))
+			return false;
+		foreach (char c in str)
+		{
+			if (!char.IsLetter(c))
+				return false;
+		}
+		return true;
+	}
+
+	/// <summary>
+	/// 是否为字母或数字
+	/// </summary>
+	public static bool IsAlphanumeric(string str)
+	{
+		if (IsEmpty(str))
+			return false;
+		foreach (char c in str)
+		{
+			if (!char.IsLetterOrDigit(c))
+				return false;
+		}
+		return true;
+	}
+
+	/// <summary>
+	/// 是否为数字
+	/// </summary>
+	public static bool IsNumber(string str)
+	{
+		if (IsEmpty(str))
+			return false;
+		return double.TryParse(str, out _);
+	}
+
+	/// <summary>
+	/// 分割字符串
+	/// </summary>
+	public static string[] Split(string str, char separator)
+	{
+		if (IsEmpty(str))
+			return Array.Empty<string>();
+		return str.Split(separator);
+	}
+
+	/// <summary>
+	/// 分割字符串为数组
+	/// </summary>
+	public static string[] SplitToArray(string str, char separator)
+	{
+		return Split(str, separator);
+	}
+
+	/// <summary>
+	/// 拼接字符串
+	/// </summary>
+	public static string Join(string separator, params string[] values)
+	{
+		if (values == null || values.Length == 0)
+			return string.Empty;
+		return string.Join(separator, values);
+	}
+
+	/// <summary>
+	/// 拼接字符串（带集合）
+	/// </summary>
+	public static string Join(string separator, System.Collections.Generic.IEnumerable<string> values)
+	{
+		if (values == null)
+			return string.Empty;
+		return string.Join(separator, values);
+	}
+
+	/// <summary>
+	/// 包裹字符串
+	/// </summary>
+	public static string Wrap(string str, char wrapper)
+	{
+		if (IsEmpty(str))
+			return str;
+		return wrapper + str + wrapper;
+	}
+
+	/// <summary>
+	/// 解除包裹
+	/// </summary>
+	public static string Unwrap(string str, char wrapper)
+	{
+		if (IsEmpty(str))
+			return str;
+		if (str.Length >= 2 && str[0] == wrapper && str[str.Length - 1] == wrapper)
+			return str.Substring(1, str.Length - 2);
+		return str;
+	}
+
+	/// <summary>
+	/// 如果缺少后缀则追加
+	/// </summary>
+	public static string AppendIfMissing(string str, string suffix)
+	{
+		if (IsEmpty(str) || str.EndsWith(suffix))
+			return str;
+		return str + suffix;
+	}
+
+	/// <summary>
+	/// 如果缺少前缀则前置
+	/// </summary>
+	public static string PrependIfMissing(string str, string prefix)
+	{
+		if (IsEmpty(str) || str.StartsWith(prefix))
+			return str;
+		return prefix + str;
+	}
+
+	/// <summary>
+	/// 替换指定位置的字符串
+	/// </summary>
+	public static string Replace(string str, int start, int end, string replacement)
+	{
+		if (IsEmpty(str))
+			return str;
+		return str.Substring(0, start) + replacement + str.Substring(end);
+	}
+
+	/// <summary>
+	/// 替换字符
+	/// </summary>
+	public static string ReplaceChars(string str, char search, char replacement)
+	{
+		if (IsEmpty(str))
+			return str;
+		return str.Replace(search, replacement);
+	}
+
+	/// <summary>
+	/// 去除首尾指定字符串
+	/// </summary>
+	public static string Strip(string str, string prefix, string suffix)
+	{
+		if (IsEmpty(str))
+			return str;
+		var result = str;
+		if (!string.IsNullOrEmpty(prefix) && result.StartsWith(prefix))
+			result = result.Substring(prefix.Length);
+		if (!string.IsNullOrEmpty(suffix) && result.EndsWith(suffix))
+			result = result.Substring(0, result.Length - suffix.Length);
+		return result;
+	}
+
+	/// <summary>
+	/// 重复字符
+	/// </summary>
+	public static string Repeat(char c, int count)
+	{
+		if (count <= 0)
+			return string.Empty;
+		return new string(c, count);
+	}
+
+	/// <summary>
+	/// 索引字典
+	/// </summary>
+	public static System.Collections.Generic.IDictionary<int, char> Indexed(string str)
+	{
+		var dict = new System.Collections.Generic.Dictionary<int, char>();
+		if (!IsEmpty(str))
+		{
+			for (int i = 0; i < str.Length; i++)
+			{
+				dict[i] = str[i];
+			}
+		}
+		return dict;
+	}
 }

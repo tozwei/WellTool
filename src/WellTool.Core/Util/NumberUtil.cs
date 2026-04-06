@@ -75,7 +75,7 @@ public static class NumberUtil
 	/// <summary>
 	/// 保留小数位
 	/// </summary>
-	public static string Round(double value, int decimals) => System.Math.Round(value, decimals).ToString($"F{decimals}");
+	public static string RoundToString(double value, int decimals) => System.Math.Round(value, decimals).ToString($"F{decimals}");
 
 	/// <summary>
 	/// 取绝对值
@@ -238,5 +238,119 @@ public static class NumberUtil
 		} else {
 			return sorted[mid];
 		}
+	}
+
+	/// <summary>
+	/// 是否为长整数
+	/// </summary>
+	public static bool IsLong(object obj)
+	{
+		if (obj == null)
+			return false;
+		return long.TryParse(obj.ToString(), out _);
+	}
+
+	/// <summary>
+	/// 加法（支持多个参数）
+	/// </summary>
+	public static double Add(params double[] values)
+	{
+		if (values == null || values.Length == 0)
+			return 0;
+		double sum = 0;
+		foreach (var v in values)
+			sum += v;
+		return sum;
+	}
+
+	/// <summary>
+	/// 加法（float重载）
+	/// </summary>
+	public static double Add(float a, float b) => a + b;
+
+	/// <summary>
+	/// 减法
+	/// </summary>
+	public static double Sub(double a, double b) => a - b;
+
+	/// <summary>
+	/// 乘法
+	/// </summary>
+	public static double Mul(params double[] values)
+	{
+		if (values == null || values.Length == 0)
+			return 0;
+		double product = 1;
+		foreach (var v in values)
+			product *= v;
+		return product;
+	}
+
+	/// <summary>
+	/// 除法
+	/// </summary>
+	public static double Div(double a, double b)
+	{
+		if (b == 0)
+			return 0;
+		return a / b;
+	}
+
+	/// <summary>
+	/// 四舍五入
+	/// </summary>
+	public static double Round(double value, int decimals)
+	{
+		return System.Math.Round(value, decimals);
+	}
+
+	/// <summary>
+	/// 是否在范围内
+	/// </summary>
+	public static bool IsBetween(double value, double min, double max)
+	{
+		return value >= min && value <= max;
+	}
+
+	/// <summary>
+	/// 是否为质数
+	/// </summary>
+	public static bool IsPrime(int n)
+	{
+		if (n <= 1) return false;
+		if (n <= 3) return true;
+		if (n % 2 == 0 || n % 3 == 0) return false;
+		for (int i = 5; i * i <= n; i += 6)
+		{
+			if (n % i == 0 || n % (i + 2) == 0)
+				return false;
+		}
+		return true;
+	}
+
+	/// <summary>
+	/// 最大值（数组）
+	/// </summary>
+	public static int Max(params int[] values)
+	{
+		if (values == null || values.Length == 0)
+			throw new ArgumentException("Values array cannot be null or empty");
+		int max = values[0];
+		foreach (var v in values)
+			if (v > max) max = v;
+		return max;
+	}
+
+	/// <summary>
+	/// 最小值（数组）
+	/// </summary>
+	public static int Min(params int[] values)
+	{
+		if (values == null || values.Length == 0)
+			throw new ArgumentException("Values array cannot be null or empty");
+		int min = values[0];
+		foreach (var v in values)
+			if (v < min) min = v;
+		return min;
 	}
 }

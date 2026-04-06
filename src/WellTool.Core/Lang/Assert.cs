@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 
 namespace WellTool.Core.Lang;
 
@@ -7,98 +8,147 @@ namespace WellTool.Core.Lang;
 /// </summary>
 public static class Assert
 {
-	/// <summary>
-	/// 断言对象不为空
-	/// </summary>
-	/// <param name="obj">对象</param>
-	/// <param name="errorMsg">错误信息</param>
-	public static void NotNull(object obj, string errorMsg = "Object cannot be null")
-	{
-		if (obj == null)
-		{
-			throw new ArgumentNullException(nameof(obj), errorMsg);
-		}
-	}
+    /// <summary>
+    /// 断言对象为null
+    /// </summary>
+    public static bool IsNull(object obj)
+    {
+        return obj == null;
+    }
 
-	/// <summary>
-	/// 断言字符串不为空
-	/// </summary>
-	/// <param name="str">字符串</param>
-	/// <param name="errorMsg">错误信息</param>
-	public static void NotBlank(string str, string errorMsg = "String cannot be blank")
-	{
-		if (string.IsNullOrWhiteSpace(str))
-		{
-			throw new ArgumentException(errorMsg, nameof(str));
-		}
-	}
+    /// <summary>
+    /// 断言对象不为null
+    /// </summary>
+    public static bool NotNull(object obj)
+    {
+        return obj != null;
+    }
 
-	/// <summary>
-	/// 断言条件为真
-	/// </summary>
-	/// <param name="condition">条件</param>
-	/// <param name="errorMsg">错误信息</param>
-	public static void IsTrue(bool condition, string errorMsg = "Condition must be true")
-	{
-		if (!condition)
-		{
-			throw new InvalidOperationException(errorMsg);
-		}
-	}
+    /// <summary>
+    /// 断言对象不为空
+    /// </summary>
+    public static object NotNull(object obj, Func<Exception> exceptionProducer)
+    {
+        if (obj == null)
+        {
+            throw exceptionProducer();
+        }
+        return obj;
+    }
 
-	/// <summary>
-	/// 断言条件为假
-	/// </summary>
-	/// <param name="condition">条件</param>
-	/// <param name="errorMsg">错误信息</param>
-	public static void IsFalse(bool condition, string errorMsg = "Condition must be false")
-	{
-		if (condition)
-		{
-			throw new InvalidOperationException(errorMsg);
-		}
-	}
+    /// <summary>
+    /// 断言条件为真
+    /// </summary>
+    public static bool IsTrue(bool condition)
+    {
+        return condition;
+    }
 
-	/// <summary>
-	/// 断言值在范围内
-	/// </summary>
-	/// <typeparam name="T">值类型</typeparam>
-	/// <param name="value">值</param>
-	/// <param name="min">最小值</param>
-	/// <param name="max">最大值</param>
-	/// <param name="errorMsg">错误信息</param>
-	public static T CheckBetween<T>(T value, T min, T max) where T : IComparable<T>
-	{
-		if (value.CompareTo(min) < 0 || value.CompareTo(max) > 0)
-		{
-			throw new ArgumentOutOfRangeException(nameof(value), $"Value must be between {min} and {max}");
-		}
-		return value;
-	}
+    /// <summary>
+    /// 断言条件为真
+    /// </summary>
+    public static bool IsTrue(bool condition, Func<Exception> exceptionProducer)
+    {
+        if (!condition)
+        {
+            throw exceptionProducer();
+        }
+        return true;
+    }
 
-	/// <summary>
-	/// 断言数组不为空
-	/// </summary>
-	/// <param name="array">数组</param>
-	/// <param name="errorMsg">错误信息</param>
-	public static void NotEmpty(Array array, string errorMsg = "Array cannot be empty")
-	{
-		if (array == null || array.Length == 0)
-		{
-			throw new ArgumentException(errorMsg, nameof(array));
-		}
-	}
+    /// <summary>
+    /// 断言条件为假
+    /// </summary>
+    public static bool IsFalse(bool condition)
+    {
+        return !condition;
+    }
 
-	/// <summary>
-	/// 断言集合不为空
-	/// </summary>
-	/// <param name="collection">集合</param>
-	/// <param name="errorMsg">错误信息</param>
-	public static void NotEmpty<T>(System.Collections.Generic.ICollection<T> collection, string errorMsg = "Collection cannot be empty")
-	{
-		if (collection == null || collection.Count == 0)
-		{
-			throw new ArgumentException(errorMsg, nameof(collection));
-		}
-	}
+    /// <summary>
+    /// 断言条件为假
+    /// </summary>
+    public static bool IsFalse(bool condition, Func<Exception> exceptionProducer)
+    {
+        if (condition)
+        {
+            throw exceptionProducer();
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// 断言值在范围内
+    /// </summary>
+    public static T CheckBetween<T>(T value, T min, T max) where T : IComparable<T>
+    {
+        if (value.CompareTo(min) < 0 || value.CompareTo(max) > 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(value), $"Value must be between {min} and {max}");
+        }
+        return value;
+    }
+
+    /// <summary>
+    /// 断言数组不为空
+    /// </summary>
+    public static bool NotEmpty(Array array)
+    {
+        return array != null && array.Length > 0;
+    }
+
+    /// <summary>
+    /// 断言数组不为空
+    /// </summary>
+    public static Array NotEmpty(Array array, Func<Exception> exceptionProducer)
+    {
+        if (array == null || array.Length == 0)
+        {
+            throw exceptionProducer();
+        }
+        return array;
+    }
+
+    /// <summary>
+    /// 断言集合不为空
+    /// </summary>
+    public static bool NotEmpty<T>(ICollection<T> collection)
+    {
+        return collection != null && collection.Count > 0;
+    }
+
+    /// <summary>
+    /// 断言集合不为空
+    /// </summary>
+    public static ICollection<T> NotEmpty<T>(ICollection<T> collection, Func<Exception> exceptionProducer)
+    {
+        if (collection == null || collection.Count == 0)
+        {
+            throw exceptionProducer();
+        }
+        return collection;
+    }
+
+    /// <summary>
+    /// 断言集合为空
+    /// </summary>
+    public static bool Empty(IEnumerable collection)
+    {
+        if (collection == null)
+            return true;
+        return !collection.GetEnumerator().MoveNext();
+    }
+
+    /// <summary>
+    /// 断言集合为空
+    /// </summary>
+    public static IEnumerable Empty(IEnumerable collection, Func<Exception> exceptionProducer)
+    {
+        if (collection == null)
+            return collection;
+        if (collection.GetEnumerator().MoveNext())
+        {
+            throw exceptionProducer();
+        }
+        return collection;
+    }
 }

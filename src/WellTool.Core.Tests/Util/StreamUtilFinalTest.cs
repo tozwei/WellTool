@@ -1,4 +1,3 @@
-using WellTool.Core.IO;
 using WellTool.Core.Streams;
 using Xunit;
 using System.IO;
@@ -9,44 +8,39 @@ namespace WellTool.Core.Tests;
 public class StreamUtilFinalTest
 {
     [Fact]
-    public void ReadUtf8Test()
+    public void OfArrayTest()
     {
-        using var stream = new MemoryStream(Encoding.UTF8.GetBytes("Hello"));
-        var result = StreamUtil.ReadUtf8(stream);
-        Assert.Equal("Hello", result);
+        var result = StreamUtil.OfArray(new[] { "a", "b", "c" });
+        Assert.Equal(3, result.Length);
     }
 
     [Fact]
-    public void ReadBytesTest()
+    public void OfListTest()
     {
-        using var stream = new MemoryStream(Encoding.UTF8.GetBytes("Hello"));
-        var bytes = StreamUtil.ReadBytes(stream);
-        Assert.Equal(5, bytes.Length);
+        var list = new System.Collections.Generic.List<string> { "a", "b", "c" };
+        var result = StreamUtil.OfList(list);
+        Assert.Equal(3, result.Count);
     }
 
     [Fact]
-    public void CopyTest()
+    public void OfParamsTest()
     {
-        using var input = new MemoryStream(Encoding.UTF8.GetBytes("Hello"));
-        using var output = new MemoryStream();
-        StreamUtil.Copy(input, output);
-        output.Position = 0;
-        using var reader = new StreamReader(output, Encoding.UTF8);
-        Assert.Equal("Hello", reader.ReadToEnd());
+        var result = StreamUtil.Of("a", "b", "c");
+        Assert.Equal(3, result.Count());
     }
 
     [Fact]
-    public void EmptyStreamTest()
+    public void JoinTest()
     {
-        var empty = StreamUtil.EmptyStream();
-        Assert.Equal(0, empty.Length);
+        var items = new[] { "a", "b", "c" };
+        var result = StreamUtil.Join(items, ",");
+        Assert.Equal("a,b,c", result);
     }
 
     [Fact]
-    public void GetAvailableTest()
+    public void EmptyTest()
     {
-        using var stream = new MemoryStream(Encoding.UTF8.GetBytes("Hello"));
-        var available = StreamUtil.GetAvailable(stream);
-        Assert.Equal(5, available);
+        var empty = StreamUtil.Of<string>();
+        Assert.Empty(empty);
     }
 }

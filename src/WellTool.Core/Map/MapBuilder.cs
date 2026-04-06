@@ -8,7 +8,7 @@ namespace WellTool.Core.Map
     /// </summary>
     /// <typeparam name="K">键类型</typeparam>
     /// <typeparam name="V">值类型</typeparam>
-    public class MapBuilderImpl<K, V>
+    public class MapBuilder<K, V>
     {
         private readonly Dictionary<K, V> _map;
 
@@ -161,59 +161,6 @@ namespace WellTool.Core.Map
         /// <param name="dictionary">字典</param>
         /// <returns>MapBuilder 实例</returns>
         public static MapBuilder<K, V> Create(IDictionary<K, V> dictionary)
-        {
-            return new MapBuilder<K, V>(dictionary);
-        }
-    }
-
-    /// <summary>
-    /// MapBuilder 静态工厂类
-    /// </summary>
-    public static class MapBuilder
-    {
-        /// <summary>
-        /// 创建 MapBuilder 实例
-        /// </summary>
-        /// <typeparam name="K">键类型</typeparam>
-        /// <typeparam name="V">值类型</typeparam>
-        /// <returns>MapBuilder 实例</returns>
-        public static MapBuilder<K, V> Create<K, V>()
-        {
-            return new MapBuilder<K, V>();
-        }
-
-        /// <summary>
-        /// 创建 MapBuilder 实例
-        /// </summary>
-        /// <typeparam name="K">键类型</typeparam>
-        /// <typeparam name="V">值类型</typeparam>
-        /// <param name="capacity">初始容量</param>
-        /// <returns>MapBuilder 实例</returns>
-        public static MapBuilder<K, V> Create<K, V>(int capacity)
-        {
-            return new MapBuilder<K, V>(capacity);
-        }
-
-        /// <summary>
-        /// 创建 MapBuilder 实例
-        /// </summary>
-        /// <typeparam name="K">键类型</typeparam>
-        /// <typeparam name="V">值类型</typeparam>
-        /// <param name="comparer">键比较器</param>
-        /// <returns>MapBuilder 实例</returns>
-        public static MapBuilder<K, V> Create<K, V>(IEqualityComparer<K> comparer)
-        {
-            return new MapBuilder<K, V>(comparer);
-        }
-
-        /// <summary>
-        /// 创建 MapBuilder 实例
-        /// </summary>
-        /// <typeparam name="K">键类型</typeparam>
-        /// <typeparam name="V">值类型</typeparam>
-        /// <param name="dictionary">字典</param>
-        /// <returns>MapBuilder 实例</returns>
-        public static MapBuilder<K, V> Create<K, V>(IDictionary<K, V> dictionary)
         {
             return new MapBuilder<K, V>(dictionary);
         }
