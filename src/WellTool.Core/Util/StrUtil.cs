@@ -159,7 +159,7 @@ public static class StrUtil
 	{
 		if (IsEmpty(str))
 			return str;
-		return str.Substring(fromIndex, MathUtil.Min(toIndex, str.Length) - fromIndex);
+		return str.Substring(fromIndex, System.Math.Min(toIndex, str.Length) - fromIndex);
 	}
 
 	/// <summary>
@@ -374,7 +374,7 @@ public static class StrUtil
 		var list = new System.Collections.Generic.List<string>();
 		for (int i = 0; i < str.Length; i += length)
 		{
-			int end = Math.Min(i + length, str.Length);
+			int end = System.Math.Min(i + length, str.Length);
 			list.Add(str.Substring(i, end - i));
 		}
 		return list.ToArray();

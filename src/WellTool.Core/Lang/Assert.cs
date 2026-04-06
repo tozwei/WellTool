@@ -27,7 +27,7 @@ public static class Assert
     /// <summary>
     /// 断言对象不为空
     /// </summary>
-    public static object NotNull(object obj, Func<Exception> exceptionProducer)
+    public static object NotNull(object obj, Func<System.Exception> exceptionProducer)
     {
         if (obj == null)
         {
@@ -47,7 +47,7 @@ public static class Assert
     /// <summary>
     /// 断言条件为真
     /// </summary>
-    public static bool IsTrue(bool condition, Func<Exception> exceptionProducer)
+    public static bool IsTrue(bool condition, Func<System.Exception> exceptionProducer)
     {
         if (!condition)
         {
@@ -67,7 +67,7 @@ public static class Assert
     /// <summary>
     /// 断言条件为假
     /// </summary>
-    public static bool IsFalse(bool condition, Func<Exception> exceptionProducer)
+    public static bool IsFalse(bool condition, Func<System.Exception> exceptionProducer)
     {
         if (condition)
         {
@@ -99,7 +99,7 @@ public static class Assert
     /// <summary>
     /// 断言数组不为空
     /// </summary>
-    public static Array NotEmpty(Array array, Func<Exception> exceptionProducer)
+    public static Array NotEmpty(Array array, Func<System.Exception> exceptionProducer)
     {
         if (array == null || array.Length == 0)
         {
@@ -119,7 +119,7 @@ public static class Assert
     /// <summary>
     /// 断言集合不为空
     /// </summary>
-    public static ICollection<T> NotEmpty<T>(ICollection<T> collection, Func<Exception> exceptionProducer)
+    public static ICollection<T> NotEmpty<T>(ICollection<T> collection, Func<System.Exception> exceptionProducer)
     {
         if (collection == null || collection.Count == 0)
         {
@@ -141,7 +141,7 @@ public static class Assert
     /// <summary>
     /// 断言集合为空
     /// </summary>
-    public static IEnumerable Empty(IEnumerable collection, Func<Exception> exceptionProducer)
+    public static IEnumerable Empty(IEnumerable collection, Func<System.Exception> exceptionProducer)
     {
         if (collection == null)
             return collection;

@@ -8,7 +8,7 @@ namespace WellTool.Core.Map
     /// </summary>
     /// <typeparam name="K">键类型</typeparam>
     /// <typeparam name="V">值类型</typeparam>
-    public class MapBuilder<K, V>
+    public class MapBuilder<K, V> where K : notnull
     {
         private readonly Dictionary<K, V> _map;
 
