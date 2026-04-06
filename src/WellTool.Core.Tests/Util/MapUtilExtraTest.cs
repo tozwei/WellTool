@@ -1,5 +1,6 @@
 using WellTool.Core.Map;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace WellTool.Core.Tests;
 
@@ -29,8 +30,8 @@ public class MapUtilExtraTest
     {
         var map = MapUtil.NewHashMap<string, object>();
         map["count"] = 100;
-        Assert.Equal(100, map.GetInt("count"));
-        Assert.Equal(0, map.GetInt("notExist"));
+        Assert.Equal(100, MapUtil.GetInt(map, "count"));
+        Assert.Equal(0, MapUtil.GetInt(map, "notExist"));
     }
 
     [Fact]
@@ -38,7 +39,7 @@ public class MapUtilExtraTest
     {
         var map = MapUtil.NewHashMap<string, object>();
         map["name"] = "John";
-        Assert.Equal("John", map.GetStr("name"));
+        Assert.Equal("John", MapUtil.GetStr(map, "name"));
     }
 
     [Fact]
@@ -46,7 +47,7 @@ public class MapUtilExtraTest
     {
         var map = MapUtil.NewHashMap<string, object>();
         map["enabled"] = true;
-        Assert.True(map.GetBool("enabled"));
+        Assert.True(MapUtil.GetBool(map, "enabled"));
     }
 
     [Fact]
@@ -54,7 +55,7 @@ public class MapUtilExtraTest
     {
         var map = MapUtil.NewHashMap<string, object>();
         map["num"] = 100L;
-        Assert.Equal(100L, map.GetLong("num"));
+        Assert.Equal(100L, MapUtil.GetLong(map, "num"));
     }
 
     [Fact]
@@ -62,7 +63,7 @@ public class MapUtilExtraTest
     {
         var map = MapUtil.NewHashMap<string, object>();
         map["price"] = 99.99;
-        Assert.Equal(99.99, map.GetDouble("price"), 0.001);
+        Assert.Equal(99.99, MapUtil.GetDouble(map, "price"), 0.001);
     }
 
     [Fact]

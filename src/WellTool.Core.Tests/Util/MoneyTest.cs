@@ -1,5 +1,6 @@
 using WellTool.Core.Math;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace WellTool.Core.Tests;
 
@@ -8,7 +9,7 @@ public class MoneyTest
     [Fact]
     public void ConstructorTest()
     {
-        var money = new Money(100.50);
+        var money = new Money(100.50m);
         Assert.Equal(100.50m, money.Amount);
     }
 
@@ -75,7 +76,7 @@ public class MoneyTest
     [Fact]
     public void ToStringTest()
     {
-        var money = new Money(100.50);
+        var money = new Money(100.50m);
         Assert.Contains("100", money.ToString());
     }
 }

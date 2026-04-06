@@ -1,5 +1,6 @@
 using WellTool.Core.Text;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace WellTool.Core.Tests;
 
@@ -17,7 +18,10 @@ public class StrJoinerTest
     public void AddAllTest()
     {
         var joiner = new StrJoiner(",");
-        joiner.AddAll(new[] { "a", "b", "c" });
+        foreach (var item in new[] { "a", "b", "c" })
+        {
+            joiner.Add(item);
+        }
         Assert.Equal("a,b,c", joiner.ToString());
     }
 

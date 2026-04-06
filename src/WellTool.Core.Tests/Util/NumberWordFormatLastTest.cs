@@ -1,5 +1,6 @@
 using WellTool.Core.Convert;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace WellTool.Core.Tests;
 
@@ -20,7 +21,7 @@ public class NumberWordFormatLastTest
     [Fact]
     public void FormatDecimalTest()
     {
-        var result = NumberWordFormatter.FormatDecimal(123.45m);
+        var result = NumberWordFormatter.FormatDecimal(123.45);
         Assert.NotNull(result);
     }
 }

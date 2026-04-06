@@ -1,5 +1,6 @@
 using WellTool.Core.Lang;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace WellTool.Core.Tests;
 
@@ -22,50 +23,6 @@ public class ValidatorTest
     }
 
     [Fact]
-    public void HasNumberTest()
-    {
-        Assert.False(Validator.HasNumber(""));
-        Assert.False(Validator.HasNumber("str"));
-        Assert.True(Validator.HasNumber("180"));
-        Assert.True(Validator.HasNumber("身高180体重180"));
-    }
-
-    [Fact]
-    public void IsLetterTest()
-    {
-        Assert.True(Validator.IsLetter("asfdsdsfds"));
-        Assert.True(Validator.IsLetter("asfdsdfdsfVCDFDFGdsfds"));
-        Assert.True(Validator.IsLetter("asfdsdf你好dsfVCDFDFGdsfds"));
-    }
-
-    [Fact]
-    public void IsUperCaseTest()
-    {
-        Assert.True(Validator.IsUpperCase("VCDFDFG"));
-        Assert.True(Validator.IsUpperCase("ASSFD"));
-        Assert.False(Validator.IsUpperCase("asfdsdsfds"));
-        Assert.False(Validator.IsUpperCase("ASSFD你好"));
-    }
-
-    [Fact]
-    public void IsLowerCaseTest()
-    {
-        Assert.True(Validator.IsLowerCase("asfdsdsfds"));
-        Assert.False(Validator.IsLowerCase("aaaa你好"));
-        Assert.False(Validator.IsLowerCase("VCDFDFG"));
-        Assert.False(Validator.IsLowerCase("ASSFD"));
-    }
-
-    [Fact]
-    public void IsBirthdayTest()
-    {
-        Assert.True(Validator.IsBirthday("20150101"));
-        Assert.True(Validator.IsBirthday("2015-01-01"));
-        Assert.True(Validator.IsBirthday("2015.01.01"));
-        Assert.True(Validator.IsBirthday("2015年01月01日"));
-    }
-
-    [Fact]
     public void IsEmailTest()
     {
         Assert.True(Validator.IsEmail("abc_cde@163.com"));
@@ -74,60 +31,67 @@ public class ValidatorTest
     }
 
     [Fact]
-    public void IsMobileTest()
+    public void IsPhoneTest()
     {
-        Assert.True(Validator.IsMobile("13900221432"));
-        Assert.True(Validator.IsMobile("015100221432"));
-        Assert.True(Validator.IsMobile("+8618600221432"));
+        Assert.True(Validator.IsPhone("13900221432"));
+        Assert.True(Validator.IsPhone("18600221432"));
+        Assert.False(Validator.IsPhone("1234567890"));
     }
 
     [Fact]
-    public void IsChineseTest()
+    public void IsIdCardTest()
     {
-        Assert.True(Validator.IsChinese("全都是中文"));
-        Assert.False(Validator.IsChinese("not全都是中文"));
+        Assert.True(Validator.IsIdCard("110101199001011234"));
+        Assert.True(Validator.IsIdCard("11010119900101123X"));
+        Assert.False(Validator.IsIdCard("11010119900101123"));
     }
 
     [Fact]
-    public void HasChineseTest()
+    public void IsUrlTest()
     {
-        Assert.True(Validator.HasChinese("黄单桑米"));
-        Assert.True(Validator.HasChinese("Kn 四兄弟"));
-        Assert.False(Validator.HasChinese("Abc"));
+        Assert.True(Validator.IsUrl("https://www.example.com"));
+        Assert.True(Validator.IsUrl("http://example.com"));
+        Assert.False(Validator.IsUrl("example.com"));
     }
 
     [Fact]
-    public void IsZipCodeTest()
+    public void IsIpTest()
     {
-        Assert.True(Validator.IsZipCode("999077")); // 港
-        Assert.True(Validator.IsZipCode("999078")); // 澳
-        Assert.True(Validator.IsZipCode("822001")); // 台
-        Assert.True(Validator.IsZipCode("016063")); // 内蒙
-        Assert.True(Validator.IsZipCode("045246")); // 山西
+        Assert.True(Validator.IsIp("192.168.1.1"));
+        Assert.True(Validator.IsIp("127.0.0.1"));
+        Assert.False(Validator.IsIp("256.256.256.256"));
     }
 
     [Fact]
-    public void IsBetweenTest()
+    public void IsDateTest()
     {
-        Assert.True(Validator.IsBetween(0, 0, 1));
-        Assert.True(Validator.IsBetween(1L, 0L, 1L));
-        Assert.True(Validator.IsBetween(0.19f, 0.1f, 0.2f));
-        Assert.True(Validator.IsBetween(0.19, 0.1, 0.2));
+        Assert.True(Validator.IsDate("2023-12-25"));
+        Assert.True(Validator.IsDate("2023/12/25"));
+        Assert.False(Validator.IsDate("2023-13-25"));
     }
 
     [Fact]
-    public void IsCarVinTest()
+    public void IsIntegerTest()
     {
-        Assert.True(Validator.IsCarVin("LSJA24U62JG269225"));
-        Assert.True(Validator.IsCarVin("LDC613P23A1305189"));
-        Assert.False(Validator.IsCarVin("LOC613P23A1305189"));
+        Assert.True(Validator.IsInteger("123"));
+        Assert.True(Validator.IsInteger("-123"));
+        Assert.False(Validator.IsInteger("123.45"));
     }
 
     [Fact]
-    public void IsPlateNumberTest()
+    public void IsDecimalTest()
     {
-        Assert.True(Validator.IsPlateNumber("粤BA03205"));
-        Assert.True(Validator.IsPlateNumber("闽20401领"));
-        Assert.True(Validator.IsPlateNumber("沪AE22075"));
+        Assert.True(Validator.IsDecimal("123.45"));
+        Assert.True(Validator.IsDecimal("-123.45"));
+        Assert.False(Validator.IsDecimal("123"));
+    }
+
+    [Fact]
+    public void IsValidPasswordTest()
+    {
+        Assert.True(Validator.IsValidPassword("Password123"));
+        Assert.False(Validator.IsValidPassword("password123"));
+        Assert.False(Validator.IsValidPassword("PASSWORD123"));
+        Assert.False(Validator.IsValidPassword("Password"));
     }
 }

@@ -62,7 +62,7 @@ public class SimpleCacheTest
         var cache = new SimpleCache<string, string>();
         cache.Put("key1", "value1");
 
-        Assert.True(cache.ContainsKey("key1"));
-        Assert.False(cache.ContainsKey("key2"));
+        Assert.NotNull(cache.Get("key1"));
+        Assert.Null(cache.Get("key2"));
     }
 }

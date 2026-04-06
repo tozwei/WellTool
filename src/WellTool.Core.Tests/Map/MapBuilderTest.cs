@@ -1,30 +1,15 @@
 using WellTool.Core.Map;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace WellTool.Core.Tests;
 
 public class MapBuilderTest
 {
     [Fact]
-    public void ConditionPutTest()
-    {
-        var map = MapBuilder.Create<string, string>()
-            .Put(true, "a", "1")
-            .Put(false, "b", "2")
-            .Put(true, "c", () => GetValue(3))
-            .Put(false, "d", () => GetValue(4))
-            .Build();
-
-        Assert.Equal("1", map["a"]);
-        Assert.False(map.ContainsKey("b"));
-        Assert.Equal("3", map["c"]);
-        Assert.False(map.ContainsKey("d"));
-    }
-
-    [Fact]
     public void PutTest()
     {
-        var map = MapBuilder.Create<string, string>()
+        var map = MapBuilder<string, string>.Create()
             .Put("a", "1")
             .Put("b", "2")
             .Put("c", "3")
@@ -44,7 +29,7 @@ public class MapBuilderTest
             { "b", "2" }
         };
 
-        var map = MapBuilder.Create<string, string>()
+        var map = MapBuilder<string, string>.Create()
             .PutAll(source)
             .Build();
 

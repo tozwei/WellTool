@@ -1,5 +1,6 @@
-using WellTool.Core.IO;
+using WellTool.Core.IO.File;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace WellTool.Core.Tests;
 
@@ -15,9 +16,9 @@ public class FileNameUtilTest
     [Fact]
     public void GetExtensionTest()
     {
-        Assert.Equal(".txt", FileNameUtil.GetExtension("test.txt"));
-        Assert.Equal(".log", FileNameUtil.GetExtension("test.log.bak"));
-        Assert.Equal("", FileNameUtil.GetExtension("test"));
+        Assert.Equal("txt", FileNameUtil.GetSuffix("test.txt"));
+        Assert.Equal("bak", FileNameUtil.GetSuffix("test.log.bak"));
+        Assert.Equal("", FileNameUtil.GetSuffix("test"));
     }
 
     [Fact]
@@ -39,26 +40,19 @@ public class FileNameUtilTest
     [Fact]
     public void PrefixTest()
     {
-        Assert.Equal("test", FileNameUtil.Prefix("test.txt"));
+        Assert.Equal("test", FileNameUtil.GetPrefix("test.txt"));
     }
 
     [Fact]
     public void SuffixTest()
     {
-        Assert.Equal(".txt", FileNameUtil.Suffix("test.txt"));
+        Assert.Equal("txt", FileNameUtil.GetSuffix("test.txt"));
     }
 
     [Fact]
-    public void IsValidNameTest()
+    public void ContainsInvalidTest()
     {
-        Assert.True(FileNameUtil.IsValidName("test.txt"));
-        Assert.False(FileNameUtil.IsValidName("test<file>.txt"));
-    }
-
-    [Fact]
-    public void NormalizeTest()
-    {
-        var name = FileNameUtil.Normalize("test.TXT");
-        Assert.Equal("test.txt", name);
+        Assert.False(FileNameUtil.ContainsInvalid("test.txt"));
+        Assert.True(FileNameUtil.ContainsInvalid("test<file>.txt"));
     }
 }

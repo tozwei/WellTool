@@ -1,6 +1,7 @@
 using WellTool.Core.Text;
 using System;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace WellTool.Core.Tests;
 

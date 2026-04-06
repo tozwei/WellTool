@@ -1,5 +1,6 @@
 using WellTool.Core.Convert.impl;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace WellTool.Core.Tests;
 

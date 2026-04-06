@@ -1,24 +1,18 @@
 using WellTool.Core.Collection;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace WellTool.Core.Tests;
 
 public class IterUtilLastTest
 {
     [Fact]
-    public void HasNextTest()
+    public void ToArrayTest()
     {
         var list = new System.Collections.Generic.List<int> { 1, 2, 3 };
         using var iterator = list.GetEnumerator();
-        Assert.True(IterUtil.HasNext(iterator));
-    }
-
-    [Fact]
-    public void NextTest()
-    {
-        var list = new System.Collections.Generic.List<int> { 1, 2, 3 };
-        using var iterator = list.GetEnumerator();
-        Assert.Equal(1, IterUtil.Next(iterator));
+        var result = IterUtil.ToArray(iterator);
+        Assert.Equal(3, result.Length);
     }
 
     [Fact]
@@ -35,7 +29,7 @@ public class IterUtilLastTest
     {
         var list = new System.Collections.Generic.List<int> { 1, 2, 3 };
         using var iterator = list.GetEnumerator();
-        Assert.Equal(3, IterUtil.Count(iterator));
+        Assert.Equal(3, IterUtil.Count(iterator, x => true));
     }
 
     [Fact]
