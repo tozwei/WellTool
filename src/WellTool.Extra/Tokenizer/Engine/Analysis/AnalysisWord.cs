@@ -5,7 +5,7 @@ namespace WellTool.Extra.Tokenizer.Engine.Analysis
     /// <summary>
     /// Lucene-analysis分词中的一个单词包装
     /// </summary>
-    public class AnalysisWord : Word
+    public class AnalysisWord : WellTool.Extra.Tokenizer.Word
     {
         private readonly ICharTermAttribute _word;
         private readonly IOffsetAttribute _offsetAtt;

@@ -228,14 +228,14 @@ namespace WellTool.Extra.Pinyin.Engine
         /// </summary>
         /// <param name="c">字符</param>
         /// <returns>首字母</returns>
-        public string GetFirstLetter(char c)
+        public char GetFirstLetter(char c)
         {
             var pinyin = GetPinyin(c);
             if (!string.IsNullOrEmpty(pinyin))
             {
-                return char.ToUpper(pinyin[0]).ToString();
+                return char.ToUpper(pinyin[0]);
             }
-            return c.ToString();
+            return c;
         }
 
         /// <summary>

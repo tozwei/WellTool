@@ -23,9 +23,12 @@ namespace WellTool.Extra.Mail
         }
 
         /// <summary>
-        /// 获取凭证
+        /// 获取网络凭证
         /// </summary>
-        public NetworkCredential GetCredential(string domain, string username)
+        /// <param name="uri">统一资源标识符</param>
+        /// <param name="authType">认证类型</param>
+        /// <returns>网络凭证</returns>
+        public NetworkCredential GetCredential(Uri uri, string authType)
         {
             return new NetworkCredential(_user, _password);
         }
