@@ -37,57 +37,67 @@ public class ExpressionUtil
     }
 
     /// <summary>
-    /// 执行表达式
-    /// </summary>
-    /// <param name="expression">表达式字符串</param>
-    /// <param name="parameters">参数</param>
-    /// <returns>执行结果</returns>
-    public object Evaluate(string expression, IDictionary<string, object> parameters = null)
-    {
-        if (string.IsNullOrWhiteSpace(expression))
+        /// 执行表达式
+        /// </summary>
+        /// <param name="expression">表达式字符串</param>
+        /// <param name="parameters">参数</param>
+        /// <returns>执行结果</returns>
+        public object Evaluate(string expression, IDictionary<string, object> parameters = null)
         {
-            throw new ExpressionException("表达式不能为空");
-        }
-
-        try
-        {
-            using var dataTable = new DataTable();
-            
-            if (parameters != null && parameters.Count > 0)
+            if (expression == null)
             {
-                var processedExpression = expression;
-                foreach (var param in parameters)
-                {
-                    var value = param.Value;
-                    string replacement;
-                    if (value is string strValue)
-                    {
-                        replacement = $"'{strValue}'";
-                    }
-                    else if (value == null)
-                    {
-                        replacement = "0";
-                    }
-                    else
-                    {
-                        replacement = value.ToString();
-                    }
-                    processedExpression = processedExpression.Replace(param.Key, replacement);
-                }
-                return dataTable.Compute(processedExpression, string.Empty);
+                return null;
             }
             
-            return dataTable.Compute(expression, string.Empty);
+            if (string.IsNullOrWhiteSpace(expression))
+            {
+                return string.Empty;
+            }
+
+            try
+            {
+                using var dataTable = new DataTable();
+                
+                // 处理布尔操作符
+                var processedExpression = expression
+                    .Replace("&&", " AND ")
+                    .Replace("||", " OR ")
+                    .Replace("!", " NOT ");
+                
+                if (parameters != null && parameters.Count > 0)
+                {
+                    foreach (var param in parameters)
+                    {
+                        var value = param.Value;
+                        string replacement;
+                        if (value is string strValue)
+                        {
+                            replacement = $"'{strValue}'";
+                        }
+                        else if (value == null)
+                        {
+                            replacement = "0";
+                        }
+                        else
+                        {
+                            replacement = value.ToString();
+                        }
+                        processedExpression = processedExpression.Replace(param.Key, replacement);
+                    }
+                    return dataTable.Compute(processedExpression, string.Empty);
+                }
+                
+                return dataTable.Compute(processedExpression, string.Empty);
+            }
+            catch (EvaluateException ex)
+            {
+                throw new ExpressionException($"表达式执行失败: {ex.Message}", ex);
+            }
+            catch (System.Exception ex)
+            {
+                throw new ExpressionException("表达式执行失败", ex);
+            }
         }
-        catch (EvaluateException ex)
-        {
-            throw new ExpressionException($"表达式执行失败: {ex.Message}", ex);
-        }
-        catch (System.Exception ex)
-        {
-            throw new ExpressionException("表达式执行失败", ex);
-        }
-    }
 
     /// <summary>
     /// 执行表达式并转换为指定类型

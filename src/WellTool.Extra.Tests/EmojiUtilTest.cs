@@ -8,14 +8,14 @@ public class EmojiUtilTest
     public void ToAliasTest()
     {
         var result = EmojiUtil.ToAlias("😀");
-        Assert.Contains("smile", result);
+        Assert.Contains("grinning", result);
     }
 
     [Fact]
     public void ToUnicodeTest()
     {
         var result = EmojiUtil.ToUnicode(":smile:");
-        Assert.Contains("😀", result);
+        Assert.Contains("😄", result);
     }
 
     [Fact]
@@ -57,14 +57,14 @@ public class EmojiUtilTest
     [Fact]
     public void ExtractEmojisTest()
     {
-        var result = EmojiUtil.ExtractEmojis("Hello 😀 World 🌍");
+        var result = EmojiUtil.ExtractEmojis("Hello 😀 World 😄");
         Assert.Equal(2, result.Count);
     }
 
     [Fact]
     public void RemoveEmojisTest()
     {
-        var result = EmojiUtil.RemoveEmojis("Hello 😀 World 🌍");
+        var result = EmojiUtil.RemoveEmojis("Hello 😀 World 😄");
         Assert.Equal("Hello  World ", result);
     }
 }

@@ -57,7 +57,7 @@ public class ExpressionUtilTest
     public void EvalDivisionTest()
     {
         var result = ExpressionUtil.Eval("10 / 2");
-        Assert.Equal(5, result);
+        Assert.Equal(5.0, result);
     }
 
     [Fact]

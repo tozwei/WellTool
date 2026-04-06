@@ -146,7 +146,27 @@ namespace WellTool.Extra.Emoji
         public static bool ContainsEmoji(string str)
         {
             if (string.IsNullOrEmpty(str)) return false;
-            return str.Any(c => EmojiAliases.ContainsValue(c.ToString()));
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (char.IsSurrogate(str[i]) && i + 1 < str.Length && char.IsSurrogatePair(str[i], str[i + 1]))
+                {
+                    string emoji = str.Substring(i, 2);
+                    if (EmojiAliases.ContainsValue(emoji))
+                    {
+                        return true;
+                    }
+                    i++;
+                }
+                else
+                {
+                    string emoji = str[i].ToString();
+                    if (EmojiAliases.ContainsValue(emoji))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -216,10 +236,36 @@ namespace WellTool.Extra.Emoji
         {
             if (string.IsNullOrEmpty(str)) return str;
 
-            var sb = new StringBuilder(str);
-            foreach (var kvp in EmojiAliases.OrderByDescending(x => x.Value.Length))
+            var sb = new StringBuilder();
+            for (int i = 0; i < str.Length; i++)
             {
-                sb.Replace(kvp.Value, $":{kvp.Key}:");
+                if (char.IsSurrogate(str[i]) && i + 1 < str.Length && char.IsSurrogatePair(str[i], str[i + 1]))
+                {
+                    string emoji = str.Substring(i, 2);
+                    var alias = EmojiAliases.FirstOrDefault(x => x.Value == emoji).Key;
+                    if (!string.IsNullOrEmpty(alias))
+                    {
+                        sb.Append($":{alias}:");
+                    }
+                    else
+                    {
+                        sb.Append(emoji);
+                    }
+                    i++;
+                }
+                else
+                {
+                    string emoji = str[i].ToString();
+                    var alias = EmojiAliases.FirstOrDefault(x => x.Value == emoji).Key;
+                    if (!string.IsNullOrEmpty(alias))
+                    {
+                        sb.Append($":{alias}:");
+                    }
+                    else
+                    {
+                        sb.Append(str[i]);
+                    }
+                }
             }
             return sb.ToString();
         }
@@ -234,15 +280,17 @@ namespace WellTool.Extra.Emoji
             if (string.IsNullOrEmpty(str)) return str;
 
             var sb = new StringBuilder();
-            foreach (int codePoint in str)
+            for (int i = 0; i < str.Length; i++)
             {
-                if (codePoint > 0xFFFF)
+                if (char.IsSurrogate(str[i]) && i + 1 < str.Length && char.IsSurrogatePair(str[i], str[i + 1]))
                 {
+                    int codePoint = char.ConvertToUtf32(str[i], str[i + 1]);
                     sb.Append($"&#x{codePoint:X};");
+                    i++;
                 }
                 else
                 {
-                    sb.Append((char)codePoint);
+                    sb.Append(str[i]);
                 }
             }
             return sb.ToString();
@@ -258,15 +306,17 @@ namespace WellTool.Extra.Emoji
             if (string.IsNullOrEmpty(str)) return str;
 
             var sb = new StringBuilder();
-            foreach (int codePoint in str)
+            for (int i = 0; i < str.Length; i++)
             {
-                if (codePoint > 0xFFFF)
+                if (char.IsSurrogate(str[i]) && i + 1 < str.Length && char.IsSurrogatePair(str[i], str[i + 1]))
                 {
+                    int codePoint = char.ConvertToUtf32(str[i], str[i + 1]);
                     sb.Append($"&#{codePoint};");
+                    i++;
                 }
                 else
                 {
-                    sb.Append((char)codePoint);
+                    sb.Append(str[i]);
                 }
             }
             return sb.ToString();
@@ -282,11 +332,24 @@ namespace WellTool.Extra.Emoji
             if (string.IsNullOrEmpty(str)) return str;
 
             var sb = new StringBuilder();
-            foreach (char c in str)
+            for (int i = 0; i < str.Length; i++)
             {
-                if (!EmojiAliases.ContainsValue(c.ToString()))
+                if (char.IsSurrogate(str[i]) && i + 1 < str.Length && char.IsSurrogatePair(str[i], str[i + 1]))
                 {
-                    sb.Append(c);
+                    string emoji = str.Substring(i, 2);
+                    if (!EmojiAliases.ContainsValue(emoji))
+                    {
+                        sb.Append(emoji);
+                    }
+                    i++;
+                }
+                else
+                {
+                    string emoji = str[i].ToString();
+                    if (!EmojiAliases.ContainsValue(emoji))
+                    {
+                        sb.Append(str[i]);
+                    }
                 }
             }
             return sb.ToString();
@@ -332,10 +395,28 @@ namespace WellTool.Extra.Emoji
         {
             if (string.IsNullOrEmpty(str)) return new List<string>();
 
-            return str.Where(c => EmojiAliases.ContainsValue(c.ToString()))
-                .Select(c => c.ToString())
-                .Distinct()
-                .ToList();
+            var result = new List<string>();
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (char.IsSurrogate(str[i]) && i + 1 < str.Length && char.IsSurrogatePair(str[i], str[i + 1]))
+                {
+                    string emoji = str.Substring(i, 2);
+                    if (EmojiAliases.ContainsValue(emoji))
+                    {
+                        result.Add(emoji);
+                    }
+                    i++;
+                }
+                else
+                {
+                    string emoji = str[i].ToString();
+                    if (EmojiAliases.ContainsValue(emoji))
+                    {
+                        result.Add(emoji);
+                    }
+                }
+            }
+            return result.Distinct().ToList();
         }
     }
 }
