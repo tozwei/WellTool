@@ -246,7 +246,7 @@ namespace WellTool.Core.Text
         /// <summary>
         /// 是否为空
         /// </summary>
-        public bool IsEmpty => _sb.Length == 0;
+        public bool IsEmpty() => _sb.Length == 0;
 
         /// <summary>
         /// 是否不为空

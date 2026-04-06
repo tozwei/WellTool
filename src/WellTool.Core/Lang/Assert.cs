@@ -25,15 +25,23 @@ public static class Assert
     }
 
     /// <summary>
-    /// 断言对象不为空
+    /// 断言对象不为null
     /// </summary>
-    public static object NotNull(object obj, Func<System.Exception> exceptionProducer)
+    public static object NotNull(object obj, System.Func<System.Exception> exceptionProducer)
     {
         if (obj == null)
         {
             throw exceptionProducer();
         }
         return obj;
+    }
+
+    /// <summary>
+    /// 断言对象不为null
+    /// </summary>
+    public static object NotNull(object obj, string message)
+    {
+        return NotNull(obj, () => new ArgumentNullException(message));
     }
 
     /// <summary>
@@ -47,7 +55,7 @@ public static class Assert
     /// <summary>
     /// 断言条件为真
     /// </summary>
-    public static bool IsTrue(bool condition, Func<System.Exception> exceptionProducer)
+    public static bool IsTrue(bool condition, System.Func<System.Exception> exceptionProducer)
     {
         if (!condition)
         {
@@ -67,7 +75,7 @@ public static class Assert
     /// <summary>
     /// 断言条件为假
     /// </summary>
-    public static bool IsFalse(bool condition, Func<System.Exception> exceptionProducer)
+    public static bool IsFalse(bool condition, System.Func<System.Exception> exceptionProducer)
     {
         if (condition)
         {
@@ -99,7 +107,7 @@ public static class Assert
     /// <summary>
     /// 断言数组不为空
     /// </summary>
-    public static Array NotEmpty(Array array, Func<System.Exception> exceptionProducer)
+    public static Array NotEmpty(Array array, System.Func<System.Exception> exceptionProducer)
     {
         if (array == null || array.Length == 0)
         {
@@ -119,7 +127,7 @@ public static class Assert
     /// <summary>
     /// 断言集合不为空
     /// </summary>
-    public static ICollection<T> NotEmpty<T>(ICollection<T> collection, Func<System.Exception> exceptionProducer)
+    public static ICollection<T> NotEmpty<T>(ICollection<T> collection, System.Func<System.Exception> exceptionProducer)
     {
         if (collection == null || collection.Count == 0)
         {
@@ -141,7 +149,7 @@ public static class Assert
     /// <summary>
     /// 断言集合为空
     /// </summary>
-    public static IEnumerable Empty(IEnumerable collection, Func<System.Exception> exceptionProducer)
+    public static IEnumerable Empty(IEnumerable collection, System.Func<System.Exception> exceptionProducer)
     {
         if (collection == null)
             return collection;
@@ -151,4 +159,32 @@ public static class Assert
         }
         return collection;
     }
-}
+
+    /// <summary>
+    /// 断言字符串不为空白
+    /// </summary>
+    public static bool NotBlank(string str)
+    {
+        return !string.IsNullOrWhiteSpace(str);
+    }
+
+    /// <summary>
+    /// 断言字符串不为空白
+    /// </summary>
+    public static string NotBlank(string str, System.Func<System.Exception> exceptionProducer)
+    {
+        if (string.IsNullOrWhiteSpace(str))
+        {
+            throw exceptionProducer();
+        }
+        return str;
+    }
+
+    /// <summary>
+    /// 断言字符串不为空白
+    /// </summary>
+    public static string NotBlank(string str, string message)
+    {
+        return NotBlank(str, () => new ArgumentException(message));
+    }
+} 

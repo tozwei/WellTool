@@ -192,6 +192,21 @@ public static class NumberUtil
 	}
 
 	/// <summary>
+	/// 生成指定范围内的数字数组（带步长）
+	/// </summary>
+	public static int[] Range(int start, int end, int step) {
+		if (start > end || step <= 0) {
+			return Array.Empty<int>();
+		}
+		int length = (end - start) / step + 1;
+		int[] result = new int[length];
+		for (int i = 0; i < length; i++) {
+			result[i] = start + i * step;
+		}
+		return result;
+	}
+
+	/// <summary>
 	/// 计算百分比
 	/// </summary>
 	public static double PercentOf(double value, double total) => total != 0 ? (value / total) * 100 : 0;

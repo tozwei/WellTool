@@ -149,4 +149,90 @@ public static class ReUtil
 		}
 		return null;
 	}
+
+	/// <summary>
+	/// 获取所有匹配项（GetAll 的别名）
+	/// </summary>
+	/// <param name="text">文本</param>
+	/// <param name="pattern">正则表达式</param>
+	/// <returns>匹配的值列表</returns>
+	public static List<string> GetMatchs(string text, string pattern)
+	{
+		return GetAll(text, pattern);
+	}
+
+	/// <summary>
+	/// 替换所有匹配项（Replace 的别名）
+	/// </summary>
+	/// <param name="text">文本</param>
+	/// <param name="pattern">正则表达式</param>
+	/// <param name="replacement">替换文本</param>
+	/// <returns>替换后的文本</returns>
+	public static string ReplaceAll(string text, string pattern, string replacement)
+	{
+		return Replace(text, pattern, replacement);
+	}
+
+	/// <summary>
+	/// 只替换第一个匹配项
+	/// </summary>
+	/// <param name="text">文本</param>
+	/// <param name="pattern">正则表达式</param>
+	/// <param name="replacement">替换文本</param>
+	/// <returns>替换后的文本</returns>
+	public static string ReplaceFirst(string text, string pattern, string replacement)
+	{
+		if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(pattern))
+		{
+			return text;
+		}
+		return Regex.Replace(text, pattern, replacement ?? string.Empty, RegexOptions.None, TimeSpan.FromSeconds(1));
+	}
+
+	/// <summary>
+	/// 删除第一个匹配项
+	/// </summary>
+	/// <param name="text">文本</param>
+	/// <param name="pattern">正则表达式</param>
+	/// <returns>删除后的文本</returns>
+	public static string DelFirst(string text, string pattern)
+	{
+		return ReplaceFirst(text, pattern, string.Empty);
+	}
+
+	/// <summary>
+	/// 删除所有匹配项
+	/// </summary>
+	/// <param name="text">文本</param>
+	/// <param name="pattern">正则表达式</param>
+	/// <returns>删除后的文本</returns>
+	public static string DelAll(string text, string pattern)
+	{
+		return Replace(text, pattern, string.Empty);
+	}
+
+	/// <summary>
+	/// 检查文本是否包含匹配项
+	/// </summary>
+	/// <param name="text">文本</param>
+	/// <param name="pattern">正则表达式</param>
+	/// <returns>是否包含匹配项</returns>
+	public static bool Contains(string text, string pattern)
+	{
+		return IsMatch(text, pattern);
+	}
+
+	/// <summary>
+	/// 转义正则表达式特殊字符
+	/// </summary>
+	/// <param name="text">文本</param>
+	/// <returns>转义后的文本</returns>
+	public static string Escape(string text)
+	{
+		if (string.IsNullOrEmpty(text))
+		{
+			return text;
+		}
+		return Regex.Escape(text);
+	}
 }

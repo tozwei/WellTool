@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace WellTool.Core.Text;
 
@@ -122,5 +123,41 @@ public class StrSplitter
     public static List<string> SplitToList(string text, string[] separators, StringSplitOptions options)
     {
         return Split(text, separators, options).ToList();
+    }
+
+    /// <summary>
+    /// 按字符串分割
+    /// </summary>
+    /// <param name="text">要分割的文本</param>
+    /// <param name="separator">分隔符</param>
+    /// <returns>分割后的字符串数组</returns>
+    public static string[] SplitByString(string text, string separator)
+    {
+        return Split(text, separator);
+    }
+
+    /// <summary>
+    /// 按字符串分割
+    /// </summary>
+    /// <param name="text">要分割的文本</param>
+    /// <param name="separator">分隔符</param>
+    /// <param name="limit">分割限制</param>
+    /// <param name="trim">是否修剪每个分割后的字符串</param>
+    /// <returns>分割后的字符串数组</returns>
+    public static string[] SplitByString(string text, string separator, int limit, bool trim)
+    {
+        var result = Split(text, separator);
+        if (limit > 0 && limit < result.Length)
+        {
+            var limitedResult = new string[limit];
+            Array.Copy(result, limitedResult, limit - 1);
+            limitedResult[limit - 1] = string.Join(separator, result.Skip(limit - 1));
+            result = limitedResult;
+        }
+        if (trim)
+        {
+            result = result.Select(s => s.Trim()).ToArray();
+        }
+        return result;
     }
 }

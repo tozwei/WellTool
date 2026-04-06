@@ -190,6 +190,37 @@ public class StrJoiner
     }
 
     /// <summary>
+    /// 添加元素（Append的别名）
+    /// </summary>
+    /// <param name="obj">对象</param>
+    /// <returns>this</returns>
+    public StrJoiner Add(object? obj)
+    {
+        return Append(obj);
+    }
+
+    /// <summary>
+    /// 添加元素（Append的别名）
+    /// </summary>
+    /// <param name="str">字符串</param>
+    /// <returns>this</returns>
+    public StrJoiner Add(string? str)
+    {
+        return Append(str);
+    }
+
+    /// <summary>
+    /// 设置空结果
+    /// </summary>
+    /// <param name="emptyResult">空结果</param>
+    /// <returns>this</returns>
+    public StrJoiner SetEmptyValue(string emptyResult)
+    {
+        _emptyResult = emptyResult;
+        return this;
+    }
+
+    /// <summary>
     /// 长度
     /// </summary>
     /// <returns>长度</returns>

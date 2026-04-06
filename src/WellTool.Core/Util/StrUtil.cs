@@ -745,4 +745,103 @@ public static class StrUtil
 		}
 		return dict;
 	}
+
+	/// <summary>
+	/// 重复并连接字符串
+	/// </summary>
+	public static string RepeatAndJoin(string str, int count, string separator)
+	{
+		if (IsEmpty(str) || count <= 0)
+			return string.Empty;
+		var parts = new string[count];
+		for (int i = 0; i < count; i++)
+		{
+			parts[i] = str;
+		}
+		return string.Join(separator, parts);
+	}
+
+	/// <summary>
+	/// 获取最大长度
+	/// </summary>
+	public static int MaxLength(params string[] strs)
+	{
+		if (strs == null || strs.Length == 0)
+			return 0;
+		int max = 0;
+		foreach (var str in strs)
+		{
+			if (str != null && str.Length > max)
+			{
+				max = str.Length;
+			}
+		}
+		return max;
+	}
+
+	/// <summary>
+	/// 检查字符串是否包含任何指定的字符
+	/// </summary>
+	public static bool ContainsAny(string str, params char[] chars)
+	{
+		if (IsEmpty(str) || chars == null || chars.Length == 0)
+			return false;
+		foreach (var c in chars)
+		{
+			if (str.Contains(c))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/// <summary>
+	/// 检查字符串是否包含任何指定的子字符串
+	/// </summary>
+	public static bool ContainsAny(string str, params string[] substrings)
+	{
+		if (IsEmpty(str) || substrings == null || substrings.Length == 0)
+			return false;
+		foreach (var substring in substrings)
+		{
+			if (str.Contains(substring))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/// <summary>
+	/// 居中对齐字符串
+	/// </summary>
+	public static string Center(string str, int length, char padChar = ' ')
+	{
+		if (str == null)
+			str = string.Empty;
+		if (length <= str.Length)
+			return str;
+		int padding = length - str.Length;
+		int leftPadding = padding / 2;
+		int rightPadding = padding - leftPadding;
+		return new string(padChar, leftPadding) + str + new string(padChar, rightPadding);
+	}
+
+	/// <summary>
+	/// 居中对齐字符串
+	/// </summary>
+	public static string Center(string str, int length, string padStr)
+	{
+		if (str == null)
+			str = string.Empty;
+		if (length <= str.Length)
+			return str;
+		int padding = length - str.Length;
+		int leftPadding = padding / 2;
+		int rightPadding = padding - leftPadding;
+		var leftPad = Repeat(padStr, leftPadding / padStr.Length + 1).Substring(0, leftPadding);
+		var rightPad = Repeat(padStr, rightPadding / padStr.Length + 1).Substring(0, rightPadding);
+		return leftPad + str + rightPad;
+	}
 }

@@ -1867,6 +1867,54 @@ namespace WellTool.Core.Map
         /// <summary>
         /// 清空字典
         /// </summary>
+
+        /// <summary>
+        /// 将字典转换为列表
+        /// </summary>
+        /// <typeparam name="K">键类型</typeparam>
+        /// <typeparam name="V">值类型</typeparam>
+        /// <param name="map">字典</param>
+        /// <returns>键值对列表</returns>
+        public static List<KeyValuePair<K, V>> ToList<K, V>(Dictionary<K, V> map) where K : notnull
+        {
+            if (map == null)
+            {
+                return new List<KeyValuePair<K, V>>();
+            }
+            return map.ToList();
+        }
+
+        /// <summary>
+        /// 合并两个字典
+        /// </summary>
+        /// <typeparam name="K">键类型</typeparam>
+        /// <typeparam name="V">值类型</typeparam>
+        /// <param name="map1">第一个字典</param>
+        /// <param name="map2">第二个字典</param>
+        /// <returns>合并后的字典</returns>
+        public static Dictionary<K, V> Union<K, V>(Dictionary<K, V> map1, Dictionary<K, V> map2) where K : notnull
+        {
+            var result = new Dictionary<K, V>();
+            if (map1 != null)
+            {
+                foreach (var entry in map1)
+                {
+                    result[entry.Key] = entry.Value;
+                }
+            }
+            if (map2 != null)
+            {
+                foreach (var entry in map2)
+                {
+                    result[entry.Key] = entry.Value;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 清空字典
+        /// </summary>
         /// <typeparam name="K">键类型</typeparam>
         /// <typeparam name="V">值类型</typeparam>
         /// <param name="map">字典</param>

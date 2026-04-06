@@ -211,5 +211,15 @@ namespace WellTool.Core.Util
         {
             return type.IsSubclassOf(baseType);
         }
+
+        /// <summary>
+        /// 获取类型名称
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>类型名称</returns>
+        public static string GetTypeName(Type type)
+        {
+            return type.FullName ?? type.Name;
+        }
     }
 }

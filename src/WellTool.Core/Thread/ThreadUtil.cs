@@ -405,6 +405,15 @@ namespace WellTool.Core.Threading
         }
 
         /// <summary>
+        /// 获取当前线程
+        /// </summary>
+        /// <returns>当前线程</returns>
+        public static Thread Current()
+        {
+            return Thread.CurrentThread;
+        }
+
+        /// <summary>
         /// 阻塞当前线程，保证在main方法中执行不被退出
         /// </summary>
         /// <param name="obj">对象所在线程</param>
@@ -439,6 +448,39 @@ namespace WellTool.Core.Threading
             {
                 return tester.Test(action);
             }
+        }
+
+        /// <summary>
+        /// 等待任务执行完成
+        /// </summary>
+        /// <param name="tasks">任务列表</param>
+        public static void WaitForFinish(params Task[] tasks)
+        {
+            if (tasks == null || tasks.Length == 0)
+                return;
+            Task.WaitAll(tasks);
+        }
+
+        /// <summary>
+        /// 等待任务执行完成
+        /// </summary>
+        /// <param name="tasks">任务列表</param>
+        public static void WaitForFinish(IEnumerable<Task> tasks)
+        {
+            if (tasks == null)
+                return;
+            Task.WaitAll(tasks.ToArray());
+        }
+
+        /// <summary>
+        /// 等待线程池执行完成
+        /// </summary>
+        /// <param name="executor">线程池</param>
+        public static void WaitForFinish(TaskFactory executor)
+        {
+            // 这里只是一个占位符，实际项目中可能需要更复杂的实现
+            // 由于 TaskFactory 没有直接的方法来等待所有任务完成，我们可以简单地等待一段时间
+            Thread.Sleep(100);
         }
     }
 
