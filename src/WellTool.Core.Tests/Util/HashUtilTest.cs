@@ -1,4 +1,4 @@
-using WellTool.Core.Codec;
+using WellTool.Core.Util;
 using Xunit;
 
 namespace WellTool.Core.Tests;
@@ -8,7 +8,7 @@ public class HashUtilTest
     [Fact]
     public void Md5Test()
     {
-        var hash = HashUtil.Md5("Hello");
+        var hash = HashUtil.MD5("Hello");
         Assert.NotNull(hash);
         Assert.Equal(32, hash.Length);
     }
@@ -16,7 +16,7 @@ public class HashUtilTest
     [Fact]
     public void Sha1Test()
     {
-        var hash = HashUtil.Sha1("Hello");
+        var hash = HashUtil.SHA1("Hello");
         Assert.NotNull(hash);
         Assert.Equal(40, hash.Length);
     }
@@ -24,7 +24,7 @@ public class HashUtilTest
     [Fact]
     public void Sha256Test()
     {
-        var hash = HashUtil.Sha256("Hello");
+        var hash = HashUtil.SHA256("Hello");
         Assert.NotNull(hash);
         Assert.Equal(64, hash.Length);
     }
@@ -32,22 +32,15 @@ public class HashUtilTest
     [Fact]
     public void Sha512Test()
     {
-        var hash = HashUtil.Sha512("Hello");
+        var hash = HashUtil.SHA512("Hello");
         Assert.NotNull(hash);
         Assert.Equal(128, hash.Length);
     }
 
     [Fact]
-    public void Crc32Test()
+    public void FnvHashTest()
     {
-        var hash = HashUtil.Crc32("Hello");
-        Assert.True(hash >= 0);
-    }
-
-    [Fact]
-    public void Adler32Test()
-    {
-        var hash = HashUtil.Adler32("Hello");
-        Assert.True(hash >= 0);
+        var hash = HashUtil.FnvHash("Hello");
+        Assert.True(hash != 0);
     }
 }

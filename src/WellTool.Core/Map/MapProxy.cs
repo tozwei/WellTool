@@ -17,6 +17,16 @@ public class MapProxy
     }
 
     /// <summary>
+    /// 创建MapProxy实例
+    /// </summary>
+    /// <param name="map">被代理的Map</param>
+    /// <returns>MapProxy实例</returns>
+    public static MapProxy Create(IDictionary<string, object?> map)
+    {
+        return new MapProxy(map);
+    }
+
+    /// <summary>
     /// 获取值
     /// </summary>
     /// <param name="key">键</param>
@@ -34,6 +44,42 @@ public class MapProxy
     public void Set(string key, object? value)
     {
         _map[key] = value;
+    }
+
+    /// <summary>
+    /// 检查是否包含指定的键
+    /// </summary>
+    /// <param name="key">键</param>
+    /// <returns>是否包含</returns>
+    public bool ContainsKey(string key)
+    {
+        return _map.ContainsKey(key);
+    }
+
+    /// <summary>
+    /// 移除指定的键
+    /// </summary>
+    /// <param name="key">键</param>
+    public void Remove(string key)
+    {
+        _map.Remove(key);
+    }
+
+    /// <summary>
+    /// 清空所有键值对
+    /// </summary>
+    public void Clear()
+    {
+        _map.Clear();
+    }
+
+    /// <summary>
+    /// 获取键值对的数量
+    /// </summary>
+    /// <returns>数量</returns>
+    public int Size()
+    {
+        return _map.Count;
     }
 
     /// <summary>
