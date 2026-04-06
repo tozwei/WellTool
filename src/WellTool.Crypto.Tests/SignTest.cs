@@ -39,7 +39,7 @@ namespace WellTool.Crypto.Tests
             var sign = new Sign(SignAlgorithm.RSA_SHA256, privateKey, publicKey);
             
             byte[] data = System.Text.Encoding.UTF8.GetBytes("test data");
-            byte[] signature = sign.Sign(data);
+            byte[] signature = sign.SignData(data);
             Assert.NotNull(signature);
             
             bool isValid = sign.Verify(data, signature);

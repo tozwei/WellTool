@@ -4,13 +4,31 @@ namespace WellTool.Crypto.Asymmetric
 {
     public class SM2 : AsymmetricCrypto
     {
+        /// <summary>
+        /// 无参构造函数
+        /// </summary>
+        public SM2()
+            : base(AsymmetricAlgorithm.SM2, Array.Empty<byte>(), null)
+        {
+        }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="publicKey">公钥</param>
+        /// <param name="privateKey">私钥（可选）</param>
         public SM2(byte[] publicKey, byte[] privateKey = null)
             : base(AsymmetricAlgorithm.SM2, publicKey, privateKey)
         {
         }
-        
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="publicKey">公钥（Base64编码）</param>
+        /// <param name="privateKey">私钥（Base64编码，可选）</param>
         public SM2(string publicKey, string privateKey = null)
-            : base(AsymmetricAlgorithm.SM2, System.Convert.FromBase64String(publicKey), 
+            : base(AsymmetricAlgorithm.SM2, System.Convert.FromBase64String(publicKey),
                   string.IsNullOrEmpty(privateKey) ? null : System.Convert.FromBase64String(privateKey))
         {
         }

@@ -128,16 +128,6 @@ namespace WellTool.Crypto.Asymmetric
         }
 
         /// <summary>
-        /// 签名（别名方法）
-        /// </summary>
-        /// <param name="data">待签名数据</param>
-        /// <returns>签名</returns>
-        public byte[] Sign(byte[] data)
-        {
-            return SignData(data);
-        }
-
-        /// <summary>
         /// 签名
         /// </summary>
         /// <param name="data">待签名数据</param>

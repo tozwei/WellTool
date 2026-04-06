@@ -26,9 +26,8 @@ namespace WellTool.Crypto.Tests
         [Fact]
         public void DigestTest()
         {
-            var md5 = new Crypto.Digest.MD5();
             byte[] data = System.Text.Encoding.UTF8.GetBytes("test");
-            byte[] result = md5.Digest(data);
+            byte[] result = Crypto.Digest.MD5.Digest(data);
             Assert.NotNull(result);
             Assert.Equal(16, result.Length);
         }
@@ -36,8 +35,7 @@ namespace WellTool.Crypto.Tests
         [Fact]
         public void DigestHexTest()
         {
-            var md5 = new Crypto.Digest.MD5();
-            string result = md5.DigestHex("test");
+            string result = Crypto.Digest.MD5.DigestHex("test");
             Assert.NotNull(result);
             Assert.Equal(32, result.Length);
         }
