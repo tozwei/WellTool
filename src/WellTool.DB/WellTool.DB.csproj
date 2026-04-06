@@ -16,4 +16,8 @@
 		<PackageTags>database;activerecord</PackageTags>
 	</PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
+  </ItemGroup>
+
 </Project>

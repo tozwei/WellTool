@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
+using WellTool.Core;
+using WellTool.Core.Util;
 using WellTool.DB.Dialect;
 using WellTool.DB.Handler;
 using WellTool.DB.Sql;
@@ -30,16 +33,21 @@ namespace WellTool.DB
         /// SQL连接运行器
         /// </summary>
         protected SqlConnRunner _runner;
+        /// <summary>
+        /// SQL执行器
+        /// </summary>
+        protected SqlExecutor _sqlExecutor;
 
         /// <summary>
         /// 构造
         /// </summary>
         /// <param name="ds">数据源</param>
-        /// <param name="dialect">数据库方言</param>
-        protected AbstractDb(IDbDataSource ds, Dialect dialect)
+        protected AbstractDb(IDbDataSource ds)
         {
             _ds = ds;
-            _runner = new SqlConnRunner(dialect);
+            var connection = ds.GetConnection();
+            _runner = new SqlConnRunner(connection);
+            _sqlExecutor = new SqlExecutor(connection);
         }
 
         /// <summary>
@@ -68,7 +76,7 @@ namespace WellTool.DB
         /// <returns>结果对象列表</returns>
         public List<Entity> Query(string sql, params object[] parameters)
         {
-            return Query<Entity>(sql, new EntityListHandler(_caseInsensitive), parameters);
+            return Query<List<Entity>>(sql, new EntityListHandler() as RsHandler<List<Entity>>, parameters);
         }
 
         /// <summary>
@@ -84,7 +92,8 @@ namespace WellTool.DB
             var conn = GetConnection();
             try
             {
-                return SqlExecutor.Query(conn, sql, rsh, parameters);
+                var executor = new SqlExecutor(conn);
+                return executor.Query(sql, rsh, parameters);
             }
             finally
             {
@@ -100,7 +109,7 @@ namespace WellTool.DB
         /// <returns>结果对象</returns>
         public Entity QueryOne(string sql, params object[] parameters)
         {
-            return Query<Entity>(sql, new EntityHandler(_caseInsensitive), parameters);
+            return Query<Entity>(sql, new EntityHandler() as RsHandler<Entity>, parameters);
         }
 
         /// <summary>
@@ -114,7 +123,8 @@ namespace WellTool.DB
             var conn = GetConnection();
             try
             {
-                return SqlExecutor.Execute(conn, sql, parameters);
+                var executor = new SqlExecutor(conn);
+                return executor.Execute(sql, parameters);
             }
             finally
             {
@@ -239,7 +249,7 @@ namespace WellTool.DB
         /// <returns>记录</returns>
         public Entity Get(Entity where)
         {
-            return Find(CollUtil.NewArrayList(where.GetFieldNames()), where, new EntityHandler(_caseInsensitive));
+            return Find(where.GetFieldNames(), where, new EntityHandler());
         }
 
         /// <summary>
@@ -250,12 +260,12 @@ namespace WellTool.DB
         /// <param name="where">条件实体</param>
         /// <param name="rsh">结果集处理器</param>
         /// <returns>结果对象</returns>
-        public T Find<T>(Collection<string> fields, Entity where, RsHandler<T> rsh)
+        public T Find<T>(IEnumerable<string> fields, Entity where, RsHandler<T> rsh)
         {
             var conn = GetConnection();
             try
             {
-                return _runner.Find(conn, fields, where, rsh);
+                return _runner.Find(conn, new Collection<string>(fields.ToList()), where, rsh);
             }
             finally
             {
@@ -270,7 +280,7 @@ namespace WellTool.DB
         /// <returns>记录列表</returns>
         public List<Entity> Find(Entity where)
         {
-            return Find(CollUtil.NewArrayList(where.GetFieldNames()), where, new EntityListHandler(_caseInsensitive));
+            return Find(where.GetFieldNames(), where, new EntityListHandler() as RsHandler<List<Entity>>);
         }
 
         /// <summary>
@@ -298,12 +308,12 @@ namespace WellTool.DB
         /// <param name="where">条件</param>
         /// <param name="page">页码</param>
         /// <returns>分页结果</returns>
-        public PageResult<Entity> Page(Collection<string> fields, Entity where, Page page)
+        public PageResult<Entity> Page(Collection<string> fields, Entity where, WellTool.DB.Sql.Page page)
         {
             var conn = GetConnection();
             try
             {
-                return _runner.Page(conn, fields, where, page);
+                return _runner.Page<Entity>(conn, fields, where, page);
             }
             finally
             {
@@ -329,19 +339,9 @@ namespace WellTool.DB
         /// <summary>
         /// 设置包装器
         /// </summary>
-        /// <param name="wrapperChar">包装字符</param>
-        /// <returns>this</returns>
-        public AbstractDb SetWrapper(char? wrapperChar)
-        {
-            return SetWrapper(new Wrapper(wrapperChar));
-        }
-
-        /// <summary>
-        /// 设置包装器
-        /// </summary>
         /// <param name="wrapper">包装器</param>
         /// <returns>this</returns>
-        public AbstractDb SetWrapper(Wrapper wrapper)
+        public AbstractDb SetWrapper(object wrapper)
         {
             _runner.SetWrapper(wrapper);
             return this;

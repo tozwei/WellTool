@@ -1,6 +1,8 @@
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
 using WellTool.DB.Dialect;
+using WellTool.DB.Handler;
 using WellTool.DB.Sql;
 
 namespace WellTool.DB
@@ -263,6 +265,109 @@ namespace WellTool.DB
         public SqlExecutor GetSqlExecutor()
         {
             return _sqlExecutor;
+        }
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="fields">字段列表</param>
+        /// <param name="where">查询条件</param>
+        /// <param name="page">页码</param>
+        /// <returns>分页结果</returns>
+        public PageResult<Entity> Page(Collection<string> fields, Entity where, WellTool.DB.Sql.Page page)
+        {
+            Open();
+            var runner = new DialectRunner(_dialect, _connection);
+            return runner.Page(_connection, fields, where, page);
+        }
+
+        /// <summary>
+        /// 插入数据
+        /// </summary>
+        /// <param name="record">记录</param>
+        /// <returns>插入行数</returns>
+        public int Insert(Entity record)
+        {
+            Open();
+            var runner = new DialectRunner(_dialect, _connection);
+            return runner.Insert(_connection, record)[0];
+        }
+
+        /// <summary>
+        /// 插入数据并返回生成的主键
+        /// </summary>
+        /// <param name="record">记录</param>
+        /// <returns>生成的主键</returns>
+        public long InsertForGeneratedKey(Entity record)
+        {
+            Open();
+            // 默认实现，子类可重写
+            return 0;
+        }
+
+        /// <summary>
+        /// 根据条件查询单个记录
+        /// </summary>
+        /// <param name="where">条件</param>
+        /// <returns>记录</returns>
+        public Entity Get(Entity where)
+        {
+            Open();
+            var runner = new DialectRunner(_dialect, _connection);
+            var query = WellTool.DB.Sql.Query.Of(where);
+            return runner.Find(_connection, query, new EntityHandler());
+        }
+
+        /// <summary>
+        /// 根据条件查询单个记录
+        /// </summary>
+        /// <param name="where">条件</param>
+        /// <param name="rsh">结果集处理器</param>
+        /// <returns>记录</returns>
+        public T Get<T>(Entity where, RsHandler<T> rsh)
+        {
+            Open();
+            var runner = new DialectRunner(_dialect, _connection);
+            var query = WellTool.DB.Sql.Query.Of(where);
+            return runner.Find(_connection, query, rsh);
+        }
+
+        /// <summary>
+        /// 统计记录数
+        /// </summary>
+        /// <param name="where">条件</param>
+        /// <returns>记录数</returns>
+        public long Count(Entity where)
+        {
+            Open();
+            var runner = new DialectRunner(_dialect, _connection);
+            return runner.Count(_connection, where);
+        }
+
+        /// <summary>
+        /// 更新数据
+        /// </summary>
+        /// <param name="record">记录</param>
+        /// <param name="where">条件</param>
+        /// <returns>更新行数</returns>
+        public int Update(Entity record, Entity where)
+        {
+            Open();
+            var runner = new DialectRunner(_dialect, _connection);
+            return runner.Update(_connection, record, where);
+        }
+
+        /// <summary>
+        /// 查找记录列表
+        /// </summary>
+        /// <param name="where">条件</param>
+        /// <returns>记录列表</returns>
+        public List<Entity> FindList(Entity where)
+        {
+            Open();
+            var runner = new DialectRunner(_dialect, _connection);
+            var query = WellTool.DB.Sql.Query.Of(where);
+            return runner.Find(_connection, query, new EntityListHandler());
         }
     }
 }

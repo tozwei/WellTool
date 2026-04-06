@@ -1,4 +1,4 @@
-using WellTool.Core.Id;
+using WellTool.Core.Lang;
 using Xunit;
 
 namespace WellTool.Core.Tests;

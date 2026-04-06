@@ -1,4 +1,4 @@
-using WellTool.Core.Crypto;
+using WellTool.Crypto;
 using Xunit;
 
 namespace WellTool.Core.Tests;

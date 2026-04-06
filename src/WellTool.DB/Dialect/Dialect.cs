@@ -13,6 +13,8 @@
 
 namespace WellTool.DB.Dialect;
 
+using System.Data;
+
 /// <summary>
 /// 数据库方言接口
 /// </summary>
@@ -44,6 +46,69 @@ public interface IDialect
     /// <param name="name">表名或列名</param>
     /// <returns>转义后的表名或列名</returns>
     string Quote(string name);
+
+    /// <summary>
+    /// 创建查询的 PreparedStatement
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="query">查询对象</param>
+    /// <returns>PreparedStatement</returns>
+    IDbCommand PreparedStatementForFind(IDbConnection conn, object query);
+
+    /// <summary>
+    /// 创建计数的 PreparedStatement
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="query">查询对象</param>
+    /// <returns>PreparedStatement</returns>
+    IDbCommand PreparedStatementForCount(IDbConnection conn, object query);
+
+    /// <summary>
+    /// 创建分页的 PreparedStatement
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="query">查询对象</param>
+    /// <returns>PreparedStatement</returns>
+    IDbCommand PreparedStatementForPage(IDbConnection conn, object query);
+
+    /// <summary>
+    /// 创建插入的 PreparedStatement
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="entity">实体对象</param>
+    /// <returns>PreparedStatement</returns>
+    IDbCommand PreparedStatementForInsert(IDbConnection conn, object entity);
+
+    /// <summary>
+    /// 创建批量插入的 PreparedStatement
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="entities">实体对象数组</param>
+    /// <returns>批量 PreparedStatement</returns>
+    object PreparedStatementForInsertBatch(IDbConnection conn, object[] entities);
+
+    /// <summary>
+    /// 创建删除的 PreparedStatement
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="query">查询对象</param>
+    /// <returns>PreparedStatement</returns>
+    IDbCommand PreparedStatementForDelete(IDbConnection conn, object query);
+
+    /// <summary>
+    /// 创建更新的 PreparedStatement
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="entity">实体对象</param>
+    /// <param name="query">查询对象</param>
+    /// <returns>PreparedStatement</returns>
+    IDbCommand PreparedStatementForUpdate(IDbConnection conn, object entity, object query);
+
+    /// <summary>
+    /// 设置包装器
+    /// </summary>
+    /// <param name="wrapper">包装器</param>
+    void SetWrapper(object wrapper);
 }
 
 /// <summary>
@@ -82,5 +147,99 @@ public abstract class Dialect : IDialect
     public virtual string Quote(string name)
     {
         return $"[{name}]";
+    }
+
+    /// <summary>
+    /// 创建查询的 PreparedStatement
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="query">查询对象</param>
+    /// <returns>PreparedStatement</returns>
+    public virtual IDbCommand PreparedStatementForFind(IDbConnection conn, object query)
+    {
+        // 默认实现，子类可重写
+        return conn.CreateCommand();
+    }
+
+    /// <summary>
+    /// 创建计数的 PreparedStatement
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="query">查询对象</param>
+    /// <returns>PreparedStatement</returns>
+    public virtual IDbCommand PreparedStatementForCount(IDbConnection conn, object query)
+    {
+        // 默认实现，子类可重写
+        return conn.CreateCommand();
+    }
+
+    /// <summary>
+    /// 创建分页的 PreparedStatement
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="query">查询对象</param>
+    /// <returns>PreparedStatement</returns>
+    public virtual IDbCommand PreparedStatementForPage(IDbConnection conn, object query)
+    {
+        // 默认实现，子类可重写
+        return conn.CreateCommand();
+    }
+
+    /// <summary>
+    /// 创建插入的 PreparedStatement
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="entity">实体对象</param>
+    /// <returns>PreparedStatement</returns>
+    public virtual IDbCommand PreparedStatementForInsert(IDbConnection conn, object entity)
+    {
+        // 默认实现，子类可重写
+        return conn.CreateCommand();
+    }
+
+    /// <summary>
+    /// 创建批量插入的 PreparedStatement
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="entities">实体对象数组</param>
+    /// <returns>批量 PreparedStatement</returns>
+    public virtual object PreparedStatementForInsertBatch(IDbConnection conn, object[] entities)
+    {
+        // 默认实现，子类可重写
+        return conn.CreateCommand();
+    }
+
+    /// <summary>
+    /// 创建删除的 PreparedStatement
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="query">查询对象</param>
+    /// <returns>PreparedStatement</returns>
+    public virtual IDbCommand PreparedStatementForDelete(IDbConnection conn, object query)
+    {
+        // 默认实现，子类可重写
+        return conn.CreateCommand();
+    }
+
+    /// <summary>
+    /// 创建更新的 PreparedStatement
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="entity">实体对象</param>
+    /// <param name="query">查询对象</param>
+    /// <returns>PreparedStatement</returns>
+    public virtual IDbCommand PreparedStatementForUpdate(IDbConnection conn, object entity, object query)
+    {
+        // 默认实现，子类可重写
+        return conn.CreateCommand();
+    }
+
+    /// <summary>
+    /// 设置包装器
+    /// </summary>
+    /// <param name="wrapper">包装器</param>
+    public virtual void SetWrapper(object wrapper)
+    {
+        // 默认实现，子类可重写
     }
 }

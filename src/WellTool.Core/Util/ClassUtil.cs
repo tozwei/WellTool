@@ -114,4 +114,14 @@ public static class ClassUtil
 	{
 		return Type.GetType(className, initialize);
 	}
+
+	/// <summary>
+	/// 获取类名
+	/// </summary>
+	public static string GetClassName(Type type) => GetSimpleName(type);
+
+	/// <summary>
+	/// 获取类名
+	/// </summary>
+	public static string GetClassName(object obj) => obj == null ? null : GetSimpleName(obj.GetType());
 }

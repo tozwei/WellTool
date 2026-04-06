@@ -1,4 +1,4 @@
-using WellTool.Core.Json;
+using WellTool.Json;
 using Xunit;
 
 namespace WellTool.Core.Tests;

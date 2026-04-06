@@ -100,4 +100,19 @@ public static class RandomUtil
 		}
 		return new string(result);
 	}
+
+	/// <summary>
+	/// 随机整数
+	/// </summary>
+	public static int RandomInt() => NextInt();
+
+	/// <summary>
+	/// 随机整数（0到max之间）
+	/// </summary>
+	public static int RandomInt(int max) => NextInt(max);
+
+	/// <summary>
+	/// 随机整数（min到max之间）
+	/// </summary>
+	public static int RandomInt(int min, int max) => NextInt(min, max);
 }

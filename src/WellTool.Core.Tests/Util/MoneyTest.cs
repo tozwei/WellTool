@@ -1,4 +1,4 @@
-using WellTool.Core.Money;
+using WellTool.Core.Math;
 using Xunit;
 
 namespace WellTool.Core.Tests;

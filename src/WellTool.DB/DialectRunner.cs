@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using WellTool.Core.Map;
 using WellTool.DB.Dialect;
-using WellTool.DB.Dialect.Factory;
 using WellTool.DB.Handler;
 using WellTool.DB.Sql;
 
@@ -14,7 +14,8 @@ namespace WellTool.DB
     /// </summary>
     public class DialectRunner
     {
-        private Dialect _dialect;
+        private IDialect _dialect;
+        private SqlExecutor _sqlExecutor;
         /// <summary>
         /// 是否大小写不敏感（默认大小写不敏感）
         /// </summary>
@@ -24,18 +25,22 @@ namespace WellTool.DB
         /// 构造
         /// </summary>
         /// <param name="dialect">方言</param>
-        public DialectRunner(Dialect dialect)
+        /// <param name="connection">数据库连接</param>
+        public DialectRunner(IDialect dialect, IDbConnection connection)
         {
             _dialect = dialect;
+            _sqlExecutor = new SqlExecutor(connection);
         }
 
         /// <summary>
         /// 构造
         /// </summary>
         /// <param name="driverClassName">驱动类名，用于识别方言</param>
-        public DialectRunner(string driverClassName)
+        /// <param name="connection">数据库连接</param>
+        public DialectRunner(string driverClassName, IDbConnection connection)
         {
-            _dialect = DialectFactory.NewDialect(driverClassName);
+            _dialect = DialectFactory.GetDialect(driverClassName);
+            _sqlExecutor = new SqlExecutor(connection);
         }
 
         /// <summary>
@@ -57,8 +62,12 @@ namespace WellTool.DB
                 return new int[] { ps.ExecuteNonQuery() };
             }
 
-            var batchPs = _dialect.PreparedStatementForInsertBatch(conn, records);
-            return batchPs.ExecuteBatch();
+            var batchPs = _dialect.PreparedStatementForInsertBatch(conn, records) as IDbCommand;
+            if (batchPs != null)
+            {
+                return new int[] { batchPs.ExecuteNonQuery() };
+            }
+            return new int[] { 0 };
         }
 
         /// <summary>
@@ -136,10 +145,7 @@ namespace WellTool.DB
         /// <param name="query">查询对象</param>
         /// <param name="rsh">结果集处理器</param>
         /// <returns>结果对象</returns>
-        public T Find<T>(IDbConnection conn, Query query, RsHandler<T> rsh)
-        {
-            return SqlExecutor.QueryAndClosePs(_dialect.PreparedStatementForFind(conn, query), rsh);
-        }
+
 
         /// <summary>
         /// 获取结果总数
@@ -149,7 +155,8 @@ namespace WellTool.DB
         /// <returns>复合条件的结果数</returns>
         public long Count(IDbConnection conn, Entity where)
         {
-            return SqlExecutor.QueryAndClosePs(_dialect.PreparedStatementForCount(conn, Query.Of(where)), new NumberHandler()).LongValue();
+            var result = _sqlExecutor.QueryAndClosePs(_dialect.PreparedStatementForCount(conn, Query.Of(where)), new NumberHandler());
+            return Convert.ToInt64(result);
         }
 
         /// <summary>
@@ -160,6 +167,11 @@ namespace WellTool.DB
         /// <param name="query">查询条件</param>
         /// <param name="rsh">结果集处理器</param>
         /// <returns>结果对象</returns>
+        public T Find<T>(IDbConnection conn, Query query, RsHandler<T> rsh)
+        {
+            return _sqlExecutor.QueryAndClosePs(_dialect.PreparedStatementForFind(conn, query), rsh);
+        }
+
         public T Page<T>(IDbConnection conn, Query query, RsHandler<T> rsh)
         {
             if (query.GetPage() == null)
@@ -167,7 +179,15 @@ namespace WellTool.DB
                 return Find(conn, query, rsh);
             }
 
-            return SqlExecutor.QueryAndClosePs(_dialect.PreparedStatementForPage(conn, query), rsh);
+            return _sqlExecutor.QueryAndClosePs(_dialect.PreparedStatementForPage(conn, query), rsh);
+        }
+
+        public PageResult<Entity> Page(IDbConnection conn, Collection<string> fields, Entity where, WellTool.DB.Sql.Page page)
+        {
+            var query = WellTool.DB.Sql.Query.Of(where).SelectFields(fields).SetPage(page);
+            var entities = Find(conn, query, new EntityListHandler());
+            var count = Count(conn, where);
+            return new PageResult<Entity>(entities, count, page.PageNumber, page.PageSize);
         }
 
         /// <summary>
@@ -182,13 +202,13 @@ namespace WellTool.DB
         /// <summary>
         /// 获取方言
         /// </summary>
-        public Dialect GetDialect() => _dialect;
+        public IDialect GetDialect() => _dialect;
 
         /// <summary>
         /// 设置方言
         /// </summary>
         /// <param name="dialect">方言</param>
-        public void SetDialect(Dialect dialect)
+        public void SetDialect(IDialect dialect)
         {
             _dialect = dialect;
         }

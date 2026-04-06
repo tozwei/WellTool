@@ -283,4 +283,66 @@ public static class StrUtil
 		str = str.Trim().ToLower();
 		return str == "true" || str == "1" || str == "yes" || str == "y" || str == "on";
 	}
+
+	/// <summary>
+	/// 左侧填充
+	/// </summary>
+	public static string PadPre(string str, int length, char padChar = ' ')
+	{
+		return PadLeft(str, length, padChar);
+	}
+
+	/// <summary>
+	/// 左侧填充
+	/// </summary>
+	public static string PadPre(string str, int length, string padStr)
+	{
+		if (str == null || str.Length >= length)
+			return str;
+		var padLength = length - str.Length;
+		var padRepeat = padLength / padStr.Length + 1;
+		var pad = Repeat(padStr, padRepeat).Substring(0, padLength);
+		return pad + str;
+	}
+
+	/// <summary>
+	/// 右侧填充
+	/// </summary>
+	public static string PadAfter(string str, int length, char padChar = ' ')
+	{
+		if (length < 0)
+			return string.Empty;
+		return PadRight(str, length, padChar);
+	}
+
+	/// <summary>
+	/// 右侧填充
+	/// </summary>
+	public static string PadAfter(string str, int length, string padStr)
+	{
+		if (str == null || str.Length >= length)
+			return str;
+		var padLength = length - str.Length;
+		var padRepeat = padLength / padStr.Length + 1;
+		var pad = Repeat(padStr, padRepeat).Substring(0, padLength);
+		return str + pad;
+	}
+
+	/// <summary>
+	/// 索引格式化
+	/// </summary>
+	public static string IndexedFormat(string template, params object[] args)
+	{
+		return string.Format(template, args);
+	}
+
+	/// <summary>
+	/// 是否为数字
+	/// </summary>
+	public static bool IsNumeric(string str)
+	{
+		if (IsEmpty(str))
+			return false;
+		return double.TryParse(str, out _);
+	}
 }

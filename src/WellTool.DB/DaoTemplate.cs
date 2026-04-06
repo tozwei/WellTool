@@ -38,7 +38,7 @@ namespace WellTool.DB
         /// <param name="tableName">表名</param>
         /// <param name="primaryKeyField">主键字段</param>
         public DaoTemplate(string tableName, string primaryKeyField)
-            : this(tableName, primaryKeyField, DS.DSFactory.Get())
+            : this(tableName, primaryKeyField, null)
         {
         }
 
@@ -133,7 +133,7 @@ namespace WellTool.DB
                 return 0;
             }
             entity = FixEntity(entity);
-            object pk = entity.Get(_primaryKeyField);
+            object pk = entity.Get<object>(_primaryKeyField);
             if (pk == null)
             {
                 throw new Exception($"Please determine `{_primaryKeyField}` for update");
@@ -193,7 +193,7 @@ namespace WellTool.DB
         /// <returns>记录列表</returns>
         public System.Collections.Generic.List<Entity> Find(Entity where)
         {
-            return _db.Find(null, FixEntity(where));
+            return _db.FindList(FixEntity(where));
         }
 
         /// <summary>
@@ -222,9 +222,9 @@ namespace WellTool.DB
         /// <param name="where">条件</param>
         /// <param name="page">分页对象</param>
         /// <returns>分页结果</returns>
-        public PageResult<Entity> Page(Entity where, Page page)
+        public PageResult<Entity> Page(Entity where, WellTool.DB.Sql.Page page)
         {
-            return _db.Page(FixEntity(where), page);
+            return _db.Page(null, FixEntity(where), page);
         }
 
         /// <summary>

@@ -86,17 +86,6 @@ namespace WellTool.DB
             {
                 if (_connMap.TryGetValue(ds, out var conn))
                 {
-                    try
-                    {
-                        if (conn.AutoCommit == false)
-                        {
-                            return this;
-                        }
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
                     _connMap.Remove(ds);
                     conn?.Dispose();
                 }

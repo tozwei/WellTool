@@ -31,5 +31,10 @@ namespace WellTool.DB
         /// 数据库类型，用于指定默认的数据库方言
         /// </summary>
         public static string DbType { get; set; } = "mysql";
+
+        /// <summary>
+        /// 是否大小写不敏感
+        /// </summary>
+        public static bool CaseInsensitive { get; set; } = true;
     }
 }

@@ -11,8 +11,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using WellTool.DB.Handler;
+using WellTool.DB.Sql;
 
 namespace WellTool.DB;
 
@@ -165,5 +169,130 @@ public class SqlConnRunner
         }
 
         return command;
+    }
+
+    /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <typeparam name="T">结果类型</typeparam>
+        /// <param name="conn">数据库连接</param>
+        /// <param name="fields">字段列表</param>
+        /// <param name="where">条件</param>
+        /// <param name="page">分页信息</param>
+        /// <returns>分页结果</returns>
+        public PageResult<T> Page<T>(IDbConnection conn, Collection<string> fields, object where, WellTool.DB.Sql.Page page)
+        {
+            // 默认实现，子类可重写
+            return new PageResult<T>(new List<T>(), 0, page.PageNumber, page.PageSize);
+        }
+
+    /// <summary>
+    /// 设置包装器
+    /// </summary>
+    /// <param name="wrapper">包装器</param>
+    public void SetWrapper(object wrapper)
+    {
+        // 默认实现，子类可重写
+    }
+
+    /// <summary>
+    /// 插入数据
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="record">记录</param>
+    /// <returns>插入行数</returns>
+    public int Insert(IDbConnection conn, Entity record)
+    {
+        // 默认实现，子类可重写
+        return 0;
+    }
+
+    /// <summary>
+    /// 插入数据并返回生成的主键
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="record">记录</param>
+    /// <returns>生成的主键</returns>
+    public long InsertForGeneratedKey(IDbConnection conn, Entity record)
+    {
+        // 默认实现，子类可重写
+        return 0;
+    }
+
+    /// <summary>
+    /// 插入或更新数据
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="record">记录</param>
+    /// <param name="keys">需要检查唯一性的字段</param>
+    /// <returns>插入或更新的行数</returns>
+    public int InsertOrUpdate(IDbConnection conn, Entity record, params string[] keys)
+    {
+        // 默认实现，子类可重写
+        return 0;
+    }
+
+    /// <summary>
+    /// 批量插入数据
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="records">记录列表</param>
+    /// <returns>插入行数</returns>
+    public int Insert(IDbConnection conn, params Entity[] records)
+    {
+        // 默认实现，子类可重写
+        return 0;
+    }
+
+    /// <summary>
+    /// 删除数据
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="where">条件</param>
+    /// <returns>删除行数</returns>
+    public int Delete(IDbConnection conn, Entity where)
+    {
+        // 默认实现，子类可重写
+        return 0;
+    }
+
+    /// <summary>
+    /// 更新数据
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="record">记录</param>
+    /// <param name="where">条件</param>
+    /// <returns>更新行数</returns>
+    public int Update(IDbConnection conn, Entity record, Entity where)
+    {
+        // 默认实现，子类可重写
+        return 0;
+    }
+
+    /// <summary>
+    /// 查询
+    /// </summary>
+    /// <typeparam name="T">结果类型</typeparam>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="fields">字段列表</param>
+    /// <param name="where">条件</param>
+    /// <param name="rsh">结果集处理器</param>
+    /// <returns>查询结果</returns>
+    public T Find<T>(IDbConnection conn, Collection<string> fields, Entity where, RsHandler<T> rsh)
+    {
+        // 默认实现，子类可重写
+        return default(T);
+    }
+
+    /// <summary>
+    /// 统计记录数
+    /// </summary>
+    /// <param name="conn">数据库连接</param>
+    /// <param name="where">条件</param>
+    /// <returns>记录数</returns>
+    public long Count(IDbConnection conn, Entity where)
+    {
+        // 默认实现，子类可重写
+        return 0;
     }
 }

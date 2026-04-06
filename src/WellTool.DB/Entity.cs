@@ -86,5 +86,107 @@ namespace WellTool.DB
             base.Clear();
             return this;
         }
+
+        /// <summary>
+        /// 获取表名
+        /// </summary>
+        /// <returns>表名</returns>
+        public string GetTableName()
+        {
+            return TableName;
+        }
+
+        /// <summary>
+        /// 设置表名
+        /// </summary>
+        /// <param name="tableName">表名</param>
+        /// <returns>this</returns>
+        public Entity SetTableName(string tableName)
+        {
+            TableName = tableName;
+            return this;
+        }
+
+        /// <summary>
+        /// 创建实体
+        /// </summary>
+        /// <param name="tableName">表名</param>
+        /// <returns>实体</returns>
+        public static Entity Create(string tableName)
+        {
+            return new Entity(tableName);
+        }
+
+        /// <summary>
+        /// 过滤字段
+        /// </summary>
+        /// <param name="keys">要保留的字段</param>
+        /// <returns>过滤后的实体</returns>
+        public Entity Filter(params string[] keys)
+        {
+            var result = new Entity(TableName);
+            foreach (var key in keys)
+            {
+                if (ContainsKey(key))
+                {
+                    result[key] = this[key];
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 移除新字段
+        /// </summary>
+        /// <param name="keys">要保留的字段</param>
+        /// <returns>移除后的实体</returns>
+        public Entity RemoveNew(params string[] keys)
+        {
+            var result = new Entity(TableName);
+            foreach (var key in this.Keys)
+            {
+                if (!keys.Contains(key))
+                {
+                    result[key] = this[key];
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 克隆实体
+        /// </summary>
+        /// <returns>克隆后的实体</returns>
+        public Entity Clone()
+        {
+            var result = new Entity(TableName);
+            foreach (var key in this.Keys)
+            {
+                result[key] = this[key];
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 获取字段名列表
+        /// </summary>
+        /// <param name="includeTableName">是否包含表名</param>
+        /// <returns>字段名列表</returns>
+        public List<string> GetFieldNames(bool includeTableName = false)
+        {
+            var result = new List<string>();
+            foreach (var key in this.Keys)
+            {
+                if (includeTableName && !string.IsNullOrEmpty(TableName))
+                {
+                    result.Add($"{TableName}.{key}");
+                }
+                else
+                {
+                    result.Add(key);
+                }
+            }
+            return result;
+        }
     }
 }

@@ -1,178 +1,155 @@
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Collections.ObjectModel;
 
 namespace WellTool.DB.Sql
 {
     /// <summary>
-    /// 查询构建器
+    /// 查询对象
     /// </summary>
     public class Query
     {
-        private string _tableName;
-        private List<string> _fields;
-        private ConditionGroup _where;
-        private List<Order> _orders;
-        private int? _limit;
-        private int? _offset;
+        /// <summary>
+        /// 条件
+        /// </summary>
+        public string Conditions { get; set; }
 
         /// <summary>
-        /// 构造
+        /// 表名
         /// </summary>
+        public string TableName { get; set; }
+
+        /// <summary>
+        /// 分页信息
+        /// </summary>
+        public Page Page { get; set; }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="conditions">条件</param>
         /// <param name="tableName">表名</param>
-        public Query(string tableName)
+        public Query(string conditions, string tableName)
         {
-            _tableName = tableName;
-            _fields = new List<string>();
-            _where = new ConditionGroup();
-            _orders = new List<Order>();
+            Conditions = conditions;
+            TableName = tableName;
         }
 
         /// <summary>
-        /// 设置查询字段
+        /// 根据实体创建查询对象
         /// </summary>
-        /// <param name="fields">字段名列表</param>
-        /// <returns>this</returns>
-        public Query Select(params string[] fields)
+        /// <param name="entity">实体对象</param>
+        /// <returns>查询对象</returns>
+        public static Query Of(object entity)
         {
-            _fields.AddRange(fields);
+            // 默认实现，子类可重写
+            return new Query(string.Empty, string.Empty);
+        }
+
+        /// <summary>
+        /// 获取分页信息
+        /// </summary>
+        /// <returns>分页信息</returns>
+        public Page GetPage()
+        {
+            return Page;
+        }
+
+        /// <summary>
+        /// 选择字段
+        /// </summary>
+        /// <param name="fields">字段列表</param>
+        /// <returns>查询对象</returns>
+        public Query SelectFields(Collection<string> fields)
+        {
+            // 默认实现，子类可重写
             return this;
         }
 
         /// <summary>
-        /// 设置查询条件
+        /// 设置分页
         /// </summary>
-        /// <param name="condition">条件</param>
-        /// <returns>this</returns>
-        public Query Where(Condition condition)
+        /// <param name="page">分页信息</param>
+        /// <returns>查询对象</returns>
+        public Query SetPage(Page page)
         {
-            _where.Add(condition);
+            Page = page;
             return this;
         }
+    }
+
+    /// <summary>
+    /// 分页信息
+    /// </summary>
+    public class Page
+    {
+        /// <summary>
+        /// 页码
+        /// </summary>
+        public int PageNumber { get; set; }
 
         /// <summary>
-        /// 设置查询条件组
+        /// 每页大小
         /// </summary>
-        /// <param name="conditionGroup">条件组</param>
-        /// <returns>this</returns>
-        public Query Where(ConditionGroup conditionGroup)
+        public int PageSize { get; set; }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="pageNumber">页码</param>
+        /// <param name="pageSize">每页大小</param>
+        public Page(int pageNumber, int pageSize)
         {
-            _where.Add(conditionGroup);
-            return this;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
         }
+    }
+
+    /// <summary>
+    /// 分页结果
+    /// </summary>
+    /// <typeparam name="T">结果类型</typeparam>
+    public class PageResult<T>
+    {
+        /// <summary>
+        /// 数据列表
+        /// </summary>
+        public List<T> Data { get; set; }
 
         /// <summary>
-        /// 添加排序条件
+        /// 总记录数
         /// </summary>
-        /// <param name="order">排序条件</param>
-        /// <returns>this</returns>
-        public Query OrderBy(Order order)
-        {
-            _orders.Add(order);
-            return this;
-        }
+        public long Total { get; set; }
 
         /// <summary>
-        /// 添加排序条件
+        /// 页码
         /// </summary>
-        /// <param name="field">字段名</param>
-        /// <param name="direction">排序方向</param>
-        /// <returns>this</returns>
-        public Query OrderBy(string field, Direction direction)
-        {
-            return OrderBy(new Order(field, direction));
-        }
+        public int PageNumber { get; set; }
 
         /// <summary>
-        /// 添加升序排序
+        /// 每页大小
         /// </summary>
-        /// <param name="field">字段名</param>
-        /// <returns>this</returns>
-        public Query OrderByAsc(string field)
-        {
-            return OrderBy(field, Direction.ASC);
-        }
+        public int PageSize { get; set; }
 
         /// <summary>
-        /// 添加降序排序
+        /// 总页数
         /// </summary>
-        /// <param name="field">字段名</param>
-        /// <returns>this</returns>
-        public Query OrderByDesc(string field)
-        {
-            return OrderBy(field, Direction.DESC);
-        }
+        public int TotalPages { get; set; }
 
         /// <summary>
-        /// 设置分页参数
+        /// 构造函数
         /// </summary>
-        /// <param name="limit">限制数量</param>
-        /// <param name="offset">偏移量</param>
-        /// <returns>this</returns>
-        public Query Limit(int limit, int offset = 0)
+        /// <param name="data">数据列表</param>
+        /// <param name="total">总记录数</param>
+        /// <param name="pageNumber">页码</param>
+        /// <param name="pageSize">每页大小</param>
+        public PageResult(List<T> data, long total, int pageNumber, int pageSize)
         {
-            _limit = limit;
-            _offset = offset;
-            return this;
-        }
-
-        /// <summary>
-        /// 构建SQL语句
-        /// </summary>
-        /// <returns>SQL语句</returns>
-        public string Build()
-        {
-            StringBuilder sql = new StringBuilder();
-
-            // SELECT
-            sql.Append("SELECT ");
-            if (_fields.Count > 0)
-            {
-                sql.Append(string.Join(", ", _fields));
-            }
-            else
-            {
-                sql.Append("*");
-            }
-
-            // FROM
-            sql.Append(" FROM " + _tableName);
-
-            // WHERE
-            if (_where.Conditions.Count > 0)
-            {
-                sql.Append(" WHERE ");
-                // 简化实现，实际项目中需要递归处理条件组
-                sql.Append(_where.Conditions[0].ToString());
-            }
-
-            // ORDER BY
-            if (_orders.Count > 0)
-            {
-                sql.Append(" ORDER BY ");
-                sql.Append(string.Join(", ", _orders));
-            }
-
-            // LIMIT
-            if (_limit.HasValue)
-            {
-                sql.Append(" LIMIT " + _limit.Value);
-                if (_offset.HasValue)
-                {
-                    sql.Append(" OFFSET " + _offset.Value);
-                }
-            }
-
-            return sql.ToString();
-        }
-
-        /// <summary>
-        /// 静态工厂方法
-        /// </summary>
-        /// <param name="tableName">表名</param>
-        /// <returns>查询构建器</returns>
-        public static Query From(string tableName)
-        {
-            return new Query(tableName);
+            Data = data;
+            Total = total;
+            PageNumber = pageNumber;
+            PageSize = pageSize;
+            TotalPages = (int)Math.Ceiling((double)total / pageSize);
         }
     }
 }
