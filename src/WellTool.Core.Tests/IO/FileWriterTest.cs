@@ -37,7 +37,7 @@ public class FileWriterTest
             writer.Flush();
             writer.Close();
 
-            writer = new FileWriter(tempFile, true);
+            writer = new FileWriter(tempFile, System.Text.Encoding.UTF8, FileMode.Append);
             writer.Write(" World");
             writer.Flush();
             writer.Close();

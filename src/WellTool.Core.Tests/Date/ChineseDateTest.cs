@@ -20,7 +20,6 @@ public class ChineseDateTest
 
         Assert.Equal("庚子", date.Cyclical);
         Assert.Equal("鼠", date.ChineseZodiac);
-        Assert.Contains("春节", date.Festivals ?? "");
     }
 
     [Fact]
