@@ -10,30 +10,30 @@ namespace WellTool.Core.Tests
         [Fact]
         public void GetClassLoaderTest()
         {
-            var classLoader = WellTool.Core.ClassUtil.GetClassLoader();
+            var classLoader = WellTool.Core.Util.ClassUtil.GetClassLoader();
             Assert.NotNull(classLoader);
         }
 
         [Fact]
         public void LoadClassTest()
         {
-            var clazz = WellTool.Core.ClassUtil.GetClassByName("System.String");
+            var clazz = WellTool.Core.Util.ClassUtil.GetClassByName("System.String");
             Assert.NotNull(clazz);
         }
 
         [Fact]
         public void GetDefaultClassLoaderTest()
         {
-            var classLoader = WellTool.Core.ClassUtil.GetDefaultClassLoader();
+            var classLoader = WellTool.Core.Util.ClassUtil.GetDefaultClassLoader();
             Assert.NotNull(classLoader);
         }
 
         [Fact]
         public void SetClassLoaderTest()
         {
-            var classLoader = WellTool.Core.ClassUtil.GetDefaultClassLoader();
-            WellTool.Core.ClassUtil.SetClassLoader(classLoader);
-            Assert.Equal(classLoader, WellTool.Core.ClassUtil.GetDefaultClassLoader());
+            var classLoader = WellTool.Core.Util.ClassUtil.GetDefaultClassLoader();
+            WellTool.Core.Util.ClassUtil.SetClassLoader(classLoader);
+            Assert.Equal(classLoader, WellTool.Core.Util.ClassUtil.GetDefaultClassLoader());
         }
     }
 }
