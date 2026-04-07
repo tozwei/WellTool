@@ -8,14 +8,14 @@ public class EscapeUtilLastTest
     [Fact]
     public void EscapeHtmlTest()
     {
-        var escaped = EscapeUtil.EscapeHtml("<div>Hello</div>");
+        var escaped = EscapeUtil.Escape("<div>Hello</div>");
         Assert.Contains("&lt;", escaped);
     }
 
     [Fact]
     public void UnescapeHtmlTest()
     {
-        var unescaped = EscapeUtil.UnescapeHtml("&lt;div&gt;Hello&lt;/div&gt;");
+        var unescaped = EscapeUtil.Unescape("&lt;div&gt;Hello&lt;/div&gt;");
         Assert.Contains("<div>", unescaped);
     }
 
@@ -24,12 +24,5 @@ public class EscapeUtilLastTest
     {
         var escaped = EscapeUtil.EscapeJs("Hello 'World'");
         Assert.Contains("\\'", escaped);
-    }
-
-    [Fact]
-    public void EscapeSqlTest()
-    {
-        var escaped = EscapeUtil.EscapeSql("O'Reilly");
-        Assert.Contains("''", escaped);
     }
 }

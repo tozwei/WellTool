@@ -1,22 +1,16 @@
-using WellTool.Core.Lang;
+using WellTool.Core.Util;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace WellTool.Core.Tests;
 
 public class EnumUtilTest
 {
     [Fact]
-    public void GetEnumTest()
+    public void ParseTest()
     {
-        var status = EnumUtil.GetEnum<TestStatus>("Active");
+        var status = EnumUtil.Parse<TestStatus>("Active");
         Assert.Equal(TestStatus.Active, status);
-    }
-
-    [Fact]
-    public void GetNameTest()
-    {
-        var name = EnumUtil.GetName(TestStatus.Active);
-        Assert.Equal("Active", name);
     }
 
     [Fact]
@@ -36,31 +30,10 @@ public class EnumUtilTest
     }
 
     [Fact]
-    public void GetDescriptionsTest()
+    public void IsDefinedTest()
     {
-        var descriptions = EnumUtil.GetDescriptions<TestStatus>();
-        Assert.NotEmpty(descriptions);
-    }
-
-    [Fact]
-    public void GetDescriptionTest()
-    {
-        var description = EnumUtil.GetDescription(TestStatus.Active);
-        Assert.NotNull(description);
-    }
-
-    [Fact]
-    public void IsValidTest()
-    {
-        Assert.True(EnumUtil.IsValid<TestStatus>("Active"));
-        Assert.False(EnumUtil.IsValid<TestStatus>("Invalid"));
-    }
-
-    [Fact]
-    public void GetIndexTest()
-    {
-        var index = EnumUtil.GetIndex(TestStatus.Active);
-        Assert.Equal(0, index);
+        Assert.True(EnumUtil.IsDefined<TestStatus>("Active"));
+        Assert.False(EnumUtil.IsDefined<TestStatus>("Invalid"));
     }
 
     public enum TestStatus

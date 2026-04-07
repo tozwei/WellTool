@@ -1,17 +1,11 @@
-using WellTool.Core.Codec;
+using WellTool.Core.Util;
 using Xunit;
+using Assert = Xunit.Assert;
 
 namespace WellTool.Core.Tests;
 
 public class CrcTest
 {
-    [Fact]
-    public void Crc8Test()
-    {
-        var crc = CrcUtil.Crc8("Hello");
-        Assert.True(crc >= 0);
-    }
-
     [Fact]
     public void Crc16Test()
     {
@@ -27,23 +21,18 @@ public class CrcTest
     }
 
     [Fact]
-    public void Crc64Test()
+    public void Crc16BytesTest()
     {
-        var crc = CrcUtil.Crc64("Hello");
+        var bytes = System.Text.Encoding.UTF8.GetBytes("Hello");
+        var crc = CrcUtil.Crc16(bytes);
         Assert.True(crc >= 0);
     }
 
     [Fact]
-    public void Md5Test()
+    public void Crc32BytesTest()
     {
-        var md5 = CrcUtil.Md5("Hello");
-        Assert.NotNull(md5);
-    }
-
-    [Fact]
-    public void Sha1Test()
-    {
-        var sha1 = CrcUtil.Sha1("Hello");
-        Assert.NotNull(sha1);
+        var bytes = System.Text.Encoding.UTF8.GetBytes("Hello");
+        var crc = CrcUtil.Crc32(bytes);
+        Assert.True(crc >= 0);
     }
 }

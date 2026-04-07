@@ -10,8 +10,8 @@ public class DateBetweenExtraTest
     {
         var start = DateTime.Parse("2021-01-01 10:00:00");
         var end = DateTime.Parse("2021-01-01 11:00:00");
-        var between = DateBetween.Between(start, end);
-        Assert.Equal(60, between.GetTotalMinutes());
+        var between = new DateBetween(start, end);
+        Assert.Equal(60, between.Between(DateUnit.Minute));
     }
 
     [Fact]
@@ -19,8 +19,8 @@ public class DateBetweenExtraTest
     {
         var start = DateTime.Now;
         var end = start.AddSeconds(5);
-        var between = DateBetween.Between(start, end);
-        Assert.True(between.GetTotalSeconds() >= 5);
+        var between = new DateBetween(start, end);
+        Assert.True(between.Between(DateUnit.Second) >= 5);
     }
 
     [Fact]
@@ -28,8 +28,8 @@ public class DateBetweenExtraTest
     {
         var start = DateTime.Parse("2021-01-01");
         var end = DateTime.Parse("2021-04-01");
-        var between = DateBetween.Between(start, end);
-        Assert.Equal(3, between.GetTotalMonths());
+        var between = new DateBetween(start, end);
+        Assert.Equal(3, between.Between(DateUnit.Month));
     }
 
     [Fact]
@@ -37,8 +37,8 @@ public class DateBetweenExtraTest
     {
         var start = DateTime.Parse("2020-01-01");
         var end = DateTime.Parse("2022-01-01");
-        var between = DateBetween.Between(start, end);
-        Assert.Equal(2, between.GetTotalYears());
+        var between = new DateBetween(start, end);
+        Assert.Equal(2, between.Between(DateUnit.Year));
     }
 
     [Fact]
@@ -46,8 +46,8 @@ public class DateBetweenExtraTest
     {
         var start = DateTime.Parse("2021-01-01 10:00:00");
         var end = DateTime.Parse("2021-01-01 11:00:00");
-        var between = DateBetween.Between(start, end);
-        var str = between.ToString();
+        var between = new DateBetween(start, end);
+        var str = between.ToString(DateUnit.Minute, WellTool.Core.Date.BetweenFormatter.Level.SECOND);
         Assert.NotEmpty(str);
     }
 }

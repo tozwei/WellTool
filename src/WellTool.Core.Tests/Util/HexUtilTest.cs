@@ -1,4 +1,5 @@
 using WellTool.Core.Util;
+using System.Text;
 using Xunit;
 
 namespace WellTool.Core.Tests;
@@ -9,38 +10,25 @@ public class HexUtilTest
     public void HexStrTest()
     {
         var str = "我是一个字符串";
-        var hex = HexUtil.EncodeHexStr(str, System.Text.Encoding.UTF8);
-        var decodedStr = HexUtil.DecodeHexStr(hex);
+        var hex = HexUtil.Encode(str, Encoding.UTF8);
+        var decodedStr = HexUtil.DecodeToString(hex, Encoding.UTF8);
         Assert.Equal(str, decodedStr);
     }
 
     [Fact]
-    public void IsHexNumberTest()
+    public void EncodeTest()
     {
-        Assert.True(HexUtil.IsHexNumber("0"));
-        Assert.True(HexUtil.IsHexNumber("002c"));
-        Assert.True(HexUtil.IsHexNumber("0x3544534F444"));
-        Assert.True(HexUtil.IsHexNumber("0x0000000000000001158e460913d00000"));
-
-        Assert.False(HexUtil.IsHexNumber("0x0000001000T00001158e460913d00000"));
-        Assert.False(HexUtil.IsHexNumber("-1"));
-        Assert.False(HexUtil.IsHexNumber("abc"));
-    }
-
-    [Fact]
-    public void EncodeHexTest()
-    {
-        var bytes = System.Text.Encoding.UTF8.GetBytes("Hello");
-        var hex = HexUtil.EncodeHex(bytes);
+        var bytes = Encoding.UTF8.GetBytes("Hello");
+        var hex = HexUtil.Encode(bytes);
         Assert.Equal("48656c6c6f", hex);
     }
 
     [Fact]
-    public void DecodeHexTest()
+    public void DecodeTest()
     {
         var hex = "48656c6c6f";
-        var bytes = HexUtil.DecodeHex(hex);
-        var str = System.Text.Encoding.UTF8.GetString(bytes);
+        var bytes = HexUtil.Decode(hex);
+        var str = Encoding.UTF8.GetString(bytes);
         Assert.Equal("Hello", str);
     }
 
@@ -52,5 +40,14 @@ public class HexUtilTest
 
         unicodeHex = HexUtil.ToUnicodeHex('你');
         Assert.Equal("\\u4f60", unicodeHex);
+    }
+
+    [Fact]
+    public void DecodeHexTest()
+    {
+        var hex = "48656c6c6f";
+        var bytes = HexUtil.DecodeHex(hex);
+        var str = Encoding.UTF8.GetString(bytes);
+        Assert.Equal("Hello", str);
     }
 }

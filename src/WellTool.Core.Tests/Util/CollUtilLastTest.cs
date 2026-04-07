@@ -24,17 +24,17 @@ public class CollUtilLastTest
     [Fact]
     public void IsEmptyTest()
     {
-        Assert.True(CollUtil.IsEmpty(null));
-        Assert.True(CollUtil.IsEmpty(new List<string>()));
-        Assert.False(CollUtil.IsEmpty(CollUtil.NewArrayList("a")));
+        Assert.True(CollUtil.IsEmpty<string>(null));
+        Assert.True(CollUtil.IsEmpty<string>(new List<string>()));
+        Assert.False(CollUtil.IsEmpty<string>(CollUtil.NewArrayList("a")));
     }
 
     [Fact]
     public void IsNotEmptyTest()
     {
-        Assert.False(CollUtil.IsNotEmpty(null));
-        Assert.False(CollUtil.IsNotEmpty(new List<string>()));
-        Assert.True(CollUtil.IsNotEmpty(CollUtil.NewArrayList("a")));
+        Assert.False(CollUtil.IsNotEmpty<string>(null));
+        Assert.False(CollUtil.IsNotEmpty<string>(new List<string>()));
+        Assert.True(CollUtil.IsNotEmpty<string>(CollUtil.NewArrayList("a")));
     }
 
     [Fact]

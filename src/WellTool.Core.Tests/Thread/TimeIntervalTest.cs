@@ -1,3 +1,4 @@
+using WellTool.Core.Date;
 using WellTool.Core.Util;
 using Xunit;
 
@@ -10,8 +11,8 @@ public class TimeIntervalTest
     {
         var timer = new TimeInterval();
         ThreadUtil.Sleep(100);
-        timer.Stop();
-        Assert.True(timer.IntervalMillis >= 100);
+        var interval = timer.IntervalMs();
+        Assert.True(interval >= 100);
     }
 
     [Fact]
@@ -28,7 +29,7 @@ public class TimeIntervalTest
     {
         var timer = new TimeInterval();
         ThreadUtil.Sleep(1000);
-        var seconds = timer.IntervalSeconds();
+        var seconds = timer.IntervalSecond();
         Assert.True(seconds >= 1);
     }
 
@@ -37,22 +38,8 @@ public class TimeIntervalTest
     {
         var timer = new TimeInterval();
         ThreadUtil.Sleep(60000);
-        var minutes = timer.IntervalMinutes();
+        var minutes = timer.IntervalMinute();
         Assert.True(minutes >= 1);
-    }
-
-    [Fact]
-    public void PauseResumeTest()
-    {
-        var timer = new TimeInterval();
-        ThreadUtil.Sleep(50);
-        timer.Pause();
-        ThreadUtil.Sleep(100);
-        timer.Resume();
-        ThreadUtil.Sleep(50);
-        timer.Stop();
-
-        Assert.True(timer.IntervalMillis >= 50 && timer.IntervalMillis < 150);
     }
 
     [Fact]

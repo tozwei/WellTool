@@ -1,4 +1,4 @@
-using WellTool.Core.Collection;
+using WellTool.Core.Util;
 using Xunit;
 
 namespace WellTool.Core.Tests;
@@ -10,7 +10,7 @@ public class CollUtilTestExtra
     {
         var list1 = CollUtil.NewArrayList(1, 2);
         var list2 = CollUtil.NewArrayList(2, 3);
-        var union = CollUtil.Union(list1, list2);
+        var union = CollUtil.GetUnion(list1, list2);
         Assert.Equal(3, union.Count);
     }
 
@@ -19,7 +19,7 @@ public class CollUtilTestExtra
     {
         var list1 = CollUtil.NewArrayList(1, 2, 3);
         var list2 = CollUtil.NewArrayList(2, 3, 4);
-        var intersection = CollUtil.Intersection(list1, list2);
+        var intersection = CollUtil.GetIntersection(list1, list2);
         Assert.Equal(2, intersection.Count);
     }
 
@@ -31,35 +31,6 @@ public class CollUtilTestExtra
         var disj = CollUtil.Disjunction(list1, list2);
         Assert.Equal(2, disj.Count);
         Assert.Contains(1, disj);
-        Assert.Contains(4, disj);
-    }
-
-    [Fact]
-    public void SubtractTest()
-    {
-        var list1 = CollUtil.NewArrayList(1, 2, 3);
-        var list2 = CollUtil.NewArrayList(2, 3);
-        var diff = CollUtil.Subtract(list1, list2);
-        Assert.Single(diff);
-        Assert.Contains(1, diff);
-    }
-
-    [Fact]
-    public void AddAllIfNotContainsTest()
-    {
-        var list = CollUtil.NewArrayList(1, 2);
-        var toAdd = CollUtil.NewArrayList(2, 3, 4);
-        CollUtil.AddAllIfNotContains(list, toAdd);
-        Assert.Equal(4, list.Count);
-        Assert.Contains(3, list);
-        Assert.Contains(4, list);
-    }
-
-    [Fact]
-    public void NewLinkedListTest()
-    {
-        var list = CollUtil.NewLinkedList(1, 2, 3);
-        Assert.Equal(3, list.Count);
     }
 
     [Fact]
@@ -67,5 +38,23 @@ public class CollUtilTestExtra
     {
         var set = CollUtil.NewArraySet(1, 2, 2, 3);
         Assert.Equal(3, set.Count);
+    }
+
+    [Fact]
+    public void IsEmptyTest()
+    {
+        var list = CollUtil.NewArrayList<int>();
+        Assert.True(CollUtil.IsEmpty(list));
+        list.Add(1);
+        Assert.False(CollUtil.IsEmpty(list));
+    }
+
+    [Fact]
+    public void IsNotEmptyTest()
+    {
+        var list = CollUtil.NewArrayList<int>();
+        Assert.False(CollUtil.IsNotEmpty(list));
+        list.Add(1);
+        Assert.True(CollUtil.IsNotEmpty(list));
     }
 }

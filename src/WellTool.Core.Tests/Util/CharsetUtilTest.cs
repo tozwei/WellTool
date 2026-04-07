@@ -1,4 +1,5 @@
 using WellTool.Core.Util;
+using System.Text;
 using Xunit;
 
 namespace WellTool.Core.Tests;
@@ -8,22 +9,15 @@ public class CharsetUtilTest
     [Fact]
     public void Utf8Test()
     {
-        var charset = CharsetUtil.UTF8;
+        var charset = CharsetUtil.UTF_8;
         Assert.NotNull(charset);
         Assert.Equal("UTF-8", charset.Name);
     }
 
     [Fact]
-    public void Utf16Test()
+    public void GbkTest()
     {
-        var charset = CharsetUtil.UTF16;
-        Assert.NotNull(charset);
-    }
-
-    [Fact]
-    public void Gb2312Test()
-    {
-        var charset = CharsetUtil.GB2312;
+        var charset = CharsetUtil.GBK;
         Assert.NotNull(charset);
     }
 
@@ -35,37 +29,26 @@ public class CharsetUtilTest
     }
 
     [Fact]
-    public void ConvertTest()
+    public void AsciiTest()
     {
-        var str = "Hello, 世界";
-        var bytes = System.Text.Encoding.UTF8.GetBytes(str);
-        var converted = CharsetUtil.Convert(bytes, CharsetUtil.UTF8, CharsetUtil.GB2312);
-        Assert.NotNull(converted);
+        var charset = CharsetUtil.ASCII;
+        Assert.NotNull(charset);
     }
 
     [Fact]
-    public void EncodeTest()
+    public void GetEncodingTest()
     {
-        var str = "Hello, 世界";
-        var bytes = CharsetUtil.Encode(str);
-        Assert.NotNull(bytes);
-        Assert.NotEmpty(bytes);
-    }
-
-    [Fact]
-    public void DecodeTest()
-    {
-        var str = "Hello, 世界";
-        var bytes = System.Text.Encoding.UTF8.GetBytes(str);
-        var decoded = CharsetUtil.Decode(bytes);
-        Assert.Equal(str, decoded);
-    }
-
-    [Fact]
-    public void WrapTest()
-    {
-        var charset = CharsetUtil.Wrap("UTF-8");
+        var charset = CharsetUtil.GetEncoding("UTF-8");
         Assert.NotNull(charset);
         Assert.Equal("UTF-8", charset.Name);
+    }
+
+    [Fact]
+    public void EncodeDecodeTest()
+    {
+        var str = "Hello, 世界";
+        var bytes = CharsetUtil.UTF_8.GetBytes(str);
+        var decoded = CharsetUtil.UTF_8.GetString(bytes);
+        Assert.Equal(str, decoded);
     }
 }

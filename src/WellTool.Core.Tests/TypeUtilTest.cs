@@ -1,5 +1,5 @@
 using Xunit;
-using WellTool.Core;
+using WellTool.Core.Util;
 using System;
 
 namespace WellTool.Core.Tests
@@ -10,76 +10,17 @@ namespace WellTool.Core.Tests
     public class TypeUtilTest
     {
         [Fact]
-        public void GetTypeArgumentTest()
+        public void GetNameTest()
         {
-            var type = TypeUtil.GetTypeArgument<string>();
-            Assert.Equal(typeof(string), type);
-        }
-
-        [Fact]
-        public void GetTypeArgumentClassTest()
-        {
-            var type = TypeUtil.GetTypeArgumentClass(typeof(string));
-            Assert.Equal(typeof(string), type);
-        }
-
-        [Fact]
-        public void IsUnknownTest()
-        {
-            Assert.False(TypeUtil.IsUnknown(typeof(string)));
-        }
-
-        [Fact]
-        public void GetTypeNameTest()
-        {
-            var name = TypeUtil.GetTypeName(typeof(string));
+            var name = TypeUtil.GetName(typeof(string));
             Assert.Equal("String", name);
         }
 
         [Fact]
-        public void GetTypeClassTest()
+        public void GetFullNameTest()
         {
-            var type = TypeUtil.GetTypeClass(typeof(string));
-            Assert.NotNull(type);
-        }
-
-        [Fact]
-        public void IsTypeMatchTest()
-        {
-            Assert.True(TypeUtil.IsTypeMatch(typeof(string), typeof(string)));
-            Assert.False(TypeUtil.IsTypeMatch(typeof(string), typeof(int)));
-        }
-
-        [Fact]
-        public void GetCollectionElementTypeTest()
-        {
-            var listType = typeof(System.Collections.Generic.List<string>);
-            var elementType = TypeUtil.GetCollectionElementType(listType);
-            Assert.Equal(typeof(string), elementType);
-        }
-
-        [Fact]
-        public void GetMapKeyTypeTest()
-        {
-            var dictType = typeof(System.Collections.Generic.Dictionary<string, int>);
-            var keyType = TypeUtil.GetMapKeyType(dictType);
-            Assert.Equal(typeof(string), keyType);
-        }
-
-        [Fact]
-        public void GetMapValueTypeTest()
-        {
-            var dictType = typeof(System.Collections.Generic.Dictionary<string, int>);
-            var valueType = TypeUtil.GetMapValueType(dictType);
-            Assert.Equal(typeof(int), valueType);
-        }
-
-        [Fact]
-        public void IsSimpleTypeTest()
-        {
-            Assert.True(TypeUtil.IsSimpleType(typeof(int)));
-            Assert.True(TypeUtil.IsSimpleType(typeof(string)));
-            Assert.False(TypeUtil.IsSimpleType(typeof(System.Collections.Generic.List<int>)));
+            var fullName = TypeUtil.GetFullName(typeof(string));
+            Assert.Equal("System.String", fullName);
         }
 
         [Fact]
@@ -91,11 +32,69 @@ namespace WellTool.Core.Tests
         }
 
         [Fact]
-        public void IsPrimitiveTypeTest()
+        public void IsValueTypeTest()
         {
-            Assert.True(TypeUtil.IsPrimitiveType(typeof(int)));
-            Assert.True(TypeUtil.IsPrimitiveType(typeof(bool)));
-            Assert.False(TypeUtil.IsPrimitiveType(typeof(string)));
+            Assert.True(TypeUtil.IsValueType(typeof(int)));
+            Assert.True(TypeUtil.IsValueType(typeof(bool)));
+            Assert.False(TypeUtil.IsValueType(typeof(string)));
+        }
+
+        [Fact]
+        public void IsEnumTest()
+        {
+            Assert.True(TypeUtil.IsEnum(typeof(DayOfWeek)));
+            Assert.False(TypeUtil.IsEnum(typeof(string)));
+        }
+
+        [Fact]
+        public void IsArrayTest()
+        {
+            Assert.True(TypeUtil.IsArray(typeof(int[])));
+            Assert.False(TypeUtil.IsArray(typeof(string)));
+        }
+
+        [Fact]
+        public void GetElementTypeTest()
+        {
+            var elementType = TypeUtil.GetElementType(typeof(int[]));
+            Assert.Equal(typeof(int), elementType);
+        }
+
+        [Fact]
+        public void GetGenericArgumentsTest()
+        {
+            var listType = typeof(System.Collections.Generic.List<string>);
+            var arguments = TypeUtil.GetGenericArguments(listType);
+            Assert.Equal(1, arguments.Length);
+            Assert.Equal(typeof(string), arguments[0]);
+        }
+
+        [Fact]
+        public void GetBaseTypeTest()
+        {
+            var baseType = TypeUtil.GetBaseType(typeof(string));
+            Assert.Equal(typeof(object), baseType);
+        }
+
+        [Fact]
+        public void IsAssignableFromTest()
+        {
+            Assert.True(TypeUtil.IsAssignableFrom(typeof(string), typeof(object)));
+            Assert.False(TypeUtil.IsAssignableFrom(typeof(int), typeof(string)));
+        }
+
+        [Fact]
+        public void GetNamespaceTest()
+        {
+            var ns = TypeUtil.GetNamespace(typeof(string));
+            Assert.Equal("System", ns);
+        }
+
+        [Fact]
+        public void GetAssemblyNameTest()
+        {
+            var assemblyName = TypeUtil.GetAssemblyName(typeof(string));
+            Assert.NotNull(assemblyName);
         }
     }
 }

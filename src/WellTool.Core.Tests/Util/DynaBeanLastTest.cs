@@ -1,4 +1,5 @@
 using WellTool.Core.Bean;
+using System.Collections.Generic;
 using Xunit;
 
 namespace WellTool.Core.Tests;
@@ -8,33 +9,37 @@ public class DynaBeanLastTest
     [Fact]
     public void ConstructorTest()
     {
-        var bean = new DynaBean("name", "John");
-        Assert.Equal("John", bean.Get("name"));
+        var map = new Dictionary<string, object> { { "name", "John" } };
+        var bean = new DynaBean(map);
+        Assert.Equal("John", bean.Get<string>("name"));
     }
 
     [Fact]
     public void SetGetTest()
     {
-        var bean = new DynaBean();
+        var map = new Dictionary<string, object>();
+        var bean = new DynaBean(map);
         bean.Set("name", "John");
-        Assert.Equal("John", bean.Get("name"));
+        Assert.Equal("John", bean.Get<string>("name"));
     }
 
     [Fact]
     public void ContainsTest()
     {
-        var bean = new DynaBean();
+        var map = new Dictionary<string, object>();
+        var bean = new DynaBean(map);
         bean.Set("name", "John");
-        Assert.True(bean.Contains("name"));
-        Assert.False(bean.Contains("age"));
+        Assert.True(bean.ContainsProp("name"));
+        Assert.False(bean.ContainsProp("age"));
     }
 
     [Fact]
     public void RemoveTest()
     {
-        var bean = new DynaBean();
+        var map = new Dictionary<string, object>();
+        var bean = new DynaBean(map);
         bean.Set("name", "John");
-        bean.Remove("name");
-        Assert.False(bean.Contains("name"));
+        map.Remove("name");
+        Assert.False(bean.ContainsProp("name"));
     }
 }

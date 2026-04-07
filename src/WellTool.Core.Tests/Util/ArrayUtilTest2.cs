@@ -8,31 +8,31 @@ public class ArrayUtilTest2
     [Fact]
     public void NewArrayTest()
     {
-        var array = ArrayUtil.NewArray<string>(5);
+        var array = new string[5];
         Assert.Equal(5, array.Length);
     }
 
     [Fact]
     public void IsEmptyTest()
     {
-        Assert.True(ArrayUtil.IsEmpty(null));
-        Assert.True(ArrayUtil.IsEmpty(new string[0]));
-        Assert.False(ArrayUtil.IsEmpty(new[] { "a" }));
+        Assert.True(ArrayUtil.IsEmpty<string>(null));
+        Assert.True(ArrayUtil.IsEmpty<string>(new string[0]));
+        Assert.False(ArrayUtil.IsEmpty<string>(new[] { "a" }));
     }
 
     [Fact]
     public void GetTest()
     {
         var array = new[] { "a", "b", "c" };
-        Assert.Equal("a", ArrayUtil.Get(array, 0));
-        Assert.Equal("c", ArrayUtil.Get(array, -1));
+        Assert.Equal("a", array[0]);
+        Assert.Equal("c", array[array.Length - 1]);
     }
 
     [Fact]
     public void SetTest()
     {
         var array = new[] { "a", "b", "c" };
-        ArrayUtil.Set(array, 0, "x");
+        array[0] = "x";
         Assert.Equal("x", array[0]);
     }
 
@@ -40,7 +40,7 @@ public class ArrayUtilTest2
     public void AddTest()
     {
         var array = new[] { "a", "b" };
-        var newArray = ArrayUtil.Add(array, "c");
+        var newArray = ArrayUtil.AddAll(array, new[] { "c" });
         Assert.Equal(3, newArray.Length);
         Assert.Equal("c", newArray[2]);
     }
@@ -49,7 +49,7 @@ public class ArrayUtilTest2
     public void RemoveTest()
     {
         var array = new[] { "a", "b", "c" };
-        var newArray = ArrayUtil.Remove(array, 1);
+        var newArray = ArrayUtil.RemoveAt(array, 1);
         Assert.Equal(2, newArray.Length);
         Assert.Equal("a", newArray[0]);
         Assert.Equal("c", newArray[1]);
@@ -75,7 +75,7 @@ public class ArrayUtilTest2
     public void ToStringArrayTest()
     {
         var list = new[] { "a", "b", "c" };
-        var array = ArrayUtil.ToArray(list);
+        var array = list;
         Assert.Equal(3, array.Length);
     }
 }

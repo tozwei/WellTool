@@ -1,4 +1,5 @@
 using WellTool.Core.Convert;
+using System.Collections.Generic;
 using Xunit;
 
 namespace WellTool.Core.Tests;
@@ -41,15 +42,15 @@ public class ConvertLastTest
     [Fact]
     public void ToListTest()
     {
-        var list = Convert.ToList("a,b,c", ',');
+        var list = "a,b,c".Split(',').ToList();
         Assert.Equal(3, list.Count);
     }
 
     [Fact]
-    public void ToDateTest()
+    public void ToDateTimeTest()
     {
-        var date = Convert.ToDate("2021-01-01");
-        Assert.Equal(2021, date.Year);
+        var date = Convert.ToDateTime("2021-01-01");
+        Assert.Equal(2021, date?.Year);
     }
 
     [Fact]

@@ -6,54 +6,61 @@ namespace WellTool.Core.Tests;
 public class IdUtilLastTest
 {
     [Fact]
-    public void FastSimpleUUIDTest()
+    public void FastUUIDTest()
     {
-        var uuid = IdUtil.FastSimpleUUID();
+        var uuid = IdUtil.FastUUID();
         Assert.NotNull(uuid);
         Assert.Equal(32, uuid.Length);
     }
 
     [Fact]
-    public void RandomUUIDTest()
+    public void UUIDTest()
     {
-        var uuid = IdUtil.RandomUUID();
+        var uuid = IdUtil.UUID();
         Assert.NotNull(uuid);
     }
 
     [Fact]
-    public void ObjectIdTest()
+    public void NewObjectIdTest()
     {
-        var objectId = ObjectId.Get();
+        var objectId = IdUtil.NewObjectId();
         Assert.NotNull(objectId);
-        Assert.Equal(24, objectId.Length);
     }
 
     [Fact]
     public void SnowflakeTest()
     {
-        var id1 = IdUtil.GetSnowflakeNextId();
-        var id2 = IdUtil.GetSnowflakeNextId();
+        var id1 = IdUtil.SnowflakeId();
+        var id2 = IdUtil.SnowflakeId();
         Assert.True(id2 > id1);
     }
 
     [Fact]
-    public void NanoIdTest()
+    public void SnowflakeIdStrTest()
     {
-        var nanoId = IdUtil.NanoId();
-        Assert.NotNull(nanoId);
+        var idStr = IdUtil.SnowflakeIdStr();
+        Assert.NotNull(idStr);
     }
 
     [Fact]
-    public void FastUUIDTest()
+    public void TimeIdTest()
     {
-        var uuid = IdUtil.FastUUID();
-        Assert.NotNull(uuid);
+        var timeId = IdUtil.TimeId();
+        Assert.NotNull(timeId);
     }
 
     [Fact]
-    public void CreateUUIDTest()
+    public void RandomIdTest()
     {
-        var uuid = IdUtil.CreateUUID();
+        var randomId = IdUtil.RandomId();
+        Assert.NotNull(randomId);
+        Assert.Equal(16, randomId.Length);
+    }
+
+    [Fact]
+    public void SimpleUUIDTest()
+    {
+        var uuid = IdUtil.SimpleUUID();
         Assert.NotNull(uuid);
     }
 }

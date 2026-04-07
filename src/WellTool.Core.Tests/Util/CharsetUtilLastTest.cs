@@ -1,4 +1,5 @@
 using WellTool.Core.Util;
+using System.Text;
 using Xunit;
 
 namespace WellTool.Core.Tests;
@@ -8,21 +9,14 @@ public class CharsetUtilLastTest
     [Fact]
     public void Utf8Test()
     {
-        var charset = CharsetUtil.UTF8;
+        var charset = CharsetUtil.UTF_8;
         Assert.NotNull(charset);
     }
 
     [Fact]
-    public void Utf16Test()
+    public void GbkTest()
     {
-        var charset = CharsetUtil.UTF16;
-        Assert.NotNull(charset);
-    }
-
-    [Fact]
-    public void Gb2312Test()
-    {
-        var charset = CharsetUtil.GB2312;
+        var charset = CharsetUtil.GBK;
         Assert.NotNull(charset);
     }
 
@@ -34,28 +28,25 @@ public class CharsetUtilLastTest
     }
 
     [Fact]
-    public void ConvertTest()
+    public void AsciiTest()
     {
-        var str = "Hello";
-        var bytes = System.Text.Encoding.UTF8.GetBytes(str);
-        var converted = CharsetUtil.Convert(bytes, CharsetUtil.UTF8, CharsetUtil.UTF8);
-        Assert.NotNull(converted);
+        var charset = CharsetUtil.ASCII;
+        Assert.NotNull(charset);
     }
 
     [Fact]
-    public void EncodeTest()
+    public void GetEncodingTest()
     {
-        var str = "Hello";
-        var bytes = CharsetUtil.Encode(str);
-        Assert.NotNull(bytes);
+        var charset = CharsetUtil.GetEncoding("UTF-8");
+        Assert.NotNull(charset);
     }
 
     [Fact]
-    public void DecodeTest()
+    public void EncodeDecodeTest()
     {
         var str = "Hello";
-        var bytes = System.Text.Encoding.UTF8.GetBytes(str);
-        var decoded = CharsetUtil.Decode(bytes);
+        var bytes = CharsetUtil.UTF_8.GetBytes(str);
+        var decoded = CharsetUtil.UTF_8.GetString(bytes);
         Assert.Equal(str, decoded);
     }
 }

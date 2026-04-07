@@ -8,35 +8,42 @@ public class ClassUtilLastTest
     [Fact]
     public void GetClassNameTest()
     {
-        var className = ClassUtil.GetClassName<ClassUtilLastTest>();
+        var className = ClassUtil.GetClassName(typeof(ClassUtilLastTest));
         Assert.Equal("ClassUtilLastTest", className);
     }
 
     [Fact]
-    public void GetPackageNameTest()
+    public void GetPackageTest()
     {
-        var packageName = ClassUtil.GetPackageName<ClassUtilLastTest>();
+        var packageName = ClassUtil.GetPackage(typeof(ClassUtilLastTest));
         Assert.Contains("WellTool", packageName);
     }
 
     [Fact]
-    public void IsPresentTest()
+    public void LoadClassTest()
     {
-        Assert.True(ClassUtil.IsPresent("System.String"));
-        Assert.False(ClassUtil.IsPresent("Not.Exist.Class"));
-    }
-
-    [Fact]
-    public void ForNameTest()
-    {
-        var type = ClassUtil.ForName("System.String");
+        var type = ClassUtil.LoadClass("System.String");
         Assert.NotNull(type);
     }
 
     [Fact]
-    public void NewInstanceTest()
+    public void GetSimpleNameTest()
     {
-        var instance = ClassUtil.NewInstance<ClassUtilLastTest>();
-        Assert.NotNull(instance);
+        var simpleName = ClassUtil.GetSimpleName(typeof(ClassUtilLastTest));
+        Assert.Equal("ClassUtilLastTest", simpleName);
+    }
+
+    [Fact]
+    public void IsPrimitiveWrapperTest()
+    {
+        Assert.True(ClassUtil.IsPrimitiveWrapper(typeof(int)));
+        Assert.True(ClassUtil.IsPrimitiveWrapper(typeof(bool)));
+    }
+
+    [Fact]
+    public void IsPrimitiveTest()
+    {
+        Assert.True(ClassUtil.IsPrimitive(typeof(int)));
+        Assert.True(ClassUtil.IsPrimitive(typeof(string)));
     }
 }

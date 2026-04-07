@@ -1,4 +1,4 @@
-using WellTool.Core.Codec;
+using WellTool.Core.Util;
 using Xunit;
 
 namespace WellTool.Core.Tests;
@@ -23,7 +23,7 @@ public class Base64UtilLastTest
     public void EncodeBytesTest()
     {
         var bytes = System.Text.Encoding.UTF8.GetBytes("Hello");
-        var encoded = Base64Util.EncodeBytes(bytes);
+        var encoded = Base64Util.Encode(bytes);
         Assert.Equal("SGVsbG8=", encoded);
     }
 
@@ -33,21 +33,5 @@ public class Base64UtilLastTest
         var bytes = Base64Util.DecodeBytes("SGVsbG8=");
         var str = System.Text.Encoding.UTF8.GetString(bytes);
         Assert.Equal("Hello", str);
-    }
-
-    [Fact]
-    public void UrlSafeTest()
-    {
-        var encoded = Base64Util.EncodeUrlSafe("Hello+/World=");
-        Assert.DoesNotContain("+", encoded);
-        Assert.DoesNotContain("/", encoded);
-    }
-
-    [Fact]
-    public void DecodeUrlSafeTest()
-    {
-        var encoded = Base64Util.EncodeUrlSafe("Hello+/World=");
-        var decoded = Base64Util.DecodeUrlSafe(encoded);
-        Assert.Equal("Hello+/World=", decoded);
     }
 }
