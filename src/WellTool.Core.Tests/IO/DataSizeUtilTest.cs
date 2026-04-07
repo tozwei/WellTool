@@ -64,7 +64,8 @@ public class DataSizeUtilTest
     [Fact]
     public void FormatWithUnitTest()
     {
-        // 简化测试，移除对不存在的DataUnit常量的引用
-        Xunit.Assert.True(true);
+        // 测试带单位的格式化
+        var result = DataSizeUtil.Format(1024, DataUnit.Kilobytes);
+        Assert.Equal("1 KB", result);
     }
 }

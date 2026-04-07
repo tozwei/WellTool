@@ -26,15 +26,15 @@ public class DateConvertTest
     public void ToSqlDateTest()
     {
         var a = "2017-05-06";
-        // 简化测试，移除对不存在的ToSqlDate方法的引用
-        Xunit.Assert.True(true);
+        var value = WellTool.Core.Convert.Convert.ToDateTime(a);
+        Assert.NotNull(value);
     }
 
     [Fact]
     public void ToLocalDateTimeTest()
     {
         var str = "2020-12-12 12:12:12";
-        // 简化测试，移除对不存在的ToLocalDateTime方法的引用
-        Xunit.Assert.True(true);
+        var value = WellTool.Core.Convert.Convert.ToDateTime(str);
+        Assert.NotNull(value);
     }
 }

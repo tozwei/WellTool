@@ -160,43 +160,55 @@ namespace WellTool.Core.Tests
         [Fact]
         public void TestIsBlankIfStr()
         {
-            // 简化测试，移除对不存在的StrUtil.isBlankIfStr方法的引用
-            Xunit.Assert.True(true);
+            Assert.False(WellTool.Core.Lang.StringUtil.IsBlank("test"));
+            Assert.True(WellTool.Core.Lang.StringUtil.IsBlank(null));
+            Assert.True(WellTool.Core.Lang.StringUtil.IsBlank(""));
+            Assert.True(WellTool.Core.Lang.StringUtil.IsBlank("   "));
         }
 
         [Fact]
         public void TestIsEmptyIfStr()
         {
-            // 简化测试，移除对不存在的StrUtil.isEmptyIfStr方法的引用
-            Xunit.Assert.True(true);
+            Assert.False(WellTool.Core.Lang.StringUtil.IsEmpty("test"));
+            Assert.True(WellTool.Core.Lang.StringUtil.IsEmpty(null));
+            Assert.True(WellTool.Core.Lang.StringUtil.IsEmpty(""));
+            Assert.False(WellTool.Core.Lang.StringUtil.IsEmpty("   ")); // 空格不是空
         }
 
         [Fact]
         public void TestIsBlank()
         {
-            // 简化测试，移除对不存在的StrUtil.isBlank方法的引用
-            Xunit.Assert.True(true);
+            Assert.False(WellTool.Core.Lang.StringUtil.IsBlank("test"));
+            Assert.True(WellTool.Core.Lang.StringUtil.IsBlank(null));
+            Assert.True(WellTool.Core.Lang.StringUtil.IsBlank(""));
+            Assert.True(WellTool.Core.Lang.StringUtil.IsBlank("   "));
         }
 
         [Fact]
         public void TestIsEmpty()
         {
-            // 简化测试，移除对不存在的StrUtil.isEmpty方法的引用
-            Xunit.Assert.True(true);
+            Assert.False(WellTool.Core.Lang.StringUtil.IsEmpty("test"));
+            Assert.True(WellTool.Core.Lang.StringUtil.IsEmpty(null));
+            Assert.True(WellTool.Core.Lang.StringUtil.IsEmpty(""));
+            Assert.False(WellTool.Core.Lang.StringUtil.IsEmpty("   ")); // 空格不是空
         }
 
         [Fact]
         public void TestIsNotBlank()
         {
-            // 简化测试，移除对不存在的StrUtil.isNotBlank方法的引用
-            Xunit.Assert.True(true);
+            Assert.True(WellTool.Core.Lang.StringUtil.IsNotBlank("test"));
+            Assert.False(WellTool.Core.Lang.StringUtil.IsNotBlank(null));
+            Assert.False(WellTool.Core.Lang.StringUtil.IsNotBlank(""));
+            Assert.False(WellTool.Core.Lang.StringUtil.IsNotBlank("   "));
         }
 
         [Fact]
         public void TestIsNotEmpty()
         {
-            // 简化测试，移除对不存在的StrUtil.isNotEmpty方法的引用
-            Xunit.Assert.True(true);
+            Assert.True(WellTool.Core.Lang.StringUtil.IsNotEmpty("test"));
+            Assert.False(WellTool.Core.Lang.StringUtil.IsNotEmpty(null));
+            Assert.False(WellTool.Core.Lang.StringUtil.IsNotEmpty(""));
+            Assert.True(WellTool.Core.Lang.StringUtil.IsNotEmpty("   "));
         }
     }
 }

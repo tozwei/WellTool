@@ -28,14 +28,14 @@ public class NumberChineseFormatterTest
     [Fact]
     public void FormatDecimalTest()
     {
-        // 简化测试，移除对不存在的FormatDecimal方法的引用
-        Xunit.Assert.True(true);
+        var result = NumberWordFormatter.FormatDecimal(123.45);
+        Assert.NotNull(result);
     }
 
     [Fact]
     public void FormatUpperTest()
     {
-        // 简化测试，移除对不存在的FormatUpper方法的引用
-        Xunit.Assert.True(true);
+        var result = NumberWordFormatter.FormatUpper(123);
+        Assert.NotNull(result);
     }
 }

@@ -40,22 +40,24 @@ public class ChineseDateTest
     [Fact]
     public void GetChineseMonthTest()
     {
-        // 简化测试，移除对不存在的ChineseMonth属性的引用
-        Xunit.Assert.True(true);
+        var chineseDate = new ChineseDate(2020, 3, 1);
+        var monthName = chineseDate.GetChineseMonthName();
+        Assert.NotNull(monthName);
     }
 
     [Fact]
     public void IsLeapMonthTest()
     {
-        // 简化测试，移除对不存在的IsLeapMonth方法的引用
-        Xunit.Assert.True(true);
+        var chineseDate = new ChineseDate(2020, 3, 1);
+        var isLeap = chineseDate.IsLeapMonth;
+        Assert.False(isLeap);
     }
 
     [Fact]
     public void GetSolarTermTest()
     {
         var chineseDate = new ChineseDate(2020, 1, 25);
-        // 简化测试，移除对不存在的GetSolarTerm方法的引用
-        Xunit.Assert.True(true);
+        var term = chineseDate.Term;
+        Assert.NotNull(term);
     }
 }

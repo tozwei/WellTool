@@ -71,10 +71,4 @@ public class AntPathMatcherTest
         Assert.True(pathMatcher.Match("*.*", "test.test.test"));
     }
 
-    [Fact]
-    public void ExtractUriTemplateVariablesTest()
-    {
-        // 简化测试，移除对不存在的ExtractUriTemplateVariables方法的引用
-        Assert.True(true);
-    }
 }

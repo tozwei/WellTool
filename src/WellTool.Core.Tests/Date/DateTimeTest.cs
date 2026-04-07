@@ -70,23 +70,23 @@ public class DateTimeTest
     public void IsWeekendTest()
     {
         var saturday = DateTime.Parse("2021-01-02"); // Saturday
-        // 简化测试，移除对不存在的IsWeekend方法的引用
-        Xunit.Assert.True(true);
+        var isWeekend = DateUtil.IsWeekend(saturday);
+        Assert.True(isWeekend);
 
         var monday = DateTime.Parse("2021-01-04"); // Monday
-        // 简化测试，移除对不存在的IsWeekend方法的引用
-        Xunit.Assert.True(true);
+        var isWeekend2 = DateUtil.IsWeekend(monday);
+        Assert.False(isWeekend2);
     }
 
     [Fact]
     public void IsWorkdayTest()
     {
         var saturday = DateTime.Parse("2021-01-02"); // Saturday
-        // 简化测试，移除对不存在的IsWorkday方法的引用
-        Xunit.Assert.True(true);
+        var isWorkday = !DateUtil.IsWeekend(saturday); // 工作日是周末的反面
+        Assert.False(isWorkday);
 
         var monday = DateTime.Parse("2021-01-04"); // Monday
-        // 简化测试，移除对不存在的IsWorkday方法的引用
-        Xunit.Assert.True(true);
+        var isWorkday2 = !DateUtil.IsWeekend(monday);
+        Assert.True(isWorkday2);
     }
 }

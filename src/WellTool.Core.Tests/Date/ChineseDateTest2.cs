@@ -32,15 +32,17 @@ public class ChineseDateTest2
     public void TestSolarTerms()
     {
         var chineseDate = new ChineseDate(2020, 1, 1);
-        // 简化测试，移除对不存在的GetSolarTerm方法的引用
-        Xunit.Assert.True(true);
+        // 测试节气获取
+        var term = chineseDate.Term;
+        Assert.NotNull(term);
     }
 
     [Fact]
     public void TestIsLeapYear()
     {
         var chineseDate = new ChineseDate(2020, 1, 1);
-        // 简化测试，移除对不存在的IsLeapYear方法的引用
-        Xunit.Assert.True(true);
+        // 测试闰年判断
+        var isLeap = chineseDate.IsLeapMonth;
+        Assert.False(isLeap); // 2020年1月不是闰月
     }
 }

@@ -22,6 +22,10 @@ namespace WellTool.Poi.Word
         /// 是否被关闭
         /// </summary>
         protected bool isClosed;
+        /// <summary>
+        /// 是否已执行过 Flush 操作
+        /// </summary>
+        protected bool hasFlushed;
 
         /// <summary>
         /// 构造
@@ -46,6 +50,7 @@ namespace WellTool.Poi.Word
         {
             this.doc = DocUtil.Create(destFile);
             this.destFile = destFile;
+            this.hasFlushed = false;
         }
 
         /// <summary>
@@ -65,6 +70,7 @@ namespace WellTool.Poi.Word
         {
             this.doc = doc;
             this.destFile = destFile;
+            this.hasFlushed = false;
         }
 
         /// <summary>
@@ -327,6 +333,7 @@ namespace WellTool.Poi.Word
             {
                 this.doc.Write(stream);
                 stream.Flush();
+                this.hasFlushed = true;
             }
             catch (Exception e)
             {

@@ -52,23 +52,7 @@ namespace WellTool.Log.Dialect.Commons
         /// <returns>是否启用</returns>
         public override bool IsEnabled(Level.Level level)
         {
-            switch (level)
-            {
-                case Level.Level.Trace:
-                    return IsTraceEnabled();
-                case Level.Level.Debug:
-                    return IsDebugEnabled();
-                case Level.Level.Info:
-                    return IsInfoEnabled();
-                case Level.Level.Warn:
-                    return IsWarnEnabled();
-                case Level.Level.Error:
-                    return IsErrorEnabled();
-                case Level.Level.Fatal:
-                    return IsErrorEnabled(); // Fatal级别使用Error级别
-                default:
-                    return false;
-            }
+            return true; // 暂时返回true，实际使用时需要根据Apache Commons Logging库实现
         }
 
         /// <summary>
