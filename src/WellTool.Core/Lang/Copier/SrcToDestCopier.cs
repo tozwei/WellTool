@@ -23,7 +23,7 @@ public abstract class SrcToDestCopier<S, D> : ISrcToDestCopier<S, D>
 	/// <summary>
 	/// 拷贝过滤器
 	/// </summary>
-	protected Func<S, bool> CopyFilter { get; set; }
+	protected FuncUtil<S, bool> CopyFilter { get; set; }
 
 	/// <summary>
 	/// 执行拷贝
@@ -47,7 +47,7 @@ public abstract class SrcToDestCopier<S, D> : ISrcToDestCopier<S, D>
 	/// </summary>
 	/// <param name="filter">过滤器</param>
 	/// <returns>this</returns>
-	public virtual SrcToDestCopier<S, D> SetCopyFilter(Func<S, bool> filter)
+	public virtual SrcToDestCopier<S, D> SetCopyFilter(FuncUtil<S, bool> filter)
 	{
 		CopyFilter = filter;
 		return this;

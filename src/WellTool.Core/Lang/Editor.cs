@@ -34,13 +34,13 @@ public abstract class Editor<T> : IEditor<T>
 /// <typeparam name="T">编辑对象类型</typeparam>
 public class LambdaEditor<T> : Editor<T>
 {
-	private readonly Func<T, T> _editor;
+	private readonly FuncUtil<T, T> _editor;
 
 	/// <summary>
 	/// 构造
 	/// </summary>
 	/// <param name="editor">编辑函数</param>
-	public LambdaEditor(Func<T, T> editor)
+	public LambdaEditor(FuncUtil<T, T> editor)
 	{
 		_editor = editor;
 	}

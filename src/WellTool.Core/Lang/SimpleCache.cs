@@ -57,7 +57,7 @@ namespace WellTool.Core.Lang
 		/// <param name="validPredicate">检查结果对象是否可用</param>
 		/// <param name="supplier">如果不存在回调方法或结果不可用，用于生产值对象</param>
 		/// <returns>值对象</returns>
-		public V Get(K key, Func<V, bool> validPredicate, Func<V> supplier)
+		public V Get(K key, FuncUtil<V, bool> validPredicate, Func<V> supplier)
 		{
 			V v = Get(key);
 			if (validPredicate != null && !validPredicate.Invoke(v))
