@@ -57,8 +57,8 @@ namespace WellTool.Core.Annotation.Scanner
         /// <param name="excludeTypes">不包含的类型</param>
         protected AbstractTypeAnnotationScanner(bool includeSuperClass, bool includeInterfaces, System.Func<Type, bool> filter, HashSet<Type> excludeTypes)
         {
-            Assert.NotNull(filter, "filter must not null");
-            Assert.NotNull(excludeTypes, "excludeTypes must not null");
+            AssertUtil.NotNull(filter, "filter must not null");
+            AssertUtil.NotNull(excludeTypes, "excludeTypes must not null");
             this.includeSuperClass = includeSuperClass;
             this.includeInterfaces = includeInterfaces;
             this.filter = filter;
@@ -92,7 +92,7 @@ namespace WellTool.Core.Annotation.Scanner
         /// <returns>当前实例</returns>
         public T SetFilter(System.Func<Type, bool> filter)
         {
-            Assert.NotNull(filter, "filter must not null");
+            AssertUtil.NotNull(filter, "filter must not null");
             this.filter = filter;
             return typedThis;
         }
@@ -119,7 +119,7 @@ namespace WellTool.Core.Annotation.Scanner
         /// <returns>当前实例</returns>
         public T AddConverters(System.Func<Type, Type> converter)
         {
-            Assert.NotNull(converter, "converter must not null");
+            AssertUtil.NotNull(converter, "converter must not null");
             this.converters.Add(converter);
             if (!this.hasConverters)
             {

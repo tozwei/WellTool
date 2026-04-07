@@ -19,7 +19,7 @@ namespace WellTool.Core.Threading
         /// <param name="executor"><see cref="IExecutorService"/></param>
         public DelegatedExecutorService(IExecutorService executor)
         {
-            Assert.NotNull(executor, "executor must be not null!");
+            AssertUtil.NotNull(executor, "executor must be not null!");
             _executor = executor;
         }
 

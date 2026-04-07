@@ -99,7 +99,7 @@ namespace WellTool.Core.Net.Url
         /// <returns>UrlBuilder</returns>
         public static UrlBuilder OfHttp(string httpUrl, Encoding charset)
         {
-            Assert.NotBlank(httpUrl, "Http url must be not blank!");
+            AssertUtil.NotBlank(httpUrl, "Http url must be not blank!");
             httpUrl = StrUtil.TrimStart(httpUrl);
             // issue#I66CIR
             if (!httpUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !httpUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
@@ -127,7 +127,7 @@ namespace WellTool.Core.Net.Url
         /// <returns>UrlBuilder</returns>
         public static UrlBuilder Of(string url, Encoding charset)
         {
-            Assert.NotBlank(url, "Url must be not blank!");
+            AssertUtil.NotBlank(url, "Url must be not blank!");
             return OfUri(new Uri(StrUtil.Trim(url)), charset);
         }
 

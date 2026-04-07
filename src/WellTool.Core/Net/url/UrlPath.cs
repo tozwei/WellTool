@@ -204,7 +204,7 @@ namespace WellTool.Core.Net.Url
         /// <returns>修正后的路径</returns>
         private static string FixPath(string path)
         {
-            Assert.NotNull(path, "Path segment must be not null!");
+            AssertUtil.NotNull(path, "Path segment must be not null!");
             if ("/".Equals(path))
             {
                 return StrUtil.EMPTY;

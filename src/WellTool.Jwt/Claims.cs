@@ -130,7 +130,7 @@ namespace WellTool.JWT
         public void Parse(string tokenPart)
         {
             var jsonStr = JWT.Base64UrlDecode(tokenPart, Encoding.UTF8);
-            _claims = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonStr);
+            _claims = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonStr) ?? new Dictionary<string, object>();
         }
 
         /// <inheritdoc/>

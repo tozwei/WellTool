@@ -122,7 +122,7 @@ public class Dict : Dictionary<string, object>
 	/// <returns>自己</returns>
 	public Dict ParseBean<T>(T bean)
 	{
-		Assert.NotNull(bean, "Bean class must be not null");
+		AssertUtil.NotNull(bean, "Bean class must be not null");
 		var map = BeanUtil.BeanToMap(bean);
 		foreach (var kvp in map)
 		{

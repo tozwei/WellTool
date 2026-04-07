@@ -22,7 +22,7 @@ public static class Singleton
 	/// <returns>单例对象</returns>
 	public static T Get<T>(Type clazz, params object[] @params) where T : class
 	{
-		Assert.NotNull(clazz, "Class must be not null !");
+		AssertUtil.NotNull(clazz, "Class must be not null !");
 		string key = BuildKey(clazz.FullName, @params);
 		return Get<T>(key, () => ReflectUtil.NewInstance<T>(clazz, @params));
 	}
@@ -53,7 +53,7 @@ public static class Singleton
 	/// <returns>单例对象</returns>
 	public static T Get<T>(string className, params object[] @params) where T : class
 	{
-		Assert.NotBlank(className, "Class name must be not blank !");
+		AssertUtil.NotBlank(className, "Class name must be not blank !");
 		Type clazz = ClassUtil.LoadClass(className);
 		return Get<T>(clazz, @params);
 	}
@@ -64,7 +64,7 @@ public static class Singleton
 	/// <param name="obj">对象</param>
 	public static void Put(object obj)
 	{
-		Assert.NotNull(obj, "Bean object must be not null !");
+		AssertUtil.NotNull(obj, "Bean object must be not null !");
 		Put(obj.GetType().FullName, obj);
 	}
 

@@ -6,7 +6,7 @@ namespace WellTool.Core.Lang;
 /// <summary>
 /// 断言工具类
 /// </summary>
-public static class Assert
+public static class AssertUtil
 {
     /// <summary>
     /// 断言对象为null

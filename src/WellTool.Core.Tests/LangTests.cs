@@ -52,10 +52,10 @@ namespace WellTool.Core.Tests
         {
             // 测试Assert.NotNull
             var obj = new object();
-            XAssert.Throws<ArgumentNullException>(() => WellTool.Core.Lang.Assert.NotNull(null, "Object cannot be null"));
+            XAssert.Throws<ArgumentNullException>(() => WellTool.Core.Lang.AssertUtil.NotNull(null, "Object cannot be null"));
             
             // 测试Assert.IsTrue
-            XAssert.Throws<ArgumentException>(() => WellTool.Core.Lang.Assert.IsTrue(false, () => new ArgumentException("Condition must be true")));
+            XAssert.Throws<ArgumentException>(() => WellTool.Core.Lang.AssertUtil.IsTrue(false, () => new ArgumentException("Condition must be true")));
         }
 
         private class TestObject

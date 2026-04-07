@@ -13,18 +13,18 @@ public interface IAction<T>
 /// <summary>
 /// Action实现
 /// </summary>
-public class Action<T> : IAction<T>
+public class ActionUtil<T> : IAction<T>
 {
 	private readonly System.Action<T> _action;
 
-	public Action(System.Action<T> action)
+	public ActionUtil(System.Action<T> action)
 	{
 		_action = action;
 	}
 
 	public void Invoke(T t) => _action(t);
 
-	public static implicit operator Action<T>(System.Action<T> action) => new Action<T>(action);
+	public static implicit operator ActionUtil<T>(System.Action<T> action) => new ActionUtil<T>(action);
 }
 
 /// <summary>
