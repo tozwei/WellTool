@@ -29,6 +29,11 @@ namespace WellTool.Core.Converter
             {
                 return (T)(object)value.ToString();
             }
+            // 处理字符串到数值类型的转换
+            if (value is string str && IsNumericType(typeof(T)))
+            {
+                return (T)Convert.ChangeType(str, typeof(T));
+            }
             var result = To(value, typeof(T));
             if (result is bool boolValue && typeof(T) == typeof(int))
             {
@@ -729,6 +734,19 @@ namespace WellTool.Core.Converter
         private static object GetDefaultValue(Type type)
         {
             return type.IsValueType ? Activator.CreateInstance(type) : null;
+        }
+
+        /// <summary>
+        /// 判断是否为数值类型
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>是否为数值类型</returns>
+        private static bool IsNumericType(Type type)
+        {
+            return type == typeof(int) || type == typeof(long) || type == typeof(short) ||
+                   type == typeof(float) || type == typeof(double) || type == typeof(decimal) ||
+                   type == typeof(byte) || type == typeof(sbyte) || type == typeof(ushort) ||
+                   type == typeof(uint) || type == typeof(ulong);
         }
     }
 }
