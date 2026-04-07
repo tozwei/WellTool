@@ -27,7 +27,8 @@ public class SimpleCacheTest
         cache.Put("key1", "value1");
 
         Assert.Equal("value1", cache.Get("key1"));
-        Assert.Equal("value2", cache.Get("key2", () => "value2"));
+        // 使用完全限定名来避免二义性
+        Assert.Equal("value2", cache.Get("key2", new WellTool.Core.Lang.Func<string>(() => "value2")));
         Assert.Equal("value2", cache.Get("key2")); // Now cached
     }
 

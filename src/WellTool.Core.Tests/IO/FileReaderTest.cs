@@ -14,7 +14,7 @@ public class FileReaderTest
         try
         {
             var reader = new FileReader(tempFile);
-            var content = reader.ReadUtf8();
+            var content = reader.ReadString();
             Assert.Equal("Hello, 世界!", content);
         }
         finally
@@ -66,8 +66,8 @@ public class FileReaderTest
         File.WriteAllText(tempFile, "Hello", System.Text.Encoding.UTF8);
         try
         {
-            var reader = new FileReader(tempFile, System.Text.Encoding.UTF8);
-            var content = reader.ReadUtf8();
+            var reader = new WellTool.Core.IO.FileReader(tempFile, System.Text.Encoding.UTF8);
+            var content = reader.ReadString();
             Assert.Equal("Hello", content);
         }
         finally

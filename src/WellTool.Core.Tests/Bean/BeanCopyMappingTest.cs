@@ -1,4 +1,5 @@
 using WellTool.Core.Bean;
+using WellTool.Core.Bean.Copier;
 using WellTool.Core.Map;
 using Xunit;
 

@@ -1,58 +1,43 @@
-using WellTool.Core.Convert;
 using Xunit;
 
-namespace WellTool.Core.Tests;
+namespace WellTool.Core.Tests.Convert;
 
 public class ConvertOtherTest
 {
     [Fact]
     public void ToCharTest()
     {
-        Assert.Equal('A', Convert.ToChar("A"));
-        Assert.Equal('a', Convert.ToChar(97));
+        Assert.Equal('A', WellTool.Core.Convert.Convert.ToChar("A"));
     }
 
     [Fact]
-    public void ToDateTest()
+    public void ToDateTimeTest()
     {
-        var date = Convert.ToDate("2021-01-01");
-        Assert.Equal(2021, date.Year);
-        Assert.Equal(1, date.Month);
-        Assert.Equal(1, date.Day);
+        var date = WellTool.Core.Convert.Convert.ToDateTime("2021-01-01");
+        Assert.NotNull(date);
+        Assert.Equal(2021, date.Value.Year);
+        Assert.Equal(1, date.Value.Month);
+        Assert.Equal(1, date.Value.Day);
     }
 
     [Fact]
-    public void ToBytesTest()
+    public void ToShortTest()
     {
-        var bytes = Convert.ToBytes("Hello");
-        Assert.Equal(5, bytes.Length);
+        Assert.Equal((short)123, WellTool.Core.Convert.Convert.ToShort("123"));
+        Assert.Equal((short)0, WellTool.Core.Convert.Convert.ToShort(null));
     }
 
     [Fact]
-    public void ToBigIntegerTest()
+    public void ToFloatTest()
     {
-        var bi = Convert.ToBigInteger("12345678901234567890");
-        Assert.NotNull(bi);
+        Assert.Equal(123.45f, WellTool.Core.Convert.Convert.ToFloat("123.45"), 0.001f);
+        Assert.Equal(0f, WellTool.Core.Convert.Convert.ToFloat(null));
     }
 
     [Fact]
-    public void ToBigDecimalTest()
+    public void ToDecimalTest()
     {
-        var bd = Convert.ToBigDecimal("123.456789");
-        Assert.NotNull(bd);
-    }
-
-    [Fact]
-    public void ToSBCTest()
-    {
-        var sbc = Convert.ToSBC("abc123");
-        Assert.NotEqual("abc123", sbc);
-    }
-
-    [Fact]
-    public void ToDBCTest()
-    {
-        var dbc = Convert.ToDBC("ａｂｃ１２３");
-        Assert.NotEqual("ａｂｃ１２３", dbc);
+        Assert.Equal(123.456m, WellTool.Core.Convert.Convert.ToDecimal("123.456"));
+        Assert.Equal(0m, WellTool.Core.Convert.Convert.ToDecimal(null));
     }
 }

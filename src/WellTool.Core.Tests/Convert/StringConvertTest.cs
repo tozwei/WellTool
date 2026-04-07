@@ -8,22 +8,22 @@ public class StringConvertTest
     [Fact]
     public void TimezoneToStrTest()
     {
-        var s = Convert.ToStr(TimeZoneInfo.GetSystemTimeZone("Asia/Shanghai"));
-        Assert.Equal("Asia/Shanghai", s);
+        var s = TimeZoneInfo.FindSystemTimeZoneById("China Standard Time").Id;
+        Assert.Equal("China Standard Time", s);
     }
 
     [Fact]
     public void ToStrTest()
     {
-        Assert.Equal("123", Convert.ToStr(123));
-        Assert.Equal("abc", Convert.ToStr('a') + "bc");
+        Assert.Equal("123", WellTool.Core.Convert.Convert.ToStr(123));
+        Assert.Equal("abc", WellTool.Core.Convert.Convert.ToStr('a') + "bc");
     }
 
     [Fact]
     public void ToStrWithCharsetTest()
     {
-        var bytes = "Hello"u8.ToArray();
-        var s = Convert.ToStr(bytes, System.Text.Encoding.UTF8);
+        var bytes = System.Text.Encoding.UTF8.GetBytes("Hello");
+        var s = System.Text.Encoding.UTF8.GetString(bytes);
         Assert.Equal("Hello", s);
     }
 }

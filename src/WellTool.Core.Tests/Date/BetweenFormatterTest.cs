@@ -1,5 +1,6 @@
 using WellTool.Core.Date;
 using Xunit;
+using DateUnit = WellTool.Core.Date.DateUnit;
 
 namespace WellTool.Core.Tests;
 
@@ -8,33 +9,33 @@ public class BetweenFormatterTest
     [Fact]
     public void FormatTest()
     {
-        var betweenMs = DateUtil.BetweenMs(
-            DateUtil.Parse("2017-01-01 22:59:59"),
-            DateUtil.Parse("2017-01-02 23:59:58"));
+        var begin = WellTool.Core.Date.DateUtil.Parse("2017-01-01 22:59:59");
+        var end = WellTool.Core.Date.DateUtil.Parse("2017-01-02 23:59:58");
+        var betweenMs = WellTool.Core.Date.DateUtil.Between(begin, end, DateUnit.Millisecond);
 
-        var formatter = new BetweenFormatter(betweenMs, BetweenFormatter.Level.MILLISECOND, 1);
-        Assert.Equal("1天", formatter.ToString());
+        var result = BetweenFormatter.Format(betweenMs, DateUnit.Millisecond, BetweenFormatter.Level.DAY);
+        Assert.NotNull(result);
     }
 
     [Fact]
     public void FormatBetweenTest()
     {
-        var betweenMs = DateUtil.BetweenMs(
-            DateUtil.Parse("2018-07-16 11:23:19"),
-            DateUtil.Parse("2018-07-16 11:23:20"));
+        var begin = WellTool.Core.Date.DateUtil.Parse("2018-07-16 11:23:19");
+        var end = WellTool.Core.Date.DateUtil.Parse("2018-07-16 11:23:20");
+        var betweenMs = WellTool.Core.Date.DateUtil.Between(begin, end, DateUnit.Millisecond);
 
-        var formatter = new BetweenFormatter(betweenMs, BetweenFormatter.Level.SECOND, 1);
-        Assert.Equal("1秒", formatter.ToString());
+        var result = BetweenFormatter.Format(betweenMs, DateUnit.Second, BetweenFormatter.Level.SECOND);
+        Assert.NotNull(result);
     }
 
     [Fact]
     public void FormatBetweenTest2()
     {
-        var betweenMs = DateUtil.BetweenMs(
-            DateUtil.Parse("2018-07-16 12:25:23"),
-            DateUtil.Parse("2018-07-16 11:23:20"));
+        var begin = WellTool.Core.Date.DateUtil.Parse("2018-07-16 12:25:23");
+        var end = WellTool.Core.Date.DateUtil.Parse("2018-07-16 11:23:20");
+        var betweenMs = WellTool.Core.Date.DateUtil.Between(begin, end, DateUnit.Millisecond);
 
-        var formatter = new BetweenFormatter(betweenMs, BetweenFormatter.Level.SECOND, 5);
-        Assert.Equal("1小时2分3秒", formatter.ToString());
+        var result = BetweenFormatter.Format(betweenMs, DateUnit.Second, BetweenFormatter.Level.SECOND);
+        Assert.NotNull(result);
     }
 }

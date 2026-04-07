@@ -17,7 +17,8 @@ public class SimpleCacheLastTest
     public void GetWithDefaultTest()
     {
         var cache = new SimpleCache<string, string>();
-        var result = cache.Get("nonexistent", () => "default");
+        // 使用完全限定名来避免二义性
+        var result = cache.Get("nonexistent", new WellTool.Core.Lang.Func<string>(() => "default"));
         Xunit.Assert.Equal("default", result);
     }
 }

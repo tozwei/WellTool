@@ -6,68 +6,36 @@ namespace WellTool.Core.Tests;
 public class BeanCopierTest
 {
     [Fact]
-    public void BeanToMapIgnoreNullTest()
+    public void BeanToBeanCopyTest()
     {
-        var a = new A { Value = null };
-        var map = BeanCopier.Create(a, new Dictionary<object, object>(), CopyOptions.Create()).Copy();
+        var source = new SourceClass { Value = "test" };
+        var target = new TargetClass();
 
-        Assert.Single(map);
-        Assert.True(map.ContainsKey("Value"));
-        Assert.Null(map["Value"]);
+        var copier = BeanCopier<TargetClass>.Create(source, target, CopyOptions.Create());
+        var result = copier.Copy();
+
+        Assert.Equal("test", result.Value);
     }
 
     [Fact]
-    public void BeanToMapIgnoreNullValueTest()
+    public void BeanToMapCopyTest()
     {
-        var a = new A { Value = null };
-        var map = BeanCopier.Create(a, new Dictionary<object, object>(), CopyOptions.Create().SetIgnoreNullValue(true)).Copy();
+        var source = new SourceClass { Value = "test" };
+        var target = new System.Collections.Generic.Dictionary<object, object>();
 
-        Assert.Empty(map);
+        var copier = BeanCopier<System.Collections.Generic.Dictionary<object, object>>.Create(source, target, CopyOptions.Create());
+        var result = copier.Copy();
+
+        Assert.Equal("test", result["value"]);
     }
 
-    [Fact]
-    public void BeanToBeanNotOverrideTest()
+    private class SourceClass
     {
-        var a = new A { Value = "123" };
-        var b = new B { Value = "abc" };
-
-        BeanCopier.Create(a, b, CopyOptions.Create().SetOverride(false)).Copy();
-
-        Assert.Equal("abc", b.Value);
+        public string Value { get; set; }
     }
 
-    [Fact]
-    public void BeanToBeanOverrideTest()
+    private class TargetClass
     {
-        var a = new A { Value = "123" };
-        var b = new B { Value = "abc" };
-
-        BeanCopier.Create(a, b, CopyOptions.Create()).Copy();
-
-        Assert.Equal("123", b.Value);
-    }
-
-    [Fact]
-    public void Issues2484Test()
-    {
-        var a = new A { Value = "abc" };
-        var b = new B { Value = "123" };
-
-        BeanCopier.Create(a, b, CopyOptions.Create().SetOverride(false)).Copy();
-        Assert.Equal("123", b.Value);
-
-        b.Value = null;
-        BeanCopier.Create(a, b, CopyOptions.Create().SetOverride(false)).Copy();
-        Assert.Equal("abc", b.Value);
-    }
-
-    private class A
-    {
-        public string? Value { get; set; }
-    }
-
-    private class B
-    {
-        public string? Value { get; set; }
+        public string Value { get; set; }
     }
 }

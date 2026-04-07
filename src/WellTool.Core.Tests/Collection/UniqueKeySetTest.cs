@@ -8,7 +8,7 @@ public class UniqueKeySetTest
     [Fact]
     public void AddTest()
     {
-        var set = new UniqueKeySet<UniqueTestBean>(x => x.Id);
+        var set = new UniqueKeySet<string, UniqueTestBean>(x => x.Id);
         set.Add(new UniqueTestBean("id1", "张三", "地球"));
         set.Add(new UniqueTestBean("id2", "李四", "火星"));
         // id重复，替换之前的元素
@@ -21,7 +21,7 @@ public class UniqueKeySetTest
     [Fact]
     public void ContainsTest()
     {
-        var set = new UniqueKeySet<UniqueTestBean>(x => x.Id);
+        var set = new UniqueKeySet<string, UniqueTestBean>(x => x.Id);
         var bean1 = new UniqueTestBean("id1", "张三", "地球");
         set.Add(bean1);
 

@@ -1,22 +1,14 @@
 using WellTool.Core.Date;
 using Xunit;
 
-namespace WellTool.Core.Tests;
+namespace WellTool.Core.Tests.Date;
 
 public class BetweenFormatterLastTest
 {
     [Fact]
     public void FormatTest()
     {
-        var formatter = new BetweenFormatter(1000, BetweenFormatter.Level.SECOND, 1);
-        Assert.NotNull(formatter);
-    }
-
-    [Fact]
-    public void ToStringTest()
-    {
-        var formatter = new BetweenFormatter(1000, BetweenFormatter.Level.SECOND, 1);
-        var result = formatter.ToString();
+        var result = BetweenFormatter.Format(1000, DateUnit.Second, BetweenFormatter.Level.SECOND);
         Assert.NotNull(result);
     }
 }

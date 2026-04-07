@@ -1,17 +1,15 @@
+using WellTool.Core.Util;
 using Xunit;
 
 namespace WellTool.Core.Tests
 {
-    /// <summary>
-    /// Byte工具单元测试
-    /// </summary>
     public class ByteUtilTest
     {
         [Fact]
         public void ToLongTest()
         {
             var bytes = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x2B };
-            var result = WellTool.Core.Util.ByteUtil.ToLong(bytes);
+            var result = ByteUtil.ToLong(bytes);
             Assert.Equal(299L, result);
         }
 
@@ -19,7 +17,7 @@ namespace WellTool.Core.Tests
         public void ToIntTest()
         {
             var bytes = new byte[] { 0x00, 0x00, 0x01, 0x2B };
-            var result = WellTool.Core.Util.ByteUtil.ToInt(bytes);
+            var result = ByteUtil.ToInt(bytes);
             Assert.Equal(299, result);
         }
 
@@ -27,7 +25,7 @@ namespace WellTool.Core.Tests
         public void ToShortTest()
         {
             var bytes = new byte[] { 0x01, 0x2B };
-            var result = WellTool.Core.Util.ByteUtil.ToShort(bytes);
+            var result = ByteUtil.ToShort(bytes);
             Assert.Equal((short)299, result);
         }
 
@@ -35,31 +33,29 @@ namespace WellTool.Core.Tests
         public void ToHexStringTest()
         {
             var bytes = new byte[] { 0x01, 0x2B };
-            var result = WellTool.Core.Util.ByteUtil.ToHexString(bytes);
+            var result = ByteUtil.ToHexString(bytes);
             Assert.Equal("012B", result);
         }
 
         [Fact]
         public void FromHexStringTest()
         {
-            var result = WellTool.Core.Util.ByteUtil.FromHexString("012B");
+            var result = ByteUtil.FromHexString("012B");
             Assert.Equal(new byte[] { 0x01, 0x2B }, result);
         }
 
         [Fact]
-        public void IsEmptyTest()
+        public void ToBytesIntTest()
         {
-            Assert.True(WellTool.Core.Util.ByteUtil.IsEmpty(null));
-            Assert.True(WellTool.Core.Util.ByteUtil.IsEmpty(new byte[0]));
-            Assert.False(WellTool.Core.Util.ByteUtil.IsEmpty(new byte[] { 0x01 }));
+            var bytes = ByteUtil.ToBytes(299);
+            Assert.Equal(4, bytes.Length);
         }
 
         [Fact]
-        public void ToBinaryStringTest()
+        public void ToBytesLongTest()
         {
-            var b = (byte)0x3A;
-            var result = WellTool.Core.Util.ByteUtil.ToBinaryString(b);
-            Assert.Equal("00111010", result);
+            var bytes = ByteUtil.ToBytes(299L);
+            Assert.Equal(8, bytes.Length);
         }
     }
 }

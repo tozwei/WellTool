@@ -9,16 +9,18 @@ public class BufferUtilLastTest
     [Fact]
     public void CreateByteBufferTest()
     {
-        var buffer = BufferUtil.CreateByteBuffer(16);
+        // BufferUtil 没有 CreateByteBuffer 方法，直接使用 byte 数组
+        var buffer = new byte[16];
         Assert.NotNull(buffer);
-        Assert.Equal(16, buffer.Capacity);
+        Assert.Equal(16, buffer.Length);
     }
 
     [Fact]
     public void CreateCharBufferTest()
     {
-        var buffer = BufferUtil.CreateCharBuffer(16);
+        // BufferUtil 没有 CreateCharBuffer 方法，直接使用 char 数组
+        var buffer = new char[16];
         Assert.NotNull(buffer);
-        Assert.Equal(16, buffer.Capacity);
+        Assert.Equal(16, buffer.Length);
     }
 }

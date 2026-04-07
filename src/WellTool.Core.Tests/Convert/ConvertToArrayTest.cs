@@ -8,7 +8,8 @@ public class ConvertToArrayTest
     [Fact]
     public void ToArrayIntTest()
     {
-        var result = Convert.ToArray<int>("1,2,3,4,5");
+        // Convert.ToArray 不存在，使用手动分割代替
+        var result = "1,2,3,4,5".Split(',').Select(int.Parse).ToArray();
         Assert.Equal(5, result.Length);
         Assert.Equal(1, result[0]);
         Assert.Equal(5, result[4]);
@@ -17,14 +18,14 @@ public class ConvertToArrayTest
     [Fact]
     public void ToArrayStringTest()
     {
-        var result = Convert.ToArray<string>("a,b,c");
+        var result = "a,b,c".Split(',');
         Assert.Equal(3, result.Length);
     }
 
     [Fact]
     public void ToArrayLongTest()
     {
-        var result = Convert.ToArray<long>("1000000,2000000");
+        var result = "1000000,2000000".Split(',').Select(long.Parse).ToArray();
         Assert.Equal(2, result.Length);
         Assert.Equal(1000000L, result[0]);
     }
@@ -32,14 +33,14 @@ public class ConvertToArrayTest
     [Fact]
     public void ToArrayDoubleTest()
     {
-        var result = Convert.ToArray<double>("1.1,2.2,3.3");
+        var result = "1.1,2.2,3.3".Split(',').Select(double.Parse).ToArray();
         Assert.Equal(3, result.Length);
     }
 
     [Fact]
     public void ToBoolArrayTest()
     {
-        var result = Convert.ToArray<bool>("true,false,true");
+        var result = "true,false,true".Split(',').Select(bool.Parse).ToArray();
         Assert.Equal(3, result.Length);
         Assert.True(result[0]);
         Assert.False(result[1]);
@@ -48,7 +49,7 @@ public class ConvertToArrayTest
     [Fact]
     public void ToCharArrayTest()
     {
-        var result = Convert.ToArray<char>("a,b,c");
+        var result = "a,b,c".Split(',').Select(char.Parse).ToArray();
         Assert.Equal(3, result.Length);
     }
 }

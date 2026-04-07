@@ -1,8 +1,7 @@
-using WellTool.Core.Convert;
-using WellTool.Core.Converter;
 using Xunit;
+using System.Linq;
 
-namespace WellTool.Core.Tests;
+namespace WellTool.Core.Tests.Convert;
 
 public class CastUtilTest
 {
@@ -10,41 +9,32 @@ public class CastUtilTest
     public void CastTest()
     {
         var obj = "Hello" as object;
-        var str = CastUtil.Cast<string>(obj);
+        var str = WellTool.Core.Converter.CastUtil.Cast<string>(obj);
         Assert.Equal("Hello", str);
     }
 
     [Fact]
-    public void CastToIntTest()
+    public void CastToTest()
     {
-        Assert.Equal(123, CastUtil.CastToInt(123.45));
-        Assert.Equal(123, CastUtil.CastToInt("123"));
+        var obj = "123" as object;
+        var result = WellTool.Core.Converter.CastUtil.CastTo<int>(obj);
+        Assert.Equal(123, result);
     }
 
     [Fact]
-    public void CastToLongTest()
+    public void CastUpTest()
     {
-        Assert.Equal(123L, CastUtil.CastToLong(123));
-        Assert.Equal(123L, CastUtil.CastToLong("123"));
+        var collection = new System.Collections.ObjectModel.Collection<object> { "a", "b", "c" };
+        var result = WellTool.Core.Converter.CastUtil.CastUp<string>(collection);
+        Assert.Equal(3, result.Count);
+        Assert.Equal("a", result.ElementAt(0));
     }
 
     [Fact]
-    public void CastToStringTest()
+    public void CastDownTest()
     {
-        Assert.Equal("123", CastUtil.CastToString(123));
-        Assert.Equal("Hello", CastUtil.CastToString("Hello"));
-    }
-
-    [Fact]
-    public void CastToBoolTest()
-    {
-        Assert.True(CastUtil.CastToBool(1));
-        Assert.False(CastUtil.CastToBool(0));
-    }
-
-    [Fact]
-    public void CastToDoubleTest()
-    {
-        Assert.Equal(123.45, CastUtil.CastToDouble("123.45"), 0.001);
+        var collection = new System.Collections.ObjectModel.Collection<object> { "a", "b", "c" };
+        var result = WellTool.Core.Converter.CastUtil.CastDown<object>(collection);
+        Assert.Equal(3, result.Count);
     }
 }

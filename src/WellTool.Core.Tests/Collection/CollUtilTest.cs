@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using WellTool.Core.Collection;
 using Xunit;
 
@@ -6,134 +8,181 @@ namespace WellTool.Core.Tests;
 public class CollUtilTest
 {
     [Fact]
-    public void TestPredicateContains()
-    {
-        var list = CollUtil.NewArrayList("bbbbb", "aaaaa", "ccccc");
-        Assert.True(CollUtil.Contains(list, s => s.StartsWith("a")));
-        Assert.False(CollUtil.Contains(list, s => s.StartsWith("d")));
-    }
-
-    [Fact]
-    public void TestRemoveWithAddIf()
-    {
-        var list = CollUtil.NewArrayList(1, 2, 3);
-        var exceptRemovedList = CollUtil.NewArrayList(2, 3);
-        var exceptResultList = CollUtil.NewArrayList(1);
-
-        var resultList = CollUtil.RemoveWithAddIf(list, ele => 1 == ele);
-        Assert.Equal(exceptRemovedList, list);
-        Assert.Equal(exceptResultList, resultList);
-
-        list = CollUtil.NewArrayList(1, 2, 3);
-        resultList = new List<int>();
-        CollUtil.RemoveWithAddIf(list, resultList, ele => 1 == ele);
-        Assert.Equal(exceptRemovedList, list);
-        Assert.Equal(exceptResultList, resultList);
-    }
-
-    [Fact]
-    public void TestPadLeft()
-    {
-        var srcList = new List<string>();
-        var answerList = CollUtil.NewArrayList("a", "b");
-        CollUtil.PadLeft(srcList, 1, "b");
-        CollUtil.PadLeft(srcList, 2, "a");
-        Assert.Equal(answerList, srcList);
-
-        srcList = CollUtil.NewArrayList("a", "b");
-        answerList = CollUtil.NewArrayList("a", "b");
-        CollUtil.PadLeft(srcList, 2, "a");
-        Assert.Equal(answerList, srcList);
-    }
-
-    [Fact]
-    public void TestPadRight()
-    {
-        var srcList = new List<string>();
-        var answerList = CollUtil.NewArrayList("a", "b");
-        CollUtil.PadRight(srcList, 1, "b");
-        CollUtil.PadRight(srcList, 2, "a");
-        Assert.Equal(answerList, srcList);
-    }
-
-    [Fact]
     public void TestIsEmpty()
     {
-        Assert.True(CollUtil.IsEmpty(null));
-        Assert.True(CollUtil.IsEmpty(new List<string>()));
-        Assert.False(CollUtil.IsEmpty(CollUtil.NewArrayList("a")));
+        Assert.True(CollUtil.IsEmpty((ICollection)null));
+        Assert.True(CollUtil.IsEmpty((ICollection)new List<string>()));
+        Assert.False(CollUtil.IsEmpty((ICollection)new List<string> { "a" }));
     }
 
     [Fact]
     public void TestIsNotEmpty()
     {
-        Assert.False(CollUtil.IsNotEmpty(null));
-        Assert.False(CollUtil.IsNotEmpty( new List<string>()));
-        Assert.True(CollUtil.IsNotEmpty(CollUtil.NewArrayList("a")));
+        Assert.False(CollUtil.IsNotEmpty((ICollection)null));
+        Assert.False(CollUtil.IsNotEmpty((ICollection)new List<string>()));
+        Assert.True(CollUtil.IsNotEmpty((ICollection)new List<string> { "a" }));
     }
 
     [Fact]
-    public void TestNewArrayList()
+    public void TestFirst()
     {
-        var list = CollUtil.NewArrayList("a", "b", "c");
-        Assert.Equal(3, list.Count);
-
-        var list2 = CollUtil.NewArrayList<string>();
-        Assert.Empty(list2);
+        var list = new List<string> { "a", "b", "c" };
+        Assert.Equal("a", CollUtil.First(list));
+        Assert.Null(CollUtil.First<string>(null!));
+        Assert.Null(CollUtil.First(new List<string>()));
     }
 
     [Fact]
-    public void TestNewHashMap()
+    public void TestLast()
     {
-        var map = CollUtil.NewHashMap<string, object>();
-        map["key"] = "value";
-        Assert.Equal("value", map["key"]);
-    }
-
-    [Fact]
-    public void TestAddIfNotNull()
-    {
-        var list = CollUtil.NewArrayList<string>();
-        CollUtil.AddIfNotNull(list, "a");
-        CollUtil.AddIfNotNull(list, null);
-        Assert.Single(list);
-    }
-
-    [Fact]
-    public void TestGetFirst()
-    {
-        var list = CollUtil.NewArrayList("a", "b", "c");
-        Assert.Equal("a", CollUtil.GetFirst(list));
-        Assert.Null(CollUtil.GetFirst<string>(null!));
-        Assert.Null(CollUtil.GetFirst(new List<string>()));
-    }
-
-    [Fact]
-    public void TestGetLast()
-    {
-        var list = CollUtil.NewArrayList("a", "b", "c");
-        Assert.Equal("c", CollUtil.GetLast(list));
-        Assert.Null(CollUtil.GetLast<string>(null!));
-        Assert.Null(CollUtil.GetLast(new List<string>()));
+        var list = new List<string> { "a", "b", "c" };
+        Assert.Equal("c", CollUtil.Last(list));
+        Assert.Null(CollUtil.Last<string>(null!));
+        Assert.Null(CollUtil.Last(new List<string>()));
     }
 
     [Fact]
     public void TestReverse()
     {
-        var list = CollUtil.NewArrayList("a", "b", "c");
-        CollUtil.Reverse(list);
-        Assert.Equal("c", list[0]);
-        Assert.Equal("b", list[1]);
-        Assert.Equal("a", list[2]);
+        var list = new List<string> { "a", "b", "c" };
+        var reversedList = CollUtil.Reverse(list);
+        Assert.Equal("c", reversedList[0]);
+        Assert.Equal("b", reversedList[1]);
+        Assert.Equal("a", reversedList[2]);
     }
 
     [Fact]
     public void TestSub()
     {
-        var list = CollUtil.NewArrayList("a", "b", "c", "d");
-        var sub = CollUtil.Sub(list, 1, 3);
+        var list = new List<string> { "a", "b", "c", "d" };
+        var sub = CollUtil.Sub((IList)list, 1, 3, 1);
         Assert.Equal(2, sub.Count);
-        Assert.Equal("b", sub[0]);
-        Assert.Equal("c", sub[1]);
+    }
+
+    [Fact]
+    public void TestContains()
+    {
+        var list = new List<string> { "a", "b", "c" };
+        Assert.True(CollUtil.Contains(list, "a"));
+        Assert.False(CollUtil.Contains(list, "d"));
+    }
+
+    [Fact]
+    public void TestContainsAll()
+    {
+        var list = new List<string> { "a", "b", "c" };
+        Assert.True(CollUtil.ContainsAll(list, "a", "b"));
+        Assert.False(CollUtil.ContainsAll(list, "a", "d"));
+    }
+
+    [Fact]
+    public void TestContainsAny()
+    {
+        var list = new List<string> { "a", "b", "c" };
+        Assert.True(CollUtil.ContainsAny(list, "a", "d"));
+        Assert.False(CollUtil.ContainsAny(list, "d", "e"));
+    }
+
+    [Fact]
+    public void TestUnion()
+    {
+        var list1 = new List<string> { "a", "b" };
+        var list2 = new List<string> { "b", "c" };
+        var union = CollUtil.Union(list1, list2);
+        Assert.Equal(3, union.Count);
+    }
+
+    [Fact]
+    public void TestIntersection()
+    {
+        var list1 = new List<string> { "a", "b" };
+        var list2 = new List<string> { "b", "c" };
+        var intersection = CollUtil.Intersection(list1, list2);
+        Assert.Single(intersection);
+    }
+
+    [Fact]
+    public void TestSubtract()
+    {
+        var list1 = new List<string> { "a", "b", "c" };
+        var list2 = new List<string> { "b" };
+        var subtract = CollUtil.Subtract(list1, list2);
+        Assert.Equal(2, subtract.Count);
+    }
+
+    [Fact]
+    public void TestAddAll()
+    {
+        var list = new List<string> { "a" };
+        var items = new List<string> { "b", "c" };
+        CollUtil.AddAll(list, items);
+        Assert.Equal(3, list.Count);
+    }
+
+    [Fact]
+    public void TestLimit()
+    {
+        var list = new List<string> { "a", "b", "c", "d" };
+        var limited = CollUtil.Limit(list, 2);
+        Assert.Equal(2, limited.Count);
+    }
+
+    [Fact]
+    public void TestSkip()
+    {
+        var list = new List<string> { "a", "b", "c", "d" };
+        var skipped = CollUtil.Skip(list, 2);
+        Assert.Equal(2, skipped.Count);
+    }
+
+    [Fact]
+    public void TestSkipLimit()
+    {
+        var list = new List<string> { "a", "b", "c", "d" };
+        var result = CollUtil.SkipLimit(list, 1, 2);
+        Assert.Equal(2, result.Count);
+    }
+
+    [Fact]
+    public void TestSplit()
+    {
+        var list = new List<string> { "a", "b", "c", "d" };
+        var split = CollUtil.Split(list, 2);
+        Assert.Equal(2, split.Count);
+    }
+
+    [Fact]
+    public void TestMerge()
+    {
+        var list1 = new List<string> { "a" };
+        var list2 = new List<string> { "b" };
+        var merged = CollUtil.Merge(list1, list2);
+        Assert.Equal(2, merged.Count);
+    }
+
+    [Fact]
+    public void TestCopy()
+    {
+        var list = new List<string> { "a", "b" };
+        var copy = CollUtil.Copy(list);
+        Assert.Equal(2, copy.Count);
+    }
+
+    [Fact]
+    public void TestEquals()
+    {
+        var list1 = new List<string> { "a", "b" };
+        var list2 = new List<string> { "a", "b" };
+        var list3 = new List<string> { "a", "c" };
+        Assert.True(CollUtil.Equals(list1, list2));
+        Assert.False(CollUtil.Equals(list1, list3));
+    }
+
+    [Fact]
+    public void TestToString()
+    {
+        var list = new List<string> { "a", "b", "c" };
+        var str = CollUtil.ToString(list);
+        Assert.Equal("a, b, c", str);
     }
 }

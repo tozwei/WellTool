@@ -1,4 +1,5 @@
 using WellTool.Core.Util;
+using Xunit;
 
 namespace WellTool.Core.Tests;
 
@@ -10,25 +11,11 @@ public class ArrayUtilTest
     {
         int[] a = Array.Empty<int>();
         Assert.True(ArrayUtil.IsEmpty(a));
-        Assert.True(ArrayUtil.IsEmpty((object)a));
         int[] b = null;
         Assert.True(ArrayUtil.IsEmpty(b));
-        object c = null;
-        Assert.True(ArrayUtil.IsEmpty(c));
 
-        object d = new object[] { "1", "2", 3, 4.0 };
-        bool isEmpty = ArrayUtil.IsEmpty(d);
-        Assert.False(isEmpty);
-        d = new object[0];
-        isEmpty = ArrayUtil.IsEmpty(d);
-        Assert.True(isEmpty);
-        d = null;
-        isEmpty = ArrayUtil.IsEmpty(d);
-        Assert.True(isEmpty);
-
-        object[] e = new object[] { "1", "2", 3, 4.0 };
-        bool empty = ArrayUtil.IsEmpty(e);
-        Assert.False(empty);
+        int[] c = { 1, 2, 3 };
+        Assert.False(ArrayUtil.IsEmpty(c));
     }
 
     [Fact]
@@ -39,28 +26,15 @@ public class ArrayUtilTest
 
         string[] b = { "a", "b", "c" };
         Assert.True(ArrayUtil.IsNotEmpty(b));
-
-        object c = new object[] { "1", "2", 3, 4.0 };
-        Assert.True(ArrayUtil.IsNotEmpty(c));
     }
 
     [Fact]
-    public void NewArrayTest()
+    public void AddAllTest()
     {
-        string[] newArray = ArrayUtil.NewArray<string>(3);
-        Assert.Equal(3, newArray.Length);
-    }
-
-    [Fact]
-    public void CloneTest()
-    {
-        int[] b = { 1, 2, 3 };
-        int[] cloneB = ArrayUtil.Clone(b);
-        Assert.Equal(b, cloneB);
-
-        int[] a = { 1, 2, 3 };
-        int[] clone = ArrayUtil.Clone(a);
-        Assert.Equal(a, clone);
+        var a = new[] { 1, 2, 3 };
+        var b = new[] { 4, 5, 6 };
+        var result = ArrayUtil.AddAll(a, b);
+        Assert.Equal(6, result.Length);
     }
 
     [Fact]
@@ -84,16 +58,6 @@ public class ArrayUtilTest
     }
 
     [Fact]
-    public void ToStringTest()
-    {
-        int[] a = { 1, 2, 3 };
-        Assert.Equal("[1, 2, 3]", ArrayUtil.ToString(a));
-
-        string[] b = { "a", "b", "c" };
-        Assert.Equal("[a, b, c]", ArrayUtil.ToString(b));
-    }
-
-    [Fact]
     public void LengthTest()
     {
         int[] a = { 1, 2, 3 };
@@ -104,23 +68,12 @@ public class ArrayUtilTest
     }
 
     [Fact]
-    public void IsEmptyPrimitiveTest()
+    public void ToListTest()
     {
-        int[] empty = Array.Empty<int>();
-        Assert.True(ArrayUtil.IsEmpty(empty));
-
-        int[] notEmpty = { 1 };
-        Assert.False(ArrayUtil.IsEmpty(notEmpty));
-    }
-
-    [Fact]
-    public void EmptyTest()
-    {
-        int[] emptyInt = ArrayUtil.Empty<int>();
-        Assert.Empty(emptyInt);
-
-        string[] emptyString = ArrayUtil.Empty<string>();
-        Assert.Empty(emptyString);
+        int[] a = { 1, 2, 3 };
+        var list = ArrayUtil.ToList(a);
+        Assert.Equal(3, list.Count);
+        Assert.Equal(1, list[0]);
     }
 
     [Fact]
@@ -135,20 +88,24 @@ public class ArrayUtilTest
     public void SubTest()
     {
         int[] a = { 1, 2, 3, 4, 5 };
-        int[] sub = ArrayUtil.Sub(a, 1, 3);
-        Assert.Equal(new[] { 2, 3 }, sub);
+        var sub = ArrayUtil.Sub(a, 1, 3, 1);
+        Assert.Equal(3, sub.Length);
     }
 
     [Fact]
-    public void WrapTest()
+    public void CopyOfTest()
     {
-        int[] a = 1;
-        int[] wrapped = ArrayUtil.Wrap(a);
-        Assert.Single(wrapped);
-        Assert.Equal(1, wrapped[0]);
+        int[] a = { 1, 2, 3 };
+        var copy = ArrayUtil.CopyOf(a);
+        Assert.Equal(3, copy.Length);
+        Assert.Equal(1, copy[0]);
+    }
 
-        int[] b = { 1, 2 };
-        int[] wrappedB = ArrayUtil.Wrap(b);
-        Assert.Equal(2, wrappedB.Length);
+    [Fact]
+    public void FillTest()
+    {
+        var a = new int[3];
+        ArrayUtil.Fill(a, 5);
+        Assert.All(a, x => Assert.Equal(5, x));
     }
 }

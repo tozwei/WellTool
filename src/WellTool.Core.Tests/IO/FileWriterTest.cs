@@ -2,7 +2,7 @@ using WellTool.Core.IO;
 using Xunit;
 using System.IO;
 
-namespace WellTool.Core.Tests;
+namespace WellTool.Core.Tests.IO;
 
 public class FileWriterTest
 {
@@ -14,8 +14,6 @@ public class FileWriterTest
         {
             var writer = new FileWriter(tempFile);
             writer.Write("Hello, 世界!");
-            writer.Flush();
-            writer.Close();
 
             var content = File.ReadAllText(tempFile, System.Text.Encoding.UTF8);
             Assert.Equal("Hello, 世界!", content);
@@ -34,13 +32,9 @@ public class FileWriterTest
         {
             var writer = new FileWriter(tempFile);
             writer.Write("Hello");
-            writer.Flush();
-            writer.Close();
 
-            writer = new FileWriter(tempFile, System.Text.Encoding.UTF8, FileMode.Append);
+            writer = new FileWriter(new FileInfo(tempFile), System.Text.Encoding.UTF8, FileMode.Append);
             writer.Write(" World");
-            writer.Flush();
-            writer.Close();
 
             var content = File.ReadAllText(tempFile, System.Text.Encoding.UTF8);
             Assert.Equal("Hello World", content);
@@ -59,8 +53,6 @@ public class FileWriterTest
         {
             var writer = new FileWriter(tempFile);
             writer.WriteLines(new[] { "line1", "line2", "line3" });
-            writer.Flush();
-            writer.Close();
 
             var content = File.ReadAllText(tempFile, System.Text.Encoding.UTF8);
             Assert.Contains("line1", content);

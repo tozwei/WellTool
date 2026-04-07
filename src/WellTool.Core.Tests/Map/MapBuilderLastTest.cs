@@ -8,14 +8,14 @@ public class MapBuilderLastTest
     [Fact]
     public void CreateTest()
     {
-        var builder = MapBuilder.Create<string, string>();
+        var builder = MapBuilder<string, string>.Create();
         Assert.NotNull(builder);
     }
 
     [Fact]
     public void BuildTest()
     {
-        var map = MapBuilder.Create<string, string>()
+        var map = MapBuilder<string, string>.Create()
             .Put("key", "value")
             .Build();
         Assert.NotNull(map);

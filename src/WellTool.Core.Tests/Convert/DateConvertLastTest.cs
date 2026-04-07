@@ -7,17 +7,17 @@ namespace WellTool.Core.Tests;
 public class DateConvertLastTest
 {
     [Fact]
-    public void ToDateTest()
+    public void ToDateTimeTest()
     {
-        var result = Convert.ToDate("2024-01-01");
+        var result = WellTool.Core.Convert.Convert.ToDateTime("2024-01-01");
         Assert.NotNull(result);
     }
 
     [Fact]
-    public void ToDateFromLongTest()
+    public void ToDateTimeFromLongTest()
     {
         var timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-        var result = Convert.ToDate(timestamp);
+        var result = WellTool.Core.Convert.Convert.ToDateTime(timestamp);
         Assert.NotNull(result);
     }
 }

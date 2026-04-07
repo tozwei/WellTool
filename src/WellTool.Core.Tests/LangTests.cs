@@ -10,9 +10,11 @@ namespace WellTool.Core.Tests
         [Fact]
         public void TestSingleton()
         {
-            var instance1 = WellTool.Core.Lang.Singleton.Get<TestObject>();
-            var instance2 = WellTool.Core.Lang.Singleton.Get<TestObject>();
-            XAssert.Same(instance1, instance2);
+            // Singleton.Get 需要 key + supplier 方式
+            // 使用公共类来测试
+            var instance1 = WellTool.Core.Lang.Singleton.Get<string>("singleton_test_key", () => "test");
+            var instance2 = WellTool.Core.Lang.Singleton.Get<string>("singleton_test_key", () => "test");
+            XAssert.Equal(instance1, instance2);
         }
 
         [Fact]

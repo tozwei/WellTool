@@ -1,5 +1,6 @@
 using WellTool.Core.Collection;
 using Xunit;
+using System.Collections.Generic;
 
 namespace WellTool.Core.Tests;
 
@@ -8,13 +9,13 @@ public class PartitionIterTest
     [Fact]
     public void IterTest()
     {
-        var list = CollUtil.NewArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9);
-        var iter = new PartitionIter<int>(() => list.GetEnumerator(), 3);
+        var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        var iter = new PartitionIter<int>(list, 3);
 
         var partitions = new List<List<int>>();
-        while (iter.MoveNext())
+        foreach (var partition in iter)
         {
-            partitions.Add(new List<int>(iter.Current));
+            partitions.Add(partition);
         }
 
         Assert.Equal(3, partitions.Count);
@@ -26,13 +27,12 @@ public class PartitionIterTest
     [Fact]
     public void IterMaxTest()
     {
-        var list = CollUtil.NewArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 0, 12, 45, 12);
-        var iter = new PartitionIter<int>(() => list.GetEnumerator(), 3);
+        var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 0, 12, 45, 12 };
+        var iter = new PartitionIter<int>(list, 3);
 
         var max = 0;
-        while (iter.MoveNext())
+        foreach (var partition in iter)
         {
-            var partition = iter.Current;
             foreach (var num in partition)
             {
                 if (num > max)
@@ -45,13 +45,13 @@ public class PartitionIterTest
     [Fact]
     public void PartitionSizeTest()
     {
-        var list = CollUtil.NewArrayList(1, 2, 3, 4, 5);
-        var iter = new PartitionIter<int>(() => list.GetEnumerator(), 2);
+        var list = new List<int> { 1, 2, 3, 4, 5 };
+        var iter = new PartitionIter<int>(list, 2);
 
         var partitions = new List<List<int>>();
-        while (iter.MoveNext())
+        foreach (var partition in iter)
         {
-            partitions.Add(new List<int>(iter.Current));
+            partitions.Add(partition);
         }
 
         Assert.Equal(3, partitions.Count);

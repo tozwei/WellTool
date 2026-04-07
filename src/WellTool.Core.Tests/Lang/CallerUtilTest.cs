@@ -6,12 +6,12 @@ namespace WellTool.Core.Tests;
 public class CallerUtilTest
 {
     [Fact]
-    public void GetCallerMethodNameTest()
+    public void GetCallerTest()
     {
-        var callerMethodName = CallerUtil.GetCallerMethodName(false);
-        Assert.Equal("GetCallerMethodNameTest", callerMethodName);
+        var caller = CallerUtil.GetCaller();
+        Assert.Equal(typeof(CallerUtilTest), caller);
 
-        var fullCallerMethodName = CallerUtil.GetCallerMethodName(true);
-        Assert.Contains("CallerUtilTest.GetCallerMethodNameTest", fullCallerMethodName);
+        var callerWithDepth = CallerUtil.GetCaller(2);
+        Assert.Equal(typeof(CallerUtilTest), callerWithDepth);
     }
 }

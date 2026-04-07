@@ -6,69 +6,49 @@ namespace WellTool.Core.Tests;
 public class DynaBeanTest
 {
     [Fact]
-    public void ConstructorTest()
+    public void CreateAndGetTest()
     {
-        var bean = new DynaBean("name", "John");
-        Assert.Equal("John", bean.Get("name"));
+        var bean = DynaBean.Create(typeof(Person));
+        bean.Set("Name", "John");
+        bean.Set("Age", 25);
+        Assert.Equal("John", bean.Get<string>("Name"));
+        Assert.Equal(25, bean.Get<int>("Age"));
+    }
+
+    [Fact]
+    public void ContainsPropTest()
+    {
+        var bean = DynaBean.Create(typeof(Person));
+        bean.Set("Name", "John");
+        Assert.True(bean.ContainsProp("Name"));
+        Assert.False(bean.ContainsProp("Age"));
     }
 
     [Fact]
     public void SetGetTest()
     {
-        var bean = new DynaBean();
-        bean.Set("name", "John");
-        bean.Set("age", 25);
-        Assert.Equal("John", bean.Get("name"));
-        Assert.Equal(25, bean.Get("age"));
+        var bean = DynaBean.Create(typeof(Person));
+        bean.Set("Name", "John");
+        bean.Set("Age", 25);
+        Assert.Equal("John", bean.Get<string>("Name"));
+        Assert.Equal(25, bean.Get<int>("Age"));
     }
 
     [Fact]
-    public void ContainsTest()
+    public void GetBeanTest()
     {
-        var bean = new DynaBean();
-        bean.Set("name", "John");
-        Assert.True(bean.Contains("name"));
-        Assert.False(bean.Contains("age"));
+        var person = new Person { Name = "John", Age = 25 };
+        var bean = DynaBean.Create(person);
+        var result = bean.GetBean<Person>();
+        Assert.Equal("John", result.Name);
+        Assert.Equal(25, result.Age);
     }
 
     [Fact]
-    public void RemoveTest()
+    public void GetBeanClassTest()
     {
-        var bean = new DynaBean();
-        bean.Set("name", "John");
-        bean.Remove("name");
-        Assert.False(bean.Contains("name"));
-    }
-
-    [Fact]
-    public void ToBeanTest()
-    {
-        var bean = new DynaBean();
-        bean.Set("name", "John");
-        bean.Set("age", 25);
-        var obj = bean.ToBean<Person>();
-        Assert.Equal("John", obj.Name);
-        Assert.Equal(25, obj.Age);
-    }
-
-    [Fact]
-    public void ToMapTest()
-    {
-        var bean = new DynaBean();
-        bean.Set("name", "John");
-        bean.Set("age", 25);
-        var map = bean.ToMap();
-        Assert.Equal(2, map.Count);
-        Assert.Equal("John", map["name"]);
-    }
-
-    [Fact]
-    public void CloneTest()
-    {
-        var bean = new DynaBean();
-        bean.Set("name", "John");
-        var cloned = bean.Clone();
-        Assert.Equal("John", cloned.Get("name"));
+        var bean = DynaBean.Create(typeof(Person));
+        Assert.Equal(typeof(Person), bean.GetBeanClass());
     }
 
     private class Person

@@ -8,21 +8,21 @@ public class EnumConvertTest
     [Fact]
     public void ToEnumTest()
     {
-        var status = Convert.ToEnum<TestStatus>("Active");
+        var status = WellTool.Core.Convert.Convert.ToEnum<TestStatus>("Active");
         Assert.Equal(TestStatus.Active, status);
     }
 
     [Fact]
     public void ToEnumIntTest()
     {
-        var status = Convert.ToEnum<TestStatus>(0);
+        var status = WellTool.Core.Convert.Convert.ToEnum<TestStatus>(0);
         Assert.Equal(TestStatus.Active, status);
     }
 
     [Fact]
     public void EnumToStringTest()
     {
-        var str = Convert.ToStr(TestStatus.Active);
+        var str = WellTool.Core.Convert.Convert.ToStr(TestStatus.Active);
         Assert.Equal("Active", str);
     }
 

@@ -1,7 +1,7 @@
 using WellTool.Core.Collection;
-using WellTool.Core.Util;
 using Xunit;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace WellTool.Core.Tests;
 
@@ -10,7 +10,7 @@ public class CollStreamUtilTest
     [Fact]
     public void FilterTest()
     {
-        var list = CollUtil.NewArrayList(1, 2, 3, 4, 5);
+        var list = new List<int> { 1, 2, 3, 4, 5 };
         var filtered = CollStreamUtil.Filter(list, x => x > 2).ToList();
         Assert.Equal(3, filtered.Count);
         Assert.Contains(3, filtered);
@@ -19,10 +19,10 @@ public class CollStreamUtilTest
     }
 
     [Fact]
-    public void MapTest()
+    public void StreamTest()
     {
-        var list = CollUtil.NewArrayList(1, 2, 3);
-        var mapped = CollStreamUtil.Map(list, x => x * 2).ToList();
+        var list = new List<int> { 1, 2, 3 };
+        var mapped = CollStreamUtil.Stream(list, x => x * 2).ToList();
         Assert.Equal(3, mapped.Count);
         Assert.Equal(2, mapped[0]);
         Assert.Equal(4, mapped[1]);
@@ -32,7 +32,7 @@ public class CollStreamUtilTest
     [Fact]
     public void FlatMapTest()
     {
-        var list = CollUtil.NewArrayList(new[] { 1, 2 }, new[] { 3, 4 });
+        var list = new List<int[]> { new[] { 1, 2 }, new[] { 3, 4 } };
         var flat = CollStreamUtil.Filter(list, x => true).SelectMany(x => x).ToList();
         Assert.Equal(4, flat.Count);
     }
@@ -40,7 +40,7 @@ public class CollStreamUtilTest
     [Fact]
     public void DistinctTest()
     {
-        var list = CollUtil.NewArrayList(1, 2, 2, 3, 3, 3);
+        var list = new List<int> { 1, 2, 2, 3, 3, 3 };
         var distinct = CollStreamUtil.Filter(list, x => true).Distinct().ToList();
         Assert.Equal(3, distinct.Count);
     }
@@ -48,7 +48,7 @@ public class CollStreamUtilTest
     [Fact]
     public void SortTest()
     {
-        var list = CollUtil.NewArrayList(3, 1, 2);
+        var list = new List<int> { 3, 1, 2 };
         var sorted = CollStreamUtil.Filter(list, x => true).OrderBy(x => x).ToList();
         Assert.Equal(1, sorted[0]);
         Assert.Equal(2, sorted[1]);
@@ -58,7 +58,7 @@ public class CollStreamUtilTest
     [Fact]
     public void ReverseSortTest()
     {
-        var list = CollUtil.NewArrayList(1, 2, 3);
+        var list = new List<int> { 1, 2, 3 };
         var sorted = CollStreamUtil.Filter(list, x => true).OrderByDescending(x => x).ToList();
         Assert.Equal(3, sorted[0]);
         Assert.Equal(2, sorted[1]);
@@ -68,7 +68,7 @@ public class CollStreamUtilTest
     [Fact]
     public void LimitTest()
     {
-        var list = CollUtil.NewArrayList(1, 2, 3, 4, 5);
+        var list = new List<int> { 1, 2, 3, 4, 5 };
         var limited = CollStreamUtil.Filter(list, x => true).Take(3).ToList();
         Assert.Equal(3, limited.Count);
     }
@@ -76,7 +76,7 @@ public class CollStreamUtilTest
     [Fact]
     public void SkipTest()
     {
-        var list = CollUtil.NewArrayList(1, 2, 3, 4, 5);
+        var list = new List<int> { 1, 2, 3, 4, 5 };
         var skipped = CollStreamUtil.Filter(list, x => true).Skip(2).ToList();
         Assert.Equal(3, skipped.Count);
         Assert.Equal(3, skipped[0]);
@@ -85,7 +85,7 @@ public class CollStreamUtilTest
     [Fact]
     public void CountTest()
     {
-        var list = CollUtil.NewArrayList(1, 2, 3, 4, 5);
+        var list = new List<int> { 1, 2, 3, 4, 5 };
         var count = CollStreamUtil.Filter(list, x => x > 2).Count();
         Assert.Equal(3, count);
     }
@@ -93,7 +93,7 @@ public class CollStreamUtilTest
     [Fact]
     public void AnyMatchTest()
     {
-        var list = CollUtil.NewArrayList(1, 2, 3);
+        var list = new List<int> { 1, 2, 3 };
         Assert.True(list.Any(x => x == 2));
         Assert.False(list.Any(x => x == 10));
     }
@@ -101,7 +101,7 @@ public class CollStreamUtilTest
     [Fact]
     public void AllMatchTest()
     {
-        var list = CollUtil.NewArrayList(1, 2, 3);
+        var list = new List<int> { 1, 2, 3 };
         Assert.True(list.All(x => x > 0));
         Assert.False(list.All(x => x > 2));
     }
@@ -109,8 +109,32 @@ public class CollStreamUtilTest
     [Fact]
     public void NoneMatchTest()
     {
-        var list = CollUtil.NewArrayList(1, 2, 3);
+        var list = new List<int> { 1, 2, 3 };
         Assert.True(!list.Any(x => x > 10));
         Assert.False(!list.Any(x => x == 2));
+    }
+
+    [Fact]
+    public void ReduceTest()
+    {
+        var list = new List<int> { 1, 2, 3, 4, 5 };
+        var sum = CollStreamUtil.Reduce(list, 0, (acc, x) => acc + x);
+        Assert.Equal(15, sum);
+    }
+
+    [Fact]
+    public void BatchForEachTest()
+    {
+        var list = new List<int> { 1, 2, 3, 4, 5, 6 };
+        var batchResults = new List<List<int>>();
+        
+        CollStreamUtil.BatchForEach(list, 2, batch => {
+            batchResults.Add(new List<int>(batch));
+        });
+        
+        Assert.Equal(3, batchResults.Count);
+        Assert.Equal(2, batchResults[0].Count);
+        Assert.Equal(2, batchResults[1].Count);
+        Assert.Equal(2, batchResults[2].Count);
     }
 }

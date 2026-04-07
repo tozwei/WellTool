@@ -1,5 +1,6 @@
 using WellTool.Core.Bean;
 using Xunit;
+using System.Collections.Generic;
 
 namespace WellTool.Core.Tests;
 
@@ -33,29 +34,16 @@ public class BeanUtilTest
     }
 
     [Fact]
-    public void CopyPropertiesWithIgnoreTest()
-    {
-        var source = new SourceBean { Name = "John", Age = 25, Email = "john@test.com" };
-        var target = new TargetBean();
-
-        BeanUtil.CopyProperties(source, target, "Email");
-
-        Assert.Equal(source.Name, target.Name);
-        Assert.Equal(source.Age, target.Age);
-        Assert.Null(target.Email);
-    }
-
-    [Fact]
-    public void ToBeanTest()
+    public void MapToBeanTest()
     {
         var map = new Dictionary<string, object>
         {
-            { "name", "John" },
-            { "age", 25 },
-            { "email", "john@test.com" }
+            { "Name", "John" },
+            { "Age", 25 },
+            { "Email", "john@test.com" }
         };
 
-        var bean = BeanUtil.ToBean<TargetBean>(map);
+        var bean = BeanUtil.MapToBean<TargetBean>(map);
 
         Assert.Equal("John", bean.Name);
         Assert.Equal(25, bean.Age);
@@ -63,23 +51,13 @@ public class BeanUtilTest
     }
 
     [Fact]
-    public void IsEmptyBeanTest()
+    public void BeanToMapTest()
     {
-        var emptyBean = new TargetBean();
-        var nonEmptyBean = new TargetBean { Name = "John" };
+        var source = new TargetBean { Name = "John", Age = 25 };
+        var map = BeanUtil.BeanToMap(source);
 
-        Assert.True(BeanUtil.IsEmpty(emptyBean));
-        Assert.False(BeanUtil.IsEmpty(nonEmptyBean));
-    }
-
-    [Fact]
-    public void DescribeTest()
-    {
-        var bean = new TargetBean { Name = "John", Age = 25 };
-        var desc = BeanUtil.Describe(bean);
-
-        Assert.Equal("John", desc["Name"]);
-        Assert.Equal(25, desc["Age"]);
+        Assert.Equal("John", map["Name"]);
+        Assert.Equal(25, map["Age"]);
     }
 
     [Fact]
@@ -87,8 +65,8 @@ public class BeanUtilTest
     {
         var map = new Dictionary<string, object>
         {
-            { "name", "Jane" },
-            { "age", 30 }
+            { "Name", "Jane" },
+            { "Age", 30 }
         };
 
         var bean = new TargetBean();
@@ -96,5 +74,19 @@ public class BeanUtilTest
 
         Assert.Equal("Jane", bean.Name);
         Assert.Equal(30, bean.Age);
+    }
+
+    [Fact]
+    public void ToBeanTest()
+    {
+        var map = new Dictionary<string, object>
+        {
+            { "Name", "John" },
+            { "Age", 25 }
+        };
+
+        var bean = BeanUtil.ToBean<TargetBean>(map);
+        Assert.Equal("John", bean.Name);
+        Assert.Equal(25, bean.Age);
     }
 }
