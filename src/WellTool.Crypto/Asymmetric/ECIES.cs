@@ -5,6 +5,7 @@ using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Paddings;
 using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Security;
 
@@ -21,23 +22,12 @@ namespace WellTool.Crypto.Asymmetric
             _keyGenerator = new ECKeyPairGenerator();
             
             // 获取曲线参数 - BouncyCastle 使用不同的命名
-            X9ECParameters ecParams = null;
-            if (curveName == "P-256" || curveName == "secp256r1")
+            X9ECParameters ecParams = X962NamedCurves.GetByName(_curveName);
+            
+            if (ecParams == null)
             {
-                ecParams = X962NamedCurves.GetByName("P-256");
-            }
-            else if (curveName == "P-384" || curveName == "secp384r1")
-            {
-                ecParams = X962NamedCurves.GetByName("P-384");
-            }
-            else if (curveName == "P-521" || curveName == "secp521r1")
-            {
-                ecParams = X962NamedCurves.GetByName("P-521");
-            }
-            else
-            {
-                // 尝试直接获取
-                ecParams = X962NamedCurves.GetByName(curveName);
+                // 尝试NIST曲线名
+                ecParams = ECNamedCurveTable.GetByName(_curveName);
             }
             
             if (ecParams == null)

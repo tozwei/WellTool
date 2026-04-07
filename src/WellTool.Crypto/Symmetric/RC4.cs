@@ -1,3 +1,6 @@
+using System.Text;
+using System.Text.RegularExpressions;
+
 namespace WellTool.Crypto.Symmetric
 {
     public class RC4
@@ -96,27 +99,53 @@ namespace WellTool.Crypto.Symmetric
         }
 
         /// <summary>
-        /// 加密字符串并返回十六进制
+        /// 加密字符串并返回十六进制密文
         /// </summary>
         /// <param name="data">明文</param>
         /// <returns>密文（十六进制）</returns>
         public string EncryptHex(string data)
         {
-            var bytes = System.Text.Encoding.UTF8.GetBytes(data);
+            var bytes = Encoding.UTF8.GetBytes(data);
             var encrypted = Encrypt(bytes);
-            return Convert.ToHexString(encrypted).ToLower();
+
+            #if NET6_0_OR_GREATER
+                        // .NET 6.0+：使用高效的 Convert.ToHexString
+                        return Convert.ToHexString(encrypted).ToLower();
+            #else
+                // .NET 6.0 以下（含 .NET Standard 2.1）：使用 BitConverter
+                // BitConverter.ToString 会生成 "A1-B2-C3" 格式，需要移除 "-"
+                return BitConverter.ToString(encrypted).Replace("-", string.Empty).ToLower();
+            #endif
         }
 
         /// <summary>
         /// 解密十六进制字符串
         /// </summary>
-        /// <param name="data">密文（十六进制）</param>
+        /// <param name="hexData">密文（十六进制）</param>
         /// <returns>明文</returns>
         public string DecryptStr(string hexData)
         {
-            var bytes = Convert.FromHexString(hexData);
+            byte[] bytes;
+
+            #if NET6_0_OR_GREATER
+                        // .NET 6.0+：直接解析
+                        bytes = Convert.FromHexString(hexData);
+            #else
+                // .NET 6.0 以下（含 .NET Standard 2.1）：手动解析
+                // 1. 移除可能存在的 "-" 连字符（兼容 BitConverter 生成的格式）
+                string cleanHex = Regex.Replace(hexData, "-", "");
+    
+                // 2. 每两个字符解析为一个字节
+                bytes = new byte[cleanHex.Length / 2];
+                for (int i = 0; i < cleanHex.Length; i += 2)
+                {
+                    // Convert.ToByte(string, 16) 将十六进制字符串转换为字节
+                    bytes[i / 2] = Convert.ToByte(cleanHex.Substring(i, 2), 16);
+                }
+            #endif
+
             var decrypted = Decrypt(bytes);
-            return System.Text.Encoding.UTF8.GetString(decrypted);
+            return Encoding.UTF8.GetString(decrypted);
         }
 
         private static void Swap(byte[] array, int i, int j)

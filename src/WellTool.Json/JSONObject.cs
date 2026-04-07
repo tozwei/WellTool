@@ -166,13 +166,14 @@ namespace WellTool.Json
             tokener.SkipWhitespace();
             var c = tokener.NextCharacter();
 
-            switch (c)
+            switch (char.ToLower(c))
             {
                 case '{':
                     return new JSONObject(tokener);
                 case '[':
                     return new JSONArray(tokener);
                 case '"':
+                case '\'':
                     return tokener.NextString();
                 case 't':
                     return tokener.NextBoolean();
