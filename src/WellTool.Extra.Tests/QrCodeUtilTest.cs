@@ -7,21 +7,21 @@ public class QrCodeUtilTest
     [Fact]
     public void GenerateTest()
     {
-        var qrCode = QrCodeUtil.Generate("Hello World");
+        var qrCode = QrCodeUtil.Instance.Generate("Hello World");
         Assert.NotNull(qrCode);
     }
 
     [Fact]
     public void GenerateWithSizeTest()
     {
-        var qrCode = QrCodeUtil.Generate("Hello", 200, 200);
+        var qrCode = QrCodeUtil.Instance.Generate("Hello", 200, 200);
         Assert.NotNull(qrCode);
     }
 
     [Fact]
     public void GenerateToByteArrayTest()
     {
-        var bytes = QrCodeUtil.GenerateToByteArray("Test");
+        var bytes = QrCodeUtil.Instance.GenerateToByteArray("Test");
         Assert.NotNull(bytes);
         Assert.True(bytes.Length > 0);
     }
@@ -32,7 +32,7 @@ public class QrCodeUtilTest
         var tempFile = Path.GetTempFileName();
         try
         {
-            QrCodeUtil.GenerateToFile("Test", tempFile);
+            QrCodeUtil.Instance.GenerateToFile("Test", tempFile);
             Assert.True(File.Exists(tempFile));
         }
         finally
@@ -45,7 +45,7 @@ public class QrCodeUtilTest
     [Fact]
     public void GenerateWithLogoTest()
     {
-        var qrCode = QrCodeUtil.Generate("WithLogo");
+        var qrCode = QrCodeUtil.Instance.Generate("WithLogo");
         Assert.NotNull(qrCode);
     }
 
@@ -55,8 +55,8 @@ public class QrCodeUtilTest
         var tempFile = Path.GetTempFileName();
         try
         {
-            QrCodeUtil.GenerateToFile("DecodeTest", tempFile);
-            var decoded = QrCodeUtil.Decode(tempFile);
+            QrCodeUtil.Instance.GenerateToFile("DecodeTest", tempFile);
+            var decoded = QrCodeUtil.Instance.Decode(tempFile);
             Assert.Equal("DecodeTest", decoded);
         }
         finally
@@ -69,12 +69,12 @@ public class QrCodeUtilTest
     [Fact]
     public void GenerateNullTest()
     {
-        Assert.Throws<ArgumentNullException>(() => QrCodeUtil.Generate(null));
+        Assert.Throws<ArgumentNullException>(() => QrCodeUtil.Instance.Generate(null));
     }
 
     [Fact]
     public void GenerateEmptyTest()
     {
-        Assert.Throws<ArgumentException>(() => QrCodeUtil.Generate(""));
+        Assert.Throws<ArgumentException>(() => QrCodeUtil.Instance.Generate(""));
     }
 }

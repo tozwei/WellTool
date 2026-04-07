@@ -19,7 +19,7 @@ public class ValidationUtilTest
             Email = "john@example.com"
         };
         
-        var result = ValidationUtil.Validate(user);
+        var result = ValidationUtil.Instance.Validate(user);
         
         Assert.Empty(result);
     }
@@ -35,7 +35,7 @@ public class ValidationUtilTest
             Email = "invalid-email"
         };
         
-        var result = ValidationUtil.Validate(user);
+        var result = ValidationUtil.Instance.Validate(user);
         
         Assert.NotEmpty(result);
     }
@@ -51,7 +51,7 @@ public class ValidationUtilTest
             Email = "test@example.com"
         };
         
-        var result = ValidationUtil.Validate(user);
+        var result = ValidationUtil.Instance.Validate(user);
         
         Assert.Contains(result, r => r.MemberNames.Contains("Name"));
     }
@@ -67,7 +67,7 @@ public class ValidationUtilTest
             Email = "john@example.com"
         };
         
-        var result = ValidationUtil.Validate(user);
+        var result = ValidationUtil.Instance.Validate(user);
         
         Assert.Contains(result, r => r.MemberNames.Contains("Age"));
     }
@@ -83,7 +83,7 @@ public class ValidationUtilTest
             Email = "not-an-email"
         };
         
-        var result = ValidationUtil.Validate(user);
+        var result = ValidationUtil.Instance.Validate(user);
         
         Assert.Contains(result, r => r.MemberNames.Contains("Email"));
     }
@@ -99,7 +99,7 @@ public class ValidationUtilTest
             Email = "john@example.com"
         };
         
-        var result = ValidationUtil.Validate(user);
+        var result = ValidationUtil.Instance.Validate(user);
         
         Assert.Contains(result, r => r.MemberNames.Contains("Name"));
     }
@@ -115,7 +115,7 @@ public class ValidationUtilTest
             Email = "john@example.com"
         };
         
-        var result = ValidationUtil.WarpValidate(user);
+        var result = ValidationUtil.Instance.WarpValidate(user);
         
         Assert.True(result.Success);
         Assert.Empty(result.ErrorMessages);
@@ -132,7 +132,7 @@ public class ValidationUtilTest
             Email = "invalid"
         };
         
-        var result = ValidationUtil.WarpValidate(user);
+        var result = ValidationUtil.Instance.WarpValidate(user);
         
         Assert.False(result.Success);
         Assert.NotEmpty(result.ErrorMessages);
@@ -149,7 +149,7 @@ public class ValidationUtilTest
             Email = "invalid"
         };
         
-        var result = ValidationUtil.WarpValidate(user);
+        var result = ValidationUtil.Instance.WarpValidate(user);
         
         Assert.False(result.Success);
         Assert.True(result.ErrorMessages.Count >= 1);
@@ -166,7 +166,7 @@ public class ValidationUtilTest
             Email = ""
         };
         
-        var result = ValidationUtil.Validate(user);
+        var result = ValidationUtil.Instance.Validate(user);
         
         Assert.True(result.Count >= 1);
     }
@@ -182,7 +182,7 @@ public class ValidationUtilTest
             Email = "invalid"
         };
         
-        var result = ValidationUtil.WarpValidate(user);
+        var result = ValidationUtil.Instance.WarpValidate(user);
         
         foreach (var error in result.ErrorMessages)
         {
@@ -211,7 +211,7 @@ public class ValidationUtilTest
                 Email = email
             };
             
-            var result = ValidationUtil.Validate(user);
+            var result = ValidationUtil.Instance.Validate(user);
             Assert.DoesNotContain(result, r => r.MemberNames.Contains("Email"));
         }
     }
@@ -223,8 +223,8 @@ public class ValidationUtilTest
         var userMinAge = new ValidUser { Name = "John", Age = 0, Email = "john@example.com" };
         var userMaxAge = new ValidUser { Name = "John", Age = 150, Email = "john@example.com" };
         
-        var resultMin = ValidationUtil.Validate(userMinAge);
-        var resultMax = ValidationUtil.Validate(userMaxAge);
+        var resultMin = ValidationUtil.Instance.Validate(userMinAge);
+        var resultMax = ValidationUtil.Instance.Validate(userMaxAge);
         
         // 边界值可能通过或失败，取决于验证规则定义
         Assert.NotNull(resultMin);

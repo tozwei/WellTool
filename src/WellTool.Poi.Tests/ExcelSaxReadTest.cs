@@ -71,8 +71,8 @@ namespace WellTool.Poi.Tests
                     writer.Save();
                 }
                 
-                // Read back
-                using var reader = WellTool.Poi.ExcelUtil.GetReader(tempFile);
+                // Read back - 使用"Large" sheet
+                using var reader = WellTool.Poi.ExcelUtil.GetReader(tempFile, "Large");
                 var result = reader.ReadAll();
                 
                 Assert.NotNull(result);

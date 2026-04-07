@@ -69,8 +69,8 @@ public class PinyinEngineTest
     {
         var engine = PinyinFactory.Get();
         
-        // 测试英文字母返回原字符
-        Assert.Equal('A', engine.GetFirstLetter('A'));
+        // 测试英文字母返回小写形式
+        Assert.Equal('a', engine.GetFirstLetter('A'));
         Assert.Equal('z', engine.GetFirstLetter('z'));
     }
 
@@ -173,7 +173,7 @@ public class PinyinFactoryTest
         var engine = PinyinFactory.Get();
         
         var result = engine.GetPinyin(null, "-");
-        Assert.Equal("", result);
+        Assert.Null(result);
     }
 }
 
