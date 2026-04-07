@@ -15,13 +15,31 @@ namespace WellTool.Crypto.Asymmetric
         private readonly IAsymmetricCipherKeyPairGenerator _keyGenerator;
         private readonly string _curveName;
 
-        public ECIES(string curveName = "secp256r1")
+        public ECIES(string curveName = "P-256")
         {
             _curveName = curveName;
             _keyGenerator = new ECKeyPairGenerator();
             
-            // 获取曲线参数
-            X9ECParameters ecParams = X962NamedCurves.GetByName(curveName);
+            // 获取曲线参数 - BouncyCastle 使用不同的命名
+            X9ECParameters ecParams = null;
+            if (curveName == "P-256" || curveName == "secp256r1")
+            {
+                ecParams = X962NamedCurves.GetByName("P-256");
+            }
+            else if (curveName == "P-384" || curveName == "secp384r1")
+            {
+                ecParams = X962NamedCurves.GetByName("P-384");
+            }
+            else if (curveName == "P-521" || curveName == "secp521r1")
+            {
+                ecParams = X962NamedCurves.GetByName("P-521");
+            }
+            else
+            {
+                // 尝试直接获取
+                ecParams = X962NamedCurves.GetByName(curveName);
+            }
+            
             if (ecParams == null)
             {
                 throw new ArgumentException($"未找到指定的曲线: {curveName}");

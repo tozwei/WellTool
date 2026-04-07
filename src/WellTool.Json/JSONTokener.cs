@@ -142,14 +142,18 @@ namespace WellTool.Json
         /// <returns>字符串值（不包含引号）</returns>
         public string NextString()
         {
-            // 消费开始的双引号
-            Next();
+            // 消费开始的引号
+            var quoteChar = Next();
+            if (quoteChar != '"' && quoteChar != '\'')
+            {
+                throw new JSONException($"Expected quote character but found '{quoteChar}'");
+            }
 
             var sb = new StringBuilder();
             while (_position < _length)
             {
                 var c = Next();
-                if (c == '"')
+                if (c == quoteChar)
                 {
                     return sb.ToString();
                 }
@@ -163,6 +167,7 @@ namespace WellTool.Json
                     switch (c)
                     {
                         case '"': sb.Append('"'); break;
+                        case '\'': sb.Append('\''); break;
                         case '\\': sb.Append('\\'); break;
                         case '/': sb.Append('/'); break;
                         case 'b': sb.Append('\b'); break;

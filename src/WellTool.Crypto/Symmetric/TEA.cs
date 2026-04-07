@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace WellTool.Crypto.Symmetric
 {
@@ -8,7 +9,8 @@ namespace WellTool.Crypto.Symmetric
     public class TEA
     {
         private static readonly uint DELTA = 0x9E3779B9;
-
+        private const int BlockSize = 8;
+        
         private readonly byte[] _key;
 
         /// <summary>
@@ -17,7 +19,9 @@ namespace WellTool.Crypto.Symmetric
         /// <param name="key">密钥（16字节）</param>
         public TEA(byte[] key)
         {
-            _key = key;
+            if (key.Length != 16)
+                throw new ArgumentException("TEA key must be 16 bytes");
+            _key = (byte[])key.Clone();
         }
 
         /// <summary>
@@ -47,9 +51,9 @@ namespace WellTool.Crypto.Symmetric
         /// <returns>密文（十六进制）</returns>
         public string EncryptHex(string data)
         {
-            var bytes = System.Text.Encoding.UTF8.GetBytes(data);
+            var bytes = Encoding.UTF8.GetBytes(data);
             var encrypted = Encrypt(bytes);
-            return BitConverter.ToString(encrypted).Replace("-", "").ToLower();
+            return Convert.ToHexString(encrypted).ToLower();
         }
 
         /// <summary>
@@ -59,31 +63,75 @@ namespace WellTool.Crypto.Symmetric
         /// <returns>明文</returns>
         public string DecryptStr(string hexData)
         {
-            var bytes = new byte[hexData.Length / 2];
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                bytes[i] = Convert.ToByte(hexData.Substring(i * 2, 2), 16);
-            }
+            var bytes = Convert.FromHexString(hexData);
             var decrypted = Decrypt(bytes);
-            return System.Text.Encoding.UTF8.GetString(decrypted);
+            return Encoding.UTF8.GetString(decrypted);
         }
 
         /// <summary>
-        /// 加密
+        /// 加密任意长度数据（使用PKCS7填充）
         /// </summary>
-        /// <param name="data">明文</param>
-        /// <param name="key">密钥</param>
-        /// <returns>密文</returns>
         public static byte[] Encrypt(byte[] data, byte[] key)
+        {
+            // PKCS7 填充
+            int padLen = BlockSize - (data.Length % BlockSize);
+            byte[] padded = new byte[data.Length + padLen];
+            Array.Copy(data, 0, padded, 0, data.Length);
+            for (int i = data.Length; i < padded.Length; i++)
+            {
+                padded[i] = (byte)padLen;
+            }
+
+            // 分块加密
+            byte[] result = new byte[padded.Length];
+            for (int i = 0; i < padded.Length; i += BlockSize)
+            {
+                byte[] block = new byte[BlockSize];
+                Array.Copy(padded, i, block, 0, BlockSize);
+                byte[] encrypted = EncryptBlock(block, key);
+                Array.Copy(encrypted, 0, result, i, BlockSize);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 解密任意长度数据
+        /// </summary>
+        public static byte[] Decrypt(byte[] data, byte[] key)
+        {
+            if (data.Length % BlockSize != 0)
+                throw new ArgumentException("Ciphertext length must be multiple of block size");
+
+            // 分块解密
+            byte[] decrypted = new byte[data.Length];
+            for (int i = 0; i < data.Length; i += BlockSize)
+            {
+                byte[] block = new byte[BlockSize];
+                Array.Copy(data, i, block, 0, BlockSize);
+                byte[] decryptedBlock = DecryptBlock(block, key);
+                Array.Copy(decryptedBlock, 0, decrypted, i, BlockSize);
+            }
+
+            // 移除 PKCS7 填充
+            int padLen = decrypted[decrypted.Length - 1];
+            if (padLen > BlockSize || padLen > decrypted.Length)
+                throw new ArgumentException("Invalid padding");
+            byte[] result = new byte[decrypted.Length - padLen];
+            Array.Copy(decrypted, 0, result, 0, result.Length);
+            return result;
+        }
+
+        /// <summary>
+        /// 加密单个8字节块
+        /// </summary>
+        private static byte[] EncryptBlock(byte[] data, byte[] key)
         {
             uint[] v = new uint[2];
             uint[] k = new uint[4];
 
-            // 将明文转换为 uint 数组
             v[0] = BitConverter.ToUInt32(data, 0);
             v[1] = BitConverter.ToUInt32(data, 4);
 
-            // 将密钥转换为 uint 数组
             for (int i = 0; i < 4; i++)
             {
                 k[i] = BitConverter.ToUInt32(key, i * 4);
@@ -97,30 +145,23 @@ namespace WellTool.Crypto.Symmetric
                 v[1] += ((v[0] << 4) + k[2]) ^ (v[0] + sum) ^ ((v[0] >> 5) + k[3]);
             }
 
-            // 将 uint 数组转换为 byte 数组
-            byte[] result = new byte[8];
+            byte[] result = new byte[BlockSize];
             BitConverter.GetBytes(v[0]).CopyTo(result, 0);
             BitConverter.GetBytes(v[1]).CopyTo(result, 4);
-
             return result;
         }
 
         /// <summary>
-        /// 解密
+        /// 解密单个8字节块
         /// </summary>
-        /// <param name="data">密文</param>
-        /// <param name="key">密钥</param>
-        /// <returns>明文</returns>
-        public static byte[] Decrypt(byte[] data, byte[] key)
+        private static byte[] DecryptBlock(byte[] data, byte[] key)
         {
             uint[] v = new uint[2];
             uint[] k = new uint[4];
 
-            // 将密文转换为 uint 数组
             v[0] = BitConverter.ToUInt32(data, 0);
             v[1] = BitConverter.ToUInt32(data, 4);
 
-            // 将密钥转换为 uint 数组
             for (int i = 0; i < 4; i++)
             {
                 k[i] = BitConverter.ToUInt32(key, i * 4);
@@ -134,11 +175,9 @@ namespace WellTool.Crypto.Symmetric
                 sum -= DELTA;
             }
 
-            // 将 uint 数组转换为 byte 数组
-            byte[] result = new byte[8];
+            byte[] result = new byte[BlockSize];
             BitConverter.GetBytes(v[0]).CopyTo(result, 0);
             BitConverter.GetBytes(v[1]).CopyTo(result, 4);
-
             return result;
         }
     }
