@@ -60,49 +60,73 @@ namespace WellTool.JWT
             // 处理 JsonElement 类型，转换为相应的基本类型
             if (value != null)
             {
-                try
+                // 尝试使用反射来获取 JsonElement 的 ValueKind 属性
+                var valueType = value.GetType();
+                var valueKindProperty = valueType.GetProperty("ValueKind");
+                if (valueKindProperty != null)
                 {
-                    dynamic dynamicValue = value;
-                    var valueKind = dynamicValue.ValueKind;
-                    switch (valueKind.ToString())
+                    var valueKind = valueKindProperty.GetValue(value);
+                    var valueKindStr = valueKind?.ToString();
+                    
+                    // 尝试使用反射来调用 GetString 方法
+                    var getStringMethod = valueType.GetMethod("GetString");
+                    if (getStringMethod != null && valueKindStr == "String")
                     {
-                        case "String":
-                            return dynamicValue.GetString();
-                        case "Number":
-                            try
-                            {
-                                return dynamicValue.GetInt32();
-                            }
-                            catch
+                        return getStringMethod.Invoke(value, null);
+                    }
+                    
+                    // 尝试使用反射来调用 GetInt32 方法
+                    var getInt32Method = valueType.GetMethod("GetInt32");
+                    if (getInt32Method != null && valueKindStr == "Number")
+                    {
+                        try
+                        {
+                            return getInt32Method.Invoke(value, null);
+                        }
+                        catch
+                        {
+                            // 尝试使用反射来调用 GetInt64 方法
+                            var getInt64Method = valueType.GetMethod("GetInt64");
+                            if (getInt64Method != null)
                             {
                                 try
                                 {
-                                    return dynamicValue.GetInt64();
+                                    return getInt64Method.Invoke(value, null);
                                 }
                                 catch
                                 {
-                                    try
+                                    // 尝试使用反射来调用 GetDouble 方法
+                                    var getDoubleMethod = valueType.GetMethod("GetDouble");
+                                    if (getDoubleMethod != null)
                                     {
-                                        return dynamicValue.GetDouble();
-                                    }
-                                    catch
-                                    {
-                                        return dynamicValue.GetDecimal();
+                                        try
+                                        {
+                                            return getDoubleMethod.Invoke(value, null);
+                                        }
+                                        catch
+                                        {
+                                            // 尝试使用反射来调用 GetDecimal 方法
+                                            var getDecimalMethod = valueType.GetMethod("GetDecimal");
+                                            if (getDecimalMethod != null)
+                                            {
+                                                return getDecimalMethod.Invoke(value, null);
+                                            }
+                                        }
                                     }
                                 }
                             }
-                        case "True":
-                            return true;
-                        case "False":
-                            return false;
-                        default:
-                            return value;
+                        }
                     }
-                }
-                catch
-                {
-                    // 如果不是 JsonElement 类型，直接返回
-                    return value;
+                    
+                    // 处理布尔值
+                    if (valueKindStr == "True")
+                    {
+                        return true;
+                    }
+                    if (valueKindStr == "False")
+                    {
+                        return false;
+                    }
                 }
             }
             
