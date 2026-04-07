@@ -11,8 +11,8 @@ namespace WellTool.Core.Collection
     {
         private readonly IEnumerator<T> _iterator;
         private readonly System.Func<T, bool> _predicate;
-        private T _next;
-        private bool _hasNext;
+        private T _current;
+        private bool _hasCurrent;
 
         /// <summary>
         /// 构造函数
@@ -23,7 +23,7 @@ namespace WellTool.Core.Collection
         {
             _iterator = iterator;
             _predicate = predicate;
-            _hasNext = MoveNextInternal();
+            _hasCurrent = false;
         }
 
         /// <summary>
@@ -33,11 +33,11 @@ namespace WellTool.Core.Collection
         {
             get
             {
-                if (!_hasNext)
+                if (!_hasCurrent)
                 {
                     throw new System.InvalidOperationException();
                 }
-                return _next;
+                return _current;
             }
         }
 
@@ -60,26 +60,17 @@ namespace WellTool.Core.Collection
         /// <returns>是否成功移动</returns>
         public bool MoveNext()
         {
-            var result = _hasNext;
-            _hasNext = MoveNextInternal();
-            return result;
-        }
-
-        /// <summary>
-        /// 内部移动到下一个元素
-        /// </summary>
-        /// <returns>是否成功移动</returns>
-        private bool MoveNextInternal()
-        {
             while (_iterator.MoveNext())
             {
                 var current = _iterator.Current;
-                if (_predicate(current))
+                if (_predicate == null || _predicate(current))
                 {
-                    _next = current;
+                    _current = current;
+                    _hasCurrent = true;
                     return true;
                 }
             }
+            _hasCurrent = false;
             return false;
         }
 
@@ -89,7 +80,7 @@ namespace WellTool.Core.Collection
         public void Reset()
         {
             _iterator.Reset();
-            _hasNext = MoveNextInternal();
+            _hasCurrent = false;
         }
     }
 }

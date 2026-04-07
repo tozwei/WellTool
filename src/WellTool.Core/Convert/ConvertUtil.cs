@@ -31,7 +31,7 @@ public class ConvertUtil
 	/// <returns>结果</returns>
 	public static string ToStr(object value)
 	{
-		return ToStr(value, null);
+		return ToStr(value, "");
 	}
 
 	/// <summary>
