@@ -7,13 +7,13 @@ public class ConvertOtherTest
     [Fact]
     public void ToCharTest()
     {
-        Assert.Equal('A', WellTool.Core.Convert.Convert.ToChar("A"));
+        Assert.Equal('A', WellTool.Core.Convert.ConvertUtil.ToChar("A"));
     }
 
     [Fact]
     public void ToDateTimeTest()
     {
-        var date = WellTool.Core.Convert.Convert.ToDateTime("2021-01-01");
+        var date = WellTool.Core.Convert.ConvertUtil.ToDateTime("2021-01-01");
         Assert.NotNull(date);
         Assert.Equal(2021, date.Value.Year);
         Assert.Equal(1, date.Value.Month);
@@ -23,21 +23,21 @@ public class ConvertOtherTest
     [Fact]
     public void ToShortTest()
     {
-        Assert.Equal((short)123, WellTool.Core.Convert.Convert.ToShort("123"));
-        Assert.Equal((short)0, WellTool.Core.Convert.Convert.ToShort(null));
+        Assert.Equal((short)123, WellTool.Core.Convert.ConvertUtil.ToShort("123"));
+        Assert.Equal((short)0, WellTool.Core.Convert.ConvertUtil.ToShort(null));
     }
 
     [Fact]
     public void ToFloatTest()
     {
-        Assert.Equal(123.45f, WellTool.Core.Convert.Convert.ToFloat("123.45"), 0.001f);
-        Assert.Equal(0f, WellTool.Core.Convert.Convert.ToFloat(null));
+        Assert.Equal(123.45f, WellTool.Core.Convert.ConvertUtil.ToFloat("123.45"), 0.001f);
+        Assert.Equal(0f, WellTool.Core.Convert.ConvertUtil.ToFloat(null));
     }
 
     [Fact]
     public void ToDecimalTest()
     {
-        Assert.Equal(123.456m, WellTool.Core.Convert.Convert.ToDecimal("123.456"));
-        Assert.Equal(0m, WellTool.Core.Convert.Convert.ToDecimal(null));
+        Assert.Equal(123.456m, WellTool.Core.Convert.ConvertUtil.ToDecimal("123.456"));
+        Assert.Equal(0m, WellTool.Core.Convert.ConvertUtil.ToDecimal(null));
     }
 }

@@ -3,6 +3,8 @@ using System.Text;
 using WellTool.Core.IO;
 using Xunit;
 
+namespace WellTool.Core.IO.Tests;
+
 public class CharsetDetectorTest
 {
     [Fact]

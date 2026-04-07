@@ -50,7 +50,12 @@ public class JWTHeader : Claims
     /// <returns>算法</returns>
     public string? GetAlgorithm()
     {
-        return GetClaimAsString(ALGORITHM);
+        var value = GetClaim(ALGORITHM);
+        if (value is string strValue)
+        {
+            return strValue;
+        }
+        return null;
     }
 
     /// <summary>

@@ -10,7 +10,7 @@ public class DateConvertTest
     public void ToDateTest()
     {
         var a = "2017-05-06";
-        var value = WellTool.Core.Convert.Convert.ToDateTime(a);
+        var value = WellTool.Core.Convert.ConvertUtil.ToDateTime(a);
         Assert.NotNull(value);
     }
 
@@ -18,7 +18,7 @@ public class DateConvertTest
     public void ToDateFromLongTest()
     {
         var timeLong = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-        var value = WellTool.Core.Convert.Convert.ToDateTime(timeLong);
+        var value = WellTool.Core.Convert.ConvertUtil.ToDateTime(timeLong);
         Assert.NotNull(value);
     }
 
@@ -26,7 +26,7 @@ public class DateConvertTest
     public void ToSqlDateTest()
     {
         var a = "2017-05-06";
-        var value = WellTool.Core.Convert.Convert.ToDateTime(a);
+        var value = WellTool.Core.Convert.ConvertUtil.ToDateTime(a);
         Assert.NotNull(value);
     }
 
@@ -34,7 +34,7 @@ public class DateConvertTest
     public void ToLocalDateTimeTest()
     {
         var str = "2020-12-12 12:12:12";
-        var value = WellTool.Core.Convert.Convert.ToDateTime(str);
+        var value = WellTool.Core.Convert.ConvertUtil.ToDateTime(str);
         Assert.NotNull(value);
     }
 }

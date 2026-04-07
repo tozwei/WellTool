@@ -15,8 +15,8 @@ public class StringConvertTest
     [Fact]
     public void ToStrTest()
     {
-        Assert.Equal("123", WellTool.Core.Convert.Convert.ToStr(123));
-        Assert.Equal("abc", WellTool.Core.Convert.Convert.ToStr('a') + "bc");
+        Assert.Equal("123", WellTool.Core.Convert.ConvertUtil.ToStr(123));
+        Assert.Equal("abc", WellTool.Core.Convert.ConvertUtil.ToStr('a') + "bc");
     }
 
     [Fact]

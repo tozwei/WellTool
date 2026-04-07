@@ -8,14 +8,14 @@ public class StringConvertLastTest
     [Fact]
     public void ToStrTest()
     {
-        var result = WellTool.Core.Convert.Convert.ToStr(123);
+        var result = WellTool.Core.Convert.ConvertUtil.ToStr(123);
         Assert.Equal("123", result);
     }
 
     [Fact]
     public void ToStrWithNullTest()
     {
-        var result = WellTool.Core.Convert.Convert.ToStr(null);
+        var result = WellTool.Core.Convert.ConvertUtil.ToStr(null);
         Assert.Null(result);
     }
 }

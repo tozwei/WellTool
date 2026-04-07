@@ -11,7 +11,7 @@ using WellTool.Core.Converter;
 /// <summary>
 /// 类型转换器
 /// </summary>
-public class Convert
+public class ConvertUtil
 {
 	/// <summary>
 	/// 转换为字符串
@@ -420,7 +420,7 @@ public class Convert
 	/// <returns>Base64字符串</returns>
 	public static string ToBase64String(byte[] bytes)
 	{
-		return Convert.ToBase64String(bytes);
+		return ConvertUtil.ToBase64String(bytes);
 	}
 
 	/// <summary>

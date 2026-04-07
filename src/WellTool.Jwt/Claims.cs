@@ -52,7 +52,7 @@ namespace WellTool.JWT
         /// </summary>
         /// <param name="name">名称</param>
         /// <returns>属性</returns>
-        public object GetClaim(string name)
+        public object? GetClaim(string name)
         {
             Init();
             _claims.TryGetValue(name, out var value);
@@ -99,7 +99,7 @@ namespace WellTool.JWT
         /// </summary>
         /// <param name="name">名称</param>
         /// <returns>属性</returns>
-        public string GetClaimAsString(string name)
+        public string? GetClaimAsString(string name)
         {
             var value = GetClaim(name);
             if (value is string strValue)
@@ -137,7 +137,55 @@ namespace WellTool.JWT
         public override string ToString()
         {
             Init();
-            return JsonSerializer.Serialize(_claims);
+            // 处理 JsonElement 类型的值，确保它们被正确序列化为字符串
+            var claims = new Dictionary<string, object>();
+            foreach (var kvp in _claims)
+            {
+                if (kvp.Value is System.Text.Json.JsonElement jsonElement)
+                {
+                    if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.String)
+                    {
+                        claims[kvp.Key] = jsonElement.GetString();
+                    }
+                    else if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.Number)
+                    {
+                        claims[kvp.Key] = jsonElement.GetInt64();
+                    }
+                    else if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.True || jsonElement.ValueKind == System.Text.Json.JsonValueKind.False)
+                    {
+                        claims[kvp.Key] = jsonElement.GetBoolean();
+                    }
+                    else if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.Array)
+                    {
+                        var array = new List<object>();
+                        foreach (var item in jsonElement.EnumerateArray())
+                        {
+                            if (item.ValueKind == System.Text.Json.JsonValueKind.String)
+                            {
+                                array.Add(item.GetString());
+                            }
+                            else if (item.ValueKind == System.Text.Json.JsonValueKind.Number)
+                            {
+                                array.Add(item.GetInt64());
+                            }
+                            else if (item.ValueKind == System.Text.Json.JsonValueKind.True || item.ValueKind == System.Text.Json.JsonValueKind.False)
+                            {
+                                array.Add(item.GetBoolean());
+                            }
+                        }
+                        claims[kvp.Key] = array;
+                    }
+                    else
+                    {
+                        claims[kvp.Key] = kvp.Value;
+                    }
+                }
+                else
+                {
+                    claims[kvp.Key] = kvp.Value;
+                }
+            }
+            return JsonSerializer.Serialize(claims);
         }
 
         private void Init()

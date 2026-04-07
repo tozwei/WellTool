@@ -359,7 +359,12 @@ public class JWT
             throw new JWTException("No token to verify!");
         }
 
-        return signer.Verify(tokens[0], tokens[1], tokens[2]);
+        // 使用原始的头部和载荷来验证签名，而不是使用转换后的头部和载荷
+        var headerBase64 = tokens[0];
+        var payloadBase64 = tokens[1];
+        var signatureBase64 = tokens[2];
+
+        return signer.Verify(headerBase64, payloadBase64, signatureBase64);
     }
 
     /// <summary>

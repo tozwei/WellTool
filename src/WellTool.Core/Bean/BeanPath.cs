@@ -166,7 +166,7 @@ public class BeanPath
             var keys = expression.Split(',');
             if (bean is IList list)
             {
-                return WellTool.Core.Collection.CollUtil.GetAny(list, WellTool.Core.Convert.Convert.ToIntArray(keys));
+                return WellTool.Core.Collection.CollUtil.GetAny(list, WellTool.Core.Convert.ConvertUtil.ToIntArray(keys));
             }
             if (bean is IDictionary dictionary)
             {
