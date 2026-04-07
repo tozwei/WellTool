@@ -124,6 +124,8 @@ public class ExpressionUtil
                 return (T)(object)(int)doubleResult;
             if (result is decimal decimalResult)
                 return (T)(object)(int)decimalResult;
+            if (result is long longResult)
+                return (T)(object)(int)longResult;
             return (T)Convert.ChangeType(result, typeof(T));
         }
         
@@ -135,6 +137,8 @@ public class ExpressionUtil
                 return (T)(object)(double)intResult;
             if (result is decimal decimalResult)
                 return (T)(object)(double)decimalResult;
+            if (result is long longResult)
+                return (T)(object)(double)longResult;
             return (T)Convert.ChangeType(result, typeof(T));
         }
         
@@ -146,6 +150,21 @@ public class ExpressionUtil
                 return (T)(object)(decimal)dResult;
             if (result is int intResult)
                 return (T)(object)(decimal)intResult;
+            if (result is long longResult)
+                return (T)(object)(decimal)longResult;
+            return (T)Convert.ChangeType(result, typeof(T));
+        }
+        
+        if (typeof(T) == typeof(long))
+        {
+            if (result is long longResult)
+                return (T)(object)longResult;
+            if (result is int intResult)
+                return (T)(object)(long)intResult;
+            if (result is double doubleResult)
+                return (T)(object)(long)doubleResult;
+            if (result is decimal decimalResult)
+                return (T)(object)(long)decimalResult;
             return (T)Convert.ChangeType(result, typeof(T));
         }
         

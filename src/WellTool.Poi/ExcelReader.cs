@@ -24,6 +24,14 @@ namespace WellTool.Poi;
 public class ExcelReader : IDisposable
 {
     /// <summary>
+    /// 静态构造函数，设置EPPlus许可证
+    /// </summary>
+    static ExcelReader()
+    {
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+    }
+
+    /// <summary>
     /// Excel 包
     /// </summary>
     private readonly ExcelPackage _package;

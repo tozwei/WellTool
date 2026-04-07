@@ -52,11 +52,6 @@ namespace WellTool.Extra.Tokenizer
         /// <returns>分词结果</returns>
         public static Result Tokenize(string text)
         {
-            if (string.IsNullOrEmpty(text))
-            {
-                return null;
-            }
-
             var engine = CreateEngine();
             return engine.Parse(text);
         }

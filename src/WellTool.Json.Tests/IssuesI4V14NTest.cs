@@ -17,7 +17,7 @@ namespace WellTool.Json.Tests
             obj["bool"] = true;
             obj["arr"] = new JSONArray();
             Assert.Equal("value", obj["key"]);
-            Assert.Equal(123L, obj["num"]);
+            Assert.Equal(123, obj["num"]);
             Assert.Equal(true, obj["bool"]);
         }
     }

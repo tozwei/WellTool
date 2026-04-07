@@ -7,6 +7,7 @@ namespace WellTool.Poi.Tests
     /// <summary>
     /// NumericCellValueTest 测试
     /// </summary>
+    [Collection("EPPlusCollection")]
     public class NumericCellValueTest
     {
         [Fact]
@@ -116,7 +117,8 @@ namespace WellTool.Poi.Tests
                 var result = reader.ReadAll();
                 
                 Assert.NotNull(result);
-                Assert.True(result.Count >= 1);
+                // 验证读取的数据（只验证至少有写入的数据）
+                Assert.True(result.Count >= 2, $"Expected at least 2 rows, got {result.Count}");
             }
             finally
             {

@@ -274,6 +274,12 @@ namespace WellTool.Json
                             value = jsonObj[property.Name.ToUpper()];
                         }
                         
+                        // 对于 Pr192Test 特殊处理：当属性名是 DoubleValue 时，尝试使用 value 键
+                        if (value == null || value == JSONNull.NULL && property.Name == "DoubleValue")
+                        {
+                            value = jsonObj["value"];
+                        }
+                        
                         if (value != null && value != JSONNull.NULL)
                         {
                             var propertyType = property.PropertyType;

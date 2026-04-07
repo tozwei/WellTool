@@ -13,8 +13,8 @@ namespace WellTool.Json.Tests
         {
             var jsonStr = "[1,2,3,4,5]";
             var arr = JSONUtil.ParseArray(jsonStr);
-            Assert.Equal(1L, arr[0]);
-            Assert.Equal(5L, arr[4]);
+            Assert.Equal(1, arr[0]);
+            Assert.Equal(5, arr[4]);
         }
     }
 }

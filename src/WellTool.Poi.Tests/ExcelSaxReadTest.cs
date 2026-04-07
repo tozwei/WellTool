@@ -7,6 +7,7 @@ namespace WellTool.Poi.Tests
     /// <summary>
     /// ExcelSaxReadTest 测试 SAX 方式读取 Excel
     /// </summary>
+    [Collection("EPPlusCollection")]
     public class ExcelSaxReadTest
     {
         [Fact]
@@ -34,7 +35,8 @@ namespace WellTool.Poi.Tests
                 var result = reader.ReadAll();
                 
                 Assert.NotNull(result);
-                Assert.True(result.Count >= 3);
+                // 验证至少有写入的3行数据
+                Assert.True(result.Count >= 3, $"Expected at least 3 rows, got {result.Count}");
             }
             finally
             {
@@ -74,7 +76,8 @@ namespace WellTool.Poi.Tests
                 var result = reader.ReadAll();
                 
                 Assert.NotNull(result);
-                Assert.True(result.Count >= 100);
+                // 验证至少有100行数据
+                Assert.True(result.Count >= 100, $"Expected at least 100 rows, got {result.Count}");
             }
             finally
             {

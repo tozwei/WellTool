@@ -418,7 +418,8 @@ namespace WellTool.Json
             get
             {
                 var actualKey = GetActualKey(key);
-                return actualKey != null ? _map[actualKey] : null;
+                var value = actualKey != null ? _map[actualKey] : null;
+                return value == JSONNull.NULL ? null : value;
             }
             set
             {

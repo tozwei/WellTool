@@ -23,6 +23,14 @@ namespace WellTool.Poi;
 public class ExcelUtil
 {
     /// <summary>
+    /// 静态构造函数，设置EPPlus许可证
+    /// </summary>
+    static ExcelUtil()
+    {
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+    }
+
+    /// <summary>
     /// 单例实例
     /// </summary>
     public static ExcelUtil Instance { get; } = new ExcelUtil();

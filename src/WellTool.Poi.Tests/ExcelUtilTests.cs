@@ -17,6 +17,7 @@ using Xunit;
 
 namespace WellTool.Poi.Tests;
 
+[Collection("EPPlusCollection")]
 public class ExcelUtilTests
 {
     [Fact]

@@ -7,6 +7,7 @@ namespace WellTool.Poi.Tests
     /// <summary>
     /// ExcelReadTest 测试
     /// </summary>
+    [Collection("EPPlusCollection")]
     public class ExcelReadTest
     {
         [Fact]
@@ -65,7 +66,8 @@ namespace WellTool.Poi.Tests
                 var result = reader.ReadSheet(0);
                 
                 Assert.NotNull(result);
-                Assert.True(result.Count >= 1);
+                // 验证至少有2行数据
+                Assert.True(result.Count >= 2, $"Expected at least 2 rows, got {result.Count}");
             }
             finally
             {

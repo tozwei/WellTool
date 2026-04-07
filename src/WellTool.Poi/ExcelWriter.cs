@@ -25,6 +25,14 @@ namespace WellTool.Poi;
 public class ExcelWriter : IDisposable
 {
     /// <summary>
+    /// 静态构造函数，设置EPPlus许可证
+    /// </summary>
+    static ExcelWriter()
+    {
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+    }
+
+    /// <summary>
     /// Excel 包
     /// </summary>
     private readonly ExcelPackage _package;

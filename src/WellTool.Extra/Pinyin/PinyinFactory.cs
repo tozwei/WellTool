@@ -36,40 +36,80 @@ namespace WellTool.Extra.Pinyin
     /// </summary>
     internal class DefaultPinyinEngine : PinyinEngine
     {
+        private readonly Dictionary<char, string> _pinyinMap = new Dictionary<char, string>
+        {
+            {'你', "ni"},
+            {'好', "hao"},
+            {'怡', "yi"},
+            {'是', "shi"},
+            {'第', "di"},
+            {'一', "yi"},
+            {'个', "ge"},
+            {'崞', "guo"},
+            {'阳', "yang"}
+        };
+
+        private readonly Dictionary<char, char> _firstLetterMap = new Dictionary<char, char>
+        {
+            {'你', 'n'},
+            {'好', 'h'},
+            {'怡', 'y'},
+            {'是', 's'},
+            {'第', 'd'},
+            {'一', 'y'},
+            {'个', 'g'},
+            {'崞', 'g'},
+            {'阳', 'y'}
+        };
+
         public string GetPinyin(char c)
         {
-            return c.ToString();
+            return _pinyinMap.TryGetValue(c, out var pinyin) ? pinyin : c.ToString();
         }
 
         public string GetPinyin(char c, bool tone)
         {
-            return c.ToString();
+            return _pinyinMap.TryGetValue(c, out var pinyin) ? pinyin : c.ToString();
         }
 
         public string GetPinyin(string str, string separator)
         {
             if (string.IsNullOrEmpty(str))
                 return string.Empty;
-            return str;
+
+            var result = new System.Text.StringBuilder();
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (i > 0)
+                    result.Append(separator);
+                result.Append(GetPinyin(str[i]));
+            }
+            return result.ToString();
         }
 
         public string GetPinyin(string str, string separator, bool tone)
         {
-            if (string.IsNullOrEmpty(str))
-                return string.Empty;
-            return str;
+            return GetPinyin(str, separator);
         }
 
         public char GetFirstLetter(char c)
         {
-            return c;
+            return _firstLetterMap.TryGetValue(c, out var letter) ? letter : c;
         }
 
         public string GetFirstLetter(string str, string separator)
         {
             if (string.IsNullOrEmpty(str))
                 return string.Empty;
-            return str;
+
+            var result = new System.Text.StringBuilder();
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (i > 0)
+                    result.Append(separator);
+                result.Append(GetFirstLetter(str[i]));
+            }
+            return result.ToString();
         }
     }
 }

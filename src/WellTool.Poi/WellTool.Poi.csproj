@@ -25,4 +25,10 @@
 		<ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Update="EPPlusLicense.config">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
 </Project>

@@ -53,7 +53,8 @@ namespace WellTool.Json.Tests
         private static string JSONToXML(string jsonStr)
         {
             var json = JSONUtil.ParseObj(jsonStr);
-            return Newtonsoft.Json.JsonConvert.SerializeXmlNode(ToXmlDocument(json), Newtonsoft.Json.Formatting.Indented);
+            var xmlDoc = ToXmlDocument(json);
+            return xmlDoc.InnerXml;
         }
 
         private static System.Xml.XmlDocument ToXmlDocument(JSONObject json)
