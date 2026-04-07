@@ -119,7 +119,7 @@ namespace WellTool.Core.Tests
             strip = StrUtil.Strip(str, null, "567");
             XAssert.Equal("abcd123", strip);
 
-            XAssert.Equal("", StrUtil.Strip("a", "a"));
+            XAssert.Equal("", StrUtil.Strip("a", "a", ""));
             XAssert.Equal("", StrUtil.Strip("a", "a", "b"));
         }
 

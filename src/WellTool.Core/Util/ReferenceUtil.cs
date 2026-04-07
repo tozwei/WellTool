@@ -1,82 +1,11 @@
 using System;
-using System.IO;
-using System.Text.Json;
 
 namespace WellTool.Core.Util;
 
 /// <summary>
-/// 序列化工具类
+/// 引用工具类
 /// </summary>
-public static class SerializeUtil
+public static class ReferenceUtil
 {
-	/// <summary>
-	/// 序列化对象为字节数组
-	/// </summary>
-	/// <typeparam name="T">对象类型</typeparam>
-	/// <param name="obj">对象</param>
-	/// <returns>字节数组</returns>
-	public static byte[] Serialize<T>(T obj) where T : class
-	{
-		if (obj == null)
-		{
-			return null;
-		}
-
-		return JsonSerializer.SerializeToUtf8Bytes(obj);
-	}
-
-	/// <summary>
-	/// 反序列化字节数组为对象
-	/// </summary>
-	/// <typeparam name="T">对象类型</typeparam>
-	/// <param name="data">字节数组</param>
-	/// <returns>对象</returns>
-	public static T Deserialize<T>(byte[] data) where T : class
-	{
-		if (data == null || data.Length == 0)
-		{
-			return default;
-		}
-
-		try
-		{
-			return JsonSerializer.Deserialize<T>(data);
-		}
-		catch
-		{
-			return default;
-		}
-	}
-
-	/// <summary>
-	/// 序列化对象到文件
-	/// </summary>
-	/// <typeparam name="T">对象类型</typeparam>
-	/// <param name="obj">对象</param>
-	/// <param name="filePath">文件路径</param>
-	public static void SerializeToFile<T>(T obj, string filePath) where T : class
-	{
-		var data = Serialize(obj);
-		if (data != null)
-		{
-			File.WriteAllBytes(filePath, data);
-		}
-	}
-
-	/// <summary>
-	/// 从文件反序列化对象
-	/// </summary>
-	/// <typeparam name="T">对象类型</typeparam>
-	/// <param name="filePath">文件路径</param>
-	/// <returns>对象</returns>
-	public static T DeserializeFromFile<T>(string filePath) where T : class
-	{
-		if (!File.Exists(filePath))
-		{
-			return default;
-		}
-
-		var data = File.ReadAllBytes(filePath);
-		return Deserialize<T>(data);
-	}
+    // 可以在这里添加引用相关的工具方法
 }
