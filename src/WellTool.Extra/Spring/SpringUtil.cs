@@ -42,7 +42,7 @@ namespace WellTool.Extra.Spring
         {
             if (_applicationContext == null)
             {
-                throw new Exception("No ApplicationContext injected, maybe not in the Spring environment?");
+                return default(T);
             }
             return _applicationContext.GetBean<T>(name);
         }
@@ -157,7 +157,7 @@ namespace WellTool.Extra.Spring
         {
             if (_applicationContext == null)
             {
-                throw new Exception("No ApplicationContext injected, maybe not in the Spring environment?");
+                return null;
             }
             return _applicationContext.GetBean(type);
         }
