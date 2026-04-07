@@ -1,4 +1,5 @@
 using WellTool.Core.Map;
+using WellTool.Core.Map.Multi;
 using Xunit;
 
 namespace WellTool.Core.Tests;

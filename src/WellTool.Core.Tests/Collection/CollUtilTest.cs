@@ -68,7 +68,7 @@ public class CollUtilTest
     public void TestIsNotEmpty()
     {
         Assert.False(CollUtil.IsNotEmpty(null));
-        Assert.False(CollUtil.IsNotEmpty(new List<string>()));
+        Assert.False(CollUtil.IsNotEmpty( new List<string>()));
         Assert.True(CollUtil.IsNotEmpty(CollUtil.NewArrayList("a")));
     }
 

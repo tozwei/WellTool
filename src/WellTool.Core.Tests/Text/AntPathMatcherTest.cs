@@ -37,7 +37,6 @@ public class AntPathMatcherTest
         var pathMatcher = new AntPathMatcher();
         pathMatcher.CachePatterns = true;
         pathMatcher.CaseSensitive = true;
-        pathMatcher.PathSeparator = "/";
         pathMatcher.TrimTokens = true;
 
         Assert.True(pathMatcher.Match("a", "a"));

@@ -233,8 +233,8 @@ namespace WellTool.Core.Tests
             public string Name { get; set; } = string.Empty;
             public int Age { get; set; }
             
-            // 用于单例模式的私有构造函数
-            private TestObject() { }
+            // 改为public构造函数，以便测试方法可以创建实例
+            public TestObject() { }
         }
     }
 }

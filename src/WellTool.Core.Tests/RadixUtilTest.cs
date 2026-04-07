@@ -8,11 +8,11 @@ namespace WellTool.Core.Tests
     public class RadixUtilTest
     {
         [Fact]
-        public void ConvertTest()
-        {
-            Assert.Equal("100", Convert.ToString(4, 2));
-            Assert.Equal("11", Convert.ToString(3, 2));
-        }
+    public void ConvertTest()
+    {
+        Xunit.Assert.Equal("100", System.Convert.ToString(4, 2));
+        Xunit.Assert.Equal("11", System.Convert.ToString(3, 2));
+    }
 
         [Fact]
         public void IsLowerCaseTest()
