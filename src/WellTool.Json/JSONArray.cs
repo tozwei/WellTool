@@ -774,6 +774,31 @@ namespace WellTool.Json
                 return this;
             }
 
+            // 处理 $ 前缀
+            if (expression.StartsWith("$"))
+            {
+                expression = expression.Substring(1);
+            }
+
+            // 处理以 . 开头的表达式，例如 .accountId
+            if (expression.StartsWith("."))
+            {
+                var propertyName = expression.Substring(1);
+                var result = new JSONArray();
+                foreach (var item in _list)
+                {
+                    if (item is JSONObject obj)
+                    {
+                        var value = obj[propertyName];
+                        if (value != null)
+                        {
+                            result.Set(value);
+                        }
+                    }
+                }
+                return result;
+            }
+
             // 表达式应该是 [index] 或 [index].xxx 格式
             if (expression.StartsWith("["))
             {
@@ -786,7 +811,11 @@ namespace WellTool.Json
 
                     if (endBracket < expression.Length - 1)
                     {
-                        var nextExpr = expression.Substring(endBracket + 2); // 跳过 ]. 或 ].
+                        var nextExpr = expression.Substring(endBracket + 1); // 跳过 ]
+                        if (nextExpr.StartsWith("."))
+                        {
+                            nextExpr = nextExpr.Substring(1); // 跳过 .
+                        }
                         if (value is JSONObject obj)
                         {
                             return obj.GetByPath(nextExpr);
@@ -796,7 +825,6 @@ namespace WellTool.Json
                             return arr.GetByPath(nextExpr);
                         }
                     }
-
                     return value;
                 }
             }

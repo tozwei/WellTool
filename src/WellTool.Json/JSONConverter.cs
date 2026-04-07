@@ -268,6 +268,12 @@ namespace WellTool.Json
                             value = jsonObj[property.Name.ToLower()];
                         }
                         
+                        // 尝试使用大写的属性名获取值
+                        if (value == null || value == JSONNull.NULL)
+                        {
+                            value = jsonObj[property.Name.ToUpper()];
+                        }
+                        
                         if (value != null && value != JSONNull.NULL)
                         {
                             var propertyType = property.PropertyType;

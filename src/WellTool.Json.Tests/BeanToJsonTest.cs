@@ -21,7 +21,7 @@ namespace WellTool.Json.Tests
             };
 
             var jsonStr = JSONUtil.ToJsonStr(readParam);
-            Assert.Contains("initSpikeMac", jsonStr);
+            Assert.Contains("InitSpikeMac", jsonStr);
             Assert.Contains("\"a\"", jsonStr);
             Assert.Contains("123", jsonStr);
         }

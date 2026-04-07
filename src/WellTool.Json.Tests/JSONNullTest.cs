@@ -57,7 +57,7 @@ namespace WellTool.Json.Tests
         {
             Assert.Equal(JSONNull.NULL, JSONNull.NULL);
             var nullStr = JSONNull.NULL.ToString();
-            Assert.NotEqual("null", nullStr);
+            Assert.Equal("null", nullStr);
         }
 
         [Fact]

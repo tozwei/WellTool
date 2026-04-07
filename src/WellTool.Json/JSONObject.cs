@@ -248,6 +248,38 @@ namespace WellTool.Json
                     continue;
                 }
 
+                // 跳过带有 JsonIgnore 特性的属性
+                //var hasJsonIgnore = prop.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.Schema.NotMappedAttribute), true).Length > 0;
+
+                bool hasJsonIgnore;
+
+                #if NET6_0_OR_GREATER
+                                // .NET 6.0+：使用完整类型名称引用 JsonIgnoreAttribute
+                    hasJsonIgnore = prop.IsDefined(typeof(System.Text.Json.Serialization.JsonIgnoreAttribute), true);
+                #else
+                                                    // .NET 6.0 以下（含 .NET Standard 2.1）：使用 NonSerializedAttribute
+                   hasJsonIgnore = prop.IsDefined(typeof(System.NonSerializedAttribute), true);
+                #endif
+
+
+                try
+                {
+                    // 尝试检查 Newtonsoft.Json.JsonIgnoreAttribute
+                    var jsonIgnoreType = Type.GetType("Newtonsoft.Json.JsonIgnoreAttribute, Newtonsoft.Json");
+                    if (jsonIgnoreType != null)
+                    {
+                        hasJsonIgnore = hasJsonIgnore || prop.GetCustomAttributes(jsonIgnoreType, true).Length > 0;
+                    }
+                }
+                catch
+                {
+                    // 忽略异常
+                }
+                if (hasJsonIgnore)
+                {
+                    continue;
+                }
+
                 try
                 {
                     var value = prop.GetValue(source);
@@ -255,6 +287,7 @@ namespace WellTool.Json
 
                     if (jsonValue != null || !Config.IsIgnoreNullValue())
                     {
+                        // 保持属性名的原始大小写
                         _map[prop.Name] = jsonValue;
                     }
                 }
@@ -268,6 +301,43 @@ namespace WellTool.Json
             var fields = type.GetFields();
             foreach (var field in fields)
             {
+                // 跳过静态字段
+                if (field.IsStatic)
+                {
+                    continue;
+                }
+
+                // 跳过带有 JsonIgnore 特性的字段
+                //var hasJsonIgnore = field.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.Schema.NotMappedAttribute), true).Length > 0;
+
+                bool hasJsonIgnore;
+
+                #if NET6_0_OR_GREATER
+                                // .NET 6.0+：使用完整类型名称引用 JsonIgnoreAttribute
+                                hasJsonIgnore = field.IsDefined(typeof(System.Text.Json.Serialization.JsonIgnoreAttribute), true);
+                #else
+                    // .NET 6.0 以下（含 .NET Standard 2.1）：使用 NonSerializedAttribute
+                    hasJsonIgnore = field.IsDefined(typeof(System.NonSerializedAttribute), true);
+                #endif
+
+                try
+                {
+                    // 尝试检查 Newtonsoft.Json.JsonIgnoreAttribute
+                    var jsonIgnoreType = Type.GetType("Newtonsoft.Json.JsonIgnoreAttribute, Newtonsoft.Json");
+                    if (jsonIgnoreType != null)
+                    {
+                        hasJsonIgnore = hasJsonIgnore || field.GetCustomAttributes(jsonIgnoreType, true).Length > 0;
+                    }
+                }
+                catch
+                {
+                    // 忽略异常
+                }
+                if (hasJsonIgnore)
+                {
+                    continue;
+                }
+
                 try
                 {
                     var value = field.GetValue(source);
@@ -365,7 +435,13 @@ namespace WellTool.Json
             {
                 return _map.Keys.FirstOrDefault(k => k.Equals(key, StringComparison.OrdinalIgnoreCase));
             }
-            return _map.ContainsKey(key) ? key : null;
+            // 首先尝试使用精确匹配
+            if (_map.ContainsKey(key))
+            {
+                return key;
+            }
+            // 如果没有找到，尝试使用大小写不敏感的匹配
+            return _map.Keys.FirstOrDefault(k => k.Equals(key, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -811,6 +887,12 @@ namespace WellTool.Json
                 return this;
             }
 
+            // 处理 $ 前缀
+            if (expression.StartsWith("$"))
+            {
+                expression = expression.Substring(1);
+            }
+
             var parts = expression.Split('.');
             object current = this;
 
@@ -821,12 +903,18 @@ namespace WellTool.Json
                     return null;
                 }
 
+                // 处理空部分（例如 $.accountId 分割后会有一个空部分）
+                if (string.IsNullOrEmpty(part))
+                {
+                    continue;
+                }
+
                 // 处理数组索引
                 if (part.Contains("["))
                 {
                     var namePart = part.Substring(0, part.IndexOf("["));
                     var indexPart = part.Substring(part.IndexOf("[") + 1);
-                    var index = int.Parse(indexPart.TrimEnd(']'));
+                    var indexStr = indexPart.TrimEnd(']');
 
                     if (!string.IsNullOrEmpty(namePart))
                     {
@@ -835,7 +923,54 @@ namespace WellTool.Json
 
                     if (current is JSONArray arr)
                     {
-                        current = arr[index];
+                        // 处理通配符 *
+                        if (indexStr == "*")
+                        {
+                            // 如果是通配符，需要继续处理剩余路径
+                            // 首先获取剩余的路径部分
+                            var remainingParts = new List<string>();
+                            var currentIndex = Array.IndexOf(parts, part);
+                            for (int i = currentIndex + 1; i < parts.Length; i++)
+                            {
+                                remainingParts.Add(parts[i]);
+                            }
+
+                            // 如果有剩余路径，递归处理每个元素
+                            if (remainingParts.Count > 0)
+                            {
+                                var remainingPath = string.Join(".", remainingParts);
+                                var result = new JSONArray();
+                                for (int i = 0; i < arr.Count; i++)
+                                {
+                                    var element = arr[i];
+                                    if (element is JSONBase jsonBase)
+                                    {
+                                        var value = jsonBase.GetByPath(remainingPath);
+                                        if (value != null)
+                                        {
+                                            result.Set(value);
+                                        }
+                                    }
+                                }
+                                return result;
+                            }
+                            else
+                            {
+                                // 如果没有剩余路径，返回所有元素
+                                var result = new JSONArray();
+                                for (int i = 0; i < arr.Count; i++)
+                                {
+                                    result.Set(arr[i]);
+                                }
+                                current = result;
+                            }
+                        }
+                        else
+                        {
+                            // 否则，解析索引
+                            var index = int.Parse(indexStr);
+                            current = arr[index];
+                        }
                     }
                     else
                     {
