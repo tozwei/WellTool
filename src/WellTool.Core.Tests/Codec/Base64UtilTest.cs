@@ -1,4 +1,5 @@
 using WellTool.Core.Codec;
+using WellTool.Core.Util;
 using Xunit;
 
 namespace WellTool.Core.Tests;

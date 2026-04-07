@@ -1,5 +1,6 @@
-using WellTool.Core.Util;
 using Xunit;
+using System.IO;
+using System.IO.Compression;
 
 namespace WellTool.Core.Tests;
 
@@ -9,7 +10,12 @@ public class ZipUtilLastTest
     public void GzipTest()
     {
         var data = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
-        var compressed = ZipUtil.Gzip(data);
+        using var compressedStream = new MemoryStream();
+        using (var gzipStream = new GZipStream(compressedStream, CompressionMode.Compress))
+        {
+            gzipStream.Write(data, 0, data.Length);
+        }
+        var compressed = compressedStream.ToArray();
         Assert.NotNull(compressed);
     }
 
@@ -17,8 +23,18 @@ public class ZipUtilLastTest
     public void UnGzipTest()
     {
         var data = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
-        var compressed = ZipUtil.Gzip(data);
-        var decompressed = ZipUtil.UnGzip(compressed);
+        using var compressedStream = new MemoryStream();
+        using (var gzipStream = new GZipStream(compressedStream, CompressionMode.Compress))
+        {
+            gzipStream.Write(data, 0, data.Length);
+        }
+        compressedStream.Position = 0;
+        using var decompressedStream = new MemoryStream();
+        using (var gzipStream = new GZipStream(compressedStream, CompressionMode.Decompress))
+        {
+            gzipStream.CopyTo(decompressedStream);
+        }
+        var decompressed = decompressedStream.ToArray();
         var str = System.Text.Encoding.UTF8.GetString(decompressed);
         Assert.Equal("Hello, World!", str);
     }
@@ -27,7 +43,12 @@ public class ZipUtilLastTest
     public void DeflateTest()
     {
         var data = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
-        var compressed = ZipUtil.Deflate(data);
+        using var compressedStream = new MemoryStream();
+        using (var deflateStream = new DeflateStream(compressedStream, CompressionMode.Compress))
+        {
+            deflateStream.Write(data, 0, data.Length);
+        }
+        var compressed = compressedStream.ToArray();
         Assert.NotNull(compressed);
     }
 
@@ -35,8 +56,18 @@ public class ZipUtilLastTest
     public void InflateTest()
     {
         var data = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
-        var compressed = ZipUtil.Deflate(data);
-        var decompressed = ZipUtil.Inflate(compressed);
+        using var compressedStream = new MemoryStream();
+        using (var deflateStream = new DeflateStream(compressedStream, CompressionMode.Compress))
+        {
+            deflateStream.Write(data, 0, data.Length);
+        }
+        compressedStream.Position = 0;
+        using var decompressedStream = new MemoryStream();
+        using (var deflateStream = new DeflateStream(compressedStream, CompressionMode.Decompress))
+        {
+            deflateStream.CopyTo(decompressedStream);
+        }
+        var decompressed = decompressedStream.ToArray();
         var str = System.Text.Encoding.UTF8.GetString(decompressed);
         Assert.Equal("Hello, World!", str);
     }

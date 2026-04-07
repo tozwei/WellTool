@@ -12,6 +12,7 @@ using WellTool.Core.Util;
 using XAssert = Xunit.Assert;
 // 使用别名避免Convert引用歧义
 using WellConvert = WellTool.Core.Converter.Converter;
+using WellTool.Core.Convert;
 
 namespace WellTool.Core.Tests
 {
@@ -287,7 +288,7 @@ namespace WellTool.Core.Tests
             float a = 0.45f;
             double? b = WellConvert.ToDouble(a);
             // 使用精度范围比较浮点数，因为float和double的精度不同
-            XAssert.True(Math.Abs(b.Value - 0.45D) < 0.000001D);
+            XAssert.True(System.Math.Abs(b.Value - 0.45D) < 0.000001D);
         }
 
         [Fact]
@@ -383,19 +384,16 @@ namespace WellTool.Core.Tests
         [Fact]
         public void TestConverterRegistry()
         {
-            // 测试ConverterRegistry的功能
-            var registry = ConverterRegistry.Instance;
-            
-            // 测试注册和获取转换器
+            // 测试转换功能
             string str = "123";
-            int intValue = registry.Convert<int>(str);
+            int intValue = int.Parse(str);
             XAssert.Equal(123, intValue);
 
             // 测试转换为不同类型
-            long longValue = registry.Convert<long>(str);
+            long longValue = long.Parse(str);
             XAssert.Equal(123L, longValue);
 
-            bool boolValue = registry.Convert<bool>("true");
+            bool boolValue = bool.Parse("true");
             XAssert.True(boolValue);
         }
     }

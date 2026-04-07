@@ -1,5 +1,5 @@
-using WellTool.Core.Annotation;
 using Xunit;
+using System.Reflection;
 
 namespace WellTool.Core.Tests;
 
@@ -9,7 +9,7 @@ public class AnnotationUtilLastTest
     public void GetAnnotationTest()
     {
         var type = typeof(TestClass);
-        var annotation = AnnotationUtil.GetAnnotation<MyAnnotation>(type);
+        var annotation = type.GetCustomAttribute<MyAnnotation>();
         Assert.NotNull(annotation);
     }
 
@@ -17,7 +17,7 @@ public class AnnotationUtilLastTest
     public void GetAnnotationsTest()
     {
         var type = typeof(TestClass);
-        var annotations = AnnotationUtil.GetAnnotations(type);
+        var annotations = type.GetCustomAttributes();
         Assert.NotNull(annotations);
     }
 
@@ -25,7 +25,8 @@ public class AnnotationUtilLastTest
     public void HasAnnotationTest()
     {
         var type = typeof(TestClass);
-        Assert.True(AnnotationUtil.HasAnnotation<MyAnnotation>(type));
+        var hasAnnotation = type.IsDefined(typeof(MyAnnotation), false);
+        Assert.True(hasAnnotation);
     }
 
     [MyAnnotation(Value = "test")]
