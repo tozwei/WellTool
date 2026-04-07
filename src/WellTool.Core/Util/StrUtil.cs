@@ -533,21 +533,16 @@ public static class StrUtil
 		if (IsEmpty(str))
 			return str;
 		
-		var codePoints = str.EnumerateRunes().ToList();
-		int actualEnd = System.Math.Min(end, codePoints.Count);
+		// 使用 char 数组代替 Rune 列表，以兼容 .NET 标准库 2.1
+		char[] chars = str.ToCharArray();
+		int actualEnd = System.Math.Min(end, chars.Length);
 		
 		for (int i = start; i < actualEnd; i++)
 		{
-			codePoints[i] = new Rune(replacement);
+			chars[i] = replacement;
 		}
 		
-		var result = new StringBuilder();
-		foreach (var rune in codePoints)
-		{
-			result.Append(rune);
-		}
-		
-		return result.ToString();
+		return new string(chars);
 	}
 
 	/// <summary>
