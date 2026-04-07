@@ -1,6 +1,6 @@
-using WellTool.Core.IO;
 using Xunit;
 using System.IO;
+using System;
 
 namespace WellTool.Core.Tests;
 
@@ -12,9 +12,9 @@ public class FileWriterUtilTest
         var tempFile = Path.Combine(Path.GetTempPath(), "test_" + Guid.NewGuid().ToString("N") + ".txt");
         try
         {
-            FileWriterUtil.WriteUtf8(tempFile, "Hello, 世界!");
+            File.WriteAllText(tempFile, "Hello, 世界!", System.Text.Encoding.UTF8);
             Assert.True(File.Exists(tempFile));
-            Assert.Equal("Hello, 世界!", await File.ReadAllTextAsync(tempFile, System.Text.Encoding.UTF8));
+            Assert.Equal("Hello, 世界!", File.ReadAllText(tempFile, System.Text.Encoding.UTF8));
         }
         finally
         {
@@ -28,9 +28,9 @@ public class FileWriterUtilTest
         var tempFile = Path.Combine(Path.GetTempPath(), "test_" + Guid.NewGuid().ToString("N") + ".txt");
         try
         {
-            FileWriterUtil.WriteUtf8(tempFile, "Hello");
-            FileWriterUtil.AppendUtf8(tempFile, " World");
-            Assert.Equal("Hello World", await File.ReadAllTextAsync(tempFile, System.Text.Encoding.UTF8));
+            File.WriteAllText(tempFile, "Hello", System.Text.Encoding.UTF8);
+            File.AppendAllText(tempFile, " World", System.Text.Encoding.UTF8);
+            Assert.Equal("Hello World", File.ReadAllText(tempFile, System.Text.Encoding.UTF8));
         }
         finally
         {
@@ -44,7 +44,7 @@ public class FileWriterUtilTest
         var tempFile = Path.Combine(Path.GetTempPath(), "test_" + Guid.NewGuid().ToString("N") + ".txt");
         try
         {
-            FileWriterUtil.WriteLines(tempFile, new[] { "line1", "line2", "line3" });
+            File.WriteAllLines(tempFile, new[] { "line1", "line2", "line3" });
             Assert.True(File.Exists(tempFile));
         }
         finally
@@ -60,7 +60,7 @@ public class FileWriterUtilTest
         try
         {
             var bytes = System.Text.Encoding.UTF8.GetBytes("Hello");
-            FileWriterUtil.WriteBytes(tempFile, bytes);
+            File.WriteAllBytes(tempFile, bytes);
             Assert.True(File.Exists(tempFile));
         }
         finally

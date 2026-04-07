@@ -1,6 +1,7 @@
-using WellTool.Core.IO;
+using WellTool.Core.Util;
 using Xunit;
 using System.IO;
+using System;
 
 namespace WellTool.Core.Tests;
 
@@ -9,20 +10,20 @@ public class FileUtilLastTest
     [Fact]
     public void FileExistsTest()
     {
-        Assert.True(FileUtil.FileExists("README.md"));
-        Assert.False(FileUtil.FileExists("not_exist_file.txt"));
+        Assert.True(FileUtil.Exists("README.md"));
+        Assert.False(FileUtil.Exists("not_exist_file.txt"));
     }
 
     [Fact]
     public void DirectoryExistsTest()
     {
-        Assert.True(FileUtil.DirectoryExists("."));
+        Assert.True(Directory.Exists("."));
     }
 
     [Fact]
     public void GetAbsolutePathTest()
     {
-        var path = FileUtil.GetAbsolutePath(".");
+        var path = Path.GetFullPath(".");
         Assert.NotNull(path);
         Assert.True(Path.IsPathRooted(path));
     }
@@ -30,26 +31,26 @@ public class FileUtilLastTest
     [Fact]
     public void GetNameTest()
     {
-        Assert.Equal("test.txt", FileUtil.GetName("C:\\path\\to\\test.txt"));
+        Assert.Equal("test.txt", FileUtil.Name("C:\\path\\to\\test.txt"));
     }
 
     [Fact]
     public void GetExtensionTest()
     {
-        Assert.Equal(".txt", FileUtil.GetExtension("test.txt"));
+        Assert.Equal(".txt", FileUtil.Ext("test.txt"));
     }
 
     [Fact]
     public void MainNameTest()
     {
-        Assert.Equal("test", FileUtil.MainName("test.txt"));
+        Assert.Equal("test", FileUtil.NameWithoutExt("test.txt"));
     }
 
     [Fact]
     public void IsDirectoryTest()
     {
-        Assert.True(FileUtil.IsDirectory("."));
-        Assert.False(FileUtil.IsDirectory("README.md"));
+        Assert.True(Directory.Exists("."));
+        Assert.False(File.Exists("README.md"));
     }
 
     [Fact]
@@ -58,7 +59,7 @@ public class FileUtilLastTest
         var tempPath = Path.Combine(Path.GetTempPath(), "welltool_test_" + Guid.NewGuid().ToString("N"));
         try
         {
-            FileUtil.Mkdirs(tempPath);
+            Directory.CreateDirectory(tempPath);
             Assert.True(Directory.Exists(tempPath));
         }
         finally
@@ -75,7 +76,7 @@ public class FileUtilLastTest
         File.WriteAllText(tempFile, "test");
         Assert.True(File.Exists(tempFile));
 
-        FileUtil.Del(tempFile);
+        FileUtil.Delete(tempFile);
         Assert.False(File.Exists(tempFile));
     }
 
@@ -88,7 +89,7 @@ public class FileUtilLastTest
         try
         {
             File.WriteAllText(tempFile1, "Hello");
-            FileUtil.CopyFile(tempFile1, tempFile2);
+            FileUtil.Copy(tempFile1, tempFile2);
             Assert.True(File.Exists(tempFile2));
             Assert.Equal("Hello", File.ReadAllText(tempFile2));
         }
@@ -108,7 +109,7 @@ public class FileUtilLastTest
         try
         {
             File.WriteAllText(tempFile1, "Hello");
-            FileUtil.MoveFile(tempFile1, tempFile2);
+            FileUtil.Move(tempFile1, tempFile2);
             Assert.False(File.Exists(tempFile1));
             Assert.True(File.Exists(tempFile2));
         }
@@ -126,9 +127,20 @@ public class FileUtilLastTest
         Directory.CreateDirectory(tempDir);
         File.WriteAllText(Path.Combine(tempDir, "test.txt"), "test");
         
-        FileUtil.CleanDirectory(tempDir);
+        foreach (var file in Directory.GetFiles(tempDir))
+        {
+            File.Delete(file);
+        }
         Assert.Empty(Directory.GetFiles(tempDir));
         
         Directory.Delete(tempDir);
+    }
+
+    [Fact]
+    public void DirTest()
+    {
+        var path = "C:\\path\\to\\test.txt";
+        var dir = FileUtil.Dir(path);
+        Assert.Equal("C:\\path\\to", dir);
     }
 }

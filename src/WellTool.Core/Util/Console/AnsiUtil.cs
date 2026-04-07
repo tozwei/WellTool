@@ -1,4 +1,4 @@
-namespace WellTool.Core.util.console;
+namespace WellTool.Core.Util.console;
 
 using System;
 

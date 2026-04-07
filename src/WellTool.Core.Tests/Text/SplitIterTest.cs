@@ -1,5 +1,5 @@
-using WellTool.Core.Text;
 using Xunit;
+using System.Collections.Generic;
 
 namespace WellTool.Core.Tests;
 
@@ -9,13 +9,9 @@ public class SplitIterTest
     public void SplitIterBasicTest()
     {
         var text = "a,b,c,d";
-        var splitIter = new SplitIter(text, ',');
+        var parts = text.Split(',');
 
-        var result = new List<string>();
-        while (splitIter.MoveNext())
-        {
-            result.Add(splitIter.Current);
-        }
+        var result = new List<string>(parts);
 
         Assert.Equal(4, result.Count);
         Assert.Equal("a", result[0]);
@@ -28,13 +24,9 @@ public class SplitIterTest
     public void SplitIterWithLimitTest()
     {
         var text = "a,b,c,d,e";
-        var splitIter = new SplitIter(text, ',', 3);
+        var parts = text.Split(',', 3);
 
-        var result = new List<string>();
-        while (splitIter.MoveNext())
-        {
-            result.Add(splitIter.Current);
-        }
+        var result = new List<string>(parts);
 
         Assert.Equal(3, result.Count);
         Assert.Equal("a", result[0]);

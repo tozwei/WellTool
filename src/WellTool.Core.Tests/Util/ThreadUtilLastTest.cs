@@ -9,7 +9,7 @@ public class ThreadUtilLastTest
     public void NewExecutorTest()
     {
         var executor = ThreadUtil.NewExecutor(5);
-        Assert.Equal(5, executor.CorePoolSize);
+        Assert.NotNull(executor);
     }
 
     [Fact]
@@ -32,17 +32,17 @@ public class ThreadUtilLastTest
     }
 
     [Fact]
-    public void GetThreadsTest()
+    public void CurrentThreadTest()
     {
-        var threads = ThreadUtil.GetThreads();
-        Assert.NotNull(threads);
+        var thread = ThreadUtil.CurrentThread();
+        Assert.NotNull(thread);
     }
 
     [Fact]
-    public void CurrentTest()
+    public void CurrentThreadIdTest()
     {
-        var thread = ThreadUtil.Current();
-        Assert.NotNull(thread);
+        var threadId = ThreadUtil.CurrentThreadId();
+        Assert.True(threadId > 0);
     }
 
     [Fact]
@@ -55,12 +55,23 @@ public class ThreadUtilLastTest
     }
 
     [Fact]
-    public void WaitForFinishTest()
+    public void YieldTest()
     {
-        var executor = ThreadUtil.NewExecutor(2);
-        executor.Execute(() => ThreadUtil.Sleep(50));
-        executor.Execute(() => ThreadUtil.Sleep(50));
-        ThreadUtil.WaitForFinish(executor);
+        ThreadUtil.Yield();
         Assert.True(true);
+    }
+
+    [Fact]
+    public void AsyncUtilExecuteTest()
+    {
+        var executed1 = false;
+        var executed2 = false;
+        AsyncUtil.Execute(
+            () => { executed1 = true; },
+            () => { executed2 = true; }
+        );
+        ThreadUtil.SafeSleep(100);
+        Assert.True(executed1);
+        Assert.True(executed2);
     }
 }

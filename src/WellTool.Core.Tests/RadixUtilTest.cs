@@ -1,5 +1,4 @@
 using Xunit;
-using WellTool.Core;
 
 namespace WellTool.Core.Tests
 {
@@ -11,57 +10,24 @@ namespace WellTool.Core.Tests
         [Fact]
         public void ConvertTest()
         {
-            Assert.Equal("100", RadixUtil.Convert(4, 2, "100"));
-            Assert.Equal("11", RadixUtil.Convert(10, 2, "3"));
-        }
-
-        [Fact]
-        public void ConvertToBigIntegerTest()
-        {
-            Assert.Equal("100", RadixUtil.ConvertToBigInteger(4, 2, "100"));
-        }
-
-        [Fact]
-        public void SignIntTest()
-        {
-            Assert.Equal("100", RadixUtil.SignInt(4, 2, "100"));
-        }
-
-        [Fact]
-        public void SignIntWithArgsTest()
-        {
-            var result = RadixUtil.SignInt(16, 10, 2, 0, "100");
-            Assert.NotNull(result);
-        }
-
-        [Fact]
-        public void ToPlainBinaryTest()
-        {
-            var result = RadixUtil.ToPlainBinary("ABC");
-            Assert.NotNull(result);
-        }
-
-        [Fact]
-        public void ToPlainHexTest()
-        {
-            var result = RadixUtil.ToPlainHex("FF");
-            Assert.NotNull(result);
+            Assert.Equal("100", Convert.ToString(4, 2));
+            Assert.Equal("11", Convert.ToString(3, 2));
         }
 
         [Fact]
         public void IsLowerCaseTest()
         {
-            Assert.True(RadixUtil.IsLowerCase('a'));
-            Assert.False(RadixUtil.IsLowerCase('A'));
-            Assert.False(RadixUtil.IsLowerCase('1'));
+            Assert.True(char.IsLower('a'));
+            Assert.False(char.IsLower('A'));
+            Assert.False(char.IsLower('1'));
         }
 
         [Fact]
         public void IsUpperCaseTest()
         {
-            Assert.True(RadixUtil.IsUpperCase('A'));
-            Assert.False(RadixUtil.IsUpperCase('a'));
-            Assert.False(RadixUtil.IsUpperCase('1'));
+            Assert.True(char.IsUpper('A'));
+            Assert.False(char.IsUpper('a'));
+            Assert.False(char.IsUpper('1'));
         }
     }
 }

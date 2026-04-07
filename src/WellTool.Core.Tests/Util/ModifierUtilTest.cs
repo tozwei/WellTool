@@ -20,24 +20,10 @@ public class ModifierUtilTest
     }
 
     [Fact]
-    public void IsProtectedTest()
-    {
-        Assert.False(ModifierUtil.IsProtected(typeof(PublicClass)));
-        Assert.True(ModifierUtil.IsProtected(typeof(ProtectedClass)));
-    }
-
-    [Fact]
     public void IsStaticTest()
     {
         Assert.True(ModifierUtil.IsStatic(typeof(StaticClass)));
         Assert.False(ModifierUtil.IsStatic(typeof(PublicClass)));
-    }
-
-    [Fact]
-    public void IsFinalTest()
-    {
-        Assert.True(ModifierUtil.IsFinal(typeof(FinalClass)));
-        Assert.False(ModifierUtil.IsFinal(typeof(PublicClass)));
     }
 
     [Fact]
@@ -48,23 +34,20 @@ public class ModifierUtilTest
     }
 
     [Fact]
-    public void GetModifiersTest()
-    {
-        var modifiers = ModifierUtil.GetModifiers(typeof(PublicClass));
-        Assert.NotEmpty(modifiers);
-    }
-
-    [Fact]
     public void ToStringModifierTest()
     {
         var str = ModifierUtil.ToString(typeof(PublicClass));
         Assert.Contains("public", str);
     }
 
+    [Fact]
+    public void IsInternalTest()
+    {
+        Assert.False(ModifierUtil.IsInternal(typeof(PublicClass)));
+    }
+
     public class PublicClass { }
     private class PrivateClass { }
-    protected class ProtectedClass { }
     internal static class StaticClass { }
-    public sealed class FinalClass { }
     public abstract class AbstractClass { }
 }

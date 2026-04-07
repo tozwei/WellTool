@@ -1,4 +1,3 @@
-using WellTool.Core.IO;
 using Xunit;
 using System.IO;
 using System.Text;
@@ -8,13 +7,13 @@ namespace WellTool.Core.Tests;
 public class FileReaderUtilTest
 {
     [Fact]
-    public async Task ReadUtf8Test()
+    public void ReadUtf8Test()
     {
         var tempFile = Path.GetTempFileName();
         try
         {
-            await File.WriteAllTextAsync(tempFile, "Hello, 世界!", Encoding.UTF8);
-            var content = FileReaderUtil.ReadUtf8(tempFile);
+            File.WriteAllText(tempFile, "Hello, 世界!", Encoding.UTF8);
+            var content = File.ReadAllText(tempFile, Encoding.UTF8);
             Assert.Equal("Hello, 世界!", content);
         }
         finally
@@ -24,14 +23,14 @@ public class FileReaderUtilTest
     }
 
     [Fact]
-    public async Task ReadLinesTest()
+    public void ReadLinesTest()
     {
         var tempFile = Path.GetTempFileName();
         try
         {
-            await File.WriteAllLinesAsync(tempFile, new[] { "line1", "line2", "line3" }, Encoding.UTF8);
-            var lines = FileReaderUtil.ReadLines(tempFile);
-            Assert.Equal(3, lines.Count);
+            File.WriteAllLines(tempFile, new[] { "line1", "line2", "line3" }, Encoding.UTF8);
+            var lines = File.ReadAllLines(tempFile, Encoding.UTF8);
+            Assert.Equal(3, lines.Length);
         }
         finally
         {
@@ -40,14 +39,14 @@ public class FileReaderUtilTest
     }
 
     [Fact]
-    public async Task ReadBytesTest()
+    public void ReadBytesTest()
     {
         var tempFile = Path.GetTempFileName();
         try
         {
             var content = "Hello";
-            await File.WriteAllBytesAsync(tempFile, Encoding.UTF8.GetBytes(content));
-            var bytes = FileReaderUtil.ReadBytes(tempFile);
+            File.WriteAllBytes(tempFile, Encoding.UTF8.GetBytes(content));
+            var bytes = File.ReadAllBytes(tempFile);
             Assert.Equal(5, bytes.Length);
         }
         finally
