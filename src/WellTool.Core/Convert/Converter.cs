@@ -32,7 +32,7 @@ namespace WellTool.Core.Converter
             // 处理字符串到数值类型的转换
             if (value is string str && IsNumericType(typeof(T)))
             {
-                return (T)Convert.ChangeType(str, typeof(T));
+                return (T)System.Convert.ChangeType(str, typeof(T));
             }
             var result = To(value, typeof(T));
             if (result is bool boolValue && typeof(T) == typeof(int))
