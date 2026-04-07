@@ -18,8 +18,8 @@ public class GeneratorTest
     [Fact]
     public void GenerateNumericTest()
     {
-        // 使用 RandomGenerator（支持数字）
-        var generator = new RandomGenerator(4);
+        // 使用 RandomGenerator（只包含数字）
+        var generator = new RandomGenerator("0123456789", 4);
         var code = generator.Generate();
         Assert.NotNull(code);
         Assert.Equal(4, code.Length);

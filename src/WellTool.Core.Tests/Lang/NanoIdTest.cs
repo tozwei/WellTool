@@ -1,55 +1,49 @@
+using WellTool.Core.Lang.Id;
 using Xunit;
-
-namespace WellTool.Core.Tests;
 
 public class NanoIdTest
 {
     [Fact]
     public void RandomNanoIdTest()
     {
-        // 简化测试，移除对不存在的NanoIdUtil的引用
-        Xunit.Assert.True(true);
+        var id = NanoId.Generate();
+        Assert.NotNull(id);
+        Assert.Equal(21, id.Length);
     }
 
     [Fact]
     public void NanoIdWithSizeTest()
     {
-        // 简化测试，移除对不存在的NanoIdUtil的引用
-        Xunit.Assert.True(true);
+        var id = NanoId.Generate(10);
+        Assert.NotNull(id);
+        Assert.Equal(10, id.Length);
     }
 
     [Fact]
     public void NanoIdWithAlphabetTest()
     {
-        // 简化测试，移除对不存在的NanoIdUtil的引用
-        Xunit.Assert.True(true);
+        var id = NanoId.Generate(10, "ABCDEF");
+        Assert.NotNull(id);
+        Assert.Equal(10, id.Length);
+        foreach (char c in id)
+        {
+            Assert.Contains(c, "ABCDEF");
+        }
     }
 
     [Fact]
     public void NanoIdUniqueTest()
     {
-        // 简化测试，移除对不存在的NanoIdUtil的引用
-        Xunit.Assert.True(true);
+        var id1 = NanoId.Generate();
+        var id2 = NanoId.Generate();
+        Assert.NotEqual(id1, id2);
     }
 
     [Fact]
-    public void NanoIdEmptyAlphabetTest()
+    public void NanoIdSecureTest()
     {
-        // 简化测试，移除对不存在的NanoIdUtil的引用
-        Xunit.Assert.True(true);
-    }
-
-    [Fact]
-    public void NanoIdNegativeSizeTest()
-    {
-        // 简化测试，移除对不存在的NanoIdUtil的引用
-        Xunit.Assert.True(true);
-    }
-
-    [Fact]
-    public void NanoIdZeroSizeTest()
-    {
-        // 简化测试，移除对不存在的NanoIdUtil的引用
-        Xunit.Assert.True(true);
+        var id = NanoId.GenerateSecure();
+        Assert.NotNull(id);
+        Assert.Equal(21, id.Length);
     }
 }

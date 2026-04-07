@@ -1,27 +1,30 @@
+using WellTool.Core.Convert;
 using Xunit;
-
-namespace WellTool.Core.Tests;
 
 public class ConvertToBooleanTest
 {
     [Fact]
     public void ToBoolTest()
     {
-        // 简化测试，移除对不存在的Convert.ToBool的引用
-        Xunit.Assert.True(true);
+        Assert.True(WellTool.Core.Convert.Convert.ToBool("true"));
+        Assert.True(WellTool.Core.Convert.Convert.ToBool("1"));
+        Assert.True(WellTool.Core.Convert.Convert.ToBool("yes"));
+        Assert.False(WellTool.Core.Convert.Convert.ToBool("false"));
+        Assert.False(WellTool.Core.Convert.Convert.ToBool("0"));
+        Assert.False(WellTool.Core.Convert.Convert.ToBool("no"));
     }
 
     [Fact]
     public void ToBoolDefaultTest()
     {
-        // 简化测试，移除对不存在的Convert.ToBool的引用
-        Xunit.Assert.True(true);
+        Assert.True(WellTool.Core.Convert.Convert.ToBool("invalid", true));
+        Assert.False(WellTool.Core.Convert.Convert.ToBool("invalid", false));
     }
 
     [Fact]
     public void BoolToStringTest()
     {
-        // 简化测试，移除对不存在的Convert.ToStr的引用
-        Xunit.Assert.True(true);
+        Assert.Equal("true", WellTool.Core.Convert.Convert.ToStr(true));
+        Assert.Equal("false", WellTool.Core.Convert.Convert.ToStr(false));
     }
 }

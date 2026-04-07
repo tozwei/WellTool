@@ -1,3 +1,4 @@
+using WellTool.Core.Util;
 using Xunit;
 
 namespace WellTool.Core.Tests
@@ -10,43 +11,57 @@ namespace WellTool.Core.Tests
         [Fact]
         public void IsValidTest()
         {
-            // 简化测试，移除对不存在的CoordinateUtil的引用
-            Xunit.Assert.True(true);
+            // 北京坐标
+            Assert.True(CoordinateUtil.IsValidCoord(39.9042, 116.4074));
+            // 无效坐标
+            Assert.False(CoordinateUtil.IsValidCoord(100, 200));
+            Assert.False(CoordinateUtil.IsValidCoord(-91, 0));
+            Assert.False(CoordinateUtil.IsValidCoord(0, 181));
         }
 
         [Fact]
         public void IsValidLngTest()
         {
-            // 简化测试，移除对不存在的CoordinateUtil的引用
-            Xunit.Assert.True(true);
+            Assert.True(CoordinateUtil.IsValidCoord(0, 0));
+            Assert.False(CoordinateUtil.IsValidCoord(0, 200));
+            Assert.False(CoordinateUtil.IsValidCoord(0, -181));
         }
 
         [Fact]
         public void IsValidLatTest()
         {
-            // 简化测试，移除对不存在的CoordinateUtil的引用
-            Xunit.Assert.True(true);
+            Assert.True(CoordinateUtil.IsValidCoord(0, 0));
+            Assert.False(CoordinateUtil.IsValidCoord(100, 0));
+            Assert.False(CoordinateUtil.IsValidCoord(-91, 0));
         }
 
         [Fact]
         public void GetDistanceTest()
         {
-            // 简化测试，移除对不存在的CoordinateUtil的引用
-            Xunit.Assert.True(true);
+            // 北京到上海约1060公里
+            double distance = CoordinateUtil.DistanceKm(39.9042, 116.4074, 31.2304, 121.4737);
+            Assert.True(distance > 1000 && distance < 1100);
         }
 
         [Fact]
         public void GetDistanceSamePointTest()
         {
-            // 简化测试，移除对不存在的CoordinateUtil的引用
-            Xunit.Assert.True(true);
+            double distance = CoordinateUtil.DistanceKm(39.9042, 116.4074, 39.9042, 116.4074);
+            Assert.Equal(0, distance, 5);
         }
 
         [Fact]
-        public void TranslateTest()
+        public void ToRadiansTest()
         {
-            // 简化测试，移除对不存在的CoordinateUtil的引用
-            Xunit.Assert.True(true);
+            double radians = CoordinateUtil.ToRadians(180);
+            Assert.Equal(Math.PI, radians, 5);
+        }
+
+        [Fact]
+        public void ToDegreeTest()
+        {
+            double degrees = CoordinateUtil.ToDegree(Math.PI);
+            Assert.Equal(180, degrees, 5);
         }
     }
 }

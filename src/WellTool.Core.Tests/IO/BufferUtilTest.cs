@@ -1,55 +1,73 @@
+using System.Text;
+using WellTool.Core.IO;
 using Xunit;
-
-namespace WellTool.Core.Tests;
 
 public class BufferUtilTest
 {
     [Fact]
     public void CopyTest()
     {
-        // 简化测试，移除对不存在的ByteBuffer的引用
-        Xunit.Assert.True(true);
+        byte[] src = new byte[] { 1, 2, 3, 4, 5 };
+        byte[] result = BufferUtil.Copy(src, 1, 4);
+        Assert.NotNull(result);
+        Assert.Equal(3, result.Length);
+        Assert.Equal(2, result[0]);
     }
 
     [Fact]
     public void ReadBytesTest()
     {
-        // 简化测试，移除对不存在的ByteBuffer的引用
-        Xunit.Assert.True(true);
+        byte[] buffer = new byte[] { 1, 2, 3, 4, 5 };
+        int position = 0;
+        byte[] result = BufferUtil.ReadBytes(buffer, ref position);
+        Assert.NotNull(result);
+        Assert.Equal(1, result.Length);
+        Assert.Equal(1, result[0]);
+        Assert.Equal(1, position);
     }
 
     [Fact]
     public void ReadLineTest()
     {
-        // 简化测试，移除对不存在的ByteBuffer的引用
-        Xunit.Assert.True(true);
+        byte[] buffer = Encoding.UTF8.GetBytes("hello\nworld");
+        int position = 0;
+        string line = BufferUtil.ReadLine(buffer, ref position, Encoding.UTF8);
+        Assert.Equal("hello", line);
     }
 
     [Fact]
     public void CopyNormalRangeTest()
     {
-        // 简化测试，移除对不存在的ByteBuffer的引用
-        Xunit.Assert.True(true);
+        byte[] src = new byte[] { 1, 2, 3, 4, 5 };
+        byte[] dest = new byte[5];
+        byte[] result = BufferUtil.Copy(src, 1, 3, dest, 0, 2);
+        Assert.NotNull(result);
     }
 
     [Fact]
     public void CopyFromStartTest()
     {
-        // 简化测试，移除对不存在的ByteBuffer的引用
-        Xunit.Assert.True(true);
+        byte[] src = new byte[] { 1, 2, 3, 4, 5 };
+        byte[] result = BufferUtil.Copy(src, 0, 3);
+        Assert.NotNull(result);
+        Assert.Equal(3, result.Length);
     }
 
     [Fact]
     public void CopyToEndTest()
     {
-        // 简化测试，移除对不存在的ByteBuffer的引用
-        Xunit.Assert.True(true);
+        byte[] src = new byte[] { 1, 2, 3, 4, 5 };
+        byte[] result = BufferUtil.Copy(src, 2, 5);
+        Assert.NotNull(result);
+        Assert.Equal(3, result.Length);
     }
 
     [Fact]
-    public void CopyEmptyRangeTest()
+    public void CreateUtf8Test()
     {
-        // 简化测试，移除对不存在的ByteBuffer的引用
-        Xunit.Assert.True(true);
+        string test = "Hello";
+        byte[] result = BufferUtil.CreateUtf8(test);
+        Assert.NotNull(result);
+        Assert.Equal(test, Encoding.UTF8.GetString(result));
     }
 }

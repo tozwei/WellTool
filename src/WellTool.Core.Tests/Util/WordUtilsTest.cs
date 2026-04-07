@@ -1,3 +1,4 @@
+using WellTool.Core.Text;
 using Xunit;
 
 namespace WellTool.Core.Tests;
@@ -7,56 +8,52 @@ public class WordUtilsTest
     [Fact]
     public void ToCamelCaseTest()
     {
-        // 简化测试，移除对不存在的WordUtils的引用
-        Assert.True(true);
+        Assert.Equal("helloWorld", NamingCase.ToCamelCase("hello_world"));
+        Assert.Equal("testAbc", NamingCase.ToCamelCase("test_abc"));
     }
 
     [Fact]
     public void ToPascalCaseTest()
     {
-        // 简化测试，移除对不存在的WordUtils的引用
-        Assert.True(true);
+        Assert.Equal("HelloWorld", NamingCase.ToPascalCase("hello_world"));
+        Assert.Equal("TestAbc", NamingCase.ToPascalCase("test_abc"));
     }
 
     [Fact]
     public void ToUnderScoreCaseTest()
     {
-        // 简化测试，移除对不存在的WordUtils的引用
-        Assert.True(true);
+        Assert.Equal("hello_world", NamingCase.ToUnderlineCase("helloWorld"));
+        Assert.Equal("test_abc", NamingCase.ToUnderlineCase("testAbc"));
     }
 
     [Fact]
     public void ToHyphenCaseTest()
     {
-        // 简化测试，移除对不存在的WordUtils的引用
-        Assert.True(true);
+        Assert.Equal("hello-world", NamingCase.ToKebabCase("helloWorld"));
+        Assert.Equal("test-abc", NamingCase.ToKebabCase("testAbc"));
     }
 
     [Fact]
     public void ToSnakeCaseTest()
     {
-        // 简化测试，移除对不存在的WordUtils的引用
-        Assert.True(true);
+        Assert.Equal("hello_world", NamingCase.ToUnderlineCase("helloWorld"));
     }
 
     [Fact]
     public void CapitalizeTest()
     {
-        // 简化测试，移除对不存在的WordUtils的引用
-        Assert.True(true);
+        Assert.Equal("Hello", NamingCase.ToPascalCase("hello"));
     }
 
     [Fact]
     public void UncapitalizeTest()
     {
-        // 简化测试，移除对不存在的WordUtils的引用
-        Assert.True(true);
+        Assert.Equal("hello", NamingCase.ToCamelCase("Hello"));
     }
 
     [Fact]
     public void WrapTest()
     {
-        // 简化测试，移除对不存在的WordUtils的引用
-        Assert.True(true);
+        Assert.Equal("\"hello\"", "hello");
     }
 }

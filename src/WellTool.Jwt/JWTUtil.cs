@@ -63,6 +63,10 @@ namespace WellTool.JWT;
         /// <returns>JWT 对象</returns>
         public static JWT ParseToken(string token)
         {
+            if (token == null)
+            {
+                throw new ArgumentNullException(nameof(token));
+            }
             return JWT.Of(token);
         }
 

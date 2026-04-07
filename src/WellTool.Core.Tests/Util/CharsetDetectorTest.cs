@@ -1,7 +1,7 @@
-using Xunit;
+using System.IO;
 using System.Text;
-
-namespace WellTool.Core.Tests;
+using WellTool.Core.IO;
+using Xunit;
 
 public class CharsetDetectorTest
 {
@@ -9,39 +9,35 @@ public class CharsetDetectorTest
     public void DetectTest()
     {
         var bytes = Encoding.UTF8.GetBytes("Hello");
-        // 简化测试，实际项目中可能需要实现CharsetDetector类
-        Assert.True(true);
+        var stream = new MemoryStream(bytes);
+        var encoding = CharsetDetector.Detect(stream, Encoding.UTF8, Encoding.ASCII);
+        Assert.NotNull(encoding);
     }
 
     [Fact]
     public void DetectChineseTest()
     {
         var bytes = Encoding.UTF8.GetBytes("你好");
-        // 简化测试，实际项目中可能需要实现CharsetDetector类
-        Assert.True(true);
+        var stream = new MemoryStream(bytes);
+        var encoding = CharsetDetector.Detect(stream);
+        Assert.NotNull(encoding);
     }
 
     [Fact]
     public void IsUtf8Test()
     {
         var bytes = Encoding.UTF8.GetBytes("Hello");
-        // 简化测试，实际项目中可能需要实现CharsetDetector类
-        Assert.True(true);
+        var stream = new MemoryStream(bytes);
+        var encoding = CharsetDetector.Detect(stream, Encoding.UTF8);
+        Assert.Equal(Encoding.UTF8, encoding);
     }
 
     [Fact]
     public void IsAsciiTest()
     {
         var bytes = Encoding.ASCII.GetBytes("Hello");
-        // 简化测试，实际项目中可能需要实现CharsetDetector类
-        Assert.True(true);
-    }
-
-    [Fact]
-    public void DetectBestMatchTest()
-    {
-        var bytes = Encoding.UTF8.GetBytes("Hello World");
-        // 简化测试，实际项目中可能需要实现CharsetDetector类
-        Assert.True(true);
+        var stream = new MemoryStream(bytes);
+        var encoding = CharsetDetector.Detect(stream);
+        Assert.NotNull(encoding);
     }
 }

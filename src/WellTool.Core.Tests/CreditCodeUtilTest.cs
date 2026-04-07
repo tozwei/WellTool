@@ -1,3 +1,4 @@
+using WellTool.Core.Util;
 using Xunit;
 
 namespace WellTool.Core.Tests
@@ -7,32 +8,30 @@ namespace WellTool.Core.Tests
     /// </summary>
     public class CreditCodeUtilTest
     {
+        // 有效统一社会信用代码
+        private const string ValidCode = "91110000100000000X";
+        private const string InvalidCode = "911100001000000000";
+
         [Fact]
         public void IsValidTest()
         {
-            // 简化测试，移除对不存在的CreditCodeUtil的引用
-            Xunit.Assert.True(true);
+            // 测试有效信用代码
+            Assert.True(CreditCodeUtil.IsValid(ValidCode));
+            
+            // 测试无效信用代码
+            Assert.False(CreditCodeUtil.IsValid(null));
+            Assert.False(CreditCodeUtil.IsValid(""));
+            Assert.False(CreditCodeUtil.IsValid("123456789012345678"));
+            Assert.False(CreditCodeUtil.IsValid(InvalidCode));
         }
 
         [Fact]
-        public void IsChineseTest()
+        public void GenerateTest()
         {
-            // 简化测试，移除对不存在的CreditCodeUtil的引用
-            Xunit.Assert.True(true);
-        }
-
-        [Fact]
-        public void GetAddressCodeTest()
-        {
-            // 简化测试，移除对不存在的CreditCodeUtil的引用
-            Xunit.Assert.True(true);
-        }
-
-        [Fact]
-        public void GetOrgCodeTest()
-        {
-            // 简化测试，移除对不存在的CreditCodeUtil的引用
-            Xunit.Assert.True(true);
+            var code = CreditCodeUtil.Generate("10000000");
+            Assert.NotNull(code);
+            Assert.Equal(18, code.Length);
+            Assert.True(code.StartsWith("9"));
         }
     }
 }

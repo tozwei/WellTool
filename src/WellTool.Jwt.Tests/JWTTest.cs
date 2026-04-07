@@ -102,7 +102,8 @@ public class JWTTest
     {
         var jwt = JWT.Create()
             .SetPayload("name", "test")
-            .SetPayload("age", 25);
+            .SetPayload("age", 25)
+            .SetSigner(JwtSignerUtil.None());
 
         var parsed = JWT.Of(jwt.Sign());
         Assert.Equal("test", parsed.GetPayload("name"));
@@ -115,7 +116,8 @@ public class JWTTest
         var expires = DateTime.UtcNow.AddHours(1);
         var jwt = JWT.Create()
             .SetPayload("sub", "test")
-            .SetExpiresAt(expires);
+            .SetExpiresAt(expires)
+            .SetSigner(JwtSignerUtil.None());
 
         var token = jwt.Sign();
         Assert.Contains(".", token);
@@ -127,7 +129,8 @@ public class JWTTest
         var nbf = DateTime.UtcNow;
         var jwt = JWT.Create()
             .SetPayload("sub", "test")
-            .SetNotBefore(nbf);
+            .SetNotBefore(nbf)
+            .SetSigner(JwtSignerUtil.None());
 
         var token = jwt.Sign();
         Assert.Contains(".", token);

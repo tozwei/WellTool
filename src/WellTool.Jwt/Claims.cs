@@ -56,6 +56,41 @@ namespace WellTool.JWT
         {
             Init();
             _claims.TryGetValue(name, out var value);
+            
+            // 处理 JsonElement 类型，转换为相应的基本类型
+            if (value is System.Text.Json.JsonElement jsonElement)
+            {
+                switch (jsonElement.ValueKind)
+                {
+                    case System.Text.Json.JsonValueKind.String:
+                        return jsonElement.GetString();
+                    case System.Text.Json.JsonValueKind.Number:
+                        // 尝试获取不同类型的数值
+                        if (jsonElement.TryGetInt32(out int intValue))
+                        {
+                            return intValue;
+                        }
+                        else if (jsonElement.TryGetInt64(out long longValue))
+                        {
+                            return longValue;
+                        }
+                        else if (jsonElement.TryGetDouble(out double doubleValue))
+                        {
+                            return doubleValue;
+                        }
+                        else
+                        {
+                            return jsonElement.GetDecimal();
+                        }
+                    case System.Text.Json.JsonValueKind.True:
+                        return true;
+                    case System.Text.Json.JsonValueKind.False:
+                        return false;
+                    default:
+                        return value;
+                }
+            }
+            
             return value;
         }
 
