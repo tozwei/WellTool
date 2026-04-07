@@ -112,12 +112,28 @@ namespace WellTool.Poi.Tests
                     writer.Save();
                 }
                 
-                // Read them back
-                using var reader = WellTool.Poi.ExcelUtil.GetReader(tempFile);
-                var result = reader.ReadAll();
+                Console.WriteLine("Step 1: Write completed. File exists: " + File.Exists(tempFile));
+                
+                // Read them back - wrap in try-catch to see actual exception
+                // 读取Numbers sheet（索引1，因为构造函数会创建默认Sheet1）
+                List<List<object?>> result;
+                try
+                {
+                    using var reader = WellTool.Poi.ExcelUtil.GetReader(tempFile, "Numbers");
+                    result = reader.ReadAll();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception during read: " + ex.GetType().Name);
+                    Console.WriteLine("Message: " + ex.Message);
+                    Console.WriteLine("Stack: " + ex.StackTrace);
+                    throw;
+                }
                 
                 Assert.NotNull(result);
-                // 验证读取的数据（只验证至少有写入的数据）
+                Console.WriteLine($"Step 2: Read completed. Result count: {result.Count}");
+                
+                // 验证至少有2行数据
                 Assert.True(result.Count >= 2, $"Expected at least 2 rows, got {result.Count}");
             }
             finally

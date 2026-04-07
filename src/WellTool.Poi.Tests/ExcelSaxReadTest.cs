@@ -30,8 +30,8 @@ namespace WellTool.Poi.Tests
                     writer.Save();
                 }
                 
-                // Read using SAX
-                using var reader = WellTool.Poi.ExcelUtil.GetReader(tempFile);
+                // Read using SAX - 使用创建的sheet名称"Test"
+                using var reader = WellTool.Poi.ExcelUtil.GetReader(tempFile, "Test");
                 var result = reader.ReadAll();
                 
                 Assert.NotNull(result);

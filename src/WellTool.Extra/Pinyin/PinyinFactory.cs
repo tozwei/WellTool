@@ -74,8 +74,27 @@ namespace WellTool.Extra.Pinyin
 
         public string GetPinyin(string str, string separator)
         {
+            if (str == null)
+                return null;
             if (string.IsNullOrEmpty(str))
                 return string.Empty;
+
+            // 检查是否全为非汉字字符
+            bool allNonChinese = true;
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (_pinyinMap.ContainsKey(str[i]))
+                {
+                    allNonChinese = false;
+                    break;
+                }
+            }
+
+            // 如果全为非汉字字符，直接返回原字符串
+            if (allNonChinese)
+            {
+                return str;
+            }
 
             var result = new System.Text.StringBuilder();
             for (int i = 0; i < str.Length; i++)
@@ -94,13 +113,37 @@ namespace WellTool.Extra.Pinyin
 
         public char GetFirstLetter(char c)
         {
-            return _firstLetterMap.TryGetValue(c, out var letter) ? letter : c;
+            if (_firstLetterMap.TryGetValue(c, out var letter))
+            {
+                return letter;
+            }
+            // 对于非汉字字符，返回小写形式
+            return char.ToLower(c);
         }
 
         public string GetFirstLetter(string str, string separator)
         {
+            if (str == null)
+                return null;
             if (string.IsNullOrEmpty(str))
                 return string.Empty;
+
+            // 检查是否全为非汉字字符
+            bool allNonChinese = true;
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (_firstLetterMap.ContainsKey(str[i]))
+                {
+                    allNonChinese = false;
+                    break;
+                }
+            }
+
+            // 如果全为非汉字字符，直接返回原字符串
+            if (allNonChinese)
+            {
+                return str;
+            }
 
             var result = new System.Text.StringBuilder();
             for (int i = 0; i < str.Length; i++)

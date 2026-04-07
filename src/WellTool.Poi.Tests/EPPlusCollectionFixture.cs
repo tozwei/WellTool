@@ -11,6 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Reflection;
+using OfficeOpenXml;
 using Xunit;
 
 namespace WellTool.Poi.Tests;
@@ -22,8 +25,20 @@ public class EPPlusCollectionFixture
 {
     public EPPlusCollectionFixture()
     {
-        // 触发Poi项目的静态构造函数
-        WellTool.Poi.EPPlusInitializer.Initialize();
+        // 使用反射直接设置LicenseContext，确保在任何EPPlus代码执行前设置
+        // 这是最可靠的方法，避免静态构造函数执行顺序问题
+        try
+        {
+            var licenseContextProperty = typeof(ExcelPackage).GetProperty("LicenseContext", BindingFlags.Static | BindingFlags.Public);
+            if (licenseContextProperty != null)
+            {
+                licenseContextProperty.SetValue(null, LicenseContext.NonCommercial);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to set LicenseContext via reflection: {ex.Message}");
+        }
     }
 }
 
