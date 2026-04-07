@@ -7,34 +7,32 @@ namespace WellTool.Core.Tests;
 public class XmlUtilLastTest
 {
     [Fact]
-    public void ParseTest()
+    public void EscapeTest()
     {
-        var xml = "<root><item>value</item></root>";
-        var doc = XmlUtil.Parse(xml);
-        Assert.NotNull(doc);
+        var result = XmlUtil.Escape("<tag>value & 'test'</tag>");
+        Assert.Equal("&lt;tag&gt;value &amp; &apos;test&apos;&lt;/tag&gt;", result);
     }
 
     [Fact]
-    public void CreateDocumentTest()
+    public void UnescapeTest()
     {
-        var doc = XmlUtil.CreateDocument();
-        Assert.NotNull(doc);
+        var result = XmlUtil.Unescape("&lt;tag&gt;value &amp; &apos;test&apos;&lt;/tag&gt;");
+        Assert.Equal("<tag>value & 'test'</tag>", result);
     }
 
     [Fact]
-    public void ToStrTest()
+    public void IsXmlSafeTest()
     {
-        var xml = "<root><item>value</item></root>";
-        var doc = XmlUtil.Parse(xml);
-        var str = XmlUtil.ToStr(doc);
-        Assert.Contains("root", str);
+        Assert.True(XmlUtil.IsXmlSafe('a'));
+        Assert.True(XmlUtil.IsXmlSafe('\n'));
+        Assert.False(XmlUtil.IsXmlSafe('\x01'));
     }
 
     [Fact]
-    public void SelectNodesTest()
+    public void EscapeInvalidTest()
     {
-        var xml = "<root><item>value1</item><item>value2</item></root>";
-        var nodes = XmlUtil.SelectNodes(xml, "//item");
-        Assert.Equal(2, nodes.Count);
+        var input = "hello\x01world";
+        var result = XmlUtil.EscapeInvalid(input);
+        Assert.Equal("helloworld", result);
     }
 }

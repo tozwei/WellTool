@@ -7,10 +7,10 @@ namespace WellTool.Core.Tests;
 public class FileUtilTest
 {
     [Fact]
-    public void FileExistsTest()
+    public void ExistsTest()
     {
-        Assert.True(FileUtil.FileExists("README.md"));
-        Assert.False(FileUtil.FileExists("not_exist_file.txt"));
+        Assert.True(FileUtil.Exists("README.md"));
+        Assert.False(FileUtil.Exists("not_exist_file.txt"));
     }
 
     [Fact]
@@ -44,19 +44,19 @@ public class FileUtilTest
     }
 
     [Fact]
-    public void IsDirectoryTest()
+    public void DirectoryExistsTest()
     {
-        Assert.True(FileUtil.IsDirectory("."));
-        Assert.False(FileUtil.IsDirectory("README.md"));
+        Assert.True(FileUtil.DirectoryExists("."));
+        Assert.False(FileUtil.DirectoryExists("not_exist_dir"));
     }
 
     [Fact]
-    public void MkdirsTest()
+    public void CreateDirectoryTest()
     {
         var tempPath = Path.Combine(Path.GetTempPath(), "welltool_test_" + Guid.NewGuid().ToString("N"));
         try
         {
-            FileUtil.Mkdirs(tempPath);
+            FileUtil.CreateDirectory(tempPath);
             Assert.True(Directory.Exists(tempPath));
         }
         finally
@@ -67,13 +67,13 @@ public class FileUtilTest
     }
 
     [Fact]
-    public void DelTest()
+    public void DeleteTest()
     {
         var tempFile = Path.Combine(Path.GetTempPath(), "welltool_test_" + Guid.NewGuid().ToString("N") + ".txt");
         File.WriteAllText(tempFile, "test");
         Assert.True(File.Exists(tempFile));
 
-        FileUtil.Del(tempFile);
+        FileUtil.Delete(tempFile);
         Assert.False(File.Exists(tempFile));
     }
 }

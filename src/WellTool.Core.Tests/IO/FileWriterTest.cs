@@ -7,13 +7,13 @@ namespace WellTool.Core.Tests;
 public class FileWriterTest
 {
     [Fact]
-    public void WriteUtf8Test()
+    public void WriteTest()
     {
-        var tempFile = Path.Combine(Path.GetTempPath(), "test_write_utf8_" + Guid.NewGuid().ToString("N") + ".txt");
+        var tempFile = Path.Combine(Path.GetTempPath(), "test_write_" + Guid.NewGuid().ToString("N") + ".txt");
         try
         {
             var writer = new FileWriter(tempFile);
-            writer.WriteUtf8("Hello, 世界!");
+            writer.Write("Hello, 世界!");
             writer.Flush();
             writer.Close();
 
@@ -27,18 +27,18 @@ public class FileWriterTest
     }
 
     [Fact]
-    public void AppendUtf8Test()
+    public void AppendTest()
     {
         var tempFile = Path.Combine(Path.GetTempPath(), "test_append_" + Guid.NewGuid().ToString("N") + ".txt");
         try
         {
             var writer = new FileWriter(tempFile);
-            writer.WriteUtf8("Hello");
+            writer.Write("Hello");
             writer.Flush();
             writer.Close();
 
             writer = new FileWriter(tempFile, true);
-            writer.WriteUtf8(" World");
+            writer.Write(" World");
             writer.Flush();
             writer.Close();
 

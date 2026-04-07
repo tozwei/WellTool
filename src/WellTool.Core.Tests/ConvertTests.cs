@@ -72,28 +72,28 @@ namespace WellTool.Core.Tests
             string a = " 34232";
             int? aInteger = WellConvert.ToInt(a);
             XAssert.Equal(34232, aInteger);
-            int aInt = ConverterRegistry.Instance.Convert<int>(a);
+            int aInt = WellConvert.To<int>(a);
             XAssert.Equal(34232, aInt);
 
             // 带小数测试
             string b = " 34232.00";
             int? bInteger = WellConvert.ToInt(b);
             XAssert.Equal(34232, bInteger);
-            int bInt = ConverterRegistry.Instance.Convert<int>(b);
+            int bInt = WellConvert.To<int>(b);
             XAssert.Equal(34232, bInt);
 
             // boolean测试
             bool c = true;
             int? cInteger = WellConvert.ToInt(c);
             XAssert.Equal(1, cInteger);
-            int cInt = ConverterRegistry.Instance.Convert<int>(c);
+            int cInt = WellConvert.To<int>(c);
             XAssert.Equal(1, cInt);
 
             // boolean测试
             string d = "08";
             int? dInteger = WellConvert.ToInt(d);
             XAssert.Equal(8, dInteger);
-            int dInt = ConverterRegistry.Instance.Convert<int>(d);
+            int dInt = WellConvert.To<int>(d);
             XAssert.Equal(8, dInt);
         }
 
@@ -111,28 +111,28 @@ namespace WellTool.Core.Tests
             string a = " 342324545435435";
             long? aLong = WellConvert.ToLong(a);
             XAssert.Equal(342324545435435L, aLong);
-            long aLong2 = ConverterRegistry.Instance.Convert<long>(a);
+            long aLong2 = WellConvert.To<long>(a);
             XAssert.Equal(342324545435435L, aLong2);
 
             // 带小数测试
             string b = " 342324545435435.245435435";
             long? bLong = WellConvert.ToLong(b);
             XAssert.Equal(342324545435435L, bLong);
-            long bLong2 = ConverterRegistry.Instance.Convert<long>(b);
+            long bLong2 = WellConvert.To<long>(b);
             XAssert.Equal(342324545435435L, bLong2);
 
             // boolean测试
             bool c = true;
             long? cLong = WellConvert.ToLong(c);
             XAssert.Equal(1L, cLong);
-            long cLong2 = ConverterRegistry.Instance.Convert<long>(c);
+            long cLong2 = WellConvert.To<long>(c);
             XAssert.Equal(1L, cLong2);
 
             // boolean测试
             string d = "08";
             long? dLong = WellConvert.ToLong(d);
             XAssert.Equal(8L, dLong);
-            long dLong2 = ConverterRegistry.Instance.Convert<long>(d);
+            long dLong2 = WellConvert.To<long>(d);
             XAssert.Equal(8L, dLong2);
         }
 
