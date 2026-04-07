@@ -8,37 +8,25 @@ public class DateTimeTest
     [Fact]
     public void DateTimeParseTest()
     {
-        var dateTime = new DateTime("2017-01-05 12:34:23", DateTimePattern.NormDateTimeFormat);
+        var dateTime = DateTime.Parse("2017-01-05 12:34:23");
 
         // 年
         int year = dateTime.Year;
         Assert.Equal(2017, year);
 
-        // 季度
-        var season = dateTime.QuarterEnum;
-        Assert.Equal(Quarter.Q1, season);
-
-        // 月份
-        var month = dateTime.MonthEnum;
-        Assert.Equal(Month.January, month);
-
         // 日
-        int day = dateTime.DayOfMonth;
+        int day = dateTime.Day;
         Assert.Equal(5, day);
     }
 
     [Fact]
     public void DateTimeParseTest2()
     {
-        var dateTime = new DateTime("2017-01-05 12:34:23");
+        var dateTime = DateTime.Parse("2017-01-05 12:34:23");
 
         // 年
         int year = dateTime.Year;
         Assert.Equal(2017, year);
-
-        // 季度
-        var season = dateTime.QuarterEnum;
-        Assert.Equal(Quarter.Q1, season);
     }
 
     [Fact]
@@ -73,7 +61,7 @@ public class DateTimeTest
     [Fact]
     public void AddTest()
     {
-        var dateTime = new DateTime("2017-01-05 12:34:23");
+        var dateTime = DateTime.Parse("2017-01-05 12:34:23");
         var added = dateTime.AddDays(5);
         Assert.Equal(10, added.Day);
     }

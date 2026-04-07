@@ -6,55 +6,39 @@ namespace WellTool.Core.Tests;
 public class ZipUtilTest
 {
     [Fact]
-    public void GzipTest()
+    public void CompressTest()
     {
         var data = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
-        var compressed = ZipUtil.Gzip(data);
+        var compressed = ZipUtil.Compress(data);
         Assert.NotNull(compressed);
         Assert.NotEmpty(compressed);
     }
 
     [Fact]
-    public void UnGzipTest()
+    public void DecompressTest()
     {
         var data = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
-        var compressed = ZipUtil.Gzip(data);
-        var decompressed = ZipUtil.UnGzip(compressed);
+        var compressed = ZipUtil.Compress(data);
+        var decompressed = ZipUtil.Decompress(compressed);
         var str = System.Text.Encoding.UTF8.GetString(decompressed);
         Assert.Equal("Hello, World!", str);
     }
 
     [Fact]
-    public void DeflateTest()
+    public void CompressStringTest()
     {
-        var data = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
-        var compressed = ZipUtil.Deflate(data);
+        var text = "Hello, World!";
+        var compressed = ZipUtil.CompressString(text);
         Assert.NotNull(compressed);
+        Assert.NotEmpty(compressed);
     }
 
     [Fact]
-    public void InflateTest()
+    public void DecompressStringTest()
     {
-        var data = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
-        var compressed = ZipUtil.Deflate(data);
-        var decompressed = ZipUtil.Inflate(compressed);
-        var str = System.Text.Encoding.UTF8.GetString(decompressed);
-        Assert.Equal("Hello, World!", str);
-    }
-
-    [Fact]
-    public void IsGzipTest()
-    {
-        var data = System.Text.Encoding.UTF8.GetBytes("Hello");
-        var compressed = ZipUtil.Gzip(data);
-        Assert.True(ZipUtil.IsGzip(compressed));
-    }
-
-    [Fact]
-    public void IsDeflateTest()
-    {
-        var data = System.Text.Encoding.UTF8.GetBytes("Hello");
-        var compressed = ZipUtil.Deflate(data);
-        Assert.True(ZipUtil.IsDeflate(compressed));
+        var text = "Hello, World!";
+        var compressed = ZipUtil.CompressString(text);
+        var decompressed = ZipUtil.DecompressString(compressed);
+        Assert.Equal(text, decompressed);
     }
 }

@@ -12,7 +12,7 @@ public class DateBetweenTest
         var end = DateTime.Parse("2021-01-10");
         var between = new DateBetween(start, end);
 
-        Assert.Equal(9, between.Days);
+        Assert.Equal(9, between.Between(DateUnit.Day));
     }
 
     [Fact]
@@ -22,7 +22,7 @@ public class DateBetweenTest
         var end = DateTime.Parse("2021-01-01 15:00:00");
         var between = new DateBetween(start, end);
 
-        Assert.Equal(5, between.Hours);
+        Assert.Equal(5, between.Between(DateUnit.Hour));
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class DateBetweenTest
         var end = DateTime.Parse("2021-01-01 10:30:00");
         var between = new DateBetween(start, end);
 
-        Assert.Equal(30, between.Minutes);
+        Assert.Equal(30, between.Between(DateUnit.Minute));
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class DateBetweenTest
         var end = DateTime.Parse("2021-01-01 10:00:45");
         var between = new DateBetween(start, end);
 
-        Assert.Equal(45, between.Seconds);
+        Assert.Equal(45, between.Between(DateUnit.Second));
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class DateBetweenTest
         var end = DateTime.Parse("2021-01-01");
         var between = new DateBetween(start, end);
 
-        Assert.Equal(9, between.Days);
+        Assert.Equal(9, between.Between(DateUnit.Day));
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public class DateBetweenTest
         var end = DateTime.Parse("2021-01-01 12:30:00");
         var between = new DateBetween(start, end);
 
-        var str = between.ToString();
+        var str = between.ToString(DateUnit.Hour, WellTool.Core.Date.BetweenFormatter.Level.HOUR);
         Assert.NotEmpty(str);
     }
 }
