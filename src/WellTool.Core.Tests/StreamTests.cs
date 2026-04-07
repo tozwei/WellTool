@@ -12,7 +12,7 @@ namespace WellTool.Core.Tests
         {
             // 使用C#的LINQ实现类似StreamUtil.of的功能
             var result = Enumerable.Range(0, 4)
-                .Select(i => (int)Math.Pow(2, i + 1))
+                .Select(i => (int)System.Math.Pow(2, i + 1))
                 .ToArray();
             
             Assert.Equal(new[] { 2, 4, 8, 16 }, result);

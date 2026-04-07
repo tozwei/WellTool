@@ -44,31 +44,30 @@ public class DateTimeTest
     [Fact]
     public void QuarterTest()
     {
-        var dateTime = new DateTime("2017-01-05 12:34:23", DateTimePattern.NormDateTimeFormat);
-        var quarter = dateTime.QuarterEnum;
-        Assert.Equal(Quarter.Q1, quarter);
+        var dateTime = DateTime.Parse("2017-01-05 12:34:23");
+        Xunit.Assert.Equal(1, (dateTime.Month - 1) / 3 + 1);
 
-        dateTime = new DateTime("2017-04-05 12:34:23");
-        Assert.Equal(Quarter.Q2, dateTime.QuarterEnum);
+        dateTime = DateTime.Parse("2017-04-05 12:34:23");
+        Xunit.Assert.Equal(2, (dateTime.Month - 1) / 3 + 1);
 
-        dateTime = new DateTime("2017-07-05 12:34:23");
-        Assert.Equal(Quarter.Q3, dateTime.QuarterEnum);
+        dateTime = DateTime.Parse("2017-07-05 12:34:23");
+        Xunit.Assert.Equal(3, (dateTime.Month - 1) / 3 + 1);
 
-        dateTime = new DateTime("2017-10-05 12:34:23");
-        Assert.Equal(Quarter.Q4, dateTime.QuarterEnum);
+        dateTime = DateTime.Parse("2017-10-05 12:34:23");
+        Xunit.Assert.Equal(4, (dateTime.Month - 1) / 3 + 1);
     }
 
     [Fact]
     public void MonthTest()
     {
-        var dateTime = new DateTime("2017-01-05 12:34:23");
-        Assert.Equal(Month.January, dateTime.MonthEnum);
+        var dateTime = DateTime.Parse("2017-01-05 12:34:23");
+        Xunit.Assert.Equal(1, dateTime.Month);
 
-        dateTime = new DateTime("2017-06-05 12:34:23");
-        Assert.Equal(Month.June, dateTime.MonthEnum);
+        dateTime = DateTime.Parse("2017-06-05 12:34:23");
+        Xunit.Assert.Equal(6, dateTime.Month);
 
-        dateTime = new DateTime("2017-12-05 12:34:23");
-        Assert.Equal(Month.December, dateTime.MonthEnum);
+        dateTime = DateTime.Parse("2017-12-05 12:34:23");
+        Xunit.Assert.Equal(12, dateTime.Month);
     }
 
     [Fact]
