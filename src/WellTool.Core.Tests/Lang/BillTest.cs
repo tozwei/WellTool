@@ -9,17 +9,17 @@ public class BillTest
     public void ConstructorTest()
     {
         var bill = new Bill("流水号", 100.50m);
-        Assert.Equal("流水号", bill.SerialNumber);
-        Assert.Equal(100.50m, bill.Amount);
+        Xunit.Assert.Equal("流水号", bill.SerialNumber);
+        Xunit.Assert.Equal(100.50m, bill.Amount);
     }
 
     [Fact]
     public void StatusTest()
     {
         var bill = new Bill("流水号", 100);
-        Assert.Equal(BillStatus.Pending, bill.Status);
+        Xunit.Assert.Equal(BillStatus.Pending, bill.Status);
         bill.Status = BillStatus.Paid;
-        Assert.Equal(BillStatus.Paid, bill.Status);
+        Xunit.Assert.Equal(BillStatus.Paid, bill.Status);
     }
 
     [Fact]
@@ -27,8 +27,8 @@ public class BillTest
     {
         var bill = new Bill("流水号", 100);
         bill.Pay();
-        Assert.Equal(BillStatus.Paid, bill.Status);
-        Assert.NotNull(bill.PaidTime);
+        Xunit.Assert.Equal(BillStatus.Paid, bill.Status);
+        Xunit.Assert.NotNull(bill.PaidTime);
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class BillTest
     {
         var bill = new Bill("流水号", 100);
         bill.Cancel();
-        Assert.Equal(BillStatus.Cancelled, bill.Status);
+        Xunit.Assert.Equal(BillStatus.Cancelled, bill.Status);
     }
 }
 
