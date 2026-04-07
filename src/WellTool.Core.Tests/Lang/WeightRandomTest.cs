@@ -14,7 +14,7 @@ public class WeightRandomTest
         random.Add("C", 100);
 
         var result = random.Next();
-        Assert.Contains(result, new[] { "A", "B", "C" });
+        Xunit.Assert.Contains(result, new[] { "A", "B", "C" });
     }
 
     [Fact]
@@ -28,7 +28,7 @@ public class WeightRandomTest
         // Should always return B since others have 0 weight
         for (int i = 0; i < 10; i++)
         {
-            Assert.Equal("B", random.Next());
+            Xunit.Assert.Equal("B", random.Next());
         }
     }
 
@@ -36,6 +36,6 @@ public class WeightRandomTest
     public void WeightRandomEmptyTest()
     {
         var random = new WeightRandom<string>();
-        Assert.Throws<Exception>(() => random.Next());
+        Xunit.Assert.Throws<System.Exception>(() => random.Next());
     }
 }

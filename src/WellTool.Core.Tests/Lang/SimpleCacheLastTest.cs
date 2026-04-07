@@ -10,7 +10,7 @@ public class SimpleCacheLastTest
     {
         var cache = new SimpleCache<string, string>();
         cache.Put("key", "value");
-        Assert.Equal("value", cache.Get("key"));
+        Xunit.Assert.Equal("value", cache.Get("key"));
     }
 
     [Fact]
@@ -18,6 +18,6 @@ public class SimpleCacheLastTest
     {
         var cache = new SimpleCache<string, string>();
         var result = cache.Get("nonexistent", () => "default");
-        Assert.Equal("default", result);
+        Xunit.Assert.Equal("default", result);
     }
 }

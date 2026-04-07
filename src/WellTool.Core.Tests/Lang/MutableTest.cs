@@ -9,7 +9,7 @@ public class MutableTest
     public void OfTest()
     {
         var mutable = Mutable.Of(100);
-        Assert.Equal(100, mutable.Value);
+        Xunit.Assert.Equal(100, mutable.Value);
     }
 
     [Fact]
@@ -17,7 +17,7 @@ public class MutableTest
     {
         var mutable = Mutable.Of(100);
         mutable.SetValue(200);
-        Assert.Equal(200, mutable.Value);
+        Xunit.Assert.Equal(200, mutable.Value);
     }
 
     [Fact]
@@ -25,21 +25,21 @@ public class MutableTest
     {
         var m1 = Mutable.Of(100);
         var m2 = Mutable.Of(100);
-        Assert.True(m1.Equals(m2));
-        Assert.True(m1.Equals(m1));
+        Xunit.Assert.True(m1.Equals(m2));
+        Xunit.Assert.True(m1.Equals(m1));
     }
 
     [Fact]
     public void GetHashCodeTest()
     {
         var mutable = Mutable.Of(100);
-        Assert.NotEqual(0, mutable.GetHashCode());
+        Xunit.Assert.NotEqual(0, mutable.GetHashCode());
     }
 
     [Fact]
     public void ToStringTest()
     {
         var mutable = Mutable.Of(100);
-        Assert.Contains("100", mutable.ToString());
+        Xunit.Assert.Contains("100", mutable.ToString());
     }
 }

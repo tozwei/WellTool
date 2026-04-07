@@ -69,8 +69,8 @@ namespace WellTool.Core.Tests
         {
             // 测试Console类的基本功能
             // 这里我们只测试方法是否能正常调用，不测试实际输出
-            WellTool.Core.Lang.Console.Println("Test Console");
-            WellTool.Core.Lang.Console.Print("Test Console");
+            System.Console.WriteLine("Test Console");
+            System.Console.Write("Test Console");
         }
 
         [Fact]

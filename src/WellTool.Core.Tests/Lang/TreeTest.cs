@@ -11,8 +11,8 @@ public class TreeTest
         var tree = new Tree<string>();
         tree.Id = "1";
         tree.Name = "Root";
-        Assert.Equal("1", tree.Id);
-        Assert.Equal("Root", tree.Name);
+        Xunit.Assert.Equal("1", tree.Id);
+        Xunit.Assert.Equal("Root", tree.Name);
     }
 
     [Fact]
@@ -21,8 +21,8 @@ public class TreeTest
         var root = new Tree<string> { Id = "1", Name = "Root" };
         var child = new Tree<string> { Id = "2", Name = "Child" };
         root.AddChildren(child);
-        Assert.Single(root.Children);
-        Assert.Equal("2", root.Children[0].Id);
+        Xunit.Assert.Single(root.Children);
+        Xunit.Assert.Equal("2", root.Children[0].Id);
     }
 
     [Fact]
@@ -32,26 +32,26 @@ public class TreeTest
         var child = new Tree<string> { Id = "2", Name = "Child" };
         root.AddChildren(child);
         var path = child.GetPath();
-        Assert.Equal(2, path.Count);
+        Xunit.Assert.Equal(2, path.Count);
     }
 
     [Fact]
     public void IsLeafTest()
     {
         var leaf = new Tree<string> { Id = "2" };
-        Assert.True(leaf.IsLeaf);
+        Xunit.Assert.True(leaf.IsLeaf);
 
         var parent = new Tree<string> { Id = "1" };
         parent.AddChildren(new Tree<string> { Id = "2" });
-        Assert.False(parent.IsLeaf);
+        Xunit.Assert.False(parent.IsLeaf);
     }
 
     [Fact]
     public void IsRootTest()
     {
         var root = new Tree<string> { Id = "1" };
-        Assert.True(root.IsRoot);
-        Assert.False(root.Children.Count == 0 || root.Parent != null);
+        Xunit.Assert.True(root.IsRoot);
+        Xunit.Assert.False(root.Children.Count == 0 || root.Parent != null);
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public class TreeTest
         var grandchild = new Tree<string> { Id = "3" };
         root.AddChildren(child);
         child.AddChildren(grandchild);
-        Assert.Equal(3, root.GetDepth());
+        Xunit.Assert.Equal(3, root.GetDepth());
     }
 
     [Fact]
@@ -73,7 +73,7 @@ public class TreeTest
         var child2 = new Tree<string> { Id = "2" };
         parent.AddChildren(child1);
         parent.AddChildren(child2);
-        Assert.Equal(2, child1.GetSiblingCount());
+        Xunit.Assert.Equal(2, child1.GetSiblingCount());
     }
 
     [Fact]
@@ -85,7 +85,7 @@ public class TreeTest
         parent.AddChildren(child1);
         parent.AddChildren(child2);
         var siblings = child1.GetSiblings();
-        Assert.Equal(2, siblings.Count);
+        Xunit.Assert.Equal(2, siblings.Count);
     }
 }
 

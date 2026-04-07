@@ -9,8 +9,8 @@ public class TreeNodeTest
     public void ConstructorTest()
     {
         var node = new TreeNode<string>("1", "Root");
-        Assert.Equal("1", node.Id);
-        Assert.Equal("Root", node.Name);
+        Xunit.Assert.Equal("1", node.Id);
+        Xunit.Assert.Equal("Root", node.Name);
     }
 
     [Fact]
@@ -19,7 +19,7 @@ public class TreeNodeTest
         var parent = new TreeNode<string>("1", "Parent");
         var child = new TreeNode<string>("2", "Child");
         parent.AddChild(child);
-        Assert.Same(parent, child.Parent);
+        Xunit.Assert.Same(parent, child.Parent);
     }
 
     [Fact]
@@ -30,7 +30,7 @@ public class TreeNodeTest
         var child2 = new TreeNode<string>("3", "Child2");
         parent.AddChild(child1);
         parent.AddChild(child2);
-        Assert.Equal(2, parent.Children.Count);
+        Xunit.Assert.Equal(2, parent.Children.Count);
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public class TreeNodeTest
         var node = new TreeNode<string>("1", "Root");
         var child = new TreeNode<string>("2", "Child");
         node.AddChild(child);
-        Assert.Equal(1, child.Deep);
+        Xunit.Assert.Equal(1, child.Deep);
     }
 }
 

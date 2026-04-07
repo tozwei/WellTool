@@ -10,7 +10,7 @@ public class SingletonTest
     {
         var instance1 = Singleton.GetInstance<SingletonTestClass>();
         var instance2 = Singleton.GetInstance<SingletonTestClass>();
-        Assert.Same(instance1, instance2);
+        Xunit.Assert.Same(instance1, instance2);
     }
 
     [Fact]
@@ -18,7 +18,7 @@ public class SingletonTest
     {
         var instance1 = Singleton.Get<SingletonTestClass>();
         var instance2 = Singleton.Get<SingletonTestClass>();
-        Assert.Same(instance1, instance2);
+        Xunit.Assert.Same(instance1, instance2);
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class SingletonTest
         var instance1 = Singleton.GetInstance<SingletonTestClass>();
         Singleton.Remove<SingletonTestClass>();
         var instance2 = Singleton.GetInstance<SingletonTestClass>();
-        Assert.NotSame(instance1, instance2);
+        Xunit.Assert.NotSame(instance1, instance2);
     }
 
     private class SingletonTestClass

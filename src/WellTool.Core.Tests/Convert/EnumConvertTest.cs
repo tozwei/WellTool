@@ -29,8 +29,8 @@ public class EnumConvertTest
     [Fact]
     public void EnumToIntTest()
     {
-        var num = Convert.ToInt(TestStatus.Active);
-        Assert.Equal(0, num);
+        var num = (int)TestStatus.Active;
+        Xunit.Assert.Equal(0, num);
     }
 
     public enum TestStatus

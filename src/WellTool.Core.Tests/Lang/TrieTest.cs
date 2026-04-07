@@ -10,7 +10,7 @@ public class TrieTest
     {
         var trie = new Trie();
         trie.Insert("hello");
-        Assert.True(trie.Contains("hello"));
+        Xunit.Assert.True(trie.Contains("hello"));
     }
 
     [Fact]
@@ -19,9 +19,9 @@ public class TrieTest
         var trie = new Trie();
         trie.Insert("hello");
         trie.Insert("world");
-        Assert.True(trie.Contains("hello"));
-        Assert.True(trie.Contains("world"));
-        Assert.False(trie.Contains("hell"));
+        Xunit.Assert.True(trie.Contains("hello"));
+        Xunit.Assert.True(trie.Contains("world"));
+        Xunit.Assert.False(trie.Contains("hell"));
     }
 
     [Fact]
@@ -31,7 +31,7 @@ public class TrieTest
         trie.Insert("hello");
         trie.Insert("world");
         var prefixes = trie.StartsWith("hel");
-        Assert.Contains("hello", prefixes);
+        Xunit.Assert.Contains("hello", prefixes);
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class TrieTest
         var trie = new Trie();
         trie.Insert("hello");
         trie.Remove("hello");
-        Assert.False(trie.Contains("hello"));
+        Xunit.Assert.False(trie.Contains("hello"));
     }
 
     [Fact]
@@ -50,16 +50,16 @@ public class TrieTest
         trie.Insert("hello");
         trie.Insert("world");
         trie.Insert("help");
-        Assert.Equal(3, trie.Size);
+        Xunit.Assert.Equal(3, trie.Size);
     }
 
     [Fact]
     public void IsEmptyTest()
     {
         var trie = new Trie();
-        Assert.True(trie.IsEmpty);
+        Xunit.Assert.True(trie.IsEmpty);
         trie.Insert("hello");
-        Assert.False(trie.IsEmpty);
+        Xunit.Assert.False(trie.IsEmpty);
     }
 }
 

@@ -11,21 +11,21 @@ public class NanoIdTest
         var id1 = NanoIdUtil.RandomNanoId();
         var id2 = NanoIdUtil.RandomNanoId();
 
-        Assert.NotNull(id1);
-        Assert.NotNull(id2);
-        Assert.NotEqual(id1, id2);
-        Assert.Equal(21, id1.Length);
-        Assert.Equal(21, id2.Length);
+        Xunit.Assert.NotNull(id1);
+        Xunit.Assert.NotNull(id2);
+        Xunit.Assert.NotEqual(id1, id2);
+        Xunit.Assert.Equal(21, id1.Length);
+        Xunit.Assert.Equal(21, id2.Length);
     }
 
     [Fact]
     public void NanoIdWithSizeTest()
     {
         var id = NanoIdUtil.RandomNanoId(10);
-        Assert.Equal(10, id.Length);
+        Xunit.Assert.Equal(10, id.Length);
 
         var id2 = NanoIdUtil.RandomNanoId(32);
-        Assert.Equal(32, id2.Length);
+        Xunit.Assert.Equal(32, id2.Length);
     }
 
     [Fact]
@@ -34,10 +34,10 @@ public class NanoIdTest
         var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         var id = NanoIdUtil.RandomNanoId(10, alphabet);
 
-        Assert.Equal(10, id.Length);
+        Xunit.Assert.Equal(10, id.Length);
         foreach (var c in id)
         {
-            Assert.Contains(c.ToString(), alphabet);
+            Xunit.Assert.Contains(c.ToString(), alphabet);
         }
     }
 
@@ -48,26 +48,26 @@ public class NanoIdTest
         for (int i = 0; i < 10000; i++)
         {
             var id = NanoIdUtil.RandomNanoId();
-            Assert.True(set.Add(id), $"Non-unique ID generated: {id}");
+            Xunit.Assert.True(set.Add(id), $"Non-unique ID generated: {id}");
         }
     }
 
     [Fact]
     public void NanoIdEmptyAlphabetTest()
     {
-        Assert.Throws<ArgumentException>(() => NanoIdUtil.RandomNanoId(10, ""));
+        Xunit.Assert.Throws<ArgumentException>(() => NanoIdUtil.RandomNanoId(10, ""));
     }
 
     [Fact]
     public void NanoIdNegativeSizeTest()
     {
-        Assert.Throws<ArgumentException>(() => NanoIdUtil.RandomNanoId(-1));
+        Xunit.Assert.Throws<ArgumentException>(() => NanoIdUtil.RandomNanoId(-1));
     }
 
     [Fact]
     public void NanoIdZeroSizeTest()
     {
         var id = NanoIdUtil.RandomNanoId(0);
-        Assert.Equal("", id);
+        Xunit.Assert.Equal("", id);
     }
 }
