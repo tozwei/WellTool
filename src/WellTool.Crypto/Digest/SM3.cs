@@ -91,13 +91,14 @@ namespace WellTool.Crypto.Digest
             var digest = new SM3Digest();
             byte[] dataWithSalt = AddSalt(data);
             
+            byte[] result = null;
             for (int i = 0; i < DigestCount; i++)
             {
                 digest.Reset();
                 digest.BlockUpdate(dataWithSalt, 0, dataWithSalt.Length);
                 
-                // 直接创建新数组存储结果
-                byte[] result = new byte[digest.GetDigestSize()];
+                // 创建新数组存储结果
+                result = new byte[digest.GetDigestSize()];
                 digest.DoFinal(result, 0);
                 
                 if (i < DigestCount - 1)
@@ -106,7 +107,7 @@ namespace WellTool.Crypto.Digest
                 }
             }
             
-            return dataWithSalt;
+            return result;
         }
 
         /// <summary>
