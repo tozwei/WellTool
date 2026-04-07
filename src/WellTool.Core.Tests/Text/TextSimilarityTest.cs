@@ -1,6 +1,9 @@
 using WellTool.Core.Text;
 using Xunit;
 
+
+namespace WellTool.Core.Text.Tests;
+
 public class TextSimilarityTest
 {
     [Fact]

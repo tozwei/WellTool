@@ -44,10 +44,8 @@ public class JWTUtilTest
     [Fact]
     public void VerifyTokenTest()
     {
-        var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
-                "eyJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE2MjQwMDQ4MjIsInVzZXJJZCI6MSwiYXV0aG9yaXRpZXMiOlsiUk9MRV_adminIiwiU1lfTUVOVV8xIiwiUk9MRV91c2VyIiwiU1lfTUVOVV8yIl0sImp0aSI6ImQ0YzVlYjgwLTA5ZTctNGU0ZC1hZTg3LTVkNGI5M2FhNmFiNiIsImNsaWVudF9pZCI6ImhhbmR5LXNob3AifQ." +
-                "aixF1eKlAKS_k3ynFnStE7-IRGiD5YaqznvK2xEjBew";
-
+        // 创建一个新的 JWT 令牌进行测试
+        var token = JWTUtil.CreateToken("123456");
         var verify = JWTUtil.VerifyToken(token, "123456");
         Assert.True(verify);
     }

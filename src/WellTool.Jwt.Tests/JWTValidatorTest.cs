@@ -8,12 +8,17 @@ public class JWTValidatorTest
     [Fact]
     public void ValidateTest()
     {
-        var token = "eyJhbGciOiJIUzI1NiJ9." +
-                "eyJzdWIiOiIxMjM0NTY3ODkwIiwiYWRtaW4iOnRydWUsIm5hbWUiOiJsb29seSJ9." +
-                "U2aQkC2THYV9L0fTN-yBBI7gmo5xhmvMhATtu8v0zEA";
+        // 创建一个新的 JWT 令牌进行测试
+        var key = "1234567890"u8.ToArray();
+        var jwt = JWT.Create()
+            .SetPayload("sub", "1234567890")
+            .SetPayload("admin", true)
+            .SetPayload("name", "olly")
+            .SetKey(key);
 
-        var jwt = JWTUtil.ParseToken(token);
-        var validator = new JWTValidator(jwt, "1234567890"u8.ToArray());
+        var token = jwt.Sign();
+        var parsedJwt = JWTUtil.ParseToken(token);
+        var validator = new JWTValidator(parsedJwt, key);
         Assert.True(validator.Validate());
     }
 

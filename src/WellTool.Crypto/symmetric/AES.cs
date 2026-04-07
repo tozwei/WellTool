@@ -44,16 +44,27 @@ namespace WellTool.Crypto.Symmetric
             using (var aes = (Aes)GetSymmetricAlgorithm())
             {
                 aes.Key = Key;
+                // 如果没有提供 IV，则使用随机 IV
                 if (IV != null)
                 {
                     aes.IV = IV;
+                }
+                else
+                {
+                    // 让算法生成随机 IV
+                    aes.GenerateIV();
                 }
                 aes.Mode = System.Security.Cryptography.CipherMode.CBC;
                 aes.Padding = PaddingMode.PKCS7;
 
                 using (var encryptor = aes.CreateEncryptor())
                 {
-                    return Encrypt(data, encryptor);
+                    byte[] encrypted = Encrypt(data, encryptor);
+                    // 将 IV 附加到密文前面
+                    byte[] result = new byte[aes.IV.Length + encrypted.Length];
+                    Array.Copy(aes.IV, 0, result, 0, aes.IV.Length);
+                    Array.Copy(encrypted, 0, result, aes.IV.Length, encrypted.Length);
+                    return result;
                 }
             }
         }
@@ -68,16 +79,31 @@ namespace WellTool.Crypto.Symmetric
             using (var aes = (Aes)GetSymmetricAlgorithm())
             {
                 aes.Key = Key;
-                if (IV != null)
-                {
-                    aes.IV = IV;
-                }
                 aes.Mode = System.Security.Cryptography.CipherMode.CBC;
                 aes.Padding = PaddingMode.PKCS7;
 
+                // 从密文中提取 IV（假设 IV 在前面）
+                int ivSize = aes.BlockSize / 8;
+                if (IV != null)
+                {
+                    // 如果提供了 IV，使用提供的 IV
+                    aes.IV = IV;
+                }
+                else if (data.Length > ivSize)
+                {
+                    // 从密文前面提取 IV
+                    byte[] iv = new byte[ivSize];
+                    Array.Copy(data, 0, iv, 0, ivSize);
+                    aes.IV = iv;
+                }
+
+                // 提取实际的密文
+                byte[] cipherText = new byte[data.Length - ivSize];
+                Array.Copy(data, ivSize, cipherText, 0, cipherText.Length);
+
                 using (var decryptor = aes.CreateDecryptor())
                 {
-                    return Decrypt(data, decryptor);
+                    return Decrypt(cipherText, decryptor);
                 }
             }
         }

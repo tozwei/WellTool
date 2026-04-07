@@ -116,6 +116,11 @@ namespace WellTool.Crypto.Symmetric
         }
 
         /// <summary>
+        /// 是否使用内置IV（前缀IV到密文）
+        /// </summary>
+        protected virtual bool UseInternalIV => true;
+
+        /// <summary>
         /// 加密
         /// </summary>
         /// <param name="data">待加密数据</param>

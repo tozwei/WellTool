@@ -26,25 +26,32 @@ public class Log4jLog : AbstractLog
     /// <param name="name">日志名称</param>
     public Log4jLog(string name) : base(name)
     {
-        // 使用反射加载Log4j相关类型
-        var log4jAssembly = Assembly.Load("log4j");
-        var loggerType = log4jAssembly.GetType("org.apache.log4j.Logger");
-        _levelType = log4jAssembly.GetType("org.apache.log4j.Level");
+        try
+        {
+            // 使用反射加载Log4j相关类型
+            var log4jAssembly = Assembly.Load("log4j");
+            var loggerType = log4jAssembly.GetType("org.apache.log4j.Logger");
+            _levelType = log4jAssembly.GetType("org.apache.log4j.Level");
 
-        // 获取方法和字段
-        _getLoggerMethod = loggerType.GetMethod("getLogger", new[] { typeof(string) });
-        _isEnabledForMethod = loggerType.GetMethod("isEnabledFor", new[] { _levelType });
-        _logMethod = loggerType.GetMethod("log", new[] { typeof(string), _levelType, typeof(object), typeof(Exception) });
+            // 获取方法和字段
+            _getLoggerMethod = loggerType.GetMethod("getLogger", new[] { typeof(string) });
+            _isEnabledForMethod = loggerType.GetMethod("isEnabledFor", new[] { _levelType });
+            _logMethod = loggerType.GetMethod("log", new[] { typeof(string), _levelType, typeof(object), typeof(Exception) });
 
-        // 获取级别字段
-        _traceLevel = _levelType.GetField("TRACE").GetValue(null);
-        _debugLevel = _levelType.GetField("DEBUG").GetValue(null);
-        _infoLevel = _levelType.GetField("INFO").GetValue(null);
-        _warnLevel = _levelType.GetField("WARN").GetValue(null);
-        _errorLevel = _levelType.GetField("ERROR").GetValue(null);
+            // 获取级别字段
+            _traceLevel = _levelType.GetField("TRACE").GetValue(null);
+            _debugLevel = _levelType.GetField("DEBUG").GetValue(null);
+            _infoLevel = _levelType.GetField("INFO").GetValue(null);
+            _warnLevel = _levelType.GetField("WARN").GetValue(null);
+            _errorLevel = _levelType.GetField("ERROR").GetValue(null);
 
-        // 创建Logger实例
-        _logger = _getLoggerMethod.Invoke(null, new object[] { name });
+            // 创建Logger实例
+            _logger = _getLoggerMethod.Invoke(null, new object[] { name });
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Log4j not found, please add log4j dependency", ex);
+        }
     }
 
     /// <summary>
@@ -53,25 +60,32 @@ public class Log4jLog : AbstractLog
     /// <param name="type">日志类型</param>
     public Log4jLog(Type type) : base(type)
     {
-        // 使用反射加载Log4j相关类型
-        var log4jAssembly = Assembly.Load("log4j");
-        var loggerType = log4jAssembly.GetType("org.apache.log4j.Logger");
-        _levelType = log4jAssembly.GetType("org.apache.log4j.Level");
+        try
+        {
+            // 使用反射加载Log4j相关类型
+            var log4jAssembly = Assembly.Load("log4j");
+            var loggerType = log4jAssembly.GetType("org.apache.log4j.Logger");
+            _levelType = log4jAssembly.GetType("org.apache.log4j.Level");
 
-        // 获取方法和字段
-        _getLoggerMethod = loggerType.GetMethod("getLogger", new[] { typeof(Type) });
-        _isEnabledForMethod = loggerType.GetMethod("isEnabledFor", new[] { _levelType });
-        _logMethod = loggerType.GetMethod("log", new[] { typeof(string), _levelType, typeof(object), typeof(Exception) });
+            // 获取方法和字段
+            _getLoggerMethod = loggerType.GetMethod("getLogger", new[] { typeof(Type) });
+            _isEnabledForMethod = loggerType.GetMethod("isEnabledFor", new[] { _levelType });
+            _logMethod = loggerType.GetMethod("log", new[] { typeof(string), _levelType, typeof(object), typeof(Exception) });
 
-        // 获取级别字段
-        _traceLevel = _levelType.GetField("TRACE").GetValue(null);
-        _debugLevel = _levelType.GetField("DEBUG").GetValue(null);
-        _infoLevel = _levelType.GetField("INFO").GetValue(null);
-        _warnLevel = _levelType.GetField("WARN").GetValue(null);
-        _errorLevel = _levelType.GetField("ERROR").GetValue(null);
+            // 获取级别字段
+            _traceLevel = _levelType.GetField("TRACE").GetValue(null);
+            _debugLevel = _levelType.GetField("DEBUG").GetValue(null);
+            _infoLevel = _levelType.GetField("INFO").GetValue(null);
+            _warnLevel = _levelType.GetField("WARN").GetValue(null);
+            _errorLevel = _levelType.GetField("ERROR").GetValue(null);
 
-        // 创建Logger实例
-        _logger = _getLoggerMethod.Invoke(null, new object[] { type });
+            // 创建Logger实例
+            _logger = _getLoggerMethod.Invoke(null, new object[] { type });
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Log4j not found, please add log4j dependency", ex);
+        }
     }
 
     /// <summary>

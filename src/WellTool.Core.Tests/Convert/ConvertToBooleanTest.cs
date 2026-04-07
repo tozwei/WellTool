@@ -1,6 +1,10 @@
 using WellTool.Core.Convert;
 using Xunit;
 
+
+namespace WellTool.Core.Convert.Tests;
+
+
 public class ConvertToBooleanTest
 {
     [Fact]

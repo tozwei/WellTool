@@ -301,9 +301,15 @@ namespace WellTool.Poi.Word
             {
                 throw new NullReferenceException("[destFile] is null, and you must call setDestFile(File) first or call flush(OutputStream).");
             }
-            using (var stream = destFile.OpenWrite())
+            var stream = destFile.OpenWrite();
+            try
             {
                 return Flush(stream, true);
+            }
+            catch (Exception)
+            {
+                stream.Close();
+                throw;
             }
         }
 
@@ -332,7 +338,14 @@ namespace WellTool.Poi.Word
             try
             {
                 this.doc.Write(stream);
-                stream.Flush();
+                try
+                {
+                    stream.Flush();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // 忽略流已关闭的异常
+                }
                 this.hasFlushed = true;
             }
             catch (Exception e)
@@ -343,7 +356,14 @@ namespace WellTool.Poi.Word
             {
                 if (isCloseStream)
                 {
-                    stream.Close();
+                    try
+                    {
+                        stream.Close();
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                        // 忽略流已关闭的异常
+                    }
                 }
             }
             return this;
@@ -355,7 +375,7 @@ namespace WellTool.Poi.Word
         /// </summary>
         public void Dispose()
         {
-            if (this.destFile != null)
+            if (this.destFile != null && !this.hasFlushed)
             {
                 Flush();
             }

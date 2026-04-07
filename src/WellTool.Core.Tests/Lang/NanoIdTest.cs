@@ -1,6 +1,8 @@
 using WellTool.Core.Lang.Id;
 using Xunit;
 
+namespace WellTool.Core.Lang.Id.Tests;
+
 public class NanoIdTest
 {
     [Fact]

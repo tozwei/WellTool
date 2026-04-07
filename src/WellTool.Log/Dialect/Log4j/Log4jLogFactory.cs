@@ -7,6 +7,8 @@ namespace WellTool.Log.Dialect.Log4j;
 /// </summary>
 public class Log4jLogFactory : LogFactory
 {
+    private readonly bool _log4jExists;
+
     /// <summary>
     /// 构造函数
     /// </summary>
@@ -16,11 +18,16 @@ public class Log4jLogFactory : LogFactory
         // 检查Log4j是否存在
         try
         {
-            Type.GetType("org.apache.log4j.Logger");
+            _log4jExists = Type.GetType("org.apache.log4j.Logger") != null;
+            if (!_log4jExists)
+            {
+                throw new Exception("Log4j not found, please add log4j dependency");
+            }
         }
         catch
         {
-            // 忽略异常，让上层处理
+            _log4jExists = false;
+            throw;
         }
     }
 
@@ -31,6 +38,10 @@ public class Log4jLogFactory : LogFactory
     /// <returns>日志实例</returns>
     public override ILog CreateLog(string name)
     {
+        if (!_log4jExists)
+        {
+            throw new Exception("Log4j not found, please add log4j dependency");
+        }
         return new Log4jLog(name);
     }
 
@@ -41,6 +52,10 @@ public class Log4jLogFactory : LogFactory
     /// <returns>日志实例</returns>
     public override ILog CreateLog(Type type)
     {
+        if (!_log4jExists)
+        {
+            throw new Exception("Log4j not found, please add log4j dependency");
+        }
         return new Log4jLog(type);
     }
 }

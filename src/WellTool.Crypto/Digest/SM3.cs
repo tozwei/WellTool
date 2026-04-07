@@ -95,7 +95,15 @@ namespace WellTool.Crypto.Digest
             {
                 digest.Reset();
                 digest.BlockUpdate(dataWithSalt, 0, dataWithSalt.Length);
-                digest.DoFinal(dataWithSalt, 0);
+                
+                // 直接创建新数组存储结果
+                byte[] result = new byte[digest.GetDigestSize()];
+                digest.DoFinal(result, 0);
+                
+                if (i < DigestCount - 1)
+                {
+                    dataWithSalt = result;
+                }
             }
             
             return dataWithSalt;
@@ -119,7 +127,14 @@ namespace WellTool.Crypto.Digest
         public string DigestHex(byte[] data)
         {
             byte[] digest = Digest(data);
-            return BitConverter.ToString(digest).Replace("-", "").ToLower();
+            //return Convert.ToHexString(digest).ToLower();
+            #if NET6_0_OR_GREATER
+                        // .NET 6.0 及以上：直接使用 Convert.ToHexString
+                        return Convert.ToHexString(digest).ToLower();
+            #else
+                // .NET 6.0 以下（含 .NET Standard 2.1）：使用 BitConverter 并移除 "-"
+                return BitConverter.ToString(digest).Replace("-", string.Empty).ToLower();
+            #endif
         }
 
         /// <summary>
@@ -163,9 +178,20 @@ namespace WellTool.Crypto.Digest
         public string DigestHex(Stream stream)
         {
             byte[] digest = Digest(stream);
-            return BitConverter.ToString(digest).Replace("-", "").ToLower();
+            //return Convert.ToHexString(digest).ToLower();
+
+            #if NET6_0_OR_GREATER
+                        // .NET 6.0 及以上版本：使用高效的 Convert.ToHexString
+                        // 该方法返回大写字符串，因此需要 ToLower()
+                        return Convert.ToHexString(digest).ToLower();
+            #else
+                // .NET 6.0 以下版本（含 .NET Standard 2.1, .NET Core 3.1 等）：
+                // 使用 BitConverter，它会产生 "-" 分隔符，需要移除
+                return BitConverter.ToString(digest).Replace("-", string.Empty).ToLower();
+            #endif
+
         }
-        
+
         /// <summary>
         /// 添加盐值
         /// </summary>

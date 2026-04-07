@@ -19,8 +19,22 @@ namespace WellTool.Crypto.Asymmetric
         {
             _curveName = curveName;
             _keyGenerator = new ECKeyPairGenerator();
-            var ecParams = Org.BouncyCastle.Asn1.X9.X962NamedCurves.GetByName(curveName);
-            var parameters = new ECKeyGenerationParameters(new ECDomainParameters(ecParams), new SecureRandom());
+            
+            // 获取曲线参数
+            X9ECParameters ecParams = X962NamedCurves.GetByName(curveName);
+            if (ecParams == null)
+            {
+                throw new ArgumentException($"未找到指定的曲线: {curveName}");
+            }
+            
+            var domainParams = new ECDomainParameters(
+                ecParams.Curve,
+                ecParams.G,
+                ecParams.N,
+                ecParams.H,
+                ecParams.GetSeed());
+            
+            var parameters = new ECKeyGenerationParameters(domainParams, new SecureRandom());
             _keyGenerator.Init(parameters);
         }
 

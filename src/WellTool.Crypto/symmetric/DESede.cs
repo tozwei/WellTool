@@ -48,12 +48,20 @@ namespace WellTool.Crypto.Symmetric
                 {
                     tripleDes.IV = IV;
                 }
+                else
+                {
+                    tripleDes.GenerateIV();
+                }
                 tripleDes.Mode = System.Security.Cryptography.CipherMode.CBC;
                 tripleDes.Padding = PaddingMode.PKCS7;
 
                 using (var encryptor = tripleDes.CreateEncryptor())
                 {
-                    return Encrypt(data, encryptor);
+                    byte[] encrypted = Encrypt(data, encryptor);
+                    byte[] result = new byte[tripleDes.IV.Length + encrypted.Length];
+                    Array.Copy(tripleDes.IV, 0, result, 0, tripleDes.IV.Length);
+                    Array.Copy(encrypted, 0, result, tripleDes.IV.Length, encrypted.Length);
+                    return result;
                 }
             }
         }
@@ -68,16 +76,27 @@ namespace WellTool.Crypto.Symmetric
             using (var tripleDes = (TripleDES)GetSymmetricAlgorithm())
             {
                 tripleDes.Key = Key;
+                tripleDes.Mode = System.Security.Cryptography.CipherMode.CBC;
+                tripleDes.Padding = PaddingMode.PKCS7;
+
+                int blockSize = tripleDes.BlockSize / 8;
                 if (IV != null)
                 {
                     tripleDes.IV = IV;
                 }
-                tripleDes.Mode = System.Security.Cryptography.CipherMode.CBC;
-                tripleDes.Padding = PaddingMode.PKCS7;
+                else if (data.Length > blockSize)
+                {
+                    byte[] iv = new byte[blockSize];
+                    Array.Copy(data, 0, iv, 0, blockSize);
+                    tripleDes.IV = iv;
+                }
+
+                byte[] cipherText = new byte[data.Length - blockSize];
+                Array.Copy(data, blockSize, cipherText, 0, cipherText.Length);
 
                 using (var decryptor = tripleDes.CreateDecryptor())
                 {
-                    return Decrypt(data, decryptor);
+                    return Decrypt(cipherText, decryptor);
                 }
             }
         }

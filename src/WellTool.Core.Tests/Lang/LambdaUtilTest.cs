@@ -1,6 +1,8 @@
 using WellTool.Core.Lang.Func;
 using Xunit;
 
+namespace WellTool.Core.Lang.Func.Tests;
+
 public class LambdaUtilTest
 {
     [Fact]

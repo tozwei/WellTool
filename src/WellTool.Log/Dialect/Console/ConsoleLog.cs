@@ -105,16 +105,28 @@ public class ConsoleLog : AbstractLog
         {
             // 处理 {} 占位符格式，转换为 C# 风格的 {0}, {1}...
             var formattedFormat = format;
-            if (formattedFormat.Contains("{}"))
+            var message = "";
+            if (formattedFormat != null)
             {
-                int index = 0;
-                while (formattedFormat.Contains("{}"))
+                if (formattedFormat.Contains("{}"))
                 {
-                    formattedFormat = formattedFormat.ReplaceFirst("{}", $"{{{index}}}");
-                    index++;
+                    int index = 0;
+                    while (formattedFormat.Contains("{}"))
+                    {
+                        formattedFormat = formattedFormat.ReplaceFirst("{}", $"{{{index}}}");
+                        index++;
+                    }
+                }
+                try
+                {
+                    message = string.Format(formattedFormat, arguments);
+                }
+                catch (FormatException)
+                {
+                    // 如果格式化失败，直接使用原始格式和参数
+                    message = $"{formattedFormat} {string.Join(", ", arguments ?? new object[0])}";
                 }
             }
-            var message = string.Format(formattedFormat, arguments);
             var logMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [{level}] [{Name}] {message}";
 
         // 根据日志级别设置控制台颜色

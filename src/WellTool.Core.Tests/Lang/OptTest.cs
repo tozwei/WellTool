@@ -1,6 +1,9 @@
 using WellTool.Core.Lang;
 using Xunit;
 
+
+namespace WellTool.Core.Lang.Tests;
+
 public class OptTest
 {
     [Fact]

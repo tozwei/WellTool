@@ -55,25 +55,6 @@ public class JWTHeader : Claims
         {
             return strValue;
         }
-        // 处理 JsonElement 类型的算法 ID
-        else if (value != null)
-        {
-            // 尝试使用反射来获取 JsonElement 的 ValueKind 属性
-            var valueType = value.GetType();
-            var valueKindProperty = valueType.GetProperty("ValueKind");
-            if (valueKindProperty != null)
-            {
-                var valueKind = valueKindProperty.GetValue(value);
-                var valueKindStr = valueKind?.ToString();
-                
-                // 尝试使用反射来调用 GetString 方法
-                var getStringMethod = valueType.GetMethod("GetString");
-                if (getStringMethod != null && valueKindStr == "String")
-                {
-                    return getStringMethod.Invoke(value, null) as string;
-                }
-            }
-        }
         return null;
     }
 

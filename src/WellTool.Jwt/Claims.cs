@@ -57,7 +57,63 @@ namespace WellTool.JWT
             Init();
             _claims.TryGetValue(name, out var value);
             
-            // 直接返回值，不进行任何处理
+            // 处理 JsonElement 类型，转换为相应的基本类型
+            if (value is System.Text.Json.JsonElement jsonElement)
+            {
+                switch (jsonElement.ValueKind)
+                {
+                    case System.Text.Json.JsonValueKind.String:
+                        return jsonElement.GetString();
+                    case System.Text.Json.JsonValueKind.Number:
+                        if (jsonElement.TryGetInt32(out int intValue))
+                        {
+                            return intValue;
+                        }
+                        else if (jsonElement.TryGetInt64(out long longValue))
+                        {
+                            return longValue;
+                        }
+                        else if (jsonElement.TryGetDouble(out double doubleValue))
+                        {
+                            return doubleValue;
+                        }
+                        else if (jsonElement.TryGetDecimal(out decimal decimalValue))
+                        {
+                            return decimalValue;
+                        }
+                        break;
+                    case System.Text.Json.JsonValueKind.True:
+                        return true;
+                    case System.Text.Json.JsonValueKind.False:
+                        return false;
+                    case System.Text.Json.JsonValueKind.Array:
+                        var array = new List<object>();
+                        foreach (var item in jsonElement.EnumerateArray())
+                        {
+                            if (item.ValueKind == System.Text.Json.JsonValueKind.String)
+                            {
+                                array.Add(item.GetString());
+                            }
+                            else if (item.ValueKind == System.Text.Json.JsonValueKind.Number)
+                            {
+                                if (item.TryGetInt64(out long itemLongValue))
+                                {
+                                    array.Add(itemLongValue);
+                                }
+                                else if (item.TryGetDouble(out double itemDoubleValue))
+                                {
+                                    array.Add(itemDoubleValue);
+                                }
+                            }
+                            else if (item.ValueKind == System.Text.Json.JsonValueKind.True || item.ValueKind == System.Text.Json.JsonValueKind.False)
+                            {
+                                array.Add(item.GetBoolean());
+                            }
+                        }
+                        return array;
+                }
+            }
+            
             return value;
         }
 
