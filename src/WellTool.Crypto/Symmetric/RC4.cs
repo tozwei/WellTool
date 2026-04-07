@@ -3,6 +3,7 @@ namespace WellTool.Crypto.Symmetric
     public class RC4
     {
         private byte[] _sbox;
+        private byte[] _initialBox;
         private int _i;
         private int _j;
 
@@ -32,12 +33,25 @@ namespace WellTool.Crypto.Symmetric
                 Swap(_sbox, i, j);
             }
 
+            // 保存初始状态用于重置
+            _initialBox = (byte[])_sbox.Clone();
+            _i = 0;
+            _j = 0;
+        }
+
+        /// <summary>
+        /// 重置RC4状态到初始状态
+        /// </summary>
+        public void Reset()
+        {
+            _sbox = (byte[])_initialBox.Clone();
             _i = 0;
             _j = 0;
         }
 
         public byte[] Encrypt(byte[] data)
         {
+            Reset(); // 重置状态确保每次加密从相同状态开始
             var result = new byte[data.Length];
             for (var k = 0; k < data.Length; k++)
             {
@@ -52,7 +66,17 @@ namespace WellTool.Crypto.Symmetric
 
         public byte[] Decrypt(byte[] data)
         {
-            return Encrypt(data); // RC4 加密和解密使用相同的算法
+            Reset(); // 重置状态确保解密与加密使用相同状态
+            var result = new byte[data.Length];
+            for (var k = 0; k < data.Length; k++)
+            {
+                _i = (_i + 1) % 256;
+                _j = (_j + _sbox[_i]) % 256;
+                Swap(_sbox, _i, _j);
+                var t = (_sbox[_i] + _sbox[_j]) % 256;
+                result[k] = (byte)(data[k] ^ _sbox[t]);
+            }
+            return result;
         }
 
         public string EncryptString(string data, System.Text.Encoding encoding = null)
@@ -80,7 +104,7 @@ namespace WellTool.Crypto.Symmetric
         {
             var bytes = System.Text.Encoding.UTF8.GetBytes(data);
             var encrypted = Encrypt(bytes);
-            return BitConverter.ToString(encrypted).Replace("-", "").ToLower();
+            return Convert.ToHexString(encrypted).ToLower();
         }
 
         /// <summary>
@@ -90,11 +114,7 @@ namespace WellTool.Crypto.Symmetric
         /// <returns>明文</returns>
         public string DecryptStr(string hexData)
         {
-            var bytes = new byte[hexData.Length / 2];
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                bytes[i] = Convert.ToByte(hexData.Substring(i * 2, 2), 16);
-            }
+            var bytes = Convert.FromHexString(hexData);
             var decrypted = Decrypt(bytes);
             return System.Text.Encoding.UTF8.GetString(decrypted);
         }

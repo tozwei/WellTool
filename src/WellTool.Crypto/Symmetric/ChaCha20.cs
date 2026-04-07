@@ -15,7 +15,7 @@ namespace WellTool.Crypto.Symmetric
         /// <param name="plaintext">明文</param>
         /// <param name="key">密钥</param>
         /// <param name="nonce">随机数</param>
-        /// <returns>密文</returns>
+        /// <returns>密文（包含认证标签）</returns>
         public static byte[] Encrypt(byte[] plaintext, byte[] key, byte[] nonce)
         {
 #if NET6_0_OR_GREATER
@@ -24,7 +24,12 @@ namespace WellTool.Crypto.Symmetric
                 byte[] ciphertext = new byte[plaintext.Length];
                 byte[] tag = new byte[16]; // 16 bytes for Poly1305 tag
                 chacha20.Encrypt(nonce, plaintext, ciphertext, tag);
-                return ciphertext;
+                
+                // 将密文和标签拼接返回
+                byte[] result = new byte[ciphertext.Length + tag.Length];
+                Buffer.BlockCopy(ciphertext, 0, result, 0, ciphertext.Length);
+                Buffer.BlockCopy(tag, 0, result, ciphertext.Length, tag.Length);
+                return result;
             }
 #else
             // .NET 6.0 以下版本的实现
@@ -56,7 +61,7 @@ namespace WellTool.Crypto.Symmetric
         /// <summary>
         /// 解密
         /// </summary>
-        /// <param name="ciphertext">密文</param>
+        /// <param name="ciphertext">密文（包含认证标签）</param>
         /// <param name="key">密钥</param>
         /// <param name="nonce">随机数</param>
         /// <returns>明文</returns>
@@ -65,9 +70,16 @@ namespace WellTool.Crypto.Symmetric
 #if NET6_0_OR_GREATER
             using (var chacha20 = new ChaCha20Poly1305(key))
             {
-                byte[] plaintext = new byte[ciphertext.Length];
-                byte[] tag = new byte[16]; // 16 bytes for Poly1305 tag
-                chacha20.Decrypt(nonce, ciphertext, tag, plaintext);
+                // 分离密文和标签
+                int tagLength = 16;
+                int cipherLength = ciphertext.Length - tagLength;
+                byte[] cipherText = new byte[cipherLength];
+                byte[] tag = new byte[tagLength];
+                Buffer.BlockCopy(ciphertext, 0, cipherText, 0, cipherLength);
+                Buffer.BlockCopy(ciphertext, cipherLength, tag, 0, tagLength);
+                
+                byte[] plaintext = new byte[cipherLength];
+                chacha20.Decrypt(nonce, cipherText, tag, plaintext);
                 return plaintext;
             }
 #else

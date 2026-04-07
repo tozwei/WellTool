@@ -61,6 +61,19 @@ namespace WellTool.Json
                 return value;
             }
 
+            // 处理枚举类型
+            if (type.IsEnum)
+            {
+                if (value is int enumIntValue)
+                {
+                    return Enum.ToObject(type, enumIntValue);
+                }
+                if (value is string enumStrValue)
+                {
+                    return Enum.Parse(type, enumStrValue);
+                }
+            }
+
             // 处理 JSON 对象
             if (value is JSONObject jsonObj)
             {
@@ -122,15 +135,15 @@ namespace WellTool.Json
         /// </summary>
         private static object ConvertFromString(Type type, string strValue, JSONConfig config)
         {
-            if (string.IsNullOrEmpty(strValue))
-            {
-                return GetDefaultValue(type);
-            }
-
             // 字符串类型直接返回
             if (type == typeof(string))
             {
                 return strValue;
+            }
+
+            if (string.IsNullOrEmpty(strValue))
+            {
+                return GetDefaultValue(type);
             }
 
             // 对象类型直接返回字符串
@@ -198,7 +211,14 @@ namespace WellTool.Json
                 return new Uri(strValue);
             }
 
+            // 枚举类型
+            if (type.IsEnum)
+            {
+                return Enum.Parse(type, strValue);
+            }
+
             return config.IsIgnoreError() ? GetDefaultValue(type) : throw new JSONException($"Cannot convert string to {type}");
+
         }
 
         /// <summary>
