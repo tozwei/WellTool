@@ -58,36 +58,51 @@ namespace WellTool.JWT
             _claims.TryGetValue(name, out var value);
             
             // 处理 JsonElement 类型，转换为相应的基本类型
-            if (value is System.Text.Json.JsonElement jsonElement)
+            if (value != null)
             {
-                switch (jsonElement.ValueKind)
+                try
                 {
-                    case System.Text.Json.JsonValueKind.String:
-                        return jsonElement.GetString();
-                    case System.Text.Json.JsonValueKind.Number:
-                        // 尝试获取不同类型的数值
-                        if (jsonElement.TryGetInt32(out int intValue))
-                        {
-                            return intValue;
-                        }
-                        else if (jsonElement.TryGetInt64(out long longValue))
-                        {
-                            return longValue;
-                        }
-                        else if (jsonElement.TryGetDouble(out double doubleValue))
-                        {
-                            return doubleValue;
-                        }
-                        else
-                        {
-                            return jsonElement.GetDecimal();
-                        }
-                    case System.Text.Json.JsonValueKind.True:
-                        return true;
-                    case System.Text.Json.JsonValueKind.False:
-                        return false;
-                    default:
-                        return value;
+                    dynamic dynamicValue = value;
+                    var valueKind = dynamicValue.ValueKind;
+                    switch (valueKind.ToString())
+                    {
+                        case "String":
+                            return dynamicValue.GetString();
+                        case "Number":
+                            try
+                            {
+                                return dynamicValue.GetInt32();
+                            }
+                            catch
+                            {
+                                try
+                                {
+                                    return dynamicValue.GetInt64();
+                                }
+                                catch
+                                {
+                                    try
+                                    {
+                                        return dynamicValue.GetDouble();
+                                    }
+                                    catch
+                                    {
+                                        return dynamicValue.GetDecimal();
+                                    }
+                                }
+                            }
+                        case "True":
+                            return true;
+                        case "False":
+                            return false;
+                        default:
+                            return value;
+                    }
+                }
+                catch
+                {
+                    // 如果不是 JsonElement 类型，直接返回
+                    return value;
                 }
             }
             
