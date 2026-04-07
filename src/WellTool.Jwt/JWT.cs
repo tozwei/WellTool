@@ -363,6 +363,15 @@ public class JWT
     }
 
     /// <summary>
+    /// 获取令牌的各个部分
+    /// </summary>
+    /// <returns>令牌的各个部分</returns>
+    public string[] GetTokens()
+    {
+        return _tokens ?? throw new JWTException("No token to get!");
+    }
+
+    /// <summary>
     /// 将JWT字符串拆分为3部分，无加密算法则最后一部分是""
     /// </summary>
     /// <param name="token">JWT Token</param>

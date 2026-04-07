@@ -1,21 +1,20 @@
+using WellTool.Core.Lang.Func;
 using Xunit;
-
-namespace WellTool.Core.Tests;
 
 public class LambdaUtilTest
 {
     [Fact]
     public void GetFieldNameTest()
     {
-        // 简化测试，移除对不存在的LambdaUtil的引用
-        Xunit.Assert.True(true);
+        var name = LambdaUtil.GetFieldName<Person>(p => p.Name);
+        Assert.Equal("Name", name);
     }
 
     [Fact]
     public void GetFieldNameFromPropertyTest()
     {
-        // 简化测试，移除对不存在的LambdaUtil的引用
-        Xunit.Assert.True(true);
+        var name = LambdaUtil.GetFieldName<Person>(p => p.Age);
+        Assert.Equal("Age", name);
     }
 
     private class Person

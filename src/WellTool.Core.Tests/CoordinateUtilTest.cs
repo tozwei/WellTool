@@ -54,13 +54,13 @@ namespace WellTool.Core.Tests
         public void ToRadiansTest()
         {
             double radians = CoordinateUtil.ToRadians(180);
-            Assert.Equal(Math.PI, radians, 5);
+            Assert.Equal(System.Math.PI, radians, 5);
         }
 
         [Fact]
         public void ToDegreeTest()
         {
-            double degrees = CoordinateUtil.ToDegree(Math.PI);
+            double degrees = CoordinateUtil.ToDegree(System.Math.PI);
             Assert.Equal(180, degrees, 5);
         }
     }

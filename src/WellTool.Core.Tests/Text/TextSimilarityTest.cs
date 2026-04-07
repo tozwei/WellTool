@@ -1,34 +1,33 @@
+using WellTool.Core.Text;
 using Xunit;
-
-namespace WellTool.Core.Tests;
 
 public class TextSimilarityTest
 {
     [Fact]
     public void SimilarDegreeTest()
     {
-        // 简化测试，实际项目中可能需要实现TextSimilarityUtil类
-        Assert.True(true);
+        int distance = TextSimilarity.EditDistance("hello", "hallo");
+        Assert.Equal(1, distance);
     }
 
     [Fact]
     public void SimilarDegreeTest2()
     {
-        // 简化测试，实际项目中可能需要实现TextSimilarityUtil类
-        Assert.True(true);
+        int distance = TextSimilarity.EditDistance("kitten", "sitting");
+        Assert.Equal(3, distance);
     }
 
     [Fact]
     public void SimilarTest()
     {
-        // 简化测试，实际项目中可能需要实现TextSimilarityUtil类
-        Assert.True(true);
+        double similarity = TextSimilarity.Similarity("hello", "hello");
+        Assert.Equal(1.0, similarity, 2);
     }
 
     [Fact]
     public void SimilarEmptyTest()
     {
-        // 简化测试，实际项目中可能需要实现TextSimilarityUtil类
-        Assert.True(true);
+        double similarity = TextSimilarity.Similarity("hello", "");
+        Assert.Equal(0.0, similarity, 2);
     }
 }

@@ -95,6 +95,25 @@ namespace WellTool.JWT
         }
 
         /// <summary>
+        /// 获取指定名称属性（字符串类型）
+        /// </summary>
+        /// <param name="name">名称</param>
+        /// <returns>属性</returns>
+        public string GetClaimAsString(string name)
+        {
+            var value = GetClaim(name);
+            if (value is string strValue)
+            {
+                return strValue;
+            }
+            else if (value is System.Text.Json.JsonElement jsonElement && jsonElement.ValueKind == System.Text.Json.JsonValueKind.String)
+            {
+                return jsonElement.GetString();
+            }
+            return null;
+        }
+
+        /// <summary>
         /// 获取Claims的JSON字符串形式
         /// </summary>
         /// <returns>JSON字符串</returns>

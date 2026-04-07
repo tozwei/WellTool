@@ -1,3 +1,4 @@
+using WellTool.Core.Util;
 using Xunit;
 
 namespace WellTool.Core.Tests
@@ -8,31 +9,26 @@ namespace WellTool.Core.Tests
     public class JNDIUtilTest
     {
         [Fact]
-        public void GetContextTest()
+        public void GetEnvironmentTest()
         {
-            // 简化测试，移除对不存在的JNDIUtil的引用
-            Xunit.Assert.True(true);
+            var env = JNDIUtil.GetEnvironment();
+            Assert.NotNull(env);
         }
 
         [Fact]
-        public void LookupTest()
+        public void GetEnvironmentValueTest()
         {
-            // 简化测试，移除对不存在的JNDIUtil的引用
-            Xunit.Assert.True(true);
+            var javaFactory = JNDIUtil.GetEnvironment("java.naming.factory.initial");
+            // 没有JNDI环境时可能返回null
+            Assert.Null(javaFactory);
         }
 
         [Fact]
-        public void LookupWithoutEnvTest()
+        public void LookupInvalidTest()
         {
-            // 简化测试，移除对不存在的JNDIUtil的引用
-            Xunit.Assert.True(true);
-        }
-
-        [Fact]
-        public void CloseContextTest()
-        {
-            // 简化测试，移除对不存在的JNDIUtil的引用
-            Xunit.Assert.True(true);
+            // 不存在的JNDI资源应返回null或抛异常
+            var result = JNDIUtil.Lookup("invalid/Resource");
+            Assert.Null(result);
         }
     }
 }

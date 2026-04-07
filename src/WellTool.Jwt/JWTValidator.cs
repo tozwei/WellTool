@@ -241,10 +241,31 @@ namespace WellTool.JWT
         {
             if (claims.TryGetValue(key, out var value))
             {
-                if (value is long timestamp)
+                // 处理 JsonElement 类型
+                if (value is System.Text.Json.JsonElement jsonElement)
+                {
+                    if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.Number)
+                    {
+                        if (jsonElement.TryGetInt64(out long timestamp))
+                        {
+                            return DateTimeOffset.FromUnixTimeSeconds(timestamp).DateTime;
+                        }
+                    }
+                    else if (jsonElement.ValueKind == System.Text.Json.JsonValueKind.String)
+                    {
+                        string dateStr = jsonElement.GetString();
+                        if (DateTime.TryParse(dateStr, out var date))
+                        {
+                            return date;
+                        }
+                    }
+                }
+                // 处理 long 类型
+                else if (value is long timestamp)
                 {
                     return DateTimeOffset.FromUnixTimeSeconds(timestamp).DateTime;
                 }
+                // 处理 string 类型
                 else if (value is string dateStr)
                 {
                     if (DateTime.TryParse(dateStr, out var date))

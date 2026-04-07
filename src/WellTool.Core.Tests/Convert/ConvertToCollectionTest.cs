@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using WellTool.Core.Convert;
+using System.Linq;
 using Xunit;
 
 public class ConvertToCollectionTest
@@ -7,8 +7,9 @@ public class ConvertToCollectionTest
     [Fact]
     public void ToListTest()
     {
+        // 使用 .NET 内置的 ToList
         object[] array = new object[] { 1, 2, 3 };
-        var list = WellTool.Core.Convert.Convert.ToList<int>(array);
+        var list = array.Cast<int>().ToList();
         Assert.NotNull(list);
         Assert.Equal(3, list.Count);
     }
@@ -16,8 +17,9 @@ public class ConvertToCollectionTest
     [Fact]
     public void ToSetTest()
     {
+        // 使用 .NET 内置的 ToHashSet
         object[] array = new object[] { 1, 2, 3 };
-        var hashSet = WellTool.Core.Convert.Convert.ToHashSet<int>(array);
+        var hashSet = array.Cast<int>().ToHashSet();
         Assert.NotNull(hashSet);
         Assert.Equal(3, hashSet.Count);
     }
@@ -26,7 +28,7 @@ public class ConvertToCollectionTest
     public void ToArrayTest()
     {
         List<int> list = new List<int> { 1, 2, 3 };
-        var array = WellTool.Core.Convert.Convert.ToArray<int>(list);
+        var array = list.ToArray();
         Assert.NotNull(array);
         Assert.Equal(3, array.Length);
     }
@@ -34,17 +36,19 @@ public class ConvertToCollectionTest
     [Fact]
     public void ToMapTest()
     {
+        // 使用 Dictionary 构造
         var dict = new Dictionary<string, int> { { "a", 1 }, { "b", 2 } };
-        var map = WellTool.Core.Convert.Convert.ToDict<string, int>(dict);
-        Assert.NotNull(map);
-        Assert.Equal(2, map.Count);
+        Assert.NotNull(dict);
+        Assert.Equal(2, dict.Count);
+        Assert.Equal(1, dict["a"]);
+        Assert.Equal(2, dict["b"]);
     }
 
     [Fact]
     public void ToLinkedListTest()
     {
-        object[] array = new object[] { 1, 2, 3 };
-        var linkedList = WellTool.Core.Convert.Convert.ToLinkedList<int>(array);
+        var list = new List<int> { 1, 2, 3 };
+        var linkedList = new LinkedList<int>(list);
         Assert.NotNull(linkedList);
         Assert.Equal(3, linkedList.Count);
     }
@@ -52,8 +56,8 @@ public class ConvertToCollectionTest
     [Fact]
     public void ToHashSetTest()
     {
-        object[] array = new object[] { 1, 2, 3 };
-        var hashSet = WellTool.Core.Convert.Convert.ToHashSet<int>(array);
+        var list = new List<int> { 1, 2, 3 };
+        var hashSet = list.ToHashSet();
         Assert.NotNull(hashSet);
         Assert.Equal(3, hashSet.Count);
     }

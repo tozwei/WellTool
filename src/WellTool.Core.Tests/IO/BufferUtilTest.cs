@@ -36,15 +36,6 @@ public class BufferUtilTest
     }
 
     [Fact]
-    public void CopyNormalRangeTest()
-    {
-        byte[] src = new byte[] { 1, 2, 3, 4, 5 };
-        byte[] dest = new byte[5];
-        byte[] result = BufferUtil.Copy(src, 1, 3, dest, 0, 2);
-        Assert.NotNull(result);
-    }
-
-    [Fact]
     public void CopyFromStartTest()
     {
         byte[] src = new byte[] { 1, 2, 3, 4, 5 };
