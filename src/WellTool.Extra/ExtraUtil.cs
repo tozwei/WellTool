@@ -11,6 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using WellTool.Extra.Validation;
+
 namespace WellTool.Extra;
 
 /// <summary>
@@ -80,11 +82,10 @@ public class ExtraUtil
     /// <summary>
     /// 获取二维码工具
     /// </summary>
-    /// <returns>二维码工具（静态类返回null）</returns>
-    public object QrCode()
+    /// <returns>二维码工具</returns>
+    public QrCodeUtil QrCode()
     {
-        // 静态类没有实例
-        return null;
+        return QrCodeUtil.Instance;
     }
 
     /// <summary>
@@ -118,8 +119,8 @@ public class ExtraUtil
     /// 获取验证工具
     /// </summary>
     /// <returns>验证工具</returns>
-    public object Validation()
+    public ValidationUtil Validation()
     {
-        return null;
+        return ValidationUtil.Instance;
     }
 }

@@ -63,7 +63,7 @@ namespace WellTool.Poi.Tests
                 }
 
                 using var reader = WellTool.Poi.ExcelUtil.GetReader(tempFile);
-                var result = reader.ReadSheet(0);
+                var result = reader.ReadSheet("TestSheet");
                 
                 Assert.NotNull(result);
                 // 验证至少有2行数据

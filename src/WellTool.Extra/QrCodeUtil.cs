@@ -21,8 +21,13 @@ namespace WellTool.Extra;
 /// <summary>
 /// 二维码工具类
 /// </summary>
-public static class QrCodeUtil
+public class QrCodeUtil
 {
+    /// <summary>
+    /// 单例实例
+    /// </summary>
+    public static QrCodeUtil Instance { get; } = new QrCodeUtil();
+
     /// <summary>
         /// 生成二维码
         /// </summary>
@@ -30,7 +35,7 @@ public static class QrCodeUtil
         /// <param name="width">二维码宽度</param>
         /// <param name="height">二维码高度</param>
         /// <returns>二维码图片</returns>
-        public static Bitmap Generate(string content, int width = 200, int height = 200)
+        public Bitmap Generate(string content, int width = 200, int height = 200)
         {
             if (content == null)
             {
@@ -74,7 +79,7 @@ public static class QrCodeUtil
     /// <param name="filePath">文件路径</param>
     /// <param name="width">二维码宽度</param>
     /// <param name="height">二维码高度</param>
-    public static void GenerateToFile(string content, string filePath, int width = 200, int height = 200)
+    public void GenerateToFile(string content, string filePath, int width = 200, int height = 200)
     {
         if (string.IsNullOrEmpty(content))
         {
@@ -99,7 +104,7 @@ public static class QrCodeUtil
     /// <param name="width">二维码宽度</param>
     /// <param name="height">二维码高度</param>
     /// <returns>二维码字节数组</returns>
-    public static byte[] GenerateToByteArray(string content, int width = 200, int height = 200)
+    public byte[] GenerateToByteArray(string content, int width = 200, int height = 200)
     {
         if (string.IsNullOrEmpty(content))
         {
@@ -122,7 +127,7 @@ public static class QrCodeUtil
     /// <summary>
     /// 生成带Logo的二维码
     /// </summary>
-    public static Bitmap GenerateWithLogo(string content, Image logo, int width = 200, int height = 200)
+    public Bitmap GenerateWithLogo(string content, Image logo, int width = 200, int height = 200)
     {
         if (string.IsNullOrEmpty(content))
         {
@@ -159,7 +164,7 @@ public static class QrCodeUtil
         /// </summary>
         /// <param name="filePath">二维码图片路径</param>
         /// <returns>解码后的内容</returns>
-        public static string Decode(string filePath)
+        public string Decode(string filePath)
         {
             // QRCoder 主要用于生成，解码需要使用其他库
             // 这里使用简单的实现，实际项目中可以集成ZXing
