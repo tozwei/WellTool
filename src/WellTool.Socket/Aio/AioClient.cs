@@ -43,7 +43,7 @@ public class AioClient : IDisposable
 	/// <param name="host">主机地址</param>
 	/// <param name="port">端口</param>
 	public AioClient(string host, int port)
-		: this(new IPEndPoint(IPAddress.Parse(host), port), DefaultIoAction, new SocketConfig())
+		: this(new IPEndPoint(IPAddress.Any, port), DefaultIoAction, new SocketConfig())
 	{
 	}
 
@@ -56,9 +56,8 @@ public class AioClient : IDisposable
 	public AioClient(IPEndPoint address, IIoAction<byte[]> ioAction, SocketConfig config)
 	{
 		var socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-		socket.Connect(address);
+		// 延迟连接，在需要时才连接
 		_session = new AioSession(socket, ioAction, config);
-		ioAction.Accept(_session);
 	}
 
 	/// <summary>

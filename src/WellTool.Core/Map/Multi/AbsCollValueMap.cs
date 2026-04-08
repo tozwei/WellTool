@@ -109,8 +109,8 @@ namespace WellTool.Core.Map.Multi
 		/// <param name="value">值</param>
 		public void PutValue(K key, V value)
 		{
-			C collection = this[key];
-			if (collection == null)
+			C collection;
+			if (!TryGetValue(key, out collection!))
 			{
 				collection = CreateCollection();
 				this[key] = collection;
@@ -126,7 +126,10 @@ namespace WellTool.Core.Map.Multi
 		/// <returns>值或null</returns>
 		public V Get(K key, int index)
 		{
-			var collection = this[key];
+			if (!TryGetValue(key, out var collection))
+			{
+				return default(V);
+			}
 			if (collection == null || index < 0 || index >= collection.Count)
 			{
 				return default(V);
@@ -151,7 +154,10 @@ namespace WellTool.Core.Map.Multi
 		/// <returns>是否删除成功</returns>
 		public bool RemoveValue(K key, V value)
 		{
-			C collection = this[key];
+			if (!TryGetValue(key, out var collection))
+			{
+				return false;
+			}
 			return collection != null && collection.Remove(value);
 		}
 
@@ -163,7 +169,10 @@ namespace WellTool.Core.Map.Multi
 		/// <returns>是否删除成功</returns>
 		public bool RemoveValues(K key, ICollection<V> values)
 		{
-			C collection = this[key];
+			if (!TryGetValue(key, out var collection))
+			{
+				return false;
+			}
 			return collection != null && values.All(value => collection.Remove(value));
 		}
 

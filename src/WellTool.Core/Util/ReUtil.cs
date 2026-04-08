@@ -12,10 +12,10 @@ public static class ReUtil
 	/// <summary>
 	/// 判断字符串是否匹配正则表达式
 	/// </summary>
-	/// <param name="text">文本</param>
 	/// <param name="pattern">正则表达式</param>
+	/// <param name="text">文本</param>
 	/// <returns>是否匹配</returns>
-	public static bool IsMatch(string text, string pattern)
+	public static bool IsMatch(string pattern, string text)
 	{
 		if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(pattern))
 		{
@@ -211,7 +211,12 @@ public static class ReUtil
 		{
 			return text;
 		}
-		return Regex.Replace(text, pattern, replacement ?? string.Empty, RegexOptions.None, TimeSpan.FromSeconds(1));
+		var match = Regex.Match(text, pattern);
+		if (!match.Success)
+		{
+			return text;
+		}
+		return text.Substring(0, match.Index) + (replacement ?? string.Empty) + text.Substring(match.Index + match.Length);
 	}
 
 	/// <summary>
@@ -244,7 +249,7 @@ public static class ReUtil
 	/// <returns>是否包含</returns>
 	public static bool Contains(string text, string pattern)
 	{
-		return IsMatch(text, pattern);
+		return IsMatch(pattern, text);
 	}
 
 	/// <summary>

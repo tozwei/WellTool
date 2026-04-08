@@ -217,19 +217,34 @@ public class ConvertUtil
 	}
 
 	/// <summary>
-	/// 转换为Enum对象
-	/// </summary>
-	/// <typeparam name="T">枚举类型</typeparam>
-	/// <param name="value">值</param>
-	/// <param name="defaultValue">默认值</param>
-	/// <returns>Enum</returns>
-	public static T? ToEnum<T>(object value, T? defaultValue) where T : struct, Enum
-	{
-		if (value == null) return defaultValue;
-		if (value is T t) return t;
-		if (value is string s && Enum.TryParse<T>(s, true, out T result)) return result;
-		return defaultValue;
-	}
+    /// 转换为Enum对象
+    /// </summary>
+    /// <typeparam name="T">枚举类型</typeparam>
+    /// <param name="value">值</param>
+    /// <param name="defaultValue">默认值</param>
+    /// <returns>Enum</returns>
+    public static T? ToEnum<T>(object value, T? defaultValue) where T : struct, Enum
+    {
+        if (value == null) return defaultValue;
+        if (value is T t) return t;
+        if (value is string s && Enum.TryParse<T>(s, true, out T result)) return result;
+        if (value is IConvertible convertible)
+        {
+            try
+            {
+                int intValue = convertible.ToInt32(null);
+                if (Enum.IsDefined(typeof(T), intValue))
+                {
+                    return (T)Enum.ToObject(typeof(T), intValue);
+                }
+            }
+            catch
+            {
+                // 忽略转换错误
+            }
+        }
+        return defaultValue;
+    }
 
 	/// <summary>
 	/// 转换为Enum对象

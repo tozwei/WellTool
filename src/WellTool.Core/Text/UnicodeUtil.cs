@@ -22,33 +22,44 @@ public static class UnicodeUtil
 
         int len = unicode.Length;
         var sb = new System.Text.StringBuilder(len);
+        int lastPos = 0;
         int pos = 0;
         while ((pos = StrUtil.IndexOfIgnoreCase(unicode, "\\u", pos)) != -1)
         {
-            sb.Append(unicode.AsSpan(0, pos));
-            if (pos + 5 < len)
+            sb.Append(unicode.AsSpan(lastPos, pos - lastPos));
+            if (pos + 5 <= len)
             {
                 try
                 {
                     char c = (char)int.Parse(unicode.Substring(pos + 2, 4), System.Globalization.NumberStyles.HexNumber);
                     sb.Append(c);
                     pos += 6;
+                    lastPos = pos;
                 }
                 catch (FormatException)
                 {
                     sb.Append(unicode.AsSpan(pos, 2));
                     pos += 2;
+                    lastPos = pos;
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    sb.Append(unicode.AsSpan(pos, 2));
+                    pos += 2;
+                    lastPos = pos;
                 }
             }
             else
             {
+                sb.Append(unicode.AsSpan(pos));
+                lastPos = len;
                 break;
             }
         }
 
-        if (pos < len)
+        if (lastPos < len)
         {
-            sb.Append(unicode.AsSpan(pos));
+            sb.Append(unicode.AsSpan(lastPos));
         }
         return sb.ToString();
     }
