@@ -75,7 +75,7 @@ public static class NumberChineseFormatter
 			var n = number % 10;
 			if (n > 0 || (unitsIndex > 0 && sb.Length > 0))
 			{
-				if (sb.Length > 0 && n > 0)
+				if (sb.Length > 0 && n > 0 && unitsIndex < UNITS.Length)
 					sb.Insert(0, UNITS[unitsIndex]);
 				if (n > 0)
 					sb.Insert(0, CHINESE_DIGITS[n]);

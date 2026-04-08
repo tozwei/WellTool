@@ -290,15 +290,15 @@ public class StrUtilLastTest
     [Fact]
     public void AppendIfMissingTest()
     {
-        Assert.Equal("abc", StrUtil.AppendIfMissing("abc", "x"));
-        Assert.Equal("abcx", StrUtil.AppendIfMissing("abc", "x", true));
+        Assert.Equal("abc", StrUtil.AppendIfMissing("abc", "abc"));
+        Assert.Equal("abcx", StrUtil.AppendIfMissing("abc", "x"));
     }
 
     [Fact]
     public void PrependIfMissingTest()
     {
-        Assert.Equal("abc", StrUtil.PrependIfMissing("abc", "x"));
-        Assert.Equal("xabc", StrUtil.PrependIfMissing("abc", "x", true));
+        Assert.Equal("abc", StrUtil.PrependIfMissing("abc", "abc"));
+        Assert.Equal("xabc", StrUtil.PrependIfMissing("abc", "x"));
     }
 
     [Fact]
