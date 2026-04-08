@@ -37,8 +37,12 @@ public class ConvertUtil
 	/// </summary>
 	/// <param name="value">被转换的值</param>
 	/// <returns>结果</returns>
-	public static string ToStr(object value)
+	public static string? ToStr(object value)
 	{
+		if (value == null)
+		{
+			return null;
+		}
 		return ToStr(value, "");
 	}
 
