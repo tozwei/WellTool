@@ -73,9 +73,9 @@ public static class NumberChineseFormatter
 		while (number > 0)
 		{
 			var n = number % 10;
-			if (n > 0 || unitsIndex == 1 || unitsIndex == 2) // 处理十位和百位
+			if (n > 0 || unitsIndex == 2) // 处理百位
 			{
-				if (sb.Length > 0 && unitsIndex < UNITS.Length)
+				if (sb.Length > 0 && unitsIndex < UNITS.Length && n > 0)
 					sb.Insert(0, isSimple ? UNITS[unitsIndex] : ToUpperUnit(unitsIndex));
 				else if (unitsIndex == 4) // 万位
 					sb.Insert(0, isSimple ? "万" : "万");
