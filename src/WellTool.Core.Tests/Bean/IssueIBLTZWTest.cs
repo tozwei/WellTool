@@ -1,29 +1,60 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using Xunit;
+using WellTool.Core;
+using WellTool.Core.Bean;
+using WellTool.Core.Bean.Copier;
+using WellTool.Core.Util;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace WellTool.Core.Tests.Bean;
 
 /// <summary>
-/// Issue IBLTZW 测试
+/// Issue IBLTZW 测试 - 自定义字段转换器
 /// </summary>
 public class IssueIBLTZWTest
 {
     [Fact]
-    public void TestIssueIBLTZW()
+    public void TestCopy()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var bean = new TestBean
+        {
+            Name = "test",
+            Date = DateTime.Parse("2025-02-17")
+        };
+
+        var testBean2 = new TestBean2();
+        var copyOptions = CreateCopyOptions();
+        BeanUtil.CopyProperties(bean, testBean2, copyOptions);
+        Assert.Equal("2025", testBean2.Date);
+    }
+
+    public class TestBean
+    {
+        public string Name { get; set; }
+        public DateTime Date { get; set; }
+    }
+
+    public class TestBean2
+    {
+        public string Name { get; set; }
+        public string Date { get; set; }
+    }
+
+    static CopyOptions CreateCopyOptions()
+    {
+        var copyOptions = CopyOptions.Create();
+        copyOptions.IgnoreError = true;
+        copyOptions.Converter = null;
+        copyOptions.FieldValueEditor = (fieldName, value) =>
+        {
+            var targetField = typeof(TestBean2).GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (targetField != null && targetField.FieldType == typeof(string) && value is DateTime)
+            {
+                return ((DateTime)value).ToString("yyyy");
+            }
+            return copyOptions.Converter != null ? copyOptions.Converter(targetField?.FieldType, value) : value;
+        };
+        return copyOptions;
     }
 }

@@ -1,29 +1,32 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using Xunit;
+using WellTool.Core;
+using WellTool.Core.Bean;
+using System.Collections.Generic;
 
 namespace WellTool.Core.Tests.Bean;
 
 /// <summary>
-/// Issue 3645 测试
+/// Issue 3645 测试 - Map 到 Map 的属性复制
 /// </summary>
 public class Issue3645Test
 {
     [Fact]
-    public void TestIssue3645()
+    public void TestCopyProperties()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var p = new User { UserId = 123L };
+        var map = new Dictionary<long, User>
+        {
+            { 123L, p }
+        };
+
+        var m = new Dictionary<long, User>();
+        BeanUtil.CopyProperties(map, m);
+        var u = m[123L];
+        Assert.NotNull(u);
+    }
+
+    public class User
+    {
+        public long UserId { get; set; }
     }
 }

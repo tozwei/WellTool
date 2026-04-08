@@ -1,17 +1,5 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using Xunit;
+using WellTool.Core.Codec;
 
 namespace WellTool.Core.Tests.Codec;
 
@@ -21,9 +9,34 @@ namespace WellTool.Core.Tests.Codec;
 public class Base64Test
 {
     [Fact]
-    public void TestBase64()
+    public void EncodeTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var encoded = Base64.Encode("Hello");
+        Assert.NotNull(encoded);
+    }
+
+    [Fact]
+    public void DecodeTest()
+    {
+        var encoded = Base64.Encode("Hello");
+        var decoded = Base64.Decode(encoded);
+        Assert.Equal("Hello", decoded);
+    }
+
+    [Fact]
+    public void EncodeBytesTest()
+    {
+        var bytes = new byte[] { 1, 2, 3 };
+        var encoded = Base64.Encode(bytes);
+        Assert.NotNull(encoded);
+    }
+
+    [Fact]
+    public void DecodeBytesTest()
+    {
+        var bytes = new byte[] { 1, 2, 3 };
+        var encoded = Base64.Encode(bytes);
+        var decoded = Base64.DecodeBytes(encoded);
+        Assert.Equal(bytes, decoded);
     }
 }

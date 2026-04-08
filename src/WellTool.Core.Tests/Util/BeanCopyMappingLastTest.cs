@@ -1,38 +1,44 @@
 using Xunit;
+using WellTool.Core.Bean;
+using WellTool.Core.Bean.Copier;
 
-namespace WellTool.Core.Tests;
+namespace WellTool.Core.Tests.Util;
 
+/// <summary>
+/// BeanCopyMapping 测试
+/// </summary>
 public class BeanCopyMappingLastTest
 {
     [Fact]
-    public void AddMappingTest()
+    public void CopyPropertiesTest()
     {
-        // 简化测试，实际项目中可能需要实现BeanCopyMapping类
-        Assert.True(true);
+        var copyOptions = CopyOptions.Create()
+            .SetFieldMapping(new System.Collections.Generic.Dictionary<string, string>
+            {
+                { "car", "carNo" }
+            });
+
+        var b = new B { Car = "12312312" };
+        var a = new A();
+        var c = new C();
+        BeanUtil.CopyProperties(b, a, copyOptions);
+        BeanUtil.CopyProperties(a, c);
+
+        Assert.Equal("12312312", c.CarNo);
     }
 
-    [Fact]
-    public void BuildTest()
+    public class A
     {
-        // 简化测试，实际项目中可能需要实现BeanCopyMapping类
-        Assert.True(true);
+        public string CarNo { get; set; } = "";
     }
 
-    [Fact]
-    public void CopyTest()
+    public class B
     {
-        var source = new SourceBean { SourceName = "John" };
-        var target = new TargetBean { TargetName = source.SourceName };
-        Assert.True(true);
+        public string Car { get; set; } = "";
     }
 
-    private class SourceBean
+    public class C
     {
-        public string SourceName { get; set; } = "";
-    }
-
-    private class TargetBean
-    {
-        public string TargetName { get; set; } = "";
+        public string CarNo { get; set; } = "";
     }
 }

@@ -1,29 +1,30 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using Xunit;
+using WellTool.Core;
+using WellTool.Core.Bean;
 
 namespace WellTool.Core.Tests.Bean;
 
 /// <summary>
-/// Issue IAYGT0 测试
+/// Issue IAYGT0 测试 - BeanUtil.SetProperty 是否调用 setter 方法
 /// </summary>
 public class IssueIAYGT0Test
 {
     [Fact]
-    public void TestIssueIAYGT0()
+    public void TestSetProperty()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var cat = new Cat();
+        BeanUtil.SetProperty(cat, "name", "Kitty");
+        Assert.Equal("RedKitty", cat.Name);
+    }
+
+    public class Cat
+    {
+        private string _name;
+
+        public string Name
+        {
+            get => _name;
+            set => _name = "Red" + value;
+        }
     }
 }

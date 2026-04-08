@@ -1,69 +1,46 @@
 using Xunit;
+using WellTool.Core.Net;
 
-namespace WellTool.Core.Tests;
+namespace WellTool.Core.Tests.Net;
 
+/// <summary>
+/// NetUtil 测试
+/// </summary>
 public class NetUtilTest
 {
     [Fact]
-    public void GetLocalHostTest()
+    public void IsValidIpTest()
     {
-        // 简化测试，移除对不存在的NetUtil.GetLocalHost方法的引用
-        Xunit.Assert.True(true);
+        Assert.True(NetUtil.IsValidIp("192.168.1.1"));
+        Assert.False(NetUtil.IsValidIp("999.999.999.999"));
     }
 
     [Fact]
-    public void GetLocalHostStrTest()
+    public void LocalIpTest()
     {
-        // 简化测试，移除对不存在的NetUtil.GetLocalHostStr方法的引用
-        Xunit.Assert.True(true);
+        var localIp = NetUtil.LocalIp;
+        Assert.NotNull(localIp);
     }
 
     [Fact]
-    public void IsInRangeTest()
+    public void GetLocalHostNameTest()
     {
-        // 简化测试，移除对不存在的NetUtil.IsInRange方法的引用
-        Xunit.Assert.True(true);
+        var hostName = NetUtil.GetLocalHostName();
+        Assert.NotNull(hostName);
     }
 
     [Fact]
-    public void IsInnerIPTest()
+    public void Ipv4ToLongTest()
     {
-        // 简化测试，移除对不存在的NetUtil.IsInnerIP方法的引用
-        Xunit.Assert.True(true);
+        var ipLong = NetUtil.Ipv4ToLong("192.168.1.1");
+        Assert.True(ipLong > 0);
     }
 
     [Fact]
-    public void Ip2LongTest()
+    public void LongToIpv4Test()
     {
-        // 简化测试，移除对不存在的NetUtil.Ip2Long和Long2Ip方法的引用
-        Xunit.Assert.True(true);
-    }
-
-    [Fact]
-    public void GetMultistageReverseDnsLookupTest()
-    {
-        // 简化测试，移除对不存在的NetUtil.GetMultistageReverseDnsLookup方法的引用
-        Xunit.Assert.True(true);
-    }
-
-    [Fact]
-    public void IsValidIPv4Test()
-    {
-        // 简化测试，移除对不存在的NetUtil.IsValidIPv4方法的引用
-        Xunit.Assert.True(true);
-    }
-
-    [Fact]
-    public void IsValidPortTest()
-    {
-        // 简化测试，移除对不存在的NetUtil.IsValidPort方法的引用
-        Xunit.Assert.True(true);
-    }
-
-    [Fact]
-    public void GetUrlParametersTest()
-    {
-        // 简化测试，移除对不存在的NetUtil.GetUrlParameters方法的引用
-        Xunit.Assert.True(true);
+        var ipLong = NetUtil.Ipv4ToLong("192.168.1.1");
+        var ip = NetUtil.LongToIpv4(ipLong);
+        Assert.Equal("192.168.1.1", ip);
     }
 }

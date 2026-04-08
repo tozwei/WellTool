@@ -1,29 +1,34 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using Xunit;
+using WellTool.Core.Comparator;
+using System.Collections.Generic;
 
 namespace WellTool.Core.Tests.Comparator;
 
 /// <summary>
-/// 属性比较器测试
+/// PropertyComparator 测试
 /// </summary>
 public class PropertyComparatorTest
 {
     [Fact]
-    public void TestPropertyComparator()
+    public void CompareByPropertyTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var list = new List<TestItem>
+        {
+            new TestItem { Name = "B", Age = 20 },
+            new TestItem { Name = "A", Age = 25 },
+            new TestItem { Name = "C", Age = 15 }
+        };
+
+        list.Sort(new PropertyComparator<TestItem>("Name"));
+        Assert.Equal("A", list[0].Name);
+
+        list.Sort(new PropertyComparator<TestItem>("Age"));
+        Assert.Equal(15, list[0].Age);
+    }
+
+    public class TestItem
+    {
+        public string Name { get; set; } = "";
+        public int Age { get; set; }
     }
 }

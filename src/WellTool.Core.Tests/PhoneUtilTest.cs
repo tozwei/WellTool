@@ -1,52 +1,25 @@
 using Xunit;
+using WellTool.Core.Util;
 
-namespace WellTool.Core.Tests
+namespace WellTool.Core.Tests;
+
+/// <summary>
+/// PhoneUtil 测试
+/// </summary>
+public class PhoneUtilTest
 {
-    /// <summary>
-    /// Phone工具单元测试
-    /// </summary>
-    public class PhoneUtilTest
+    [Fact]
+    public void IsValidTest()
     {
-        [Fact]
-        public void IsValidTest()
-        {
-            // 简化测试，实际项目中可能需要使用PhoneUtil类
-            Assert.True(true);
-        }
+        Assert.True(PhoneUtil.IsValid("13812345678"));
+        Assert.True(PhoneUtil.IsValid("+8613812345678"));
+        Assert.False(PhoneUtil.IsValid("12345"));
+    }
 
-        [Fact]
-        public void IsValidSimpleTest()
-        {
-            // 简化测试，实际项目中可能需要使用PhoneUtil类
-            Assert.True(true);
-        }
-
-        [Fact]
-        public void IsMobileTest()
-        {
-            // 简化测试，实际项目中可能需要使用PhoneUtil类
-            Assert.True(true);
-        }
-
-        [Fact]
-        public void HideTest()
-        {
-            // 简化测试，实际项目中可能需要使用PhoneUtil类
-            Assert.True(true);
-        }
-
-        [Fact]
-        public void GetTypeTest()
-        {
-            // 简化测试，实际项目中可能需要使用PhoneUtil类
-            Assert.True(true);
-        }
-
-        [Fact]
-        public void CleanPhoneTest()
-        {
-            // 简化测试，实际项目中可能需要使用PhoneUtil类
-            Assert.True(true);
-        }
+    [Fact]
+    public void HideTest()
+    {
+        var hidden = PhoneUtil.Hide("13812345678");
+        Assert.Contains("****", hidden);
     }
 }

@@ -1,29 +1,26 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using Xunit;
+using WellTool.Core;
+using WellTool.Core.Bean;
+using WellTool.Core.Bean.Copier;
+using WellTool.Core.Text;
+using System.Collections.Generic;
 
 namespace WellTool.Core.Tests.Bean;
 
 /// <summary>
-/// Issue 3497 测试
+/// Issue 3497 测试 - Map 到 Map 转换时使用字段名编辑器
 /// </summary>
 public class Issue3497Test
 {
     [Fact]
-    public void TestIssue3497()
+    public void TestMapToMap()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var aB = new Dictionary<string, string>
+        {
+            { "a_b", "1" }
+        };
+        var bean = BeanUtil.MapToBean<Dictionary<string, object>>(aB, CopyOptions.Create()
+            .SetFieldNameEditor(NamingCase.ToUnderlineCase));
+        Assert.Equal("1", bean["aB"]?.ToString());
     }
 }

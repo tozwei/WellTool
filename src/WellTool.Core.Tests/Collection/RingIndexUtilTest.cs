@@ -1,29 +1,33 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using Xunit;
+using WellTool.Core.Collection;
 
 namespace WellTool.Core.Tests.Collection;
 
 /// <summary>
-/// 环形索引工具测试
+/// RingIndexUtil 测试
 /// </summary>
 public class RingIndexUtilTest
 {
     [Fact]
-    public void TestRingIndexUtil()
+    public void NextTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        Assert.Equal(1, RingIndexUtil.Next(0, 3));
+        Assert.Equal(2, RingIndexUtil.Next(1, 3));
+        Assert.Equal(0, RingIndexUtil.Next(2, 3));
+    }
+
+    [Fact]
+    public void PrevTest()
+    {
+        Assert.Equal(2, RingIndexUtil.Prev(0, 3));
+        Assert.Equal(0, RingIndexUtil.Prev(1, 3));
+        Assert.Equal(1, RingIndexUtil.Prev(2, 3));
+    }
+
+    [Fact]
+    public void OffsetTest()
+    {
+        Assert.Equal(2, RingIndexUtil.Offset(0, 2, 5));
+        Assert.Equal(0, RingIndexUtil.Offset(3, 2, 5));
     }
 }

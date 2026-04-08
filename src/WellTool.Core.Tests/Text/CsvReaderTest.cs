@@ -1,27 +1,19 @@
 using Xunit;
+using WellTool.Core.Text;
 
-namespace WellTool.Core.Tests;
+namespace WellTool.Core.Tests.Text;
 
+/// <summary>
+/// CsvReader 测试
+/// </summary>
 public class CsvReaderTest
 {
     [Fact]
     public void ReadTest()
     {
-        // 简化测试，移除对不存在的CsvReader的引用
-        Assert.True(true);
-    }
-
-    [Fact]
-    public void ReadMapListTest()
-    {
-        // 简化测试，移除对不存在的CsvUtil和CsvReadConfig的引用
-        Assert.True(true);
-    }
-
-    [Fact]
-    public void CustomConfigTest()
-    {
-        // 简化测试，移除对不存在的CsvUtil和CsvReadConfig的引用
-        Assert.True(true);
+        var csv = "name,age\ntest,20";
+        using var reader = CsvUtil.Reader(csv);
+        var rows = reader.Read();
+        Assert.NotNull(rows);
     }
 }

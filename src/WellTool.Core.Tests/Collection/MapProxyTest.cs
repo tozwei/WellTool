@@ -1,29 +1,32 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using Xunit;
+using WellTool.Core.Collection;
+using System.Collections.Generic;
+using WellTool.Core.Map;
 
 namespace WellTool.Core.Tests.Collection;
 
 /// <summary>
-/// 映射代理测试
+/// MapProxy 测试
 /// </summary>
 public class MapProxyTest
 {
     [Fact]
-    public void TestMapProxy()
+    public void Test()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var map = new Dictionary<string, object> { { "key", "value" } };
+        var proxy = MapProxy.Create(map);
+        Assert.Equal("value", proxy["key"]);
+        
+        proxy["key2"] = "value2";
+        Assert.Equal("value2", proxy["key2"]);
+    }
+
+    [Fact]
+    public void ContainsKeyTest()
+    {
+        var map = new Dictionary<string, object> { { "key", "value" } };
+        var proxy = MapProxy.Create(map);
+        Assert.True(proxy.ContainsKey("key"));
+        Assert.False(proxy.ContainsKey("notexist"));
     }
 }

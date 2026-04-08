@@ -1,27 +1,35 @@
 using Xunit;
+using WellTool.Core.Text;
 
-namespace WellTool.Core.Tests;
+namespace WellTool.Core.Tests.Text;
 
+/// <summary>
+/// CsvUtil 测试
+/// </summary>
 public class CsvUtilTest
 {
     [Fact]
-    public void GetReaderTest()
+    public void ReadTest()
     {
-        // 简化测试，移除对不存在的CsvUtil的引用
-        Assert.True(true);
+        var csv = "name,age\ntest,20";
+        var reader = CsvUtil.Reader(csv);
+        Assert.NotNull(reader);
     }
 
     [Fact]
-    public void ReadFromStrTest()
+    public void WriteTest()
     {
-        // 简化测试，移除对不存在的CsvUtil的引用
-        Assert.True(true);
+        var csv = CsvUtil.Writer()
+            .WriteHeader<WriterTestClass>()
+            .WriteRow(new WriterTestClass { Name = "test", Age = 20 })
+            .ToString();
+        Assert.Contains("Name", csv);
+        Assert.Contains("test", csv);
     }
 
-    [Fact]
-    public void ReadFromStrWithQuotedTest()
+    public class WriterTestClass
     {
-        // 简化测试，移除对不存在的CsvUtil的引用
-        Assert.True(true);
+        public string Name { get; set; } = "";
+        public int Age { get; set; }
     }
 }

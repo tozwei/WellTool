@@ -1,29 +1,32 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using Xunit;
+using WellTool.Core;
+using WellTool.Core.Bean;
+using WellTool.Core.Bean.Copier;
+using System.Collections.Generic;
 
 namespace WellTool.Core.Tests.Bean;
 
 /// <summary>
-/// Issue 3452 测试
+/// Issue 3452 测试 - fillBeanWithMap 方法
 /// </summary>
 public class Issue3452Test
 {
     [Fact]
-    public void TestIssue3452()
+    public void TestFillBeanWithMap()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var properties = new Dictionary<string, object>
+        {
+            { "name", "JohnDoe" },
+            { "user_age", 25 }
+        };
+        var user = BeanUtil.MapToBean<User>(properties, CopyOptions.Create());
+        Assert.Equal("JohnDoe", user.Name);
+        Assert.Equal(25, user.UserAge);
+    }
+
+    public class User
+    {
+        public string Name { get; set; }
+        public int UserAge { get; set; }
     }
 }

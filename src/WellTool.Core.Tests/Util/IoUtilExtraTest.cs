@@ -1,51 +1,35 @@
-using WellTool.Core.Util;
 using Xunit;
-using System.IO;
-using System.Text;
+using WellTool.Core.IO;
+using WellTool.Core.IO.Resource;
 
-namespace WellTool.Core.Tests;
+namespace WellTool.Core.Tests.Util;
 
+/// <summary>
+/// IoUtil 额外测试
+/// </summary>
 public class IoUtilExtraTest
 {
     [Fact]
-    public void ReadStringTest()
-    {
-        using var stream = new MemoryStream(Encoding.UTF8.GetBytes("Hello"));
-        var result = IOUtil.ReadString(stream);
-        Assert.Equal("Hello", result);
-    }
-
-    [Fact]
     public void ReadBytesTest()
     {
-        using var stream = new MemoryStream(Encoding.UTF8.GetBytes("Hello"));
-        var bytes = IOUtil.ReadBytes(stream);
-        Assert.Equal(5, bytes.Length);
+        using var stream = ResourceUtil.GetStream("hutool.jpg");
+        var bytes = IoUtil.ReadBytes(stream);
+        Assert.Equal(22807, bytes.Length);
     }
 
     [Fact]
-    public void CopyTest()
+    public void ReadBytesWithLengthTest()
     {
-        using var input = new MemoryStream(Encoding.UTF8.GetBytes("Hello"));
-        using var output = new MemoryStream();
-        IOUtil.Copy(input, output);
-        output.Position = 0;
-        using var reader = new StreamReader(output, Encoding.UTF8);
-        Assert.Equal("Hello", reader.ReadToEnd());
+        var limit = RandomUtil.RandomInt(22807);
+        using var stream = ResourceUtil.GetStream("hutool.jpg");
+        var bytes = IoUtil.ReadBytes(stream, limit);
+        Assert.Equal(limit, bytes.Length);
     }
 
     [Fact]
-    public void EmptyStreamTest()
+    public void ReadLinesTest()
     {
-        var empty = IOUtil.EmptyStream;
-        Assert.True(true);
-    }
-
-    [Fact]
-    public void CloseTest()
-    {
-        var stream = new MemoryStream();
-        IOUtil.Close(stream);
-        Assert.True(true);
+        using var reader = ResourceUtil.GetUtf8Reader("test_lines.csv");
+        IoUtil.ReadLines(reader, line => Assert.NotNull(line));
     }
 }

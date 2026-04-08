@@ -226,109 +226,68 @@ namespace WellTool.Core.Text
             private string BuildRegex(string pattern)
             {
                 var separator = Regex.Escape(_pathSeparator);
-                var parts = pattern.Split(new[] { _pathSeparator }, StringSplitOptions.RemoveEmptyEntries);
-                var regexParts = new List<string>();
+                var regexBuilder = new System.Text.StringBuilder();
+                var length = pattern.Length;
+                var i = 0;
 
-                // 处理模式以 / 开头的情况
-                if (pattern.StartsWith(_pathSeparator))
+                while (i < length)
                 {
-                    regexParts.Add(separator);
-                }
-
-                for (int i = 0; i < parts.Length; i++)
-                {
-                    var part = parts[i];
-                    
-                    if (part == "**")
+                    var currentChar = pattern[i];
+                    if (currentChar == '*')
                     {
-                        if (i == 0 && i == parts.Length - 1)
+                        if (i + 1 < length && pattern[i + 1] == '*')
                         {
-                            // 单独的 ** 匹配任何路径
-                            return ".*";
-                        }
-                        else if (i == 0)
-                        {
-                            // 以 ** 开头，匹配零个或多个目录
-                            regexParts.Add($"(?:[^{separator}]+{separator})*");
-                        }
-                        else if (i == parts.Length - 1)
-                        {
-                            // 以 ** 结尾，匹配零个或多个目录
-                            regexParts.Add($"(?:{separator}[^{separator}]+)*");
+                            // ** 通配符
+                            regexBuilder.Append($"(?:{separator}.*)*");
+                            i += 2;
                         }
                         else
                         {
-                            // 在中间，匹配零个或多个目录
-                            regexParts.Add($"(?:{separator}[^{separator}]+)*");
+                            // * 通配符
+                            regexBuilder.Append($"[^{separator}]*");
+                            i++;
                         }
                     }
-                    else if (part == "*")
+                    else if (currentChar == '?')
                     {
-                        // * 匹配当前路径段的任何字符，不包括分隔符
-                        regexParts.Add($"[^{separator}]*");
-
-                        // 添加路径分隔符（除了最后一个部分）
-                        if (i < parts.Length - 1)
-                        {
-                            regexParts.Add(separator);
-                        }
+                        // ? 通配符
+                        regexBuilder.Append(".");
+                        i++;
                     }
-                    else if (part.Contains('*') || part.Contains('?'))
+                    else if (currentChar == '{')
                     {
-                        // 转换包含 * 和 ? 的路径段
-                        regexParts.Add(ConvertToRegex(part, separator));
-
-                        // 添加路径分隔符（除了最后一个部分）
-                        if (i < parts.Length - 1)
+                        // 变量
+                        var endIndex = pattern.IndexOf('}', i);
+                        if (endIndex > i)
                         {
-                            regexParts.Add(separator);
-                        }
-                    }
-                    else if (part.StartsWith("{") && part.EndsWith("}"))
-                    {
-                        // 处理变量
-                        var variable = part.Substring(1, part.Length - 2);
-                        var colonIndex = variable.IndexOf(':');
-                        if (colonIndex > 0)
-                        {
-                            var regex = variable.Substring(colonIndex + 1);
-                            variable = variable.Substring(0, colonIndex);
-                            regexParts.Add($"({regex})");
+                            var variable = pattern.Substring(i, endIndex - i + 1);
+                            var colonIndex = variable.IndexOf(':');
+                            if (colonIndex > 0)
+                            {
+                                var regexPart = variable.Substring(colonIndex + 1, variable.Length - colonIndex - 2);
+                                regexBuilder.Append($"({regexPart})");
+                            }
+                            else
+                            {
+                                regexBuilder.Append($"([^{separator}]+)");
+                            }
+                            i = endIndex + 1;
                         }
                         else
                         {
-                            regexParts.Add($"([^{separator}]+)");
-                        }
-
-                        // 添加路径分隔符（除了最后一个部分）
-                        if (i < parts.Length - 1)
-                        {
-                            regexParts.Add(separator);
+                            regexBuilder.Append(Regex.Escape(currentChar.ToString()));
+                            i++;
                         }
                     }
                     else
                     {
-                        // 普通路径段
-                        regexParts.Add(Regex.Escape(part));
-
-                        // 添加路径分隔符（除了最后一个部分）
-                        if (i < parts.Length - 1)
-                        {
-                            regexParts.Add(separator);
-                        }
+                        // 普通字符
+                        regexBuilder.Append(Regex.Escape(currentChar.ToString()));
+                        i++;
                     }
                 }
 
-                return string.Join("", regexParts);
-            }
-
-            private string ConvertToRegex(string segment, string separator)
-            {
-                var regex = Regex.Escape(segment);
-                regex = regex.Replace("\\?", ".");
-                // * 只匹配当前路径段的字符，不包括分隔符
-                regex = regex.Replace("\\*", $"[^{separator}]*");
-                return regex;
+                return regexBuilder.ToString();
             }
         }
     }

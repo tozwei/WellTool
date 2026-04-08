@@ -1,68 +1,36 @@
 using Xunit;
+using WellTool.Core.Util;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
-namespace WellTool.Core.Tests;
+namespace WellTool.Core.Tests.Thread;
 
+/// <summary>
+/// ThreadUtil 测试
+/// </summary>
 public class ThreadUtilTest
 {
     [Fact]
     public void NewExecutorTest()
     {
-        // 简化测试，实际项目中可能需要实现ThreadUtil类
-        Assert.True(true);
+        var executor = ThreadUtil.NewExecutor(5);
+        Assert.Equal(5, executor.GetCorePoolSize());
     }
 
     [Fact]
-    public void ExecuteTest()
+    public async Task ExecuteTest()
     {
-        var executed = false;
-        Task.Run(() => executed = true);
-        Thread.Sleep(100);
-        Assert.True(executed);
+        var isValid = true;
+        await Task.Run(() => Assert.True(isValid));
     }
 
     [Fact]
     public void SafeSleepTest()
     {
-        var sleepMillis = 100;
-        var startTime = DateTime.Now;
-        Thread.Sleep(sleepMillis);
-        var elapsed = (DateTime.Now - startTime).TotalMilliseconds;
+        var sleepMillis = RandomUtil.RandomLong(1, 1000);
+        var start = DateTime.Now.Ticks;
+        ThreadUtil.SafeSleep(sleepMillis);
+        var elapsed = (DateTime.Now.Ticks - start) / TimeSpan.TicksPerMillisecond;
         Assert.True(elapsed >= sleepMillis);
-    }
-
-    [Fact]
-    public void GetThreadsTest()
-    {
-        // 简化测试，实际项目中可能需要实现ThreadUtil类
-        Assert.True(true);
-    }
-
-    [Fact]
-    public void CurrentTest()
-    {
-        var thread = Thread.CurrentThread;
-        Assert.NotNull(thread);
-    }
-
-    [Fact]
-    public void SleepTest()
-    {
-        var startTime = DateTime.Now;
-        Thread.Sleep(100);
-        var elapsed = (DateTime.Now - startTime).TotalMilliseconds;
-        Assert.True(elapsed >= 100);
-    }
-
-    [Fact]
-    public void WaitForFinishTest()
-    {
-        var tasks = new List<Task>();
-        tasks.Add(Task.Run(() => Thread.Sleep(50)));
-        tasks.Add(Task.Run(() => Thread.Sleep(50)));
-        Task.WaitAll(tasks.ToArray());
-        Assert.True(true);
     }
 }

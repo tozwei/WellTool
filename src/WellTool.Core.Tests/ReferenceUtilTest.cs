@@ -1,46 +1,40 @@
 using Xunit;
+using WellTool.Core.Util;
 using System;
 
-namespace WellTool.Core.Tests
+namespace WellTool.Core.Tests;
+
+/// <summary>
+/// ReferenceUtil 测试
+/// </summary>
+public class ReferenceUtilTest
 {
-    /// <summary>
-    /// Reference工具单元测试
-    /// </summary>
-    public class ReferenceUtilTest
+    [Fact]
+    public void CreateSoftReferenceTest()
     {
-        [Fact]
-        public void CreateSoftReferenceTest()
-        {
-            // 简化测试，移除对不存在的ReferenceUtil的引用
-            Xunit.Assert.True(true);
-        }
+        var obj = new object();
+        var softRef = ReferenceUtil.CreateSoftReference(obj);
+        Assert.NotNull(softRef);
+        Assert.Same(obj, softRef.Get());
+        GC.KeepAlive(obj);
+    }
 
-        [Fact]
-        public void CreateWeakReferenceTest()
-        {
-            // 简化测试，移除对不存在的ReferenceUtil的引用
-            Xunit.Assert.True(true);
-        }
+    [Fact]
+    public void CreateWeakReferenceTest()
+    {
+        var obj = new object();
+        var weakRef = ReferenceUtil.CreateWeakReference(obj);
+        Assert.NotNull(weakRef);
+        GC.KeepAlive(obj);
+    }
 
-        [Fact]
-        public void CreatePhantomReferenceTest()
-        {
-            // 简化测试，移除对不存在的ReferenceUtil的引用
-            Xunit.Assert.True(true);
-        }
-
-        [Fact]
-        public void GetTest()
-        {
-            // 简化测试，移除对不存在的ReferenceUtil的引用
-            Xunit.Assert.True(true);
-        }
-
-        [Fact]
-        public void IsEnqueuedTest()
-        {
-            // 简化测试，移除对不存在的ReferenceUtil的引用
-            Xunit.Assert.True(true);
-        }
+    [Fact]
+    public void CreatePhantomReferenceTest()
+    {
+        var obj = new object();
+        var referenceQueue = new ReferenceQueue<object>();
+        var phantomRef = ReferenceUtil.CreatePhantomReference(obj, referenceQueue);
+        Assert.NotNull(phantomRef);
+        GC.KeepAlive(obj);
     }
 }

@@ -1,39 +1,20 @@
 using Xunit;
-using System.Text;
+using WellTool.Core.IO;
+using WellTool.Core.IO.Resource;
+using WellTool.Core.Util;
 
-namespace WellTool.Core.Tests;
+namespace WellTool.Core.Tests.Util;
 
+/// <summary>
+/// CharsetDetector 测试
+/// </summary>
 public class CharsetDetectorLastTest
 {
     [Fact]
     public void DetectTest()
     {
-        var bytes = Encoding.UTF8.GetBytes("Hello");
-        // 简化测试，实际项目中可能需要实现CharsetDetector类
-        Assert.True(true);
-    }
-
-    [Fact]
-    public void DetectChineseTest()
-    {
-        var bytes = Encoding.UTF8.GetBytes("你好");
-        // 简化测试，实际项目中可能需要实现CharsetDetector类
-        Assert.True(true);
-    }
-
-    [Fact]
-    public void IsUtf8Test()
-    {
-        var bytes = Encoding.UTF8.GetBytes("Hello");
-        // 简化测试，实际项目中可能需要实现CharsetDetector类
-        Assert.True(true);
-    }
-
-    [Fact]
-    public void IsAsciiTest()
-    {
-        var bytes = Encoding.ASCII.GetBytes("Hello");
-        // 简化测试，实际项目中可能需要实现CharsetDetector类
-        Assert.True(true);
+        using var stream = ResourceUtil.GetStream("test.xml");
+        var detect = CharsetDetector.Detect(stream, CharsetUtil.CHARSET_GBK, CharsetUtil.CHARSET_UTF_8);
+        Assert.Equal(CharsetUtil.CHARSET_UTF_8, detect);
     }
 }
