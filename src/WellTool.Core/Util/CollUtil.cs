@@ -286,16 +286,25 @@ public static class CollUtil
 	/// </summary>
 	public static List<T> GetDisjunction<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
 	{
-		if (collection1 == null)
+		if (collection1 == null && collection2 == null)
 		{
 			return new List<T>();
+		}
+		if (collection1 == null)
+		{
+			return collection2.ToList();
 		}
 		if (collection2 == null)
 		{
 			return collection1.ToList();
 		}
-		var set = new HashSet<T>(collection2);
-		return collection1.Where(item => !set.Contains(item)).ToList();
+		var set1 = new HashSet<T>(collection1);
+		var set2 = new HashSet<T>(collection2);
+		
+		// 对称差集：collection1 中有但 collection2 中没有的 + collection2 中有但 collection1 中没有的
+		var result = set1.Where(item => !set2.Contains(item)).ToList();
+		result.AddRange(set2.Where(item => !set1.Contains(item)));
+		return result;
 	}
 
 	/// <summary>

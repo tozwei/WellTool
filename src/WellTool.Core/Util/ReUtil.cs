@@ -211,6 +211,7 @@ public static class ReUtil
 		{
 			return text;
 		}
+		// 替换第一个匹配项
 		var match = Regex.Match(text, pattern);
 		if (!match.Success)
 		{

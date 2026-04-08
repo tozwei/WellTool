@@ -82,8 +82,16 @@ public class AioSession : IDisposable
 			{
 				Task.Run(() =>
 				{
+					var startTime = DateTime.Now;
 					while (IsOpen())
 					{
+						// 检查读取超时
+						if (_readTimeout > 0 && (DateTime.Now - startTime).TotalMilliseconds > _readTimeout)
+						{
+							_ioAction.Failed(new TimeoutException("Read operation timed out"), this);
+							break;
+						}
+
 						if (_channel.Available > 0)
 						{
 							var length = _channel.Receive(_readBuffer);
@@ -92,6 +100,8 @@ public class AioSession : IDisposable
 								var data = new byte[length];
 								Array.Copy(_readBuffer, data, length);
 								_ioAction.DoAction(this, data);
+								// 重置超时计时
+								startTime = DateTime.Now;
 							}
 						}
 						Thread.Sleep(10);
