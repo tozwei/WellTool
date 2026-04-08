@@ -129,14 +129,14 @@ public class Issue3536Test
         var request = HttpRequest.Post("http://example.com");
         
         // 设置 Content-Type
-        request.ContentType(ContentType.JSON);
+        request.SetContentType(ContentType.JSON);
         
         // 验证 Content-Type 是否设置成功
         var contentType = request.GetHeader(Header.CONTENT_TYPE);
         Assert.Equal(ContentType.JSON, contentType);
         
         // 再次设置 Content-Type，应该覆盖之前的值
-        request.ContentType(ContentType.XML);
+        request.SetContentType(ContentType.XML);
         contentType = request.GetHeader(Header.CONTENT_TYPE);
         Assert.Equal(ContentType.XML, contentType);
     }

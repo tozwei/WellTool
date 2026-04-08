@@ -21,14 +21,11 @@ public class Issue3314Test
         // 测试 HttpRequest 的各种方法
         var request = HttpRequest.Get("https://hutool.cn/test/getList");
         
-        // 测试设置 REST 模式
-        request.SetRest(true);
-        
         // 测试设置超时
         request.Timeout(5000);
         
         // 测试设置 Content-Type
-        request.ContentType(ContentType.JSON);
+        request.SetContentType(ContentType.JSON);
         
         // 测试设置 Header
         request.SetHeader("Authorization", "Bearer token123");
@@ -135,7 +132,7 @@ public class Issue3314Test
             // 验证文件大小
             var fileInfo = new FileInfo(tempFile);
             var size = fileInfo.Length;
-            Assert.Greater(size, 0);
+            Assert.True(size > 0);
         }
         finally
         {

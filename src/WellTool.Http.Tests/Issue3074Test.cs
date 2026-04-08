@@ -79,7 +79,7 @@ public class Issue3074Test
         Assert.NotNull(request);
         
         // 测试设置 Content-Type 和 Body
-        request.ContentType(ContentType.JSON).Body("{\"key\": \"value\"}");
+        request.SetContentType(ContentType.JSON).Body("{\"key\": \"value\"}");
         Assert.NotNull(request);
     }
 }

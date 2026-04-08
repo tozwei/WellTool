@@ -229,11 +229,27 @@ namespace WellTool.Core.Text
                 var parts = pattern.Split(new[] { _pathSeparator }, StringSplitOptions.None);
                 var regexParts = new List<string>();
 
-                foreach (var part in parts)
+                // 检查模式是否以 ** 结尾（匹配零个或多个目录）
+                bool patternEndsWithDoubleStar = parts.Length > 0 && parts[parts.Length - 1] == "**";
+
+                for (int i = 0; i < parts.Length; i++)
                 {
+                    var part = parts[i];
+                    
                     if (part == "**")
                     {
-                        regexParts.Add("(?:.+" + separator + ")?");
+                        // ** 匹配零个或多个目录层级
+                        // 如果 ** 不在最后，后面必须跟其他部分
+                        if (i < parts.Length - 1)
+                        {
+                            // ** 后面还有其他部分，允许匹配一个或多个目录
+                            regexParts.Add("(?:.+" + separator + ")*");
+                        }
+                        else
+                        {
+                            // ** 在最后，允许匹配零个或多个目录层级
+                            regexParts.Add("(?:.+" + separator + ")*");
+                        }
                     }
                     else if (part == "*")
                     {
@@ -264,7 +280,17 @@ namespace WellTool.Core.Text
                     }
                 }
 
-                return string.Join(separator, regexParts);
+                // 如果模式不以 ** 结尾，添加结尾锚点确保匹配完整路径
+                // 但如果最后一部分是 **，则不需要额外处理
+                var result = string.Join(separator, regexParts);
+                
+                // 对于不以 ** 结尾的模式，如果是简单模式（如 a*），确保匹配完整
+                if (!patternEndsWithDoubleStar && !pattern.Contains("**"))
+                {
+                    // 已经使用了 ^ 和 $ 锚点，不需要额外处理
+                }
+                
+                return result;
             }
 
             private string ConvertToRegex(string segment)
