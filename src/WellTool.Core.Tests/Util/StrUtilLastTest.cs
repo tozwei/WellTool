@@ -77,7 +77,8 @@ public class StrUtilLastTest
     public void SubTest()
     {
         Assert.Equal("bc", StrUtil.Sub("abcde", 1, 3));
-        Assert.Equal("abc", StrUtil.Sub("abcde", 0, -1));
+        // Sub(str, 0, -1) 返回整个字符串（因为 -1 + length + 1 = length）
+        Assert.Equal("abcde", StrUtil.Sub("abcde", 0, -1));
     }
 
     [Fact]

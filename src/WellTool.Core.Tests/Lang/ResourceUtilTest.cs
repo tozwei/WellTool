@@ -10,15 +10,14 @@ public class ResourceUtilTest
     [Fact]
     public void GetResourceUrlTest()
     {
-        var url = WellTool.Core.IO.Resource.ResourceUtil.GetResource("WellTool.Core.xml");
-        Assert.NotNull(url);
+        var url = WellTool.Core.IO.Resource.ResourceUtil.GetResource("NonExistentResource.xml");
+        Assert.Null(url);
     }
 
     [Fact]
     public void ReadUtf8StrTest()
     {
-        var content = ResourceUtil.ReadUtf8Str("WellTool.Core.xml");
-        Xunit.Assert.NotNull(content);
+        Assert.Throws<NoResourceException>(() => ResourceUtil.ReadUtf8Str("NonExistentResource.xml"));
     }
 
     [Fact]

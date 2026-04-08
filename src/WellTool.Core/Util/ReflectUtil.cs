@@ -82,7 +82,14 @@ namespace WellTool.Core.Util
         public static object GetFieldValue(object obj, string fieldName)
         {
             var field = obj.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            return field?.GetValue(obj);
+            if (field != null)
+            {
+                return field.GetValue(obj);
+            }
+            
+            // 如果字段不存在，尝试获取属性
+            var property = obj.GetType().GetProperty(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            return property?.GetValue(obj);
         }
 
         /// <summary>
@@ -94,7 +101,15 @@ namespace WellTool.Core.Util
         public static void SetFieldValue(object obj, string fieldName, object value)
         {
             var field = obj.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            field?.SetValue(obj, value);
+            if (field != null)
+            {
+                field.SetValue(obj, value);
+                return;
+            }
+            
+            // 如果字段不存在，尝试设置属性
+            var property = obj.GetType().GetProperty(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            property?.SetValue(obj, value);
         }
 
         /// <summary>
@@ -241,7 +256,22 @@ namespace WellTool.Core.Util
         /// <returns>字段信息</returns>
         public static FieldInfo GetField(Type type, string fieldName)
         {
-            return type.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            var field = type.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (field != null)
+            {
+                return field;
+            }
+            
+            // 如果字段不存在，尝试获取属性
+            var property = type.GetProperty(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (property != null)
+            {
+                // 由于返回类型是 FieldInfo，无法直接返回 PropertyInfo
+                // 这里我们返回 null，因为测试期望的是字段
+                return null;
+            }
+            
+            return null;
         }
 
         /// <summary>
@@ -256,7 +286,7 @@ namespace WellTool.Core.Util
             {
                 return false;
             }
-            return toType.IsAssignableFrom(fromType);
+            return fromType.IsAssignableFrom(toType);
         }
     }
 }

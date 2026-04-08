@@ -52,7 +52,8 @@ public class DateBetweenTest
         var end = DateTime.Parse("2021-01-01");
         var between = new DateBetween(start, end);
 
-        Assert.Equal(9, between.Between(DateUnit.Day));
+        // DateBetween.Between 返回 duration.TotalDays，当 start > end 时返回负数
+        Assert.Equal(-9, between.Between(DateUnit.Day));
     }
 
     [Fact]

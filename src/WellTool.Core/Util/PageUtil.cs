@@ -40,6 +40,10 @@ namespace WellTool.Core.Util
             {
                 return 0;
             }
+            if (total <= 0)
+            {
+                return 1;
+            }
             return (total + pageSize - 1) / pageSize;
         }
 
@@ -83,8 +87,8 @@ namespace WellTool.Core.Util
             int totalPages = TotalPages(total, pageSize);
             if (totalPages <= m * 2 + 1)
             {
-                var result = new int[totalPages];
-                for (int i = 0; i < totalPages; i++)
+                var result = new int[m];
+                for (int i = 0; i < m; i++)
                 {
                     result[i] = i + 1;
                 }
@@ -195,7 +199,7 @@ namespace WellTool.Core.Util
         /// </summary>
         public static int GetFirstPage()
         {
-            return 1;
+            return 0;
         }
 
         /// <summary>

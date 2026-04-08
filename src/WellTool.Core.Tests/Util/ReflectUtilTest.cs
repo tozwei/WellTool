@@ -80,7 +80,7 @@ public class ReflectUtilTest
 
     private class TestClass
     {
-        public string Name { get; set; } = "";
+        public string Name = "";
         public string GetName() => Name;
     }
 }

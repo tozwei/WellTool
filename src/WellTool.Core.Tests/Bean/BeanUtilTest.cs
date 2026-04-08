@@ -56,8 +56,9 @@ public class BeanUtilTest
         var source = new TargetBean { Name = "John", Age = 25 };
         var map = BeanUtil.BeanToMap(source);
 
-        Assert.Equal("John", map["Name"]);
-        Assert.Equal(25, map["Age"]);
+        // BeanToMap 默认将字段名转换为小写
+        Assert.Equal("John", map["name"]);
+        Assert.Equal(25, map["age"]);
     }
 
     [Fact]

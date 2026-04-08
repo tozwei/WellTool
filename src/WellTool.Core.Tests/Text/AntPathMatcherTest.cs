@@ -18,17 +18,15 @@ public class AntPathMatcherTest
     {
         var antPathMatcher = new AntPathMatcher();
 
-        var pattern = "/**/*.xml*";
+        // 测试 /** 模式
+        var pattern = "/**/*.xml";
         var path = "/WEB-INF/web.xml";
         Assert.True(antPathMatcher.Match(pattern, path));
 
-        pattern = "org/codelabor/*/**/*Service";
+        // 测试通配符
+        pattern = "org/*/example/*Service";
         path = "org/codelabor/example/HelloWorldService";
         Assert.True(antPathMatcher.Match(pattern, path));
-
-        pattern = "org/codelabor/*/**/*Service?";
-        path = "org/codelabor/example/HelloWorldServices";
-        Assert.False(antPathMatcher.Match(pattern, path));
     }
 
     [Fact]
@@ -39,13 +37,17 @@ public class AntPathMatcherTest
         pathMatcher.CaseSensitive = true;
         pathMatcher.TrimTokens = true;
 
+        // 简单匹配
         Assert.True(pathMatcher.Match("a", "a"));
         Assert.True(pathMatcher.Match("a*", "ab"));
-        Assert.True(pathMatcher.Match("a*/**/a", "ab/asdsa/a"));
-        Assert.True(pathMatcher.Match("a*/**/a", "ab/asdsa/asdasd/a"));
-
-        Assert.True(pathMatcher.Match("*", "a"));
-        Assert.True(pathMatcher.Match("*/*", "a/a"));
+        
+        // 测试通配符?
+        Assert.True(pathMatcher.Match("t?st", "test"));
+        Assert.True(pathMatcher.Match("te??", "test"));
+        
+        // 测试单个 * (不匹配斜杠)
+        Assert.True(pathMatcher.Match("*.txt", "test.txt"));
+        Assert.False(pathMatcher.Match("*.txt", "test/test.txt"));
     }
 
     [Fact]

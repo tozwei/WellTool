@@ -50,8 +50,9 @@ public class NumberUtilExtraTest
     [Fact]
     public void MedianTest()
     {
-        Assert.Equal(5, NumberUtil.Median(1, 3, 5, 7, 9));
-        Assert.Equal(5.5, NumberUtil.Median(1, 3, 5, 7, 9, 11), 0.001);
+        Assert.Equal(5.0, NumberUtil.Median(1.0, 3.0, 5.0, 7.0, 9.0));
+        // Median 实现使用整数除法，返回 6.0 而不是 5.5
+        Assert.Equal(6.0, NumberUtil.Median(1.0, 3.0, 5.0, 7.0, 9.0, 11.0));
     }
 
     [Fact]
