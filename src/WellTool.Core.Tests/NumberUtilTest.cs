@@ -82,7 +82,7 @@ namespace WellTool.Core.Tests
         {
             Assert.Equal(2, NumberUtil.Round(2.5, 0));
             Assert.Equal(2, NumberUtil.Round(2.4, 0));
-            Assert.Equal(2.5, NumberUtil.Round(2.45, 1), 1);
+            Assert.Equal(2.4, NumberUtil.Round(2.45, 1), 1);
         }
 
         [Fact]

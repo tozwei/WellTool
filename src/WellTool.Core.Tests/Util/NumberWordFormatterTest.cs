@@ -24,8 +24,8 @@ public class NumberWordFormatterTest
     public void FormatDecimalTest()
     {
         var result = NumberWordFormatter.FormatDecimal(123.45);
-        Assert.Contains("123", result);
-        Assert.Contains("45", result);
+        Assert.Contains("一百二十三", result);
+        Assert.Contains("四五", result);
     }
 
     [Fact]
