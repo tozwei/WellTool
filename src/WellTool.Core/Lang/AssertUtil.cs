@@ -33,7 +33,7 @@ public static class AssertUtil
     /// <summary>
     /// 断言对象必须为null，否则抛出异常
     /// </summary>
-    public static void IsNull(object obj, Func<Exception> errorSupplier)
+    public static void IsNull(object obj, System.Func<System.Exception> errorSupplier)
     {
         if (obj != null)
         {
@@ -86,7 +86,7 @@ public static class AssertUtil
     /// <summary>
     /// 断言对象不为null，否则抛出异常
     /// </summary>
-    public static T NotNull<T>(T obj, Func<Exception> errorSupplier)
+    public static T NotNull<T>(T obj, System.Func<System.Exception> errorSupplier)
     {
         if (obj == null)
         {
@@ -127,17 +127,6 @@ public static class AssertUtil
             throw new ArgumentException(string.Format(errorMsgTemplate, param));
         }
     }
-
-    /// <summary>
-    /// 断言表达式必须为true，否则抛出异常
-    /// </summary>
-    public static void IsTrue(bool expression, Func<Exception> errorSupplier)
-    {
-        if (!expression)
-        {
-            throw errorSupplier();
-        }
-    }
     #endregion
 
     #region IsFalse
@@ -169,17 +158,6 @@ public static class AssertUtil
         if (expression)
         {
             throw new ArgumentException(string.Format(errorMsgTemplate, param));
-        }
-    }
-
-    /// <summary>
-    /// 断言表达式必须为false，否则抛出异常
-    /// </summary>
-    public static void IsFalse(bool expression, Func<Exception> errorSupplier)
-    {
-        if (expression)
-        {
-            throw errorSupplier();
         }
     }
     #endregion
@@ -285,6 +263,14 @@ public static class AssertUtil
     }
 
     /// <summary>
+    /// 断言泛型数组不为空
+    /// </summary>
+    public static bool NotEmpty<T>(T[] array)
+    {
+        return array != null && array.Length > 0;
+    }
+
+    /// <summary>
     /// 断言数组不为空，否则抛出异常
     /// </summary>
     public static T[] NotEmpty<T>(T[] array, string errorMsgTemplate, params object[] param)
@@ -299,7 +285,7 @@ public static class AssertUtil
     /// <summary>
     /// 断言数组不为空，否则抛出异常
     /// </summary>
-    public static T[] NotEmpty<T>(T[] array, Func<Exception> errorSupplier)
+    public static T[] NotEmpty<T>(T[] array, System.Func<System.Exception> errorSupplier)
     {
         if (array == null || array.Length == 0)
         {
@@ -341,18 +327,6 @@ public static class AssertUtil
         }
         return collection;
     }
-
-    /// <summary>
-    /// 断言集合不为空，否则抛出异常
-    /// </summary>
-    public static ICollection<T> NotEmpty<T>(ICollection<T> collection, Func<Exception> errorSupplier)
-    {
-        if (collection == null || collection.Count == 0)
-        {
-            throw errorSupplier();
-        }
-        return collection;
-    }
     #endregion
 
     #region NotEmpty (Map)
@@ -379,7 +353,7 @@ public static class AssertUtil
     /// <summary>
     /// 断言字典不为空，否则抛出异常
     /// </summary>
-    public static IDictionary<TKey, TValue> NotEmpty<TKey, TValue>(IDictionary<TKey, TValue> map, Func<Exception> errorSupplier)
+    public static IDictionary<TKey, TValue> NotEmpty<TKey, TValue>(IDictionary<TKey, TValue> map, System.Func<System.Exception> errorSupplier)
     {
         if (map == null || map.Count == 0)
         {
@@ -415,7 +389,7 @@ public static class AssertUtil
     /// <summary>
     /// 断言数组不包含null元素
     /// </summary>
-    public static void NoNullElements<T>(T[] array, Func<Exception> errorSupplier)
+    public static void NoNullElements<T>(T[] array, System.Func<System.Exception> errorSupplier)
     {
         if (array != null && array.Any(t => t == null))
         {
@@ -457,17 +431,6 @@ public static class AssertUtil
         if (collection != null && collection.GetEnumerator().MoveNext())
         {
             throw new ArgumentException(string.Format(errorMsgTemplate, param));
-        }
-    }
-
-    /// <summary>
-    /// 断言集合必须为空，否则抛出异常
-    /// </summary>
-    public static void Empty(IEnumerable collection, Func<Exception> errorSupplier)
-    {
-        if (collection != null && collection.GetEnumerator().MoveNext())
-        {
-            throw errorSupplier();
         }
     }
     #endregion
@@ -512,18 +475,6 @@ public static class AssertUtil
         }
         return str;
     }
-
-    /// <summary>
-    /// 断言字符串不为空白，否则抛出异常
-    /// </summary>
-    public static string NotBlank(string str, Func<Exception> errorSupplier)
-    {
-        if (string.IsNullOrWhiteSpace(str))
-        {
-            throw errorSupplier();
-        }
-        return str;
-    }
     #endregion
 
     #region NotContain
@@ -556,7 +507,7 @@ public static class AssertUtil
     /// <summary>
     /// 断言字符串不包含指定子串
     /// </summary>
-    public static void NotContain(string textToSearch, string substring, Func<Exception> errorSupplier)
+    public static void NotContain(string textToSearch, string substring, System.Func<System.Exception> errorSupplier)
     {
         if (string.IsNullOrEmpty(textToSearch) || string.IsNullOrEmpty(substring))
             return;
@@ -593,7 +544,7 @@ public static class AssertUtil
     /// <summary>
     /// 断言对象是指定类的实例
     /// </summary>
-    public static void IsInstanceOf(Type type, object obj, Func<Exception> errorSupplier)
+    public static void IsInstanceOf(Type type, object obj, System.Func<System.Exception> errorSupplier)
     {
         if (obj == null || !type.IsInstanceOfType(obj))
         {
@@ -628,7 +579,7 @@ public static class AssertUtil
     /// <summary>
     /// 断言子类型可以赋值给父类型
     /// </summary>
-    public static void IsAssignable(Type superType, Type subType, Func<Exception> errorSupplier)
+    public static void IsAssignable(Type superType, Type subType, System.Func<System.Exception> errorSupplier)
     {
         if (subType == null || !superType.IsAssignableFrom(subType))
         {
@@ -663,7 +614,7 @@ public static class AssertUtil
     /// <summary>
     /// 断言状态表达式为true，否则抛出IllegalStateException
     /// </summary>
-    public static void State(bool expression, Func<string> errorMsgSupplier)
+    public static void State(bool expression, System.Func<string> errorMsgSupplier)
     {
         if (!expression)
         {

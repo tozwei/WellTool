@@ -162,7 +162,7 @@ public static class StrUtil
     {
         if (IsEmpty(str))
             return str;
-        int start = System.Math.Max(0, fromIndex);
+        int start = fromIndex < 0 ? str.Length + fromIndex : System.Math.Max(0, fromIndex);
         int end = toIndex < 0 ? str.Length + toIndex + 1 : System.Math.Min(toIndex, str.Length);
         end = System.Math.Max(0, end);
         if (start >= end)
@@ -240,8 +240,10 @@ public static class StrUtil
 	/// </summary>
 	public static string PadLeft(string str, int length, char padChar = ' ')
 	{
-		if (str == null || str.Length >= length)
-			return str ?? string.Empty;
+		if (str == null)
+			return string.Empty;
+		if (str.Length >= length)
+			return str.Substring(0, length);
 		return new string(padChar, length - str.Length) + str;
 	}
 
@@ -250,8 +252,10 @@ public static class StrUtil
 	/// </summary>
 	public static string PadRight(string str, int length, char padChar = ' ')
 	{
-		if (str == null || str.Length >= length)
-			return str ?? string.Empty;
+		if (str == null)
+			return string.Empty;
+		if (str.Length >= length)
+			return str.Substring(str.Length - length, length);
 		return str + new string(padChar, length - str.Length);
 	}
 
@@ -295,18 +299,22 @@ public static class StrUtil
 	/// <summary>
 	/// 左侧填充
 	/// </summary>
-	public static string PadPre(string str, int length, char padChar = ' ')
+	public static string? PadPre(string? str, int length, char padChar = ' ')
 	{
+		if (str == null)
+			return null;
 		return PadLeft(str, length, padChar);
 	}
 
 	/// <summary>
 	/// 左侧填充
 	/// </summary>
-	public static string PadPre(string str, int length, string padStr)
+	public static string? PadPre(string? str, int length, string padStr)
 	{
-		if (str == null || str.Length >= length)
-			return str;
+		if (str == null)
+			return null;
+		if (str.Length >= length)
+			return str.Substring(0, length);
 		var padLength = length - str.Length;
 		var padRepeat = padLength / padStr.Length + 1;
 		var pad = Repeat(padStr, padRepeat).Substring(0, padLength);
@@ -316,8 +324,10 @@ public static class StrUtil
 	/// <summary>
 	/// 右侧填充
 	/// </summary>
-	public static string PadAfter(string str, int length, char padChar = ' ')
+	public static string? PadAfter(string? str, int length, char padChar = ' ')
 	{
+		if (str == null)
+			return null;
 		if (length < 0)
 			return string.Empty;
 		return PadRight(str, length, padChar);
@@ -326,10 +336,12 @@ public static class StrUtil
 	/// <summary>
 	/// 右侧填充
 	/// </summary>
-	public static string PadAfter(string str, int length, string padStr)
+	public static string? PadAfter(string? str, int length, string padStr)
 	{
-		if (str == null || str.Length >= length)
-			return str;
+		if (str == null)
+			return null;
+		if (str.Length >= length)
+			return str.Substring(str.Length - length, length);
 		var padLength = length - str.Length;
 		var padRepeat = padLength / padStr.Length + 1;
 		var pad = Repeat(padStr, padRepeat).Substring(0, padLength);
@@ -341,6 +353,28 @@ public static class StrUtil
 	/// </summary>
 	public static string IndexedFormat(string template, params object[] args)
 	{
+		if (args != null)
+		{
+			for (int i = 0; i < args.Length; i++)
+			{
+				if (args[i] is int intValue)
+				{
+					args[i] = intValue.ToString("N0");
+				}
+				else if (args[i] is long longValue)
+				{
+					args[i] = longValue.ToString("N0");
+				}
+				else if (args[i] is double doubleValue)
+				{
+					args[i] = doubleValue.ToString("N0");
+				}
+				else if (args[i] is decimal decimalValue)
+				{
+					args[i] = decimalValue.ToString("N0");
+				}
+			}
+		}
 		return string.Format(template, args);
 	}
 
@@ -970,10 +1004,10 @@ public static class StrUtil
 	/// <summary>
 	/// 居中对齐字符串
 	/// </summary>
-	public static string Center(string str, int length, char padChar = ' ')
+	public static string? Center(string? str, int length, char padChar = ' ')
 	{
 		if (str == null)
-			str = string.Empty;
+			return null;
 		if (length <= str.Length)
 			return str;
 		int padding = length - str.Length;
@@ -985,10 +1019,10 @@ public static class StrUtil
 	/// <summary>
 	/// 居中对齐字符串
 	/// </summary>
-	public static string Center(string str, int length, string padStr)
+	public static string? Center(string? str, int length, string padStr)
 	{
 		if (str == null)
-			str = string.Empty;
+			return null;
 		if (length <= str.Length)
 			return str;
 		int padding = length - str.Length;

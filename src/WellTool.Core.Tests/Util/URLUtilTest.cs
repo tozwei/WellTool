@@ -18,7 +18,7 @@ public class URLUtilTest
     public void EncodeTest()
     {
         var encoded = HttpUtility.UrlEncode("Hello World");
-        Assert.Contains("%20", encoded);
+        Assert.Contains("+", encoded);
     }
 
     [Fact]
