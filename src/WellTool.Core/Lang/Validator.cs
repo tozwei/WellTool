@@ -19,7 +19,7 @@ namespace WellTool.Core.Lang
             {
                 return false;
             }
-            var pattern = @"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            var pattern = @"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,}$";
             return Regex.IsMatch(email, pattern);
         }
 
@@ -135,7 +135,7 @@ namespace WellTool.Core.Lang
             {
                 return false;
             }
-            return decimal.TryParse(@decimal, out _);
+            return @decimal.Contains(".") && decimal.TryParse(@decimal, out _);
         }
 
         /// <summary>

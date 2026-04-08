@@ -43,7 +43,7 @@ public class AioClient : IDisposable
 	/// <param name="host">主机地址</param>
 	/// <param name="port">端口</param>
 	public AioClient(string host, int port)
-		: this(new IPEndPoint(IPAddress.Any, port), DefaultIoAction, new SocketConfig())
+		: this(new IPEndPoint(IPAddress.Parse(host), port), DefaultIoAction, new SocketConfig())
 	{
 	}
 

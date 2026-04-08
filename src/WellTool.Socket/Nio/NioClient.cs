@@ -64,8 +64,16 @@ public class NioClient : IDisposable
 			catch (SocketException e) when (e.SocketErrorCode == SocketError.WouldBlock || e.SocketErrorCode == SocketError.InProgress)
 			{
 				// 非阻塞套接字，连接正在进行中
+				// 等待连接完成，设置超时为 5 秒
+				var timeout = 5000; // 5 秒超时
+				var startTime = DateTime.Now;
 				while (!_channel.Connected)
 				{
+					if ((DateTime.Now - startTime).TotalMilliseconds > timeout)
+					{
+						Close();
+						throw new TimeoutException("Connection timeout");
+					}
 					Thread.Sleep(10);
 				}
 			}
