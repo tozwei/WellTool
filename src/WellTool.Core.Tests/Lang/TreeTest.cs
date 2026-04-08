@@ -51,7 +51,7 @@ public class TreeTest
     {
         var root = new Tree<string> { Id = "1" };
         Xunit.Assert.True(root.IsRoot);
-        Xunit.Assert.False(root.Children.Count == 0 || root.Parent != null);
+        Xunit.Assert.True(root.Parent == null);
     }
 
     [Fact]
@@ -119,14 +119,20 @@ public class Tree<T>
 
     public int GetDepth()
     {
-        int depth = 1;
-        var current = this;
-        while (current.Parent != null)
+        if (Children.Count == 0)
         {
-            depth++;
-            current = current.Parent;
+            return 1;
         }
-        return depth;
+        int maxDepth = 0;
+        foreach (var child in Children)
+        {
+            int childDepth = child.GetDepth();
+            if (childDepth > maxDepth)
+            {
+                maxDepth = childDepth;
+            }
+        }
+        return maxDepth + 1;
     }
 
     public int GetSiblingCount()

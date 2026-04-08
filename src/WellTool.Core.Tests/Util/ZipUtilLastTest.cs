@@ -23,14 +23,14 @@ public class ZipUtilLastTest
     public void UnGzipTest()
     {
         var data = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
-        using var compressedStream = new MemoryStream();
-        using (var gzipStream = new GZipStream(compressedStream, CompressionMode.Compress))
+        var compressedStream = new MemoryStream();
+        using (var gzipStream = new GZipStream(compressedStream, CompressionMode.Compress, true))
         {
             gzipStream.Write(data, 0, data.Length);
         }
         compressedStream.Position = 0;
         using var decompressedStream = new MemoryStream();
-        using (var gzipStream = new GZipStream(compressedStream, CompressionMode.Decompress))
+        using (var gzipStream = new GZipStream(compressedStream, CompressionMode.Decompress, true))
         {
             gzipStream.CopyTo(decompressedStream);
         }
@@ -43,8 +43,8 @@ public class ZipUtilLastTest
     public void DeflateTest()
     {
         var data = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
-        using var compressedStream = new MemoryStream();
-        using (var deflateStream = new DeflateStream(compressedStream, CompressionMode.Compress))
+        var compressedStream = new MemoryStream();
+        using (var deflateStream = new DeflateStream(compressedStream, CompressionMode.Compress, true))
         {
             deflateStream.Write(data, 0, data.Length);
         }
@@ -56,14 +56,14 @@ public class ZipUtilLastTest
     public void InflateTest()
     {
         var data = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
-        using var compressedStream = new MemoryStream();
-        using (var deflateStream = new DeflateStream(compressedStream, CompressionMode.Compress))
+        var compressedStream = new MemoryStream();
+        using (var deflateStream = new DeflateStream(compressedStream, CompressionMode.Compress, true))
         {
             deflateStream.Write(data, 0, data.Length);
         }
         compressedStream.Position = 0;
         using var decompressedStream = new MemoryStream();
-        using (var deflateStream = new DeflateStream(compressedStream, CompressionMode.Decompress))
+        using (var deflateStream = new DeflateStream(compressedStream, CompressionMode.Decompress, true))
         {
             deflateStream.CopyTo(decompressedStream);
         }

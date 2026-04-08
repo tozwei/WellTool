@@ -78,7 +78,32 @@ public class WeightRandom<T> : IWeightRandom<T>
 	{
 		if (_weights.Count == 0)
 		{
-			return default;
+			throw new System.Exception("No elements in weight random");
+		}
+
+		if (_totalWeight <= 0)
+		{
+			// 查找权重最大的元素
+			T maxWeightItem = default;
+			double maxWeight = double.MinValue;
+			
+			foreach (var kvp in _weights)
+			{
+				if (kvp.Value > maxWeight)
+				{
+					maxWeight = kvp.Value;
+					maxWeightItem = kvp.Key;
+				}
+			}
+			
+			// 如果所有元素权重都为 0，随机返回一个
+			if (maxWeight <= 0)
+			{
+				var keys = new List<T>(_weights.Keys);
+				return keys[_random.Next(keys.Count)];
+			}
+			
+			return maxWeightItem;
 		}
 
 		double randomValue = _random.NextDouble() * _totalWeight;
@@ -93,7 +118,8 @@ public class WeightRandom<T> : IWeightRandom<T>
 			}
 		}
 
-		return default;
+		// 理论上不会执行到这里
+		throw new System.Exception("Failed to get random element");
 	}
 
 	/// <summary>
