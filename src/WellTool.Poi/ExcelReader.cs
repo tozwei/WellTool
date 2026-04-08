@@ -168,29 +168,15 @@ public class ExcelReader : IDisposable
         {
             var result = new List<List<object?>>();
             
-            IEnumerable<dynamic> rows;
-            if (_isStreamMode && _stream != null)
-            {
-                _stream.Position = 0;
-                rows = _stream.Query(sheetName: sheetName, useHeaderRow: false);
-            }
-            else if (_filePath != null)
-            {
-                rows = MiniExcel.Query(_filePath, sheetName: sheetName, useHeaderRow: false);
-            }
-            else
-            {
-                return result;
-            }
+            var rows = QueryAsDictList(sheetName);
 
             foreach (var row in rows)
             {
                 var rowData = new List<object?>();
-                var dict = (IDictionary<string, object>)row;
                 int colIndex = 1;
-                while (dict.ContainsKey(GetColumnName(colIndex)))
+                while (row.ContainsKey(GetColumnName(colIndex)))
                 {
-                    rowData.Add(dict[GetColumnName(colIndex)]);
+                    rowData.Add(row[GetColumnName(colIndex)]);
                     colIndex++;
                 }
                 result.Add(rowData);
@@ -247,46 +233,44 @@ public class ExcelReader : IDisposable
     {
         try
         {
-            var result = new List<Dictionary<string, object?>>();
+            var rows = QueryAsDictList(sheetName);
             
-            IEnumerable<dynamic> rows;
-            if (_isStreamMode && _stream != null)
-            {
-                _stream.Position = 0;
-                rows = _stream.Query(sheetName: sheetName, useHeaderRow: true);
-            }
-            else if (_filePath != null)
-            {
-                rows = MiniExcel.Query(_filePath, sheetName: sheetName, useHeaderRow: true);
-            }
-            else
-            {
-                return result;
-            }
-
-            // 跳过表头行
+            // MiniExcel第一行始终作为表头
+            // headerRowIndex 表示实际表头在数据中的位置（从0开始）
+            // 如果headerRowIndex > 0，需要跳过前面的行
             if (headerRowIndex > 0)
             {
-                rows = rows.Skip(headerRowIndex);
+                rows = rows.Skip(headerRowIndex).ToList();
             }
 
-            foreach (var row in rows)
-            {
-                var dict = new Dictionary<string, object?>();
-                var rowDict = (IDictionary<string, object>)row;
-                foreach (var kvp in rowDict)
-                {
-                    dict[kvp.Key] = kvp.Value;
-                }
-                result.Add(dict);
-            }
-
-            return result;
+            return rows;
         }
         catch (System.Exception ex)
         {
             throw new POIException("读取 Excel 工作表失败", ex);
         }
+    }
+
+    /// <summary>
+    /// 查询数据为字典列表（第一行作为表头）
+    /// </summary>
+    private List<Dictionary<string, object?>> QueryAsDictList(string sheetName)
+    {
+        var result = new List<Dictionary<string, object?>>();
+        
+        if (_isStreamMode && _stream != null)
+        {
+            _stream.Position = 0;
+            var rows = MiniExcel.Query<Dictionary<string, object?>>(_stream, sheetName: sheetName);
+            result = rows.ToList();
+        }
+        else if (_filePath != null)
+        {
+            var rows = MiniExcel.Query<Dictionary<string, object?>>(_filePath, sheetName: sheetName);
+            result = rows.ToList();
+        }
+        
+        return result;
     }
 
     /// <summary>
@@ -329,46 +313,31 @@ public class ExcelReader : IDisposable
         {
             var dataTable = new DataTable(tableName);
             
-            IEnumerable<dynamic> rows;
-            if (_isStreamMode && _stream != null)
-            {
-                _stream.Position = 0;
-                rows = _stream.Query(sheetName: sheetName, useHeaderRow: true);
-            }
-            else if (_filePath != null)
-            {
-                rows = MiniExcel.Query(_filePath, sheetName: sheetName, useHeaderRow: true);
-            }
-            else
-            {
-                return dataTable;
-            }
+            var rows = QueryAsDictList(sheetName);
 
-            var rowList = rows.ToList();
-            if (rowList.Count == 0)
+            if (rows.Count == 0)
             {
                 return dataTable;
             }
 
             // 添加列
-            var firstRow = (IDictionary<string, object>)rowList[0];
+            var firstRow = rows[0];
             foreach (var key in firstRow.Keys)
             {
                 dataTable.Columns.Add(key, typeof(object));
             }
 
-            // 跳过表头行
-            var dataRows = rowList.Skip(headerRowIndex + 1);
+            // 跳过表头行（MiniExcel第一行是表头）
+            var dataRows = rows.Skip(headerRowIndex + 1);
             foreach (var row in dataRows)
             {
-                var rowDict = (IDictionary<string, object>)row;
                 var dataRow = dataTable.NewRow();
                 foreach (DataColumn col in dataTable.Columns)
                 {
                     var colName = col.ColumnName;
-                    if (rowDict.ContainsKey(colName))
+                    if (row.ContainsKey(colName))
                     {
-                        dataRow[colName] = rowDict[colName] ?? DBNull.Value;
+                        dataRow[colName] = row[colName] ?? DBNull.Value;
                     }
                 }
                 dataTable.Rows.Add(dataRow);
@@ -423,36 +392,22 @@ public class ExcelReader : IDisposable
             var result = new List<T>();
             var properties = typeof(T).GetProperties();
 
-            IEnumerable<dynamic> rows;
-            if (_isStreamMode && _stream != null)
-            {
-                _stream.Position = 0;
-                rows = _stream.Query(sheetName: sheetName, useHeaderRow: true);
-            }
-            else if (_filePath != null)
-            {
-                rows = MiniExcel.Query(_filePath, sheetName: sheetName, useHeaderRow: true);
-            }
-            else
-            {
-                return result;
-            }
+            var rows = QueryAsDictList(sheetName);
 
             // 跳过表头行
             if (headerRowIndex > 0)
             {
-                rows = rows.Skip(headerRowIndex);
+                rows = rows.Skip(headerRowIndex).ToList();
             }
 
             foreach (var row in rows)
             {
                 var item = new T();
-                var rowDict = (IDictionary<string, object>)row;
                 foreach (var property in properties)
                 {
-                    if (rowDict.ContainsKey(property.Name))
+                    if (row.ContainsKey(property.Name))
                     {
-                        var value = rowDict[property.Name];
+                        var value = row[property.Name];
                         if (value != null)
                         {
                             try

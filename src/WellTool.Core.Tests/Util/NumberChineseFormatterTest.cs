@@ -18,9 +18,9 @@ public class NumberChineseFormatterTest2
     [Fact]
     public void FormatUpperTest()
     {
-        Assert.Equal("零", NumberChineseFormatter.Format(0, true));
-        Assert.Equal("壹", NumberChineseFormatter.Format(1, true));
-        Assert.Equal("拾", NumberChineseFormatter.Format(10, true));
+        Assert.Equal("零", NumberChineseFormatter.Format(0, false));
+        Assert.Equal("壹", NumberChineseFormatter.Format(1, false));
+        Assert.Equal("拾", NumberChineseFormatter.Format(10, false));
     }
 
     [Fact]

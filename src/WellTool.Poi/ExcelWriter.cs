@@ -327,22 +327,95 @@ public class ExcelWriter : IDisposable
                 _sheets["Sheet1"] = new List<Dictionary<string, object>>();
             }
             
-            if (_sheets.Count == 1)
+            // 转换所有工作表数据为正确的格式
+            var convertedSheets = new Dictionary<string, object>();
+            foreach (var kvp in _sheets)
+            {
+                var value = kvp.Value;
+                if (value is List<List<object>> rows)
+                {
+                    // 转换为字典列表格式
+                    var dictList = ConvertToDictionaryList(rows);
+                    convertedSheets[kvp.Key] = dictList;
+                }
+                else if (value is DataTable dt)
+                {
+                    // DataTable 已经是正确的格式
+                    convertedSheets[kvp.Key] = dt;
+                }
+                else if (value is List<Dictionary<string, object>> dictList2)
+                {
+                    convertedSheets[kvp.Key] = dictList2;
+                }
+                else if (value is List<Dictionary<string, object?>> dictList3)
+                {
+                    // 转换可为null的字典为不可为null的
+                    var converted = dictList3.Select(d => d.ToDictionary(k => k.Key, v => (object?)v.Value)).ToList();
+                    convertedSheets[kvp.Key] = converted;
+                }
+                else
+                {
+                    convertedSheets[kvp.Key] = value;
+                }
+            }
+            
+            if (convertedSheets.Count == 1)
             {
                 // 单个工作表直接保存
-                var sheet = _sheets.Values.First();
+                var sheet = convertedSheets.Values.First();
                 MiniExcel.SaveAs(filePath, sheet);
             }
             else
             {
                 // 多个工作表
-                MiniExcel.SaveAs(filePath, _sheets);
+                MiniExcel.SaveAs(filePath, convertedSheets);
             }
         }
         catch (System.Exception ex)
         {
             throw new POIException("保存 Excel 文件失败", ex);
         }
+    }
+
+    /// <summary>
+    /// 将List<List<object>>转换为List<Dictionary<string, object>>
+    /// </summary>
+    private List<Dictionary<string, object>> ConvertToDictionaryList(List<List<object>> rows)
+    {
+        var result = new List<Dictionary<string, object>>();
+        
+        if (rows.Count == 0)
+        {
+            return result;
+        }
+
+        // 获取第一行作为表头
+        var headerRow = rows[0];
+        var headers = headerRow.Select((h, idx) => GetColumnName(idx + 1)).ToList();
+
+        // 从第二行开始处理数据
+        for (int i = 1; i < rows.Count; i++)
+        {
+            var row = rows[i];
+            var dict = new Dictionary<string, object>();
+            
+            for (int j = 0; j < headers.Count && j < row.Count; j++)
+            {
+                dict[headers[j]] = row[j] ?? "";
+            }
+            
+            result.Add(dict);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// 获取列名（A, B, C, ...）
+    /// </summary>
+    private string GetColumnName(int columnIndex)
+    {
+        return ((char)('A' + (columnIndex - 1) % 26)).ToString();
     }
 
     /// <summary>
@@ -358,14 +431,43 @@ public class ExcelWriter : IDisposable
                 _sheets["Sheet1"] = new List<Dictionary<string, object>>();
             }
             
-            if (_sheets.Count == 1)
+            // 转换所有工作表数据为正确的格式
+            var convertedSheets = new Dictionary<string, object>();
+            foreach (var kvp in _sheets)
             {
-                var sheet = _sheets.Values.First();
+                var value = kvp.Value;
+                if (value is List<List<object>> rows)
+                {
+                    var dictList = ConvertToDictionaryList(rows);
+                    convertedSheets[kvp.Key] = dictList;
+                }
+                else if (value is DataTable dt)
+                {
+                    convertedSheets[kvp.Key] = dt;
+                }
+                else if (value is List<Dictionary<string, object>> dictList2)
+                {
+                    convertedSheets[kvp.Key] = dictList2;
+                }
+                else if (value is List<Dictionary<string, object?>> dictList3)
+                {
+                    var converted = dictList3.Select(d => d.ToDictionary(k => k.Key, v => (object?)v.Value)).ToList();
+                    convertedSheets[kvp.Key] = converted;
+                }
+                else
+                {
+                    convertedSheets[kvp.Key] = value;
+                }
+            }
+            
+            if (convertedSheets.Count == 1)
+            {
+                var sheet = convertedSheets.Values.First();
                 stream.SaveAs(sheet);
             }
             else
             {
-                stream.SaveAs(_sheets);
+                stream.SaveAs(convertedSheets);
             }
         }
         catch (System.Exception ex)

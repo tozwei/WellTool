@@ -75,29 +75,31 @@ public static class NumberChineseFormatter
 			var n = number % 10;
 			if (n > 0 || unitsIndex == 1 || unitsIndex == 2) // 处理十位和百位
 			{
-				if (sb.Length > 0 && unitsIndex < UNITS.Length)
+				if (unitsIndex == 1 && n == 1 && number == 1) // 处理数字 10 的情况
+				{
 					sb.Insert(0, isSimple ? UNITS[unitsIndex] : ToUpperUnit(unitsIndex));
+				}
+				else if (sb.Length > 0 && unitsIndex < UNITS.Length)
+				{
+					sb.Insert(0, isSimple ? UNITS[unitsIndex] : ToUpperUnit(unitsIndex));
+				}
 				else if (unitsIndex == 4) // 万位
+				{
 					sb.Insert(0, isSimple ? "万" : "万");
-				if (n > 0)
+				}
+				if (n > 0 && !(unitsIndex == 1 && n == 1 && number == 1)) // 避免重复添加数字 10 的 1
+				{
 					sb.Insert(0, isSimple ? CHINESE_DIGITS[n] : ToUpper(n));
+				}
 			}
 			number /= 10;
 			unitsIndex++;
 		}
 
-		// 处理 "一十" 变为 "十"
-		if (sb.ToString().StartsWith("一十"))
-		{
-			sb.Remove(0, 1);
-		}
-		else if (sb.ToString().StartsWith("壹拾"))
-		{
-			sb.Remove(0, 1);
-		}
-
 		if (negative)
+		{
 			sb.Insert(0, "负");
+		}
 
 		return sb.ToString();
 	}

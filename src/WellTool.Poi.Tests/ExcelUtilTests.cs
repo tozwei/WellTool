@@ -17,12 +17,6 @@ using Xunit;
 
 namespace WellTool.Poi.Tests;
 
-namespace WellTool.Poi.Tests;
-
-using System.Collections.Generic;
-using System.IO;
-using Xunit;
-
 public class ExcelUtilTests
 {
     [Fact]
