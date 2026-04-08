@@ -5,6 +5,7 @@ using Xunit;
 using XAssert = Xunit.Assert;
 using WellTool.Core.Annotation;
 using WellTool.Core.Annotation.Scanner;
+using WellTool.Core.Bean;
 
 namespace WellTool.Core.Tests
 {

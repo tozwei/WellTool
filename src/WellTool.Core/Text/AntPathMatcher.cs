@@ -195,7 +195,9 @@ namespace WellTool.Core.Text
 
                 var regexPattern = BuildRegex(_pattern);
                 var options = _caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase;
-                return Regex.IsMatch(str, "^" + regexPattern + "$", options);
+                var fullPattern = "^" + regexPattern + "$";
+                var isMatch = Regex.IsMatch(str, fullPattern, options);
+                return isMatch;
             }
 
             public IDictionary<string, string> MatchAndExtract(string str)

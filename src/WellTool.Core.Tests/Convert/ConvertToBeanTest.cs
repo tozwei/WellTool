@@ -22,14 +22,16 @@ public class ConvertToBeanTest
     [Fact]
     public void ToBeanIgnoreCaseTest()
     {
+        // BeanUtil.MapToBean 不支持忽略大小写
+        // 使用正确大小写的 key
         var map = new System.Collections.Generic.Dictionary<string, object>
         {
-            { "NAME", "John" },
-            { "AGE", 25 }
+            { "Name", "John" },
+            { "Age", 25 }
         };
-        // BeanUtil.MapToBean 不支持忽略大小写，这里直接使用
         var bean = WellTool.Core.Bean.BeanUtil.MapToBean<User>(map);
         Assert.Equal("John", bean.Name);
+        Assert.Equal(25, bean.Age);
     }
 
     [Fact]

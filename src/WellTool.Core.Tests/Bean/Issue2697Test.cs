@@ -1,29 +1,26 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using Xunit;
+using WellTool.Core.Bean;
 
 namespace WellTool.Core.Tests.Bean;
 
 /// <summary>
-/// Issue 2697 测试
+/// Issue2697 测试
 /// </summary>
 public class Issue2697Test
 {
     [Fact]
-    public void TestIssue2697()
+    public void BeanToMapTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var bean = new TestBean { Name = "test", Age = 20 };
+        var map = BeanUtil.BeanToMap(bean);
+        // BeanToMap 默认将字段名转换为小写
+        Assert.Equal("test", map["name"]);
+        Assert.Equal(20, map["age"]);
+    }
+
+    public class TestBean
+    {
+        public string Name { get; set; } = "";
+        public int Age { get; set; }
     }
 }

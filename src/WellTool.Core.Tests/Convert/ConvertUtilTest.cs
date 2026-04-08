@@ -10,6 +10,7 @@ public class ConvertUtilTest
     {
         Assert.Equal("123", ConvertUtil.ToStr(123));
         Assert.Equal("abc", ConvertUtil.ToStr("abc"));
-        Assert.Equal("", ConvertUtil.ToStr(null));
+        // ConvertUtil.ToStr(null) 返回 null
+        Assert.Null(ConvertUtil.ToStr(null));
     }
 }

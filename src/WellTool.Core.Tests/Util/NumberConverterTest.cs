@@ -9,15 +9,18 @@ public class NumberConverterTest
     [Fact]
     public void ConvertTest()
     {
+        // NumberConverter 在构造函数中指定目标类型
         var converter = new NumberConverter(typeof(int));
-        Assert.Equal(123, (int)converter.Convert("123", typeof(int)));
+        var result = converter.Convert("123", typeof(int));
+        Assert.Equal(123, result);
     }
 
     [Fact]
     public void ParseTest()
     {
         var converter = new NumberConverter(typeof(double));
-        Assert.Equal(123.45, (double)converter.Convert("123.45", typeof(double)), 0.001);
+        var result = converter.Convert("123.45", typeof(double));
+        Assert.Equal(123.45, (double)result, 0.001);
     }
 
     [Fact]

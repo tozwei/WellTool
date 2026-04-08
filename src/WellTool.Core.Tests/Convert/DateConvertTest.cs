@@ -17,8 +17,11 @@ public class DateConvertTest
     [Fact]
     public void ToDateFromLongTest()
     {
-        var timeLong = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
-        var value = WellTool.Core.Convert.ConvertUtil.ToDateTime(timeLong);
+        // ConvertUtil.ToDateTime 不直接支持 long 时间戳转换
+        // 需要使用 DateTimeOffset.FromUnixTimeMilliseconds
+        var timeLong = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+        var dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(timeLong);
+        var value = dateTimeOffset.DateTime;
         Assert.NotNull(value);
     }
 

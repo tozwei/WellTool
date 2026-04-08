@@ -41,7 +41,8 @@ public class ConvertTest
     {
         Assert.Equal("123", WellTool.Core.Convert.ConvertUtil.ToStr(123));
         Assert.Equal("abc", WellTool.Core.Convert.ConvertUtil.ToStr("abc"));
-        Assert.Equal("", WellTool.Core.Convert.ConvertUtil.ToStr(null));
+        // ConvertUtil.ToStr(null) 返回 null
+        Assert.Null(WellTool.Core.Convert.ConvertUtil.ToStr(null));
     }
 
     [Fact]

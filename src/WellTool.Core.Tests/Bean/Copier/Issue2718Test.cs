@@ -1,29 +1,31 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using Xunit;
+using WellTool.Core.Bean;
+using WellTool.Core.Bean.Copier;
 
 namespace WellTool.Core.Tests.Bean.Copier;
 
 /// <summary>
-/// Issue 2718 测试
+/// Issue2718 测试
 /// </summary>
 public class Issue2718Test
 {
     [Fact]
-    public void TestIssue2718()
+    public void CopyPropertiesTest()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        var source = new SourceClass { Name = "test" };
+        var target = new TargetClass();
+        
+        BeanUtil.CopyProperties(source, target);
+        Assert.Equal("test", target.Name);
+    }
+
+    public class SourceClass
+    {
+        public string Name { get; set; } = "";
+    }
+
+    public class TargetClass
+    {
+        public string Name { get; set; } = "";
     }
 }
