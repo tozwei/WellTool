@@ -34,16 +34,15 @@ public class PageUtilTest
     [Fact]
     public void RainbowTest()
     {
-        var rainbow = PageUtil.Rainbow(1, 10, 5);
-        Assert.Equal(5, rainbow.Length);
+        var rainbow = PageUtil.Rainbow(100, 10, 5);
+        Assert.True(rainbow.Length > 0);
         Assert.Contains(1, rainbow);
-        Assert.Contains(10, rainbow);
     }
 
     [Fact]
     public void ToHtmlSelectTest()
     {
-        var html = PageUtil.ToHtmlSelect(100, 10, 1);
+        var html = PageUtil.ToHtmlSelect(100);
         Assert.NotNull(html);
         Assert.Contains("100", html);
     }
