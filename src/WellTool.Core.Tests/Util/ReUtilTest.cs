@@ -48,7 +48,7 @@ public class ReUtilTest
     public void DelFirstTest()
     {
         var result = ReUtil.DelFirst("\\d+", "a1b2c3");
-        Assert.Equal("abc3", result);
+        Assert.Equal("ab2c3", result);
     }
 
     [Fact]
