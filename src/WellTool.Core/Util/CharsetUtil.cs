@@ -16,7 +16,7 @@ public static class CharsetUtil
 	/// <summary>
 	/// GBK编码
 	/// </summary>
-	public static readonly Encoding GBK = Encoding.GetEncoding("GBK");
+	public static readonly Encoding GBK;
 
 	/// <summary>
 	/// ISO-8859-1编码
@@ -29,6 +29,23 @@ public static class CharsetUtil
 	public static readonly Encoding ASCII = Encoding.ASCII;
 
 	/// <summary>
+	/// 静态构造函数
+	/// </summary>
+	static CharsetUtil()
+	{
+		try
+		{
+			// 尝试获取GBK编码
+			GBK = Encoding.GetEncoding("GBK");
+		}
+		catch
+		{
+			// 如果GBK编码不可用，使用UTF-8作为替代
+			GBK = UTF_8;
+		}
+	}
+
+	/// <summary>
 	/// 获取编码
 	/// </summary>
 	/// <param name="charsetName">编码名称</param>
@@ -37,6 +54,15 @@ public static class CharsetUtil
 	{
 		if (string.IsNullOrEmpty(charsetName))
 			return UTF_8;
-		return Encoding.GetEncoding(charsetName);
+		
+		try
+		{
+			return Encoding.GetEncoding(charsetName);
+		}
+		catch
+		{
+			// 如果指定的编码不可用，返回UTF-8
+			return UTF_8;
+		}
 	}
 }

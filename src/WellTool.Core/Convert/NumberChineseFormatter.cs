@@ -73,11 +73,21 @@ public static class NumberChineseFormatter
 		while (number > 0)
 		{
 			var n = number % 10;
-			if (sb.Length > 0 && n > 0)
-				sb.Insert(0, UNITS[unitsIndex]);
-			sb.Insert(0, CHINESE_DIGITS[n]);
+			if (n > 0 || (unitsIndex > 0 && sb.Length > 0))
+			{
+				if (sb.Length > 0 && n > 0)
+					sb.Insert(0, UNITS[unitsIndex]);
+				if (n > 0)
+					sb.Insert(0, CHINESE_DIGITS[n]);
+			}
 			number /= 10;
 			unitsIndex++;
+		}
+
+		// 处理 "一十" 变为 "十"
+		if (sb.ToString().StartsWith("一十"))
+		{
+			sb.Remove(0, 1);
 		}
 
 		if (negative)

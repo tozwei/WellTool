@@ -207,11 +207,13 @@ public static class NumberUtil
 	}
 
 	/// <summary>
-	/// 获取指定范围内的数字（当start > end时返回end）
-	/// </summary>
-	public static int Clamp(int start, int end, int defaultValue) {
-		return start > end ? end : start;
-	}
+    /// 获取指定范围内的数字
+    /// </summary>
+    public static int Clamp(int value, int min, int max) {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+    }
 
 	/// <summary>
 	/// 计算百分比

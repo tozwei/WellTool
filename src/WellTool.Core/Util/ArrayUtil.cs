@@ -102,12 +102,14 @@ public static class ArrayUtil
             return null;
         }
 
-        T[] result = new T[array.Length];
-        for (int i = 0; i < array.Length; i++)
+        // 反转原数组
+        for (int i = 0; i < array.Length / 2; i++)
         {
-            result[i] = array[array.Length - 1 - i];
+            T temp = array[i];
+            array[i] = array[array.Length - 1 - i];
+            array[array.Length - 1 - i] = temp;
         }
-        return result;
+        return array;
     }
 
     /// <summary>
@@ -330,5 +332,18 @@ public static class ArrayUtil
         }
 
         return result.ToArray();
+    }
+
+    /// <summary>
+    /// 截取数组的一部分
+    /// </summary>
+    /// <typeparam name="T">数组类型</typeparam>
+    /// <param name="array">数组</param>
+    /// <param name="start">起始索引</param>
+    /// <param name="end">结束索引</param>
+    /// <returns>截取后的数组</returns>
+    public static T[] Sub<T>(T[] array, int start, int end)
+    {
+        return Sub(array, start, end, 1);
     }
 }

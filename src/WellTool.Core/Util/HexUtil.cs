@@ -107,7 +107,7 @@ public static class HexUtil
 	/// <returns>Unicode十六进制字符串</returns>
 	public static string ToUnicodeHex(char c)
 	{
-		return "\\u" + ((int)c).ToString("X4");
+		return "\\u" + ((int)c).ToString("x4");
 	}
 
 	/// <summary>

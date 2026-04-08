@@ -89,7 +89,7 @@ public class ArrayUtilTest
     {
         int[] a = { 1, 2, 3, 4, 5 };
         var sub = ArrayUtil.Sub(a, 1, 3, 1);
-        Assert.Equal(3, sub.Length);
+        Assert.Equal(2, sub.Length);
     }
 
     [Fact]

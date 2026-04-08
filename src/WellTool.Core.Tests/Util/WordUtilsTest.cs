@@ -54,6 +54,6 @@ public class WordUtilsTest
     [Fact]
     public void WrapTest()
     {
-        Assert.Equal("\"hello\"", "hello");
+        Assert.Equal("\"hello\"", WellTool.Core.Util.StrUtil.Wrap("hello", '"'));
     }
 }

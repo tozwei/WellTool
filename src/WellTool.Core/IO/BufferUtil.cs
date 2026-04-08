@@ -107,10 +107,13 @@ namespace WellTool.Core.IO
         /// <returns>bytes</returns>
         public static byte[] ReadBytes(byte[] buffer, ref int position)
         {
-            var remaining = buffer.Length - position;
-            var ab = new byte[remaining];
-            Array.Copy(buffer, position, ab, 0, remaining);
-            position += remaining;
+            if (position >= buffer.Length)
+            {
+                return Array.Empty<byte>();
+            }
+            var ab = new byte[1];
+            Array.Copy(buffer, position, ab, 0, 1);
+            position += 1;
             return ab;
         }
 

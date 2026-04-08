@@ -11,7 +11,7 @@ public class CharsetUtilTest
     {
         var charset = CharsetUtil.UTF_8;
         Assert.NotNull(charset);
-        Assert.Equal("UTF-8", charset.WebName);
+        Assert.Equal("utf-8", charset.WebName);
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class CharsetUtilTest
     {
         var charset = CharsetUtil.GetEncoding("UTF-8");
         Assert.NotNull(charset);
-        Assert.Equal("UTF-8", charset.WebName);
+        Assert.Equal("utf-8", charset.WebName);
     }
 
     [Fact]

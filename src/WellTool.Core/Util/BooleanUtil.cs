@@ -33,7 +33,7 @@ namespace WellTool.Core.Util
         /// <returns>字符串</returns>
         public static string ToString(bool value)
         {
-            return value.ToString().ToLower();
+            return value.ToString();
         }
 
         /// <summary>

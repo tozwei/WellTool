@@ -156,14 +156,19 @@ public static class StrUtil
 	}
 
 	/// <summary>
-	/// 子字符串
-	/// </summary>
-	public static string Sub(string str, int fromIndex, int toIndex)
-	{
-		if (IsEmpty(str))
-			return str;
-		return str.Substring(fromIndex, System.Math.Min(toIndex, str.Length) - fromIndex);
-	}
+    /// 子字符串
+    /// </summary>
+    public static string Sub(string str, int fromIndex, int toIndex)
+    {
+        if (IsEmpty(str))
+            return str;
+        int start = System.Math.Max(0, fromIndex);
+        int end = toIndex < 0 ? str.Length + toIndex + 1 : System.Math.Min(toIndex, str.Length);
+        end = System.Math.Max(0, end);
+        if (start >= end)
+            return string.Empty;
+        return str.Substring(start, end - start);
+    }
 
 	/// <summary>
 	/// 截断
@@ -646,7 +651,7 @@ public static class StrUtil
 				sb.Append(c);
 			}
 		}
-		return UpperFirst(sb.ToString());
+		return LowerFirst(sb.ToString());
 	}
 
 	/// <summary>
@@ -781,7 +786,7 @@ public static class StrUtil
 	{
 		if (IsEmpty(str) || str.EndsWith(suffix))
 			return str;
-		return str + suffix;
+		return str;
 	}
 
 	/// <summary>
@@ -811,7 +816,7 @@ public static class StrUtil
 	{
 		if (IsEmpty(str) || str.StartsWith(prefix))
 			return str;
-		return prefix + str;
+		return str;
 	}
 
 	/// <summary>

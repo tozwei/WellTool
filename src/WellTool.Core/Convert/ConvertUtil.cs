@@ -21,7 +21,15 @@ public class ConvertUtil
 	/// <returns>结果</returns>
 	public static string ToStr(object value, string defaultValue)
 	{
-		return value?.ToString() ?? defaultValue;
+		if (value == null)
+		{
+			return defaultValue;
+		}
+		if (value is bool b)
+		{
+			return b ? "true" : "false";
+		}
+		return value.ToString();
 	}
 
 	/// <summary>

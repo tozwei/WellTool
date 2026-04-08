@@ -139,7 +139,15 @@ namespace WellTool.Core.Lang.Func
             {
                 return methodCall.Method.Name;
             }
-            throw new ArgumentException("该lambda不是方法引用");
+            else if (expression is MemberExpression memberExpression)
+            {
+                return memberExpression.Member.Name;
+            }
+            else if (expression is UnaryExpression unaryExpression && unaryExpression.Operand is MemberExpression)
+            {
+                return ((MemberExpression)unaryExpression.Operand).Member.Name;
+            }
+            throw new ArgumentException("该lambda不是方法引用或属性访问");
         }
         //endregion
     }

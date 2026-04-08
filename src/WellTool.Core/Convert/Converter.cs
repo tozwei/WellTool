@@ -32,6 +32,22 @@ namespace WellTool.Core.Converter
             // 处理字符串到数值类型的转换
             if (value is string str && IsNumericType(typeof(T)))
             {
+                str = str.Trim();
+                // 处理带有小数的情况
+                if (str.Contains("."))
+                {
+                    if (decimal.TryParse(str, out decimal d))
+                    {
+                        if (typeof(T) == typeof(int))
+                        {
+                            return (T)(object)(int)d;
+                        }
+                        if (typeof(T) == typeof(long))
+                        {
+                            return (T)(object)(long)d;
+                        }
+                    }
+                }
                 return (T)System.Convert.ChangeType(str, typeof(T));
             }
             var result = To(value, typeof(T));
@@ -86,6 +102,26 @@ namespace WellTool.Core.Converter
             if (targetType.IsAssignableFrom(sourceType))
             {
                 return value;
+            }
+
+            // 处理 Char 到 String 的转换
+            if (sourceType == typeof(char) && targetType == typeof(string))
+            {
+                return value.ToString();
+            }
+
+            // 处理 String 到 Int32 的转换
+            if (sourceType == typeof(string) && targetType == typeof(int))
+            {
+                string str = value.ToString().Trim();
+                if (str.Contains("."))
+                {
+                    if (decimal.TryParse(str, out decimal d))
+                    {
+                        return (int)d;
+                    }
+                }
+                return int.Parse(str);
             }
 
             // 处理集合类型转换
@@ -698,7 +734,12 @@ namespace WellTool.Core.Converter
                 return "零元整";
             }
 
-            return NumberChineseFormatter.Format((double)value, false, true);
+            string result = NumberChineseFormatter.Format((double)value, false, true);
+            if (result == "零")
+            {
+                return "零元整";
+            }
+            return result;
         }
 
         /// <summary>

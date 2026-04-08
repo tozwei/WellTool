@@ -233,7 +233,7 @@ namespace WellTool.Core.Util
                 {
                     sb.Append(separator);
                 }
-                sb.Append(bytes[i].ToString("x2"));
+                sb.Append(bytes[i].ToString("X2"));
             }
             return sb.ToString();
         }
