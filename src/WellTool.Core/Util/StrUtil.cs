@@ -786,7 +786,7 @@ public static class StrUtil
 	{
 		if (IsEmpty(str) || str.EndsWith(suffix))
 			return str;
-		return str;
+		return str + suffix;
 	}
 
 	/// <summary>
@@ -816,7 +816,7 @@ public static class StrUtil
 	{
 		if (IsEmpty(str) || str.StartsWith(prefix))
 			return str;
-		return str;
+		return prefix + str;
 	}
 
 	/// <summary>
