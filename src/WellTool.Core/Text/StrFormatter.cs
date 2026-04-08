@@ -30,6 +30,7 @@ namespace WellTool.Core.Text
                 return template;
             }
 
+            // 直接使用 string.Format 来处理参数替换和双大括号转义
             return string.Format(template, args);
         }
 
@@ -68,7 +69,7 @@ namespace WellTool.Core.Text
         /// <param name="template">模板字符串</param>
         /// <param name="args">参数对象</param>
         /// <returns>格式化后的字符串</returns>
-        public static string Format(string template, object args)
+        public static string FormatWithObject(string template, object args)
         {
             if (string.IsNullOrEmpty(template))
             {

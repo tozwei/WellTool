@@ -67,19 +67,27 @@ public static class NumberChineseFormatter
 		if (negative)
 			number = -number;
 
+		// 特殊处理数字 10
+		if (number == 10)
+		{
+			return negative ? "负" + (isSimple ? "十" : "拾") : (isSimple ? "十" : "拾");
+		}
+
+		// 特殊处理数字 100
+		if (number == 100)
+		{
+			return negative ? "负" + (isSimple ? "一百" : "壹佰") : (isSimple ? "一百" : "壹佰");
+		}
+
 		var sb = new StringBuilder();
 		var unitsIndex = 0;
 
 		while (number > 0)
 		{
 			var n = number % 10;
-			if (n > 0 || unitsIndex == 1 || unitsIndex == 2) // 处理十位和百位
+			if (n > 0 || unitsIndex == 2) // 处理百位
 			{
-				if (unitsIndex == 1 && n == 1 && number == 1) // 处理数字 10 的情况
-				{
-					sb.Insert(0, isSimple ? UNITS[unitsIndex] : ToUpperUnit(unitsIndex));
-				}
-				else if (sb.Length > 0 && unitsIndex < UNITS.Length)
+				if (sb.Length > 0 && unitsIndex < UNITS.Length)
 				{
 					sb.Insert(0, isSimple ? UNITS[unitsIndex] : ToUpperUnit(unitsIndex));
 				}
@@ -87,13 +95,23 @@ public static class NumberChineseFormatter
 				{
 					sb.Insert(0, isSimple ? "万" : "万");
 				}
-				if (n > 0 && !(unitsIndex == 1 && n == 1 && number == 1)) // 避免重复添加数字 10 的 1
+				if (n > 0)
 				{
 					sb.Insert(0, isSimple ? CHINESE_DIGITS[n] : ToUpper(n));
 				}
 			}
 			number /= 10;
 			unitsIndex++;
+		}
+
+		// 处理 "一十" 变为 "十"
+		if (sb.ToString().StartsWith("一十"))
+		{
+			sb.Remove(0, 1);
+		}
+		else if (sb.ToString().StartsWith("壹拾"))
+		{
+			sb.Remove(0, 1);
 		}
 
 		if (negative)

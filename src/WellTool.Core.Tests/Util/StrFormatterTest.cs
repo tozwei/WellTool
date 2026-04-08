@@ -1,14 +1,21 @@
 using WellTool.Core.Text;
 using Xunit;
 
-namespace WellTool.Core.Tests;
+namespace WellTool.Core.Tests.Util;
 
 public class StrFormatterTest
 {
     [Fact]
     public void FormatTest()
     {
+        // 直接测试 string.Format
+        var stringFormatResult = string.Format("Hello {0}", "World");
+        Console.WriteLine($"string.Format result: {stringFormatResult}");
+        
+        // 测试 StrFormatter.Format
         var result = StrFormatter.Format("Hello {0}", "World");
+        Console.WriteLine($"StrFormatter.Format result: {result}");
+        
         Assert.Equal("Hello World", result);
     }
 
@@ -22,7 +29,7 @@ public class StrFormatterTest
     [Fact]
     public void FormatNamedTest()
     {
-        var result = StrFormatter.Format("{name} is {age} years old", 
+        var result = StrFormatter.FormatWithObject("{name} is {age} years old", 
             new { name = "John", age = 25 });
         Assert.Equal("John is 25 years old", result);
     }
@@ -42,7 +49,14 @@ public class StrFormatterTest
     [Fact]
     public void FormatWithBracesTest()
     {
+        // 直接测试 string.Format
+        var stringFormatResult = string.Format("{{0}}", 123);
+        Console.WriteLine($"string.Format result: {stringFormatResult}");
+        
+        // 测试 StrFormatter.Format
         var result = StrFormatter.Format("{{0}}", 123);
+        Console.WriteLine($"StrFormatter.Format result: {result}");
+        
         Assert.Equal("{0}", result);
     }
 
