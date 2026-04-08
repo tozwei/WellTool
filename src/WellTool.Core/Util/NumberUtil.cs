@@ -471,7 +471,7 @@ public static class NumberUtil
 	{
 		if (string.IsNullOrEmpty(value))
 			return value;
-		return Math.Round(ToDecimal(value), scale).ToString($"F{scale}", CultureInfo.InvariantCulture).TrimEnd('0').TrimEnd('.');
+		return System.Math.Round(ToDecimal(value), scale).ToString($"F{scale}", CultureInfo.InvariantCulture).TrimEnd('0').TrimEnd('.');
 	}
 
 	/// <summary>

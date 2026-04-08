@@ -164,7 +164,7 @@ namespace WellTool.Core.Util
             }
 
             var provinceCode = idCard.Substring(0, 2);
-            
+
             var provinces = new System.Collections.Generic.Dictionary<string, string>
             {
                 { "11", "北京市" }, { "12", "天津市" }, { "13", "河北省" }, { "14", "山西省" },
@@ -179,6 +179,39 @@ namespace WellTool.Core.Util
             };
 
             return provinces.TryGetValue(provinceCode, out var province) ? province : null;
+        }
+
+        /// <summary>
+        /// 验证15位身份证号码（支持带括号和星号的版本）
+        /// </summary>
+        /// <param name="idCard15">15位身份证号码</param>
+        /// <returns>验证结果数组：[出生日期, 性别, 是否有效]</returns>
+        public static string[] IsValidCard10(string idCard15)
+        {
+            if (string.IsNullOrEmpty(idCard15))
+            {
+                return new string[] { null, null, "false" };
+            }
+
+            // 提取纯数字部分
+            string pureNumber = Regex.Replace(idCard15, @"[()（）*]", "");
+
+            // 验证是否是15位数字
+            if (!Regex.IsMatch(pureNumber, @"^\d{15}$"))
+            {
+                return new string[] { null, null, "false" };
+            }
+
+            // 提取出生日期 (6-12位)
+            string birthDateStr = pureNumber.Substring(6, 6);
+            string birthDate = "19" + birthDateStr.Substring(0, 2) + "-" + birthDateStr.Substring(2, 2) + "-" + birthDateStr.Substring(4, 2);
+
+            // 提取性别 (第14位，奇数为男，偶数为女)
+            int genderDigit = pureNumber[13] - '0';
+            string gender = (genderDigit % 2 == 1) ? "male" : "female";
+
+            // 15位身份证默认有效
+            return new string[] { birthDate, gender, "true" };
         }
     }
 }

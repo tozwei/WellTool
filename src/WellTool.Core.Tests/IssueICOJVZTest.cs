@@ -1,4 +1,7 @@
 using Xunit;
+using WellTool.Core;
+using WellTool.Core.Text;
+using WellTool.Core.Util;
 
 namespace WellTool.Core.Tests
 {
@@ -8,9 +11,11 @@ namespace WellTool.Core.Tests
     public class IssueICOJVZTest
     {
         [Fact]
-        public void TestIssue()
+        public void ToUnderlineTest()
         {
-            Assert.True(true);
+            string field = "PAGE_NAME";
+            field = NamingCase.ToUnderlineCase(field).ToUpperInvariant();
+            Assert.Equal("PAGE_NAME", field);
         }
     }
 }

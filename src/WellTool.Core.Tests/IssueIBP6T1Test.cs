@@ -1,4 +1,6 @@
 using Xunit;
+using WellTool.Core;
+using WellTool.Core.Util;
 
 namespace WellTool.Core.Tests
 {
@@ -8,9 +10,10 @@ namespace WellTool.Core.Tests
     public class IssueIBP6T1Test
     {
         [Fact]
-        public void TestIssue()
+        public void IsValidCard10Test()
         {
-            Assert.True(true);
+            Assert.Equal("true", IdcardUtil.IsValidCard10("1608214(1)")[2]);
+            Assert.Equal("true", IdcardUtil.IsValidCard10("1608214（1）")[2]);
         }
     }
 }

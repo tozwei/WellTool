@@ -249,23 +249,23 @@ namespace WellTool.Core.Text
                         else if (i == 0)
                         {
                             // 以 ** 开头，匹配零个或多个目录
-                            regexParts.Add("(?:[^" + separator + "]+" + separator + ")*");
+                            regexParts.Add($"(?:[^{separator}]+{separator})*");
                         }
                         else if (i == parts.Length - 1)
                         {
                             // 以 ** 结尾，匹配零个或多个目录
-                            regexParts.Add("(?:" + separator + "[^" + separator + "]+)*");
+                            regexParts.Add($"(?:{separator}[^{separator}]+)*");
                         }
                         else
                         {
                             // 在中间，匹配零个或多个目录
-                            regexParts.Add("(?:" + separator + "[^" + separator + "]+)*" + separator);
+                            regexParts.Add($"(?:{separator}[^{separator}]+)*");
                         }
                     }
                     else if (part == "*")
                     {
                         // * 匹配当前路径段的任何字符，不包括分隔符
-                        regexParts.Add("[^" + separator + "]*");
+                        regexParts.Add($"[^{separator}]*");
 
                         // 添加路径分隔符（除了最后一个部分）
                         if (i < parts.Length - 1)
@@ -293,11 +293,11 @@ namespace WellTool.Core.Text
                         {
                             var regex = variable.Substring(colonIndex + 1);
                             variable = variable.Substring(0, colonIndex);
-                            regexParts.Add("(" + regex + ")");
+                            regexParts.Add($"({regex})");
                         }
                         else
                         {
-                            regexParts.Add("([^" + separator + "]+)");
+                            regexParts.Add($"([^{separator}]+)");
                         }
 
                         // 添加路径分隔符（除了最后一个部分）
@@ -327,7 +327,7 @@ namespace WellTool.Core.Text
                 var regex = Regex.Escape(segment);
                 regex = regex.Replace("\\?", ".");
                 // * 只匹配当前路径段的字符，不包括分隔符
-                regex = regex.Replace("\\*", "[^" + separator + "]*");
+                regex = regex.Replace("\\*", $"[^{separator}]*");
                 return regex;
             }
         }

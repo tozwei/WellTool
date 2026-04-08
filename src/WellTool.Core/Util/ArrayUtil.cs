@@ -346,4 +346,38 @@ public static class ArrayUtil
     {
         return Sub(array, start, end, 1);
     }
+
+    /// <summary>
+    /// 查找子数组在目标数组中最后出现的位置
+    /// </summary>
+    /// <typeparam name="T">数组类型</typeparam>
+    /// <param name="array">目标数组</param>
+    /// <param name="subArray">子数组</param>
+    /// <returns>子数组最后出现的位置索引，未找到返回-1</returns>
+    public static int LastIndexOfSub<T>(T[] array, T[] subArray)
+    {
+        if (array == null || subArray == null || array.Length == 0 || subArray.Length == 0 || subArray.Length > array.Length)
+        {
+            return -1;
+        }
+
+        // 从后向前搜索
+        for (int i = array.Length - subArray.Length; i >= 0; i--)
+        {
+            bool match = true;
+            for (int j = 0; j < subArray.Length; j++)
+            {
+                if (!Equals(array[i + j], subArray[j]))
+                {
+                    match = false;
+                    break;
+                }
+            }
+            if (match)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

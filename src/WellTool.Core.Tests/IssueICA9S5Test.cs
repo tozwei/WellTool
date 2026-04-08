@@ -1,4 +1,7 @@
 using Xunit;
+using WellTool.Core;
+using WellTool.Core.Util;
+using WellTool.Core.Text;
 
 namespace WellTool.Core.Tests
 {
@@ -8,9 +11,11 @@ namespace WellTool.Core.Tests
     public class IssueICA9S5Test
     {
         [Fact]
-        public void TestIssue()
+        public void Test()
         {
-            Assert.True(true);
+            string a = "ENUM{\ndisable ~ 0\nenable ~ 1\n}";
+            var split = StrSplitter.SplitByString(a, "\n");
+            Assert.Equal(4, split.Length);
         }
     }
 }

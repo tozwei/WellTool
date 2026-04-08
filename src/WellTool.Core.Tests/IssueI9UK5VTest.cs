@@ -1,4 +1,6 @@
 using Xunit;
+using WellTool.Core;
+using WellTool.Core.Util;
 
 namespace WellTool.Core.Tests
 {
@@ -8,9 +10,14 @@ namespace WellTool.Core.Tests
     public class IssueI9UK5VTest
     {
         [Fact]
-        public void TestIssue()
+        public void SplitTest()
         {
-            Assert.True(true);
+            string str = "";
+            var split = StrUtil.Split(str, ',');
+            Assert.Equal(1, split.Length);
+
+            split = StrUtil.SplitTrim(str, ',');
+            Assert.Equal(0, split.Length);
         }
     }
 }
