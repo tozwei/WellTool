@@ -7,7 +7,6 @@ namespace WellTool.Poi.Tests
     /// <summary>
     /// ExcelSaxReadTest 测试 SAX 方式读取 Excel
     /// </summary>
-    [Collection("EPPlusCollection")]
     public class ExcelSaxReadTest
     {
         [Fact]

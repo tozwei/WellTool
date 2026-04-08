@@ -55,7 +55,7 @@ namespace WellTool.Core.Tests
         public void IsPrimitiveWrapperTest()
         {
             Assert.True(WellTool.Core.Util.ClassUtil.IsPrimitiveWrapper(typeof(Int32)));
-            Assert.False(WellTool.Core.Util.ClassUtil.IsPrimitiveWrapper(typeof(int)));
+            Assert.True(WellTool.Core.Util.ClassUtil.IsPrimitiveWrapper(typeof(int)));
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace WellTool.Core.Tests
         {
             Assert.True(WellTool.Core.Util.ClassUtil.IsPrimitive(typeof(int)));
             Assert.True(WellTool.Core.Util.ClassUtil.IsPrimitive(typeof(string)));
-            Assert.False(WellTool.Core.Util.ClassUtil.IsPrimitive(typeof(Int32)));
+            Assert.True(WellTool.Core.Util.ClassUtil.IsPrimitive(typeof(Int32)));
         }
 
         [Fact]

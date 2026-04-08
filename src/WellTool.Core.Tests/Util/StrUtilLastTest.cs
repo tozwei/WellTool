@@ -304,13 +304,13 @@ public class StrUtilLastTest
     [Fact]
     public void ReplaceTest()
     {
-        Assert.Equal("aXcXd", StrUtil.Replace("a_b_c_d", 1, 5, "X"));
+        Assert.Equal("aX_d", StrUtil.Replace("a_b_c_d", 1, 5, "X"));
     }
 
     [Fact]
     public void ReplaceCharsTest()
     {
-        Assert.Equal("aXcXd", StrUtil.ReplaceChars("a_b_c_d", '_', 'X'));
+        Assert.Equal("aXbXcXd", StrUtil.ReplaceChars("a_b_c_d", '_', 'X'));
     }
 
     [Fact]

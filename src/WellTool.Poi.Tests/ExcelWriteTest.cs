@@ -7,7 +7,6 @@ namespace WellTool.Poi.Tests
     /// <summary>
     /// ExcelWriteTest 测试
     /// </summary>
-    [Collection("EPPlusCollection")]
     public class ExcelWriteTest
     {
         [Fact]

@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//
+
 // http://www.apache.org/licenses/LICENSE-2.0
-//
+
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -13,8 +13,10 @@
 
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using System.Linq;
 using System.Reflection;
-using OfficeOpenXml;
+using MiniExcelLibs;
 
 namespace WellTool.Poi;
 
@@ -23,53 +25,105 @@ namespace WellTool.Poi;
 /// </summary>
 public class ExcelReader : IDisposable
 {
-    /// <summary>
-    /// 静态构造函数，设置EPPlus许可证
-    /// </summary>
-    static ExcelReader()
-    {
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-    }
+    private readonly string _filePath;
+    private readonly Stream _stream;
+    private readonly bool _isStreamMode;
+    private List<string> _sheetNames = new();
+    private string _currentSheetName = "Sheet1";
 
     /// <summary>
-    /// Excel 包
+    /// 获取所有工作表名称
     /// </summary>
-    private readonly ExcelPackage _package;
-
-    /// <summary>
-    /// 当前工作表
-    /// </summary>
-    private ExcelWorksheet _currentWorksheet;
+    public List<string> SheetNames => _sheetNames;
 
     /// <summary>
     /// 构造函数
     /// </summary>
-    /// <param name="package">Excel 包</param>
-    public ExcelReader(ExcelPackage package)
-        : this(package, 0)
+    /// <param name="filePath">文件路径</param>
+    public ExcelReader(string filePath)
     {
+        _filePath = filePath;
+        _isStreamMode = false;
+        LoadSheetNames();
     }
 
     /// <summary>
     /// 构造函数
     /// </summary>
-    /// <param name="package">Excel 包</param>
-    /// <param name="sheetIndex">工作表索引</param>
-    public ExcelReader(ExcelPackage package, int sheetIndex)
-    {
-        _package = package;
-        _currentWorksheet = _package.Workbook.Worksheets[sheetIndex];
-    }
-
-    /// <summary>
-    /// 构造函数
-    /// </summary>
-    /// <param name="package">Excel 包</param>
+    /// <param name="filePath">文件路径</param>
     /// <param name="sheetName">工作表名称</param>
-    public ExcelReader(ExcelPackage package, string sheetName)
+    public ExcelReader(string filePath, string sheetName)
     {
-        _package = package;
-        _currentWorksheet = _package.Workbook.Worksheets[sheetName];
+        _filePath = filePath;
+        _isStreamMode = false;
+        _currentSheetName = sheetName;
+        LoadSheetNames();
+    }
+
+    /// <summary>
+    /// 构造函数
+    /// </summary>
+    /// <param name="filePath">文件路径</param>
+    /// <param name="sheetIndex">工作表索引</param>
+    public ExcelReader(string filePath, int sheetIndex)
+    {
+        _filePath = filePath;
+        _isStreamMode = false;
+        LoadSheetNames();
+        if (sheetIndex >= 0 && sheetIndex < _sheetNames.Count)
+        {
+            _currentSheetName = _sheetNames[sheetIndex];
+        }
+    }
+
+    /// <summary>
+    /// 构造函数
+    /// </summary>
+    /// <param name="stream">流</param>
+    public ExcelReader(Stream stream)
+    {
+        _stream = stream;
+        _isStreamMode = true;
+    }
+
+    /// <summary>
+    /// 构造函数
+    /// </summary>
+    /// <param name="stream">流</param>
+    /// <param name="sheetName">工作表名称</param>
+    public ExcelReader(Stream stream, string sheetName)
+    {
+        _stream = stream;
+        _isStreamMode = true;
+        _currentSheetName = sheetName;
+    }
+
+    /// <summary>
+    /// 加载工作表名称
+    /// </summary>
+    private void LoadSheetNames()
+    {
+        try
+        {
+            if (_isStreamMode)
+            {
+                _stream.Position = 0;
+                _sheetNames = MiniExcel.GetSheetNames(_stream).ToList();
+            }
+            else
+            {
+                _sheetNames = MiniExcel.GetSheetNames(_filePath).ToList();
+            }
+            
+            if (_sheetNames.Count > 0 && string.IsNullOrEmpty(_currentSheetName))
+            {
+                _currentSheetName = _sheetNames[0];
+            }
+        }
+        catch
+        {
+            _sheetNames = new List<string> { "Sheet1" };
+        }
     }
 
     /// <summary>
@@ -87,7 +141,7 @@ public class ExcelReader : IDisposable
     /// <returns>数据列表</returns>
     public List<List<object?>> Read()
     {
-        return ReadSheet(_currentWorksheet);
+        return ReadSheet(_currentSheetName);
     }
 
     /// <summary>
@@ -97,8 +151,11 @@ public class ExcelReader : IDisposable
     /// <returns>数据列表</returns>
     public List<List<object?>> ReadSheet(int sheetIndex)
     {
-        var worksheet = _package.Workbook.Worksheets[sheetIndex];
-        return ReadSheet(worksheet);
+        if (sheetIndex >= 0 && sheetIndex < _sheetNames.Count)
+        {
+            return ReadSheet(_sheetNames[sheetIndex]);
+        }
+        return new List<List<object?>>();
     }
 
     /// <summary>
@@ -108,33 +165,33 @@ public class ExcelReader : IDisposable
     /// <returns>数据列表</returns>
     public List<List<object?>> ReadSheet(string sheetName)
     {
-        var worksheet = _package.Workbook.Worksheets[sheetName];
-        return ReadSheet(worksheet);
-    }
-
-    /// <summary>
-    /// 读取指定工作表的数据
-    /// </summary>
-    /// <param name="worksheet">工作表</param>
-    /// <returns>数据列表</returns>
-    private List<List<object?>> ReadSheet(ExcelWorksheet worksheet)
-    {
         try
         {
             var result = new List<List<object?>>();
-            if (worksheet.Dimension == null)
+            
+            IEnumerable<IDictionary<string, object?>> rows;
+            if (_isStreamMode)
             {
-                return result;
+                _stream.Position = 0;
+                rows = _stream.Query(sheetName: sheetName, useHeaderRow: false);
             }
-            for (int row = 1; row <= worksheet.Dimension.End.Row; row++)
+            else
+            {
+                rows = MiniExcel.Query(_filePath, sheetName: sheetName, useHeaderRow: false);
+            }
+
+            foreach (var row in rows)
             {
                 var rowData = new List<object?>();
-                for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
+                int colIndex = 1;
+                while (row.ContainsKey(GetColumnName(colIndex)))
                 {
-                    rowData.Add(worksheet.Cells[row, col].Value);
+                    rowData.Add(row[GetColumnName(colIndex)]);
+                    colIndex++;
                 }
                 result.Add(rowData);
             }
+
             return result;
         }
         catch (System.Exception ex)
@@ -144,13 +201,21 @@ public class ExcelReader : IDisposable
     }
 
     /// <summary>
+    /// 获取列名（A, B, C, ...）
+    /// </summary>
+    private string GetColumnName(int columnIndex)
+    {
+        return ((char)('A' + (columnIndex - 1) % 26)).ToString();
+    }
+
+    /// <summary>
     /// 读取当前工作表的数据为字典列表
     /// </summary>
     /// <param name="headerRowIndex">表头行索引，从0开始</param>
     /// <returns>字典列表</returns>
     public List<Dictionary<string, object?>> ReadAsDictionaryList(int headerRowIndex = 0)
     {
-        return ReadAsDictionaryList(_currentWorksheet, headerRowIndex);
+        return ReadAsDictionaryList(_currentSheetName, headerRowIndex);
     }
 
     /// <summary>
@@ -161,8 +226,11 @@ public class ExcelReader : IDisposable
     /// <returns>字典列表</returns>
     public List<Dictionary<string, object?>> ReadAsDictionaryList(int sheetIndex, int headerRowIndex = 0)
     {
-        var worksheet = _package.Workbook.Worksheets[sheetIndex];
-        return ReadAsDictionaryList(worksheet, headerRowIndex);
+        if (sheetIndex >= 0 && sheetIndex < _sheetNames.Count)
+        {
+            return ReadAsDictionaryList(_sheetNames[sheetIndex], headerRowIndex);
+        }
+        return new List<Dictionary<string, object?>>();
     }
 
     /// <summary>
@@ -173,47 +241,37 @@ public class ExcelReader : IDisposable
     /// <returns>字典列表</returns>
     public List<Dictionary<string, object?>> ReadAsDictionaryList(string sheetName, int headerRowIndex = 0)
     {
-        var worksheet = _package.Workbook.Worksheets[sheetName];
-        return ReadAsDictionaryList(worksheet, headerRowIndex);
-    }
-
-    /// <summary>
-    /// 读取指定工作表的数据为字典列表
-    /// </summary>
-    /// <param name="worksheet">工作表</param>
-    /// <param name="headerRowIndex">表头行索引，从0开始</param>
-    /// <returns>字典列表</returns>
-    private List<Dictionary<string, object?>> ReadAsDictionaryList(ExcelWorksheet worksheet, int headerRowIndex = 0)
-    {
         try
         {
             var result = new List<Dictionary<string, object?>>();
-            if (worksheet.Dimension == null)
+            
+            IEnumerable<IDictionary<string, object?>> rows;
+            if (_isStreamMode)
             {
-                return result;
+                _stream.Position = 0;
+                rows = _stream.Query(sheetName: sheetName, useHeaderRow: true);
+            }
+            else
+            {
+                rows = MiniExcel.Query(_filePath, sheetName: sheetName, useHeaderRow: true);
             }
 
-            // 读取表头
-            var headers = new List<string>();
-            for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
+            // 跳过表头行
+            if (headerRowIndex > 0)
             {
-                var headerValue = worksheet.Cells[headerRowIndex + 1, col].Value;
-                headers.Add(headerValue?.ToString() ?? string.Empty);
+                rows = rows.Skip(headerRowIndex);
             }
 
-            // 读取数据行
-            for (int row = headerRowIndex + 2; row <= worksheet.Dimension.End.Row; row++)
+            foreach (var row in rows)
             {
-                var rowData = new Dictionary<string, object?>();
-                for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
+                var dict = new Dictionary<string, object?>();
+                foreach (var kvp in row)
                 {
-                    if (col <= headers.Count)
-                    {
-                        rowData[headers[col - 1]] = worksheet.Cells[row, col].Value;
-                    }
+                    dict[kvp.Key] = kvp.Value;
                 }
-                result.Add(rowData);
+                result.Add(dict);
             }
+
             return result;
         }
         catch (System.Exception ex)
@@ -230,7 +288,7 @@ public class ExcelReader : IDisposable
     /// <returns>DataTable</returns>
     public DataTable ReadAsDataTable(string tableName = "Sheet1", int headerRowIndex = 0)
     {
-        return ReadAsDataTable(_currentWorksheet, tableName, headerRowIndex);
+        return ReadAsDataTable(_currentSheetName, tableName, headerRowIndex);
     }
 
     /// <summary>
@@ -242,8 +300,11 @@ public class ExcelReader : IDisposable
     /// <returns>DataTable</returns>
     public DataTable ReadAsDataTable(int sheetIndex, string tableName = "Sheet1", int headerRowIndex = 0)
     {
-        var worksheet = _package.Workbook.Worksheets[sheetIndex];
-        return ReadAsDataTable(worksheet, tableName, headerRowIndex);
+        if (sheetIndex >= 0 && sheetIndex < _sheetNames.Count)
+        {
+            return ReadAsDataTable(_sheetNames[sheetIndex], tableName, headerRowIndex);
+        }
+        return new DataTable(tableName);
     }
 
     /// <summary>
@@ -255,47 +316,50 @@ public class ExcelReader : IDisposable
     /// <returns>DataTable</returns>
     public DataTable ReadAsDataTable(string sheetName, string tableName = "Sheet1", int headerRowIndex = 0)
     {
-        var worksheet = _package.Workbook.Worksheets[sheetName];
-        return ReadAsDataTable(worksheet, tableName, headerRowIndex);
-    }
-
-    /// <summary>
-    /// 读取指定工作表的数据为DataTable
-    /// </summary>
-    /// <param name="worksheet">工作表</param>
-    /// <param name="tableName">表名</param>
-    /// <param name="headerRowIndex">表头行索引，从0开始</param>
-    /// <returns>DataTable</returns>
-    private DataTable ReadAsDataTable(ExcelWorksheet worksheet, string tableName = "Sheet1", int headerRowIndex = 0)
-    {
         try
         {
             var dataTable = new DataTable(tableName);
-            if (worksheet.Dimension == null)
+            
+            IEnumerable<IDictionary<string, object?>> rows;
+            if (_isStreamMode)
+            {
+                _stream.Position = 0;
+                rows = _stream.Query(sheetName: sheetName, useHeaderRow: true);
+            }
+            else
+            {
+                rows = MiniExcel.Query(_filePath, sheetName: sheetName, useHeaderRow: true);
+            }
+
+            var rowList = rows.ToList();
+            if (rowList.Count == 0)
             {
                 return dataTable;
             }
 
-            // 读取表头
-            for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
+            // 添加列
+            var firstRow = rowList[0];
+            foreach (var key in firstRow.Keys)
             {
-                var headerValue = worksheet.Cells[headerRowIndex + 1, col].Value;
-                dataTable.Columns.Add(headerValue?.ToString() ?? $"Column{col}");
+                dataTable.Columns.Add(key, typeof(object));
             }
 
-            // 读取数据行
-            for (int row = headerRowIndex + 2; row <= worksheet.Dimension.End.Row; row++)
+            // 跳过表头行
+            var dataRows = rowList.Skip(headerRowIndex + 1);
+            foreach (var row in dataRows)
             {
                 var dataRow = dataTable.NewRow();
-                for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
+                foreach (var col in dataTable.Columns)
                 {
-                    if (col <= dataTable.Columns.Count)
+                    var colName = col.ColumnName;
+                    if (row.ContainsKey(colName))
                     {
-                        dataRow[col - 1] = worksheet.Cells[row, col].Value;
+                        dataRow[colName] = row[colName] ?? DBNull.Value;
                     }
                 }
                 dataTable.Rows.Add(dataRow);
             }
+
             return dataTable;
         }
         catch (System.Exception ex)
@@ -312,7 +376,7 @@ public class ExcelReader : IDisposable
     /// <returns>指定类型的列表</returns>
     public List<T> ReadAsList<T>(int headerRowIndex = 0) where T : new()
     {
-        return ReadAsList<T>(_currentWorksheet, headerRowIndex);
+        return ReadAsList<T>(_currentSheetName, headerRowIndex);
     }
 
     /// <summary>
@@ -324,8 +388,11 @@ public class ExcelReader : IDisposable
     /// <returns>指定类型的列表</returns>
     public List<T> ReadAsList<T>(int sheetIndex, int headerRowIndex = 0) where T : new()
     {
-        var worksheet = _package.Workbook.Worksheets[sheetIndex];
-        return ReadAsList<T>(worksheet, headerRowIndex);
+        if (sheetIndex >= 0 && sheetIndex < _sheetNames.Count)
+        {
+            return ReadAsList<T>(_sheetNames[sheetIndex], headerRowIndex);
+        }
+        return new List<T>();
     }
 
     /// <summary>
@@ -337,68 +404,53 @@ public class ExcelReader : IDisposable
     /// <returns>指定类型的列表</returns>
     public List<T> ReadAsList<T>(string sheetName, int headerRowIndex = 0) where T : new()
     {
-        var worksheet = _package.Workbook.Worksheets[sheetName];
-        return ReadAsList<T>(worksheet, headerRowIndex);
-    }
-
-    /// <summary>
-    /// 读取指定工作表的数据为指定类型的列表
-    /// </summary>
-    /// <typeparam name="T">目标类型</typeparam>
-    /// <param name="worksheet">工作表</param>
-    /// <param name="headerRowIndex">表头行索引，从0开始</param>
-    /// <returns>指定类型的列表</returns>
-    private List<T> ReadAsList<T>(ExcelWorksheet worksheet, int headerRowIndex = 0) where T : new()
-    {
         try
         {
             var result = new List<T>();
-            if (worksheet.Dimension == null)
-            {
-                return result;
-            }
-
-            // 读取表头
-            var headers = new List<string>();
-            for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
-            {
-                var headerValue = worksheet.Cells[headerRowIndex + 1, col].Value;
-                headers.Add(headerValue?.ToString() ?? string.Empty);
-            }
-
-            // 获取类型的属性
             var properties = typeof(T).GetProperties();
 
-            // 读取数据行
-            for (int row = headerRowIndex + 2; row <= worksheet.Dimension.End.Row; row++)
+            IEnumerable<IDictionary<string, object?>> rows;
+            if (_isStreamMode)
+            {
+                _stream.Position = 0;
+                rows = _stream.Query(sheetName: sheetName, useHeaderRow: true);
+            }
+            else
+            {
+                rows = MiniExcel.Query(_filePath, sheetName: sheetName, useHeaderRow: true);
+            }
+
+            // 跳过表头行
+            if (headerRowIndex > 0)
+            {
+                rows = rows.Skip(headerRowIndex);
+            }
+
+            foreach (var row in rows)
             {
                 var item = new T();
-                for (int col = 1; col <= worksheet.Dimension.End.Column; col++)
+                foreach (var property in properties)
                 {
-                    if (col <= headers.Count)
+                    if (row.ContainsKey(property.Name))
                     {
-                        var header = headers[col - 1];
-                        var property = properties.FirstOrDefault(p => p.Name.Equals(header, StringComparison.OrdinalIgnoreCase));
-                        if (property != null)
+                        var value = row[property.Name];
+                        if (value != null)
                         {
-                            var cellValue = worksheet.Cells[row, col].Value;
-                            if (cellValue != null)
+                            try
                             {
-                                try
-                                {
-                                    var convertedValue = Convert.ChangeType(cellValue, property.PropertyType);
-                                    property.SetValue(item, convertedValue);
-                                }
-                                catch
-                                {
-                                    // 类型转换失败，跳过
-                                }
+                                var convertedValue = Convert.ChangeType(value, property.PropertyType);
+                                property.SetValue(item, convertedValue);
+                            }
+                            catch
+                            {
+                                // 类型转换失败，跳过
                             }
                         }
                     }
                 }
                 result.Add(item);
             }
+
             return result;
         }
         catch (System.Exception ex)
@@ -412,6 +464,6 @@ public class ExcelReader : IDisposable
     /// </summary>
     public void Dispose()
     {
-        _package.Dispose();
+        _stream?.Dispose();
     }
 }

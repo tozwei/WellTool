@@ -7,7 +7,6 @@ namespace WellTool.Poi.Tests
     /// <summary>
     /// NumericCellValueTest 测试
     /// </summary>
-    [Collection("EPPlusCollection")]
     public class NumericCellValueTest
     {
         [Fact]

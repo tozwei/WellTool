@@ -118,7 +118,7 @@ public static class ClassUtil
 	/// <summary>
 	/// 获取类名
 	/// </summary>
-	public static string GetClassName(Type type) => GetSimpleName(type);
+	public static string GetClassName(Type type) => type == null ? null : GetSimpleName(type);
 
 	/// <summary>
 	/// 获取类名

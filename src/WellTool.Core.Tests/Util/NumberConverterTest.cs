@@ -10,7 +10,7 @@ public class NumberConverterTest
     public void ConvertTest()
     {
         var converter = new NumberConverter(typeof(int));
-        Assert.Equal(123, converter.Convert("123", typeof(int)));
+        Assert.Equal(123, (int)converter.Convert("123", typeof(int)));
     }
 
     [Fact]

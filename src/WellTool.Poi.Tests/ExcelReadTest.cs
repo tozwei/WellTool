@@ -7,7 +7,6 @@ namespace WellTool.Poi.Tests
     /// <summary>
     /// ExcelReadTest 测试
     /// </summary>
-    [Collection("EPPlusCollection")]
     public class ExcelReadTest
     {
         [Fact]

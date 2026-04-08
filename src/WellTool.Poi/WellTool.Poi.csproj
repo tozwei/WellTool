@@ -17,18 +17,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="EPPlus" Version="7.0.10" />
+		<PackageReference Include="MiniExcel" Version="1.30.2" />
 		<PackageReference Include="NPOI" Version="2.6.2" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Update="EPPlusLicense.config">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
 	</ItemGroup>
 
 </Project>

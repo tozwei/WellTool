@@ -152,7 +152,7 @@ public class StrUtilTest
     [Fact]
     public void StripTest()
     {
-        Assert.Equal("abc", StrUtil.Strip("abc", "a", "c"));
+        Assert.Equal("b", StrUtil.Strip("abc", "a", "c"));
     }
 
     [Fact]
@@ -188,20 +188,20 @@ public class StrUtilTest
     [Fact]
     public void ReplaceTest()
     {
-        Assert.Equal("aXcXd", StrUtil.Replace("a_b_c_d", 1, 5, "X"));
+        Assert.Equal("aX_d", StrUtil.Replace("a_b_c_d", 1, 5, "X"));
     }
 
     [Fact]
     public void ReplaceCharsTest()
     {
-        Assert.Equal("aXcXd", StrUtil.ReplaceChars("a_b_c_d", '_', 'X'));
+        Assert.Equal("aXbXcXd", StrUtil.ReplaceChars("a_b_c_d", '_', 'X'));
     }
 
     [Fact]
     public void IndexedTest()
     {
         var indexed = StrUtil.Indexed("abc");
-        Assert.Equal("[0]=[1]=[2]", string.Join("", indexed.Select(kv => $"{kv.Key}={kv.Value}")));
+        Assert.Equal("0=a1=b2=c", string.Join("", indexed.Select(kv => $"{kv.Key}={kv.Value}")));
     }
 
     [Fact]
@@ -227,14 +227,14 @@ public class StrUtilTest
     [Fact]
     public void AppendIfMissingTest()
     {
-        Assert.Equal("abc", StrUtil.AppendIfMissing("abc", "x"));
+        Assert.Equal("abc", StrUtil.AppendIfMissing("abc", "abc"));
         Assert.Equal("abcx", StrUtil.AppendIfMissing("abc", "x"));
     }
 
     [Fact]
     public void PrependIfMissingTest()
     {
-        Assert.Equal("abc", StrUtil.PrependIfMissing("abc", "x"));
+        Assert.Equal("abc", StrUtil.PrependIfMissing("abc", "abc"));
         Assert.Equal("xabc", StrUtil.PrependIfMissing("abc", "x"));
     }
 

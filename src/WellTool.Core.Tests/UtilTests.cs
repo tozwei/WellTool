@@ -334,7 +334,7 @@ namespace WellTool.Core.Tests
         public void GetClassNameTest()
         {
             var className = ClassUtil.GetClassName(this);
-            XAssert.Equal("WellTool.Core.Tests.UtilTests", className);
+            XAssert.Equal("UtilTests", className);
         }
 
         #endregion

@@ -61,7 +61,7 @@ public static class NumberChineseFormatter
 	public static string Format(int number, bool isSimple = true)
 	{
 		if (number == 0)
-			return CHINESE_DIGITS[0];
+			return isSimple ? CHINESE_DIGITS[0] : ToUpper(0);
 
 		var negative = number < 0;
 		if (negative)
@@ -73,12 +73,16 @@ public static class NumberChineseFormatter
 		while (number > 0)
 		{
 			var n = number % 10;
-			if (n > 0 || (unitsIndex > 0 && sb.Length > 0))
+			if (n > 0 || unitsIndex == 1 || unitsIndex == 2) // 处理十位和百位
 			{
-				if (sb.Length > 0 && n > 0 && unitsIndex < UNITS.Length)
-					sb.Insert(0, UNITS[unitsIndex]);
+				if (sb.Length > 0 && unitsIndex < UNITS.Length)
+					sb.Insert(0, isSimple ? UNITS[unitsIndex] : ToUpperUnit(unitsIndex));
+				else if (unitsIndex == 4) // 万位
+					sb.Insert(0, isSimple ? "万" : "万");
 				if (n > 0)
-					sb.Insert(0, CHINESE_DIGITS[n]);
+					sb.Insert(0, isSimple ? CHINESE_DIGITS[n] : ToUpper(n));
+				else if (unitsIndex == 2) // 处理百位
+					sb.Insert(0, isSimple ? CHINESE_DIGITS[0] : ToUpper(0));
 			}
 			number /= 10;
 			unitsIndex++;
@@ -89,11 +93,21 @@ public static class NumberChineseFormatter
 		{
 			sb.Remove(0, 1);
 		}
+		else if (sb.ToString().StartsWith("壹拾"))
+		{
+			sb.Remove(0, 1);
+		}
 
 		if (negative)
 			sb.Insert(0, "负");
 
 		return sb.ToString();
+	}
+
+	private static string ToUpperUnit(int unitIndex)
+	{
+		var upperUnits = new[] { "", "拾", "佰", "仟" };
+		return upperUnits[unitIndex];
 	}
 
 	private static string ToUpper(int n)

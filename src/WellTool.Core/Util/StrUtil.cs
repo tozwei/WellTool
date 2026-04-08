@@ -152,7 +152,7 @@ public static class StrUtil
 		{
 			return str;
 		}
-		return str.Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\n", "");
+		return str.Replace(" ", "").Replace("\t", "").Replace("\r", "").Replace("\n", "").Replace("\u00A0", "").Replace("\u3000", "");
 	}
 
 	/// <summary>

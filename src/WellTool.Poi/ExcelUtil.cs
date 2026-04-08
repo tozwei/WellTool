@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//
+
 // http://www.apache.org/licenses/LICENSE-2.0
-//
+
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -13,7 +13,6 @@
 
 using System.IO;
 using System.Text.RegularExpressions;
-using OfficeOpenXml;
 
 namespace WellTool.Poi;
 
@@ -22,14 +21,6 @@ namespace WellTool.Poi;
 /// </summary>
 public class ExcelUtil
 {
-    /// <summary>
-    /// 静态构造函数，设置EPPlus许可证
-    /// </summary>
-    static ExcelUtil()
-    {
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-    }
-
     /// <summary>
     /// 单例实例
     /// </summary>
@@ -54,7 +45,14 @@ public class ExcelUtil
     /// <returns>Excel读取器</returns>
     public static ExcelReader GetReader(string filePath)
     {
-        return GetReader(filePath, 0);
+        try
+        {
+            return new ExcelReader(filePath);
+        }
+        catch (System.Exception ex)
+        {
+            throw new POIException("创建 Excel 读取器失败", ex);
+        }
     }
 
     /// <summary>
@@ -67,8 +65,7 @@ public class ExcelUtil
     {
         try
         {
-            var package = new ExcelPackage(new FileInfo(filePath));
-            return new ExcelReader(package, sheetIndex);
+            return new ExcelReader(filePath, sheetIndex);
         }
         catch (System.Exception ex)
         {
@@ -86,8 +83,7 @@ public class ExcelUtil
     {
         try
         {
-            var package = new ExcelPackage(new FileInfo(filePath));
-            return new ExcelReader(package, sheetName);
+            return new ExcelReader(filePath, sheetName);
         }
         catch (System.Exception ex)
         {
@@ -102,7 +98,14 @@ public class ExcelUtil
     /// <returns>Excel读取器</returns>
     public static ExcelReader GetReader(Stream stream)
     {
-        return GetReader(stream, 0);
+        try
+        {
+            return new ExcelReader(stream);
+        }
+        catch (System.Exception ex)
+        {
+            throw new POIException("创建 Excel 读取器失败", ex);
+        }
     }
 
     /// <summary>
@@ -115,8 +118,7 @@ public class ExcelUtil
     {
         try
         {
-            var package = new ExcelPackage(stream);
-            return new ExcelReader(package, sheetIndex);
+            return new ExcelReader(stream);
         }
         catch (System.Exception ex)
         {
@@ -134,8 +136,7 @@ public class ExcelUtil
     {
         try
         {
-            var package = new ExcelPackage(stream);
-            return new ExcelReader(package, sheetName);
+            return new ExcelReader(stream, sheetName);
         }
         catch (System.Exception ex)
         {
@@ -153,8 +154,7 @@ public class ExcelUtil
     {
         try
         {
-            var package = new ExcelPackage();
-            return new ExcelWriter(package);
+            return new ExcelWriter(Path.GetTempFileName());
         }
         catch (System.Exception ex)
         {
@@ -171,8 +171,7 @@ public class ExcelUtil
     {
         try
         {
-            var package = new ExcelPackage(new FileInfo(filePath));
-            return new ExcelWriter(package);
+            return new ExcelWriter(filePath);
         }
         catch (System.Exception ex)
         {
@@ -190,8 +189,9 @@ public class ExcelUtil
     {
         try
         {
-            var package = new ExcelPackage(new FileInfo(filePath));
-            return new ExcelWriter(package, sheetName);
+            var writer = new ExcelWriter(filePath);
+            writer.CreateSheet(sheetName);
+            return writer;
         }
         catch (System.Exception ex)
         {
@@ -208,8 +208,7 @@ public class ExcelUtil
     {
         try
         {
-            var package = new ExcelPackage(stream);
-            return new ExcelWriter(package);
+            return new ExcelWriter(stream);
         }
         catch (System.Exception ex)
         {
@@ -227,8 +226,9 @@ public class ExcelUtil
     {
         try
         {
-            var package = new ExcelPackage(stream);
-            return new ExcelWriter(package, sheetName);
+            var writer = new ExcelWriter(stream);
+            writer.CreateSheet(sheetName);
+            return writer;
         }
         catch (System.Exception ex)
         {
@@ -246,8 +246,7 @@ public class ExcelUtil
     {
         try
         {
-            var package = new ExcelPackage();
-            return new BigExcelWriter(package);
+            return new BigExcelWriter(Path.GetTempFileName());
         }
         catch (System.Exception ex)
         {
@@ -264,8 +263,7 @@ public class ExcelUtil
     {
         try
         {
-            var package = new ExcelPackage(new FileInfo(filePath));
-            return new BigExcelWriter(package);
+            return new BigExcelWriter(filePath);
         }
         catch (System.Exception ex)
         {
@@ -283,8 +281,7 @@ public class ExcelUtil
     {
         try
         {
-            var package = new ExcelPackage(new FileInfo(filePath));
-            return new BigExcelWriter(package, sheetName);
+            return new BigExcelWriter(filePath, sheetName);
         }
         catch (System.Exception ex)
         {
