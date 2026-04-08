@@ -1,5 +1,7 @@
 using Xunit;
 using WellTool.Core;
+using WellTool.Core.Util;
+using System.Collections.Generic;
 
 namespace WellTool.Core.Tests
 {
@@ -9,11 +11,13 @@ namespace WellTool.Core.Tests
     public class Issue3660Test
     {
         [Fact]
-        public void TestIssue()
+        public void SplitTest()
         {
-            // Issue 3660: 测试特定场景
-            var result = true;
-            Assert.True(result);
+            var split = StrUtil.Split("", ',');
+            Assert.Equal(1, split.Length);
+
+            split = StrUtil.SplitTrim("", ',');
+            Assert.Equal(0, split.Length);
         }
     }
 }

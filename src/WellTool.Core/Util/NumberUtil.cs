@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace WellTool.Core.Util;
 
@@ -7,6 +8,19 @@ namespace WellTool.Core.Util;
 /// </summary>
 public static class NumberUtil
 {
+	/// <summary>
+	/// 判断数字是否有效（非NaN、非Infinity）
+	/// </summary>
+	public static bool IsValidNumber(object value)
+	{
+		if (value == null)
+			return false;
+		if (value is double d)
+			return !double.IsNaN(d) && !double.IsInfinity(d);
+		if (value is float f)
+			return !float.IsNaN(f) && !float.IsInfinity(f);
+		return true;
+	}
 	/// <summary>
 	/// 是否为数字
 	/// </summary>
@@ -407,5 +421,68 @@ public static class NumberUtil
 		foreach (var v in values)
 			sum += v;
 		return sum / values.Length;
+	}
+
+	/// <summary>
+	/// 数字转BigDecimal
+	/// null或无效数字转换为0
+	/// </summary>
+	/// <param name="numberStr">数字字符串</param>
+	/// <returns>BigDecimal</returns>
+	public static decimal ToDecimal(string numberStr)
+	{
+		if (string.IsNullOrWhiteSpace(numberStr))
+			return 0;
+
+		if (decimal.TryParse(numberStr, NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
+			return result;
+		return 0;
+	}
+
+	/// <summary>
+	/// 将数字字符串转换为BigDecimal，如果为NaN则抛出异常
+	/// </summary>
+	/// <param name="numberStr">数字字符串</param>
+	/// <returns>BigDecimal</returns>
+	/// <exception cref="ArgumentException">如果数字无效</exception>
+	public static decimal ToBigDecimal(string numberStr)
+	{
+		if (string.IsNullOrWhiteSpace(numberStr))
+			return 0;
+
+		// 检查是否为NaN
+		if (numberStr.Equals("NaN", StringComparison.OrdinalIgnoreCase))
+			throw new ArgumentException("Number is invalid!");
+
+		if (decimal.TryParse(numberStr, NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
+			return result;
+
+		throw new ArgumentException("Number is invalid!");
+	}
+
+	/// <summary>
+	/// 保留固定位数小数
+	/// 采用四舍五入策略
+	/// </summary>
+	/// <param name="value">值</param>
+	/// <param name="scale">保留小数位数</param>
+	/// <returns>新值字符串</returns>
+	public static string RoundStr(string value, int scale)
+	{
+		if (string.IsNullOrEmpty(value))
+			return value;
+		return Math.Round(ToDecimal(value), scale).ToString($"F{scale}", CultureInfo.InvariantCulture).TrimEnd('0').TrimEnd('.');
+	}
+
+	/// <summary>
+	/// 保留固定位数小数
+	/// 采用四舍五入策略
+	/// </summary>
+	/// <param name="value">值</param>
+	/// <param name="scale">保留小数位数</param>
+	/// <returns>新值字符串</returns>
+	public static string RoundStr(double value, int scale)
+	{
+		return RoundStr(value.ToString(CultureInfo.InvariantCulture), scale);
 	}
 }

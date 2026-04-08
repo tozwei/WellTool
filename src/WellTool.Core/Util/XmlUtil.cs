@@ -254,7 +254,7 @@ public static class XmlUtil
 		{
 			// 只有key和bean的名称匹配时才做单一对象转换
 			var firstKey = new List<string>(map.Keys)[0];
-			if (bean.Name.LocalName.Equals(firstKey, StringComparison.OrdinalIgnoreCase))
+			if (bean.Name.Equals(firstKey, StringComparison.OrdinalIgnoreCase))
 			{
 				return BeanUtil.ToBean(map[firstKey], bean, copyOptions);
 			}

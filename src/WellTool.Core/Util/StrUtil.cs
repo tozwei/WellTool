@@ -759,8 +759,18 @@ public static class StrUtil
 	public static string[] Split(string str, char separator)
 	{
 		if (IsEmpty(str))
-			return Array.Empty<string>();
+			return new string[] { "" };
 		return str.Split(separator);
+	}
+
+	/// <summary>
+	/// 分割字符串并去除空白
+	/// </summary>
+	public static string[] SplitTrim(string str, char separator)
+	{
+		if (IsEmpty(str))
+			return Array.Empty<string>();
+		return str.Split(separator).Select(s => s.Trim()).Where(s => !IsEmpty(s)).ToArray();
 	}
 
 	/// <summary>

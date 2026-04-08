@@ -1,5 +1,6 @@
 using Xunit;
 using WellTool.Core;
+using WellTool.Core.Util;
 
 namespace WellTool.Core.Tests
 {
@@ -9,11 +10,9 @@ namespace WellTool.Core.Tests
     public class Issue3423Test
     {
         [Fact]
-        public void TestIssue()
+        public void ToBigDecimalOfNaNTest()
         {
-            // Issue 3423: 测试特定场景
-            var result = true;
-            Assert.True(result);
+            Assert.Throws<ArgumentException>(() => NumberUtil.ToBigDecimal("NaN"));
         }
     }
 }

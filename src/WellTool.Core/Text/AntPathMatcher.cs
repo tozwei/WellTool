@@ -226,11 +226,14 @@ namespace WellTool.Core.Text
             private string BuildRegex(string pattern)
             {
                 var separator = Regex.Escape(_pathSeparator);
-                var parts = pattern.Split(new[] { _pathSeparator }, StringSplitOptions.None);
+                var parts = pattern.Split(new[] { _pathSeparator }, StringSplitOptions.RemoveEmptyEntries);
                 var regexParts = new List<string>();
 
-                // 检查模式是否以 ** 结尾（匹配零个或多个目录）
-                bool patternEndsWithDoubleStar = parts.Length > 0 && parts[parts.Length - 1] == "**";
+                // 处理模式以 / 开头的情况
+                if (pattern.StartsWith(_pathSeparator))
+                {
+                    regexParts.Add(separator);
+                }
 
                 for (int i = 0; i < parts.Length; i++)
                 {
@@ -238,29 +241,52 @@ namespace WellTool.Core.Text
                     
                     if (part == "**")
                     {
-                        // ** 匹配零个或多个目录层级
-                        // 如果 ** 不在最后，后面必须跟其他部分
-                        if (i < parts.Length - 1)
+                        if (i == 0 && i == parts.Length - 1)
                         {
-                            // ** 后面还有其他部分，允许匹配一个或多个目录
-                            regexParts.Add("(?:.+" + separator + ")*");
+                            // 单独的 ** 匹配任何路径
+                            return ".*";
+                        }
+                        else if (i == 0)
+                        {
+                            // 以 ** 开头，匹配零个或多个目录
+                            regexParts.Add("(?:[^" + separator + "]+" + separator + ")*");
+                        }
+                        else if (i == parts.Length - 1)
+                        {
+                            // 以 ** 结尾，匹配零个或多个目录
+                            regexParts.Add("(?:" + separator + "[^" + separator + "]+)*");
                         }
                         else
                         {
-                            // ** 在最后，允许匹配零个或多个目录层级
-                            regexParts.Add("(?:.+" + separator + ")*");
+                            // 在中间，匹配零个或多个目录
+                            regexParts.Add("(?:" + separator + "[^" + separator + "]+)*" + separator);
                         }
                     }
                     else if (part == "*")
                     {
+                        // * 匹配当前路径段的任何字符，不包括分隔符
                         regexParts.Add("[^" + separator + "]*");
+
+                        // 添加路径分隔符（除了最后一个部分）
+                        if (i < parts.Length - 1)
+                        {
+                            regexParts.Add(separator);
+                        }
                     }
                     else if (part.Contains('*') || part.Contains('?'))
                     {
-                        regexParts.Add(ConvertToRegex(part));
+                        // 转换包含 * 和 ? 的路径段
+                        regexParts.Add(ConvertToRegex(part, separator));
+
+                        // 添加路径分隔符（除了最后一个部分）
+                        if (i < parts.Length - 1)
+                        {
+                            regexParts.Add(separator);
+                        }
                     }
                     else if (part.StartsWith("{") && part.EndsWith("}"))
                     {
+                        // 处理变量
                         var variable = part.Substring(1, part.Length - 2);
                         var colonIndex = variable.IndexOf(':');
                         if (colonIndex > 0)
@@ -273,31 +299,35 @@ namespace WellTool.Core.Text
                         {
                             regexParts.Add("([^" + separator + "]+)");
                         }
+
+                        // 添加路径分隔符（除了最后一个部分）
+                        if (i < parts.Length - 1)
+                        {
+                            regexParts.Add(separator);
+                        }
                     }
                     else
                     {
+                        // 普通路径段
                         regexParts.Add(Regex.Escape(part));
+
+                        // 添加路径分隔符（除了最后一个部分）
+                        if (i < parts.Length - 1)
+                        {
+                            regexParts.Add(separator);
+                        }
                     }
                 }
 
-                // 如果模式不以 ** 结尾，添加结尾锚点确保匹配完整路径
-                // 但如果最后一部分是 **，则不需要额外处理
-                var result = string.Join(separator, regexParts);
-                
-                // 对于不以 ** 结尾的模式，如果是简单模式（如 a*），确保匹配完整
-                if (!patternEndsWithDoubleStar && !pattern.Contains("**"))
-                {
-                    // 已经使用了 ^ 和 $ 锚点，不需要额外处理
-                }
-                
-                return result;
+                return string.Join("", regexParts);
             }
 
-            private string ConvertToRegex(string segment)
+            private string ConvertToRegex(string segment, string separator)
             {
                 var regex = Regex.Escape(segment);
                 regex = regex.Replace("\\?", ".");
-                regex = regex.Replace("\\*", ".*");
+                // * 只匹配当前路径段的字符，不包括分隔符
+                regex = regex.Replace("\\*", "[^" + separator + "]*");
                 return regex;
             }
         }

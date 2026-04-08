@@ -88,4 +88,46 @@ public static class EnumUtil
 
         return Enum.TryParse<T>(value, out _);
     }
+
+    /// <summary>
+    /// 根据映射函数获取枚举值
+    /// </summary>
+    /// <typeparam name="T">枚举类型</typeparam>
+    /// <typeparam name="V">映射值类型</typeparam>
+    /// <param name="func">映射函数</param>
+    /// <param name="value">要匹配的值</param>
+    /// <returns>匹配的枚举值，如果未找到返回null</returns>
+    public static T GetBy<T, V>(Func<T, V> func, V value) where T : struct, Enum
+    {
+        var values = GetValues<T>();
+        foreach (var val in values)
+        {
+            if (EqualityComparer<V>.Default.Equals(func(val), value))
+            {
+                return val;
+            }
+        }
+        return default;
+    }
+
+    /// <summary>
+    /// 根据映射函数获取枚举值
+    /// </summary>
+    /// <typeparam name="T">枚举类型</typeparam>
+    /// <typeparam name="V">映射值类型</typeparam>
+    /// <param name="func">映射函数</param>
+    /// <param name="value">要匹配的值</param>
+    /// <returns>匹配的枚举值，如果未找到返回null</returns>
+    public static T? GetByOrNull<T, V>(Func<T, V> func, V value) where T : struct, Enum
+    {
+        var values = GetValues<T>();
+        foreach (var val in values)
+        {
+            if (EqualityComparer<V>.Default.Equals(func(val), value))
+            {
+                return val;
+            }
+        }
+        return null;
+    }
 }
