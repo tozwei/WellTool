@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using MiniExcelLibs;
 
 namespace WellTool.Poi;
@@ -25,8 +24,8 @@ namespace WellTool.Poi;
 /// </summary>
 public class ExcelReader : IDisposable
 {
-    private readonly string _filePath;
-    private readonly Stream _stream;
+    private readonly string? _filePath;
+    private Stream? _stream;
     private readonly bool _isStreamMode;
     private List<string> _sheetNames = new();
     private string _currentSheetName = "Sheet1";
@@ -105,12 +104,12 @@ public class ExcelReader : IDisposable
     {
         try
         {
-            if (_isStreamMode)
+            if (_isStreamMode && _stream != null)
             {
                 _stream.Position = 0;
                 _sheetNames = MiniExcel.GetSheetNames(_stream).ToList();
             }
-            else
+            else if (_filePath != null)
             {
                 _sheetNames = MiniExcel.GetSheetNames(_filePath).ToList();
             }
@@ -169,24 +168,29 @@ public class ExcelReader : IDisposable
         {
             var result = new List<List<object?>>();
             
-            IEnumerable<IDictionary<string, object?>> rows;
-            if (_isStreamMode)
+            IEnumerable<dynamic> rows;
+            if (_isStreamMode && _stream != null)
             {
                 _stream.Position = 0;
                 rows = _stream.Query(sheetName: sheetName, useHeaderRow: false);
             }
-            else
+            else if (_filePath != null)
             {
                 rows = MiniExcel.Query(_filePath, sheetName: sheetName, useHeaderRow: false);
+            }
+            else
+            {
+                return result;
             }
 
             foreach (var row in rows)
             {
                 var rowData = new List<object?>();
+                var dict = (IDictionary<string, object>)row;
                 int colIndex = 1;
-                while (row.ContainsKey(GetColumnName(colIndex)))
+                while (dict.ContainsKey(GetColumnName(colIndex)))
                 {
-                    rowData.Add(row[GetColumnName(colIndex)]);
+                    rowData.Add(dict[GetColumnName(colIndex)]);
                     colIndex++;
                 }
                 result.Add(rowData);
@@ -245,15 +249,19 @@ public class ExcelReader : IDisposable
         {
             var result = new List<Dictionary<string, object?>>();
             
-            IEnumerable<IDictionary<string, object?>> rows;
-            if (_isStreamMode)
+            IEnumerable<dynamic> rows;
+            if (_isStreamMode && _stream != null)
             {
                 _stream.Position = 0;
                 rows = _stream.Query(sheetName: sheetName, useHeaderRow: true);
             }
-            else
+            else if (_filePath != null)
             {
                 rows = MiniExcel.Query(_filePath, sheetName: sheetName, useHeaderRow: true);
+            }
+            else
+            {
+                return result;
             }
 
             // 跳过表头行
@@ -265,7 +273,8 @@ public class ExcelReader : IDisposable
             foreach (var row in rows)
             {
                 var dict = new Dictionary<string, object?>();
-                foreach (var kvp in row)
+                var rowDict = (IDictionary<string, object>)row;
+                foreach (var kvp in rowDict)
                 {
                     dict[kvp.Key] = kvp.Value;
                 }
@@ -320,15 +329,19 @@ public class ExcelReader : IDisposable
         {
             var dataTable = new DataTable(tableName);
             
-            IEnumerable<IDictionary<string, object?>> rows;
-            if (_isStreamMode)
+            IEnumerable<dynamic> rows;
+            if (_isStreamMode && _stream != null)
             {
                 _stream.Position = 0;
                 rows = _stream.Query(sheetName: sheetName, useHeaderRow: true);
             }
-            else
+            else if (_filePath != null)
             {
                 rows = MiniExcel.Query(_filePath, sheetName: sheetName, useHeaderRow: true);
+            }
+            else
+            {
+                return dataTable;
             }
 
             var rowList = rows.ToList();
@@ -338,7 +351,7 @@ public class ExcelReader : IDisposable
             }
 
             // 添加列
-            var firstRow = rowList[0];
+            var firstRow = (IDictionary<string, object>)rowList[0];
             foreach (var key in firstRow.Keys)
             {
                 dataTable.Columns.Add(key, typeof(object));
@@ -348,13 +361,14 @@ public class ExcelReader : IDisposable
             var dataRows = rowList.Skip(headerRowIndex + 1);
             foreach (var row in dataRows)
             {
+                var rowDict = (IDictionary<string, object>)row;
                 var dataRow = dataTable.NewRow();
-                foreach (var col in dataTable.Columns)
+                foreach (DataColumn col in dataTable.Columns)
                 {
                     var colName = col.ColumnName;
-                    if (row.ContainsKey(colName))
+                    if (rowDict.ContainsKey(colName))
                     {
-                        dataRow[colName] = row[colName] ?? DBNull.Value;
+                        dataRow[colName] = rowDict[colName] ?? DBNull.Value;
                     }
                 }
                 dataTable.Rows.Add(dataRow);
@@ -409,15 +423,19 @@ public class ExcelReader : IDisposable
             var result = new List<T>();
             var properties = typeof(T).GetProperties();
 
-            IEnumerable<IDictionary<string, object?>> rows;
-            if (_isStreamMode)
+            IEnumerable<dynamic> rows;
+            if (_isStreamMode && _stream != null)
             {
                 _stream.Position = 0;
                 rows = _stream.Query(sheetName: sheetName, useHeaderRow: true);
             }
-            else
+            else if (_filePath != null)
             {
                 rows = MiniExcel.Query(_filePath, sheetName: sheetName, useHeaderRow: true);
+            }
+            else
+            {
+                return result;
             }
 
             // 跳过表头行
@@ -429,11 +447,12 @@ public class ExcelReader : IDisposable
             foreach (var row in rows)
             {
                 var item = new T();
+                var rowDict = (IDictionary<string, object>)row;
                 foreach (var property in properties)
                 {
-                    if (row.ContainsKey(property.Name))
+                    if (rowDict.ContainsKey(property.Name))
                     {
-                        var value = row[property.Name];
+                        var value = rowDict[property.Name];
                         if (value != null)
                         {
                             try
