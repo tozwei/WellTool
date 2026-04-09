@@ -22,7 +22,7 @@ public static partial class HttpUtil
     /// <returns>是否 HTTPS</returns>
     public static bool IsHttps(string url)
     {
-        return url.StartsWith("https:", StringComparison.OrdinalIgnoreCase);
+        return url != null && url.StartsWith("https:", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>
@@ -32,7 +32,7 @@ public static partial class HttpUtil
     /// <returns>是否 HTTP</returns>
     public static bool IsHttp(string url)
     {
-        return url.StartsWith("http:", StringComparison.OrdinalIgnoreCase);
+        return url != null && url.StartsWith("http:", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>
@@ -256,25 +256,29 @@ public static partial class HttpUtil
         var parts = new List<string>();
 
         foreach (var kvp in paramMap)
-        {
-            if (string.IsNullOrEmpty(kvp.Key))
             {
-                continue;
+                if (string.IsNullOrEmpty(kvp.Key))
+                {
+                    continue;
+                }
+
+                var value = kvp.Value?.ToString() ?? string.Empty;
+                if (string.IsNullOrEmpty(value))
+                {
+                    continue;
+                }
+                var encodedKey = UrlEncode(kvp.Key, encoding);
+                var encodedValue = UrlEncode(value, encoding);
+
+                if (isFormUrlEncoded)
+                {
+                    // x-www-form-urlencoded 模式下空格编码为 '+'
+                    encodedKey = encodedKey.Replace("%20", "+");
+                    encodedValue = encodedValue.Replace("%20", "+");
+                }
+
+                parts.Add($"{encodedKey}={encodedValue}");
             }
-
-            var value = kvp.Value?.ToString() ?? string.Empty;
-            var encodedKey = UrlEncode(kvp.Key, encoding);
-            var encodedValue = UrlEncode(value, encoding);
-
-            if (isFormUrlEncoded)
-            {
-                // x-www-form-urlencoded 模式下空格编码为 '+'
-                encodedKey = encodedKey.Replace("%20", "+");
-                encodedValue = encodedValue.Replace("%20", "+");
-            }
-
-            parts.Add($"{encodedKey}={encodedValue}");
-        }
 
         return string.Join("&", parts);
     }
@@ -497,7 +501,7 @@ public static partial class HttpUtil
             ".txt" => "text/plain",
             ".html" or ".htm" => "text/html",
             ".css" => "text/css",
-            ".js" => "application/javascript",
+            ".js" => "text/javascript",
             ".json" => "application/json",
             ".xml" => "application/xml",
             ".jpg" or ".jpeg" => "image/jpeg",

@@ -363,12 +363,12 @@ public class ExcelWriter : IDisposable
             {
                 // 单个工作表直接保存
                 var sheet = convertedSheets.Values.First();
-                MiniExcel.SaveAs(filePath, sheet);
+                MiniExcel.SaveAs(filePath, sheet, overwriteFile: true);
             }
             else
             {
                 // 多个工作表
-                MiniExcel.SaveAs(filePath, convertedSheets);
+                MiniExcel.SaveAs(filePath, convertedSheets, overwriteFile: true);
             }
         }
         catch (System.Exception ex)
@@ -391,7 +391,14 @@ public class ExcelWriter : IDisposable
 
         // 获取第一行作为表头
         var headerRow = rows[0];
-        var headers = headerRow.Select((h, idx) => GetColumnName(idx + 1)).ToList();
+        var headers = new List<string>();
+        
+        // 使用实际的表头数据作为字典的键
+        for (int i = 0; i < headerRow.Count; i++)
+        {
+            var header = headerRow[i]?.ToString() ?? GetColumnName(i + 1);
+            headers.Add(header);
+        }
 
         // 从第二行开始处理数据
         for (int i = 1; i < rows.Count; i++)

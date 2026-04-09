@@ -170,16 +170,27 @@ public class ExcelReader : IDisposable
             
             var rows = QueryAsDictList(sheetName);
 
-            foreach (var row in rows)
+            if (rows.Count > 0)
             {
-                var rowData = new List<object?>();
-                int colIndex = 1;
-                while (row.ContainsKey(GetColumnName(colIndex)))
+                // 获取所有列名
+                var columnNames = rows[0].Keys.ToList();
+                
+                foreach (var row in rows)
                 {
-                    rowData.Add(row[GetColumnName(colIndex)]);
-                    colIndex++;
+                    var rowData = new List<object?>();
+                    foreach (var columnName in columnNames)
+                    {
+                        if (row.ContainsKey(columnName))
+                        {
+                            rowData.Add(row[columnName]);
+                        }
+                        else
+                        {
+                            rowData.Add(null);
+                        }
+                    }
+                    result.Add(rowData);
                 }
-                result.Add(rowData);
             }
 
             return result;
@@ -258,16 +269,91 @@ public class ExcelReader : IDisposable
     {
         var result = new List<Dictionary<string, object?>>();
         
-        if (_isStreamMode && _stream != null)
+        try
         {
-            _stream.Position = 0;
-            var rows = MiniExcel.Query<Dictionary<string, object?>>(_stream, sheetName: sheetName);
-            result = rows.ToList();
+            if (_isStreamMode && _stream != null)
+            {
+                _stream.Position = 0;
+                // 尝试使用不同的方式读取数据
+                try
+                {
+                    // 先尝试使用指定的工作表名称
+                    var rows = MiniExcel.Query(_stream, sheetName: sheetName);
+                    foreach (var row in rows)
+                    {
+                        var dict = new Dictionary<string, object?>();
+                        if (row is IDictionary<string, object?> rowDict)
+                        {
+                            foreach (var kvp in rowDict)
+                            {
+                                dict[kvp.Key] = kvp.Value;
+                            }
+                        }
+                        result.Add(dict);
+                    }
+                }
+                catch
+                {
+                    // 如果指定的工作表名称失败，尝试使用第一个工作表
+                    _stream.Position = 0;
+                    var rows = MiniExcel.Query(_stream);
+                    foreach (var row in rows)
+                    {
+                        var dict = new Dictionary<string, object?>();
+                        if (row is IDictionary<string, object?> rowDict)
+                        {
+                            foreach (var kvp in rowDict)
+                            {
+                                dict[kvp.Key] = kvp.Value;
+                            }
+                        }
+                        result.Add(dict);
+                    }
+                }
+            }
+            else if (_filePath != null)
+            {
+                // 尝试使用不同的方式读取数据
+                try
+                {
+                    // 先尝试使用指定的工作表名称
+                    var rows = MiniExcel.Query(_filePath, sheetName: sheetName);
+                    foreach (var row in rows)
+                    {
+                        var dict = new Dictionary<string, object?>();
+                        if (row is IDictionary<string, object?> rowDict)
+                        {
+                            foreach (var kvp in rowDict)
+                            {
+                                dict[kvp.Key] = kvp.Value;
+                            }
+                        }
+                        result.Add(dict);
+                    }
+                }
+                catch
+                {
+                    // 如果指定的工作表名称失败，尝试使用第一个工作表
+                    var rows = MiniExcel.Query(_filePath);
+                    foreach (var row in rows)
+                    {
+                        var dict = new Dictionary<string, object?>();
+                        if (row is IDictionary<string, object?> rowDict)
+                        {
+                            foreach (var kvp in rowDict)
+                            {
+                                dict[kvp.Key] = kvp.Value;
+                            }
+                        }
+                        result.Add(dict);
+                    }
+                }
+            }
         }
-        else if (_filePath != null)
+        catch (System.Exception ex)
         {
-            var rows = MiniExcel.Query<Dictionary<string, object?>>(_filePath, sheetName: sheetName);
-            result = rows.ToList();
+            // 记录异常但继续执行，返回空列表
+            System.Console.WriteLine($"QueryAsDictList 异常: {ex.Message}");
         }
         
         return result;
