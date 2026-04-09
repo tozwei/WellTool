@@ -1,5 +1,7 @@
-using WellTool.Crypto.Digest;
+using System.IO;
+using System.Text;
 using Xunit;
+using WellTool.Crypto.Digest;
 
 namespace WellTool.Crypto.Tests.Digest
 {
@@ -9,10 +11,32 @@ namespace WellTool.Crypto.Tests.Digest
     public class Md5Tests
     {
         [Fact]
-        public void TestMD5()
+        public void DigestTest()
         {
-            // 这里只是一个占位符，具体实现需要根据 MD5 类的实际实现来编写
-            Assert.True(true);
+            var data = Encoding.UTF8.GetBytes("Hello, MD5!");
+            var digest = MD5.Digest(data);
+            Assert.NotNull(digest);
+            Assert.Equal(16, digest.Length); // MD5 摘要长度为 16 字节
+        }
+
+        [Fact]
+        public void DigestHexTest()
+        {
+            var data = "Hello, MD5!";
+            var digestHex = MD5.DigestHex(data);
+            Assert.NotNull(digestHex);
+            Assert.NotEmpty(digestHex);
+            Assert.Equal(32, digestHex.Length); // MD5 摘要长度为 32 个十六进制字符
+        }
+
+        [Fact]
+        public void DigestStreamTest()
+        {
+            var data = "Hello, MD5!";
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(data));
+            var digest = MD5.Digest(stream);
+            Assert.NotNull(digest);
+            Assert.Equal(16, digest.Length); // MD5 摘要长度为 16 字节
         }
     }
 }

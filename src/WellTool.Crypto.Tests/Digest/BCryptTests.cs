@@ -1,5 +1,6 @@
-using WellTool.Crypto.Digest;
+using System.Text;
 using Xunit;
+using WellTool.Crypto.Digest;
 
 namespace WellTool.Crypto.Tests.Digest
 {
@@ -9,10 +10,40 @@ namespace WellTool.Crypto.Tests.Digest
     public class BCryptTests
     {
         [Fact]
-        public void TestBCrypt()
+        public void HashTest()
         {
-            // 这里只是一个占位符，具体实现需要根据 BCrypt 类的实际实现来编写
-            Assert.True(true);
+            var password = "password123";
+            var hash = BCryptUtil.Hash(password);
+            Assert.NotNull(hash);
+            Assert.NotEmpty(hash);
+        }
+
+        [Fact]
+        public void VerifyTest()
+        {
+            var password = "password123";
+            var hash = BCryptUtil.Hash(password);
+            var result = BCryptUtil.Verify(password, hash);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void VerifyWithByteArrayTest()
+        {
+            var password = "password123";
+            var hash = BCryptUtil.Hash(password);
+            var passwordBytes = Encoding.UTF8.GetBytes(password);
+            var result = BCryptUtil.Verify(passwordBytes, hash);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void VerifyInvalidPasswordTest()
+        {
+            var password = "password123";
+            var hash = BCryptUtil.Hash(password);
+            var result = BCryptUtil.Verify("invalid", hash);
+            Assert.False(result);
         }
     }
 }
