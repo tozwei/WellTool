@@ -223,9 +223,46 @@ public abstract class HttpBase<T> where T : HttpBase<T>
 
         foreach (var entry in headers)
         {
-            foreach (var value in entry.Value)
+            var name = entry.Key;
+            var values = entry.Value;
+
+            if (string.IsNullOrEmpty(name) || values == null || values.Count == 0)
             {
-                SetHeader(entry.Key, value ?? string.Empty, isOverride);
+                continue;
+            }
+
+            var trimmedName = name.Trim();
+
+            // 不区分大小写查找已存在的头信息
+            var existingKey = Headers.Keys.FirstOrDefault(key => key.Equals(trimmedName, StringComparison.OrdinalIgnoreCase));
+
+            if (isOverride || existingKey == null)
+            {
+                if (existingKey != null)
+                {
+                    // 如果存在，先移除旧键
+                    Headers.Remove(existingKey);
+                }
+                // 添加新键值对
+                Headers[trimmedName] = new List<string>();
+                foreach (var value in values)
+                {
+                    if (value != null)
+                    {
+                        Headers[trimmedName].Add(value.Trim());
+                    }
+                }
+            }
+            else
+            {
+                // 添加到现有头信息列表
+                foreach (var value in values)
+                {
+                    if (value != null)
+                    {
+                        Headers[existingKey].Add(value.Trim());
+                    }
+                }
             }
         }
         return (T)this;

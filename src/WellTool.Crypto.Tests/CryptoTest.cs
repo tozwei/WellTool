@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using System;
+using System.Text;
 using Xunit;
 using WellTool.Crypto;
 using WellTool.Crypto.Asymmetric;
@@ -26,10 +27,98 @@ namespace WellTool.Crypto.Tests
     public class CryptoTest
     {
         [Fact]
-        public void TestCrypto()
+        public void CreateAESTest()
         {
-            // 这里只是一个占位符，具体实现需要根据 WellTool.Crypto 项目的实际实现来编写
-            Assert.True(true);
+            var key = Encoding.UTF8.GetBytes("1234567890123456");
+            var iv = Encoding.UTF8.GetBytes("1234567890123456");
+            var aes = CryptoUtil.CreateAES(key, iv);
+            Assert.NotNull(aes);
+        }
+
+        [Fact]
+        public void CreateDESTest()
+        {
+            var key = Encoding.UTF8.GetBytes("12345678");
+            var iv = Encoding.UTF8.GetBytes("12345678");
+            var des = CryptoUtil.CreateDES(key, iv);
+            Assert.NotNull(des);
+        }
+
+        [Fact]
+        public void CreateDESedeTest()
+        {
+            var key = Encoding.UTF8.GetBytes("123456789012345678901234");
+            var iv = Encoding.UTF8.GetBytes("12345678");
+            var desede = CryptoUtil.CreateDESede(key, iv);
+            Assert.NotNull(desede);
+        }
+
+        [Fact]
+        public void CreateRSATest()
+        {
+            var (publicKey, privateKey) = CryptoUtil.GenerateRsaKeyPair();
+            var rsa = CryptoUtil.CreateRSA(publicKey, privateKey);
+            Assert.NotNull(rsa);
+        }
+
+        [Fact]
+        public void CreateDigesterTest()
+        {
+            var digester = CryptoUtil.CreateDigester(DigestAlgorithm.SHA256);
+            Assert.NotNull(digester);
+        }
+
+        [Fact]
+        public void MD5Test()
+        {
+            var data = "Hello, World!";
+            var md5 = CryptoUtil.MD5(data);
+            Assert.NotNull(md5);
+            Assert.NotEmpty(md5);
+        }
+
+        [Fact]
+        public void SHA1Test()
+        {
+            var data = "Hello, World!";
+            var sha1 = CryptoUtil.SHA1(data);
+            Assert.NotNull(sha1);
+            Assert.NotEmpty(sha1);
+        }
+
+        [Fact]
+        public void SHA256Test()
+        {
+            var data = "Hello, World!";
+            var sha256 = CryptoUtil.SHA256(data);
+            Assert.NotNull(sha256);
+            Assert.NotEmpty(sha256);
+        }
+
+        [Fact]
+        public void GenerateSymmetricKeyTest()
+        {
+            var key = CryptoUtil.GenerateSymmetricKey(SymmetricAlgorithmType.AES);
+            Assert.NotNull(key);
+            Assert.Equal(32, key.Length); // 256 bits = 32 bytes
+        }
+
+        [Fact]
+        public void GenerateIVTest()
+        {
+            var iv = CryptoUtil.GenerateIV(SymmetricAlgorithmType.AES);
+            Assert.NotNull(iv);
+            Assert.Equal(16, iv.Length); // 128 bits = 16 bytes
+        }
+
+        [Fact]
+        public void GenerateRsaKeyPairTest()
+        {
+            var (publicKey, privateKey) = CryptoUtil.GenerateRsaKeyPair();
+            Assert.NotNull(publicKey);
+            Assert.NotNull(privateKey);
+            Assert.NotEmpty(publicKey);
+            Assert.NotEmpty(privateKey);
         }
     }
 }

@@ -1,6 +1,5 @@
 using WellTool.Crypto.Symmetric;
 using System.Text;
-using WellTool.Core.Util;
 using Xunit;
 
 namespace WellTool.Crypto.Tests.Symmetric
@@ -18,7 +17,7 @@ namespace WellTool.Crypto.Tests.Symmetric
             var aes = new AES(key, iv);
             var content = Encoding.UTF8.GetBytes("123456");
             var encrypted = aes.Encrypt(content);
-            var encryptHex = HexUtil.EncodeHexString(encrypted);
+            var encryptHex = Convert.ToHexString(encrypted);
             // 注意：由于 C# 版本会在密文前添加 IV，所以结果与 Java 版本不同
             Assert.NotNull(encryptHex);
         }
