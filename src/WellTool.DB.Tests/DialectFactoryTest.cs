@@ -13,6 +13,7 @@
 
 using Xunit;
 using WellTool.DB.Dialect;
+using WellTool.DB.Dialect.Impl;
 
 namespace WellTool.DB.Tests
 {
