@@ -1,16 +1,25 @@
+using System.Text;
 using Xunit;
 using WellTool.Crypto.Asymmetric;
-using System;
 
 namespace WellTool.Crypto.Tests.Asymmetric
 {
     public class SignTests
     {
         [Fact]
-        public void TestSign()
+        public void CreateTest()
         {
-            // 这里只是一个占位符，具体实现需要根据 RSA 类的实际实现来编写
-            Assert.True(true);
+            // 测试创建 Sign 对象
+            var sign = Sign.Create(SignAlgorithm.RSA_SHA256);
+            Assert.NotNull(sign);
+        }
+
+        [Fact]
+        public void CreateWithAsymmetricAlgorithmTest()
+        {
+            // 测试使用 AsymmetricAlgorithm 创建 Sign 对象
+            var sign = Sign.Create(AsymmetricAlgorithm.RSA);
+            Assert.NotNull(sign);
         }
     }
 }

@@ -1,5 +1,6 @@
-using WellTool.Crypto.Asymmetric;
+using System;
 using Xunit;
+using WellTool.Crypto.Asymmetric;
 
 namespace WellTool.Crypto.Tests.Asymmetric
 {
@@ -9,10 +10,31 @@ namespace WellTool.Crypto.Tests.Asymmetric
     public class SM2Tests
     {
         [Fact]
-        public void TestSM2()
+        public void ConstructorTest()
         {
-            // 这里只是一个占位符，具体实现需要根据 SM2 类的实际实现来编写
-            Assert.True(true);
+            // 测试无参构造函数
+            var sm2 = new SM2();
+            Assert.NotNull(sm2);
+        }
+
+        [Fact]
+        public void ConstructorWithKeysTest()
+        {
+            // 测试带密钥的构造函数
+            var publicKey = new byte[65]; // 模拟公钥
+            var privateKey = new byte[32]; // 模拟私钥
+            var sm2 = new SM2(publicKey, privateKey);
+            Assert.NotNull(sm2);
+        }
+
+        [Fact]
+        public void ConstructorWithBase64KeysTest()
+        {
+            // 测试带 Base64 编码密钥的构造函数
+            var publicKey = Convert.ToBase64String(new byte[65]); // 模拟公钥
+            var privateKey = Convert.ToBase64String(new byte[32]); // 模拟私钥
+            var sm2 = new SM2(publicKey, privateKey);
+            Assert.NotNull(sm2);
         }
     }
 }

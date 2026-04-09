@@ -1,5 +1,6 @@
-using WellTool.Crypto.Digest;
+using System.Text;
 using Xunit;
+using WellTool.Crypto.Digest;
 
 namespace WellTool.Crypto.Tests.Digest
 {
@@ -9,10 +10,54 @@ namespace WellTool.Crypto.Tests.Digest
     public class Argon2Tests
     {
         [Fact]
-        public void TestArgon2()
+        public void HashTest()
         {
-            // 这里只是一个占位符，具体实现需要根据 Argon2 类的实际实现来编写
-            Assert.True(true);
+            var password = Encoding.UTF8.GetBytes("password123");
+            var salt = Encoding.UTF8.GetBytes("salt");
+            var hash = Argon2.Hash(password, salt);
+            Assert.NotNull(hash);
+            Assert.Equal(32, hash.Length); // 默认哈希长度为 32 字节
+        }
+
+        [Fact]
+        public void HashHexTest()
+        {
+            var password = "password123";
+            var salt = "salt";
+            var hashHex = Argon2.HashHex(password, salt);
+            Assert.NotNull(hashHex);
+            Assert.NotEmpty(hashHex);
+            Assert.Equal(64, hashHex.Length); // 32 字节哈希长度为 64 个十六进制字符
+        }
+
+        [Fact]
+        public void VerifyTest()
+        {
+            var password = "password123";
+            var salt = "salt";
+            var hashHex = Argon2.HashHex(password, salt);
+            var result = Argon2.Verify(password, hashHex, salt);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void VerifyWithByteArrayTest()
+        {
+            var password = Encoding.UTF8.GetBytes("password123");
+            var salt = Encoding.UTF8.GetBytes("salt");
+            var hash = Argon2.Hash(password, salt);
+            var result = Argon2.Verify(password, hash, salt);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void VerifyInvalidPasswordTest()
+        {
+            var password = "password123";
+            var salt = "salt";
+            var hashHex = Argon2.HashHex(password, salt);
+            var result = Argon2.Verify("invalid", hashHex, salt);
+            Assert.False(result);
         }
     }
 }
