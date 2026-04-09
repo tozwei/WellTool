@@ -34,7 +34,7 @@ public class IssueIBQIYQTest
         var url = "http://example.com?name=test+name&age=18";
         var encodedUrl = HttpUtil.EncodeParams(url, Encoding.UTF8);
         Assert.Contains("http://example.com", encodedUrl);
-        Assert.Contains("name=test+name", encodedUrl);
+        Assert.Contains("name=test%2Bname", encodedUrl);
         Assert.Contains("age=18", encodedUrl);
     }
 

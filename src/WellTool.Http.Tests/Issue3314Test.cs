@@ -63,7 +63,12 @@ public class Issue3314Test
             
             // 验证字节内容
             var byteContent = Encoding.UTF8.GetString(bytes);
-            Assert.Equal(testContent.Trim(), byteContent.Trim());
+            // 移除可能的 BOM 标记
+            if (byteContent.StartsWith("\ufeff"))
+            {
+                byteContent = byteContent.Substring(1);
+            }
+            Assert.Equal(testContent, byteContent);
         }
         finally
         {

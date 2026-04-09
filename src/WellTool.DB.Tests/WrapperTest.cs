@@ -26,7 +26,28 @@ public class WrapperTest
     [Fact]
     public void TestWrapper()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        // 测试包装器基本功能
+        // 这里测试数据库连接包装器的基本操作
+        using var ds = new System.Data.SqlClient.SqlDataSourceBuilder()
+            .ConnectionString("Server=(localdb)\\MSSQLLocalDB;Database=master;Integrated Security=True;")
+            .Build();
+
+        // 验证数据源不为空
+        Assert.NotNull(ds);
+
+        // 测试连接打开和关闭
+        using var connection = ds.CreateConnection();
+        Assert.NotNull(connection);
+
+        // 测试连接状态
+        Assert.Equal(System.Data.ConnectionState.Closed, connection.State);
+
+        // 打开连接
+        connection.Open();
+        Assert.Equal(System.Data.ConnectionState.Open, connection.State);
+
+        // 关闭连接
+        connection.Close();
+        Assert.Equal(System.Data.ConnectionState.Closed, connection.State);
     }
 }

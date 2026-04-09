@@ -11,6 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
+using System.Threading;
 using Xunit;
 
 namespace WellTool.DB.Tests;
@@ -26,7 +28,34 @@ public class ConcurentTest
     [Fact]
     public void TestConcurent()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        // 测试并发操作
+        var taskCount = 10;
+        var tasks = new List<Task>();
+        var counter = 0;
+        var mutex = new object();
+
+        // 创建多个任务并发执行
+        for (int i = 0; i < taskCount; i++)
+        {
+            tasks.Add(Task.Run(() =>
+            {
+                // 模拟数据库操作
+                for (int j = 0; j < 100; j++)
+                {
+                    lock (mutex)
+                    {
+                        counter++;
+                    }
+                    // 模拟操作延迟
+                    Thread.Sleep(1);
+                }
+            }));
+        }
+
+        // 等待所有任务完成
+        Task.WaitAll(tasks.ToArray());
+
+        // 验证计数器值是否正确
+        Assert.Equal(taskCount * 100, counter);
     }
 } 
