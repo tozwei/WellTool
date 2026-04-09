@@ -98,14 +98,25 @@ public class Issue3723Test
     [Fact]
     public void SetGlobalTimeoutTest()
     {
-        // 测试设置全局超时
-        // 注意：由于 HttpGlobalConfig.SetTimeout 是静态方法，
-        // 这里我们只能测试方法是否能正常调用，而不能验证具体的值
-        HttpRequest.SetGlobalTimeout(5000);
-        Assert.True(true);
+        // 保存原始超时值
+        var originalTimeout = HttpGlobalConfig.Timeout;
         
-        // 再次设置全局超时
-        HttpRequest.SetGlobalTimeout(10000);
-        Assert.True(true);
+        try
+        {
+            // 测试设置全局超时
+            // 注意：由于 HttpGlobalConfig.SetTimeout 是静态方法，
+            // 这里我们只能测试方法是否能正常调用，而不能验证具体的值
+            HttpRequest.SetGlobalTimeout(5000);
+            Assert.True(true);
+            
+            // 再次设置全局超时
+            HttpRequest.SetGlobalTimeout(10000);
+            Assert.True(true);
+        }
+        finally
+        {
+            // 恢复原始超时值
+            HttpGlobalConfig.Timeout = originalTimeout;
+        }
     }
 }

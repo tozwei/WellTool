@@ -262,8 +262,8 @@ public static partial class HttpUtil
                     continue;
                 }
 
-                var value = kvp.Value?.ToString() ?? string.Empty;
-                if (string.IsNullOrEmpty(value))
+                var value = kvp.Value?.ToString();
+                if (value == null)
                 {
                     continue;
                 }
@@ -561,8 +561,7 @@ public static partial class HttpUtil
         }
 
         // 使用 HttpUtility 进行 URL 编码
-        var encoded = HttpUtility.UrlEncode(value, encoding)
-            ?.Replace("+", "%20") ?? string.Empty; // 将 + 替换为%20，保持标准 URL 编码
+        var encoded = HttpUtility.UrlEncode(value, encoding) ?? string.Empty;
 
         // 将小写十六进制转换为大写
         return System.Text.RegularExpressions.Regex.Replace(encoded, @"%[0-9a-fA-F]{2}", m => m.Value.ToUpper());

@@ -6,11 +6,11 @@ namespace WellTool.Http;
 /// <summary>
 /// HTTP 基类
 /// </summary>
-/// <typeparam name="T">子类类型，方便链式编�?/typeparam>
+/// <typeparam name="T">子类类型，方便链式编�?/typeparam>
 public abstract class HttpBase<T> where T : HttpBase<T>
 {
     /// <summary>
-    /// 默认的请求编码、URL �?encode、decode 编码
+    /// 默认的请求编码、URL �?encode、decode 编码
     /// </summary>
     protected static readonly Encoding DEFAULT_CHARSET = Encoding.UTF8;
 
@@ -25,12 +25,12 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     public const string HTTP_1_1 = "HTTP/1.1";
 
     /// <summary>
-    /// 是否聚合重复请求�?
+    /// 是否聚合重复请求�?
     /// </summary>
     protected bool IsHeaderAggregated { get; set; }
 
     /// <summary>
-    /// 存储头信�?
+    /// 存储头信�?
     /// </summary>
     protected Dictionary<string, List<string>> Headers { get; } = new();
 
@@ -52,10 +52,10 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     #region Headers
 
     /// <summary>
-    /// 根据 name 获取头信�?
+    /// 根据 name 获取头信�?
     /// </summary>
-    /// <param name="name">Header �?/param>
-    /// <returns>Header �?/returns>
+    /// <param name="name">Header �?/param>
+    /// <returns>Header �?/returns>
     public string? GetHeader(string name)
     {
         var values = GetHeaderList(name);
@@ -63,10 +63,10 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     }
 
     /// <summary>
-    /// 根据 name 获取头信息列�?
+    /// 根据 name 获取头信息列�?
     /// </summary>
-    /// <param name="name">Header �?/param>
-    /// <returns>Header 值列�?/returns>
+    /// <param name="name">Header �?/param>
+    /// <returns>Header 值列�?/returns>
     public List<string>? GetHeaderList(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -74,10 +74,12 @@ public abstract class HttpBase<T> where T : HttpBase<T>
             return null;
         }
 
+        var trimmedName = name.Trim();
+
         // 不区分大小写查找
         foreach (var kvp in Headers)
         {
-            if (kvp.Key.Equals(name, StringComparison.OrdinalIgnoreCase))
+            if (kvp.Key.Equals(trimmedName, StringComparison.OrdinalIgnoreCase))
             {
                 return kvp.Value;
             }
@@ -87,10 +89,10 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     }
 
     /// <summary>
-    /// 根据 name 获取头信�?
+    /// 根据 name 获取头信�?
     /// </summary>
-    /// <param name="name">Header �?/param>
-    /// <returns>Header �?/returns>
+    /// <param name="name">Header �?/param>
+    /// <returns>Header �?/returns>
     public string? GetHeader(Header name)
     {
         if (name == default)
@@ -101,36 +103,37 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     }
 
     /// <summary>
-    /// 设置一�?header
+    /// 设置一�?header
     /// </summary>
-    /// <param name="name">Header �?/param>
-    /// <param name="value">Header �?/param>
-    /// <param name="isOverride">是否覆盖已有�?/param>
+    /// <param name="name">Header �?/param>
+    /// <param name="value">Header �?/param>
+    /// <param name="isOverride">是否覆盖已有�?/param>
     /// <returns>T 本身</returns>
     public T SetHeader(string name, string? value, bool isOverride)
     {
         if (!string.IsNullOrEmpty(name) && value != null)
         {
             var trimmedName = name.Trim();
+            var trimmedValue = value.Trim();
 
             if (isOverride || !Headers.ContainsKey(trimmedName))
             {
-                Headers[trimmedName] = new List<string> { value.Trim() };
+                Headers[trimmedName] = new List<string> { trimmedValue };
             }
             else
             {
-                Headers[trimmedName].Add(value.Trim());
+                Headers[trimmedName].Add(trimmedValue);
             }
         }
         return (T)this;
     }
 
     /// <summary>
-    /// 设置一�?header
+    /// 设置一�?header
     /// </summary>
-    /// <param name="name">Header �?/param>
-    /// <param name="value">Header �?/param>
-    /// <param name="isOverride">是否覆盖已有�?/param>
+    /// <param name="name">Header �?/param>
+    /// <param name="value">Header �?/param>
+    /// <param name="isOverride">是否覆盖已有�?/param>
     /// <returns>T 本身</returns>
     public T SetHeader(Header name, string? value, bool isOverride)
     {
@@ -138,10 +141,10 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     }
 
     /// <summary>
-    /// 设置一�?header（覆盖模式）
+    /// 设置一�?header（覆盖模式）
     /// </summary>
-    /// <param name="name">Header �?/param>
-    /// <param name="value">Header �?/param>
+    /// <param name="name">Header �?/param>
+    /// <param name="value">Header �?/param>
     /// <returns>T 本身</returns>
     public T SetHeader(Header name, string? value)
     {
@@ -149,10 +152,10 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     }
 
     /// <summary>
-    /// 设置一�?header（覆盖模式）
+    /// 设置一�?header（覆盖模式）
     /// </summary>
-    /// <param name="name">Header �?/param>
-    /// <param name="value">Header �?/param>
+    /// <param name="name">Header �?/param>
+    /// <param name="value">Header �?/param>
     /// <returns>T 本身</returns>
     public T SetHeader(string name, string? value)
     {
@@ -170,10 +173,10 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     }
 
     /// <summary>
-    /// 设置请求�?
+    /// 设置请求�?
     /// </summary>
-    /// <param name="headers">请求�?/param>
-    /// <param name="isOverride">是否覆盖已有头信�?/param>
+    /// <param name="headers">请求�?/param>
+    /// <param name="isOverride">是否覆盖已有头信�?/param>
     /// <returns>this</returns>
     public T HeaderMap(IDictionary<string, string> headers, bool isOverride)
     {
@@ -190,9 +193,9 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     }
 
     /// <summary>
-    /// 设置请求头（不覆盖原有请求头�?
+    /// 设置请求头（不覆盖原有请求头�?
     /// </summary>
-    /// <param name="headers">请求�?/param>
+    /// <param name="headers">请求�?/param>
     /// <returns>this</returns>
     public T SetHeaders(IDictionary<string, List<string>> headers)
     {
@@ -200,10 +203,10 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     }
 
     /// <summary>
-    /// 设置请求�?
+    /// 设置请求�?
     /// </summary>
-    /// <param name="headers">请求�?/param>
-    /// <param name="isOverride">是否覆盖已有头信�?/param>
+    /// <param name="headers">请求�?/param>
+    /// <param name="isOverride">是否覆盖已有头信�?/param>
     /// <returns>this</returns>
     public T SetHeaders(IDictionary<string, List<string>> headers, bool isOverride)
     {
@@ -223,9 +226,9 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     }
 
     /// <summary>
-    /// 新增请求头（不覆盖原有请求头�?
+    /// 新增请求头（不覆盖原有请求头�?
     /// </summary>
-    /// <param name="headers">请求�?/param>
+    /// <param name="headers">请求�?/param>
     /// <returns>this</returns>
     public T AddHeaders(IDictionary<string, string> headers)
     {
@@ -244,13 +247,19 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     /// <summary>
     /// 移除一个头信息
     /// </summary>
-    /// <param name="name">Header �?/param>
+    /// <param name="name">Header �?/param>
     /// <returns>this</returns>
     public T RemoveHeader(string name)
     {
         if (!string.IsNullOrEmpty(name))
         {
-            Headers.Remove(name.Trim());
+            var trimmedName = name.Trim();
+            // 不区分大小写查找并移除
+            var headerToRemove = Headers.Keys.FirstOrDefault(key => key.Equals(trimmedName, StringComparison.OrdinalIgnoreCase));
+            if (headerToRemove != null)
+            {
+                Headers.Remove(headerToRemove);
+            }
         }
         return (T)this;
     }
@@ -258,7 +267,7 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     /// <summary>
     /// 移除一个头信息
     /// </summary>
-    /// <param name="name">Header �?/param>
+    /// <param name="name">Header �?/param>
     /// <returns>this</returns>
     public T RemoveHeader(Header name)
     {
@@ -285,9 +294,9 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     }
 
     /// <summary>
-    /// 设置是否需要聚合重复的请求�?
+    /// 设置是否需要聚合重复的请求�?
     /// </summary>
-    /// <param name="aggregate">是否需要聚�?/param>
+    /// <param name="aggregate">是否需要聚�?/param>
     /// <returns>this</returns>
     public T HeaderAggregation(bool aggregate)
     {
@@ -296,9 +305,9 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     }
 
     /// <summary>
-    /// 获取是否需要聚合请求头状�?
+    /// 获取是否需要聚合请求头状�?
     /// </summary>
-    /// <returns>isHeaderAggregated 请求头聚合状�?/returns>
+    /// <returns>isHeaderAggregated 请求头聚合状�?/returns>
     public bool GetIsHeaderAggregated()
     {
         return IsHeaderAggregated;
@@ -347,7 +356,7 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     #region BodyBytes
 
     /// <summary>
-    /// 获取 bodyBytes 存储字节�?
+    /// 获取 bodyBytes 存储字节�?
     /// </summary>
     /// <returns>byte[]</returns>
     public virtual byte[]? BodyBytes()
@@ -360,18 +369,18 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     #region Charset
 
     /// <summary>
-    /// 返回字符�?
+    /// 返回字符�?
     /// </summary>
-    /// <returns>字符�?/returns>
+    /// <returns>字符�?/returns>
     public string? GetCharset()
     {
         return Charset?.WebName;
     }
 
     /// <summary>
-    /// 设置字符�?
+    /// 设置字符�?
     /// </summary>
-    /// <param name="charset">字符�?/param>
+    /// <param name="charset">字符�?/param>
     /// <returns>T 自己</returns>
     public T SetCharset(string charset)
     {
@@ -383,7 +392,7 @@ public abstract class HttpBase<T> where T : HttpBase<T>
             }
             catch
             {
-                // 如果指定的编码不存在，使�?UTF-8
+                // 如果指定的编码不存在，使�?UTF-8
                 Charset = Encoding.UTF8;
             }
         }
@@ -391,9 +400,9 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     }
 
     /// <summary>
-    /// 设置字符�?
+    /// 设置字符�?
     /// </summary>
-    /// <param name="charset">字符�?/param>
+    /// <param name="charset">字符�?/param>
     /// <returns>T 自己</returns>
     public T SetCharset(Encoding? charset)
     {
@@ -411,7 +420,7 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     /// <summary>
     /// 转换为字符串
     /// </summary>
-    /// <returns>字符串表�?/returns>
+    /// <returns>字符串表�?/returns>
     public override string ToString()
     {
         var sb = new StringBuilder();

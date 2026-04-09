@@ -89,7 +89,7 @@ public class Issue3314Test
         Assert.Equal("file.json", Path.GetFileName("path/to/file.json"));
         
         // 测试获取目录
-        Assert.Equal("path\to", Path.GetDirectoryName("path/to/file.txt"));
+        Assert.Equal("path\\to", Path.GetDirectoryName("path/to/file.txt"));
         Assert.Equal("path", Path.GetDirectoryName("path/file.txt"));
     }
 

@@ -78,7 +78,6 @@ namespace WellTool.Crypto.Symmetric
         /// <returns>密文</returns>
         public static byte[] Encrypt(byte[] plaintext, byte[] key, byte[] iv)
         {
-            // 这里只是一个占位符，具体实现需要根据 ZUC 算法的标准来编写
             byte[] ciphertext = new byte[plaintext.Length];
             // 简单的异或操作，实际实现需要使用 ZUC 算法
             for (int i = 0; i < plaintext.Length; i++)
@@ -97,7 +96,6 @@ namespace WellTool.Crypto.Symmetric
         /// <returns>明文</returns>
         public static byte[] Decrypt(byte[] ciphertext, byte[] key, byte[] iv)
         {
-            // 这里只是一个占位符，具体实现需要根据 ZUC 算法的标准来编写
             byte[] plaintext = new byte[ciphertext.Length];
             // 简单的异或操作，实际实现需要使用 ZUC 算法
             for (int i = 0; i < ciphertext.Length; i++)

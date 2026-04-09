@@ -152,6 +152,14 @@ public class HttpConfig
     /// <returns>this</returns>
     public HttpConfig SetHttpProxy(string host, int port)
     {
+        if (string.IsNullOrEmpty(host))
+        {
+            return this;
+        }
+        if (port < 0 || port > 65535)
+        {
+            return this;
+        }
         Proxy = new WebProxy(host, port);
         return this;
     }

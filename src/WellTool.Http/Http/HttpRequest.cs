@@ -468,7 +468,10 @@ public class HttpRequest : HttpBase<HttpRequest>
     /// <returns>HttpRequest</returns>
     public HttpRequest Auth(string content)
     {
-        SetHeader(Header.AUTHORIZATION, content, true);
+        if (!string.IsNullOrEmpty(content))
+        {
+            Headers["Authorization"] = new List<string> { content };
+        }
         return this;
     }
 
