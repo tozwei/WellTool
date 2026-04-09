@@ -186,20 +186,20 @@ public class ChineseDate
 				case 30:
 					return "三十";
 				default:
-					return chineseTen[day / 10] + NumberChineseFormatter.Format(n + 1, false);
+                    return chineseTen[day / 10] + NumberChineseFormatter.Format(n + 1, true);
 			}
 		}
 	}
 
 	/// <summary>获得农历月份（中文，例如二月，十二月，或者润一月）</summary>
-	public string ChineseMonthName => ChineseMonth.GetChineseMonthName(IsLeapMonth, IsLeapMonth ? Month - 1 : Month, false);
+    public string ChineseMonthName => ChineseMonth.GetChineseMonthName(IsLeapMonth, IsLeapMonth ? Month - 1 : Month, true);
 
 	/// <summary>获得农历月份（中文，例如二月，十二月，或者润一月）</summary>
 	/// <param name="isTraditional">是否传统表示，例如一月传统表示为正月</param>
 	public string GetChineseMonth(bool isTraditional) => ChineseMonth.GetChineseMonthName(IsLeapMonth, IsLeapMonth ? Month - 1 : Month, isTraditional);
 
 	/// <summary>获得农历月份称呼</summary>
-	public string GetChineseMonthName() => ChineseMonth.GetChineseMonthName(IsLeapMonth, IsLeapMonth ? Month - 1 : Month, false);
+    public string GetChineseMonthName() => ChineseMonth.GetChineseMonthName(IsLeapMonth, IsLeapMonth ? Month - 1 : Month, true);
 
 	/// <summary>获取公历的Date</summary>
 	public Date GregorianDate => new Date(gyear, gmonthBase1, gday);

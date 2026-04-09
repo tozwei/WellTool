@@ -23,7 +23,23 @@ public static class CallerUtil
 	/// <returns>调用者的类</returns>
 	public static System.Type GetCaller()
 	{
-		return GetCaller(2);
+		var trace = new System.Diagnostics.StackTrace(true);
+		var frames = trace.GetFrames();
+		if (frames != null)
+		{
+			// 跳过前两个帧：GetCaller() 方法和调用它的方法
+			for (int i = 2; i < frames.Length; i++)
+			{
+				var method = frames[i].GetMethod();
+				var declaringType = method?.DeclaringType;
+				// 找到第一个不是 CallerUtil 类的类型
+				if (declaringType != null && declaringType != typeof(CallerUtil))
+				{
+					return declaringType;
+				}
+			}
+		}
+		return null;
 	}
 
 	/// <summary>
@@ -35,10 +51,15 @@ public static class CallerUtil
 	{
 		var trace = new System.Diagnostics.StackTrace(true);
 		var frames = trace.GetFrames();
-		if (frames != null && frames.Length > depth)
+		if (frames != null)
 		{
-			var method = frames[depth].GetMethod();
-			return method?.DeclaringType;
+			// 跳过前两个帧：GetCaller() 方法和调用它的方法
+			int startIndex = 2;
+			if (startIndex + depth < frames.Length)
+			{
+				var method = frames[startIndex + depth].GetMethod();
+				return method?.DeclaringType;
+			}
 		}
 		return null;
 	}
