@@ -12,6 +12,8 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.AI;
+using WellTool.AI.DeepSeek;
 
 namespace WellTool.AI.Tests
 {
@@ -21,9 +23,33 @@ namespace WellTool.AI.Tests
     public class DeepSeekServiceTest
     {
         [Fact]
-        public void Test()
+        public void TestDeepSeekServiceCreation()
         {
-            Assert.True(true);
+            // 测试 DeepSeek 服务的创建
+            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
+            var service = DeepSeekService.Create(apiKey);
+            Assert.NotNull(service);
+        }
+
+        [Fact]
+        public void TestDeepSeekServiceWithModel()
+        {
+            // 测试使用指定模型创建 DeepSeek 服务
+            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
+            var model = "deepseek-chat";
+            var service = DeepSeekService.Create(apiKey, model);
+            Assert.NotNull(service);
+        }
+
+        [Fact]
+        public void TestDeepSeekServiceWithCustomBaseUrl()
+        {
+            // 测试使用自定义基础 URL 创建 DeepSeek 服务
+            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
+            var baseUrl = "https://api.deepseek.com/v1";
+            var service = DeepSeekService.Create(apiKey, baseUrl);
+            Assert.NotNull(service);
         }
     }
 }
+

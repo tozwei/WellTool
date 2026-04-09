@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.DB.Sql;
 
 namespace WellTool.DB.Tests
 {
@@ -21,9 +22,36 @@ namespace WellTool.DB.Tests
     public class ConditionTest
     {
         [Fact]
-        public void Test()
+        public void TestConditionCreation()
         {
-            Assert.True(true);
+            // 测试创建条件
+            var condition = Condition.Create("age > @age");
+            Assert.NotNull(condition);
+        }
+
+        [Fact]
+        public void TestConditionWithAnd()
+        {
+            // 测试 AND 条件
+            var condition = Condition.Create("age > @age").And("name LIKE @name");
+            Assert.NotNull(condition);
+        }
+
+        [Fact]
+        public void TestConditionWithOr()
+        {
+            // 测试 OR 条件
+            var condition = Condition.Create("age > @age").Or("age < @minAge");
+            Assert.NotNull(condition);
+        }
+
+        [Fact]
+        public void TestConditionWithNot()
+        {
+            // 测试 NOT 条件
+            var condition = Condition.Create("age > @age").Not();
+            Assert.NotNull(condition);
         }
     }
 }
+

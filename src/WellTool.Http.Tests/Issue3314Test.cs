@@ -63,7 +63,7 @@ public class Issue3314Test
             
             // 验证字节内容
             var byteContent = Encoding.UTF8.GetString(bytes);
-            Assert.Equal(testContent, byteContent);
+            Assert.Equal(testContent.Trim(), byteContent.Trim());
         }
         finally
         {

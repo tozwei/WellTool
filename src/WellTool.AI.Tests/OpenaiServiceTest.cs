@@ -12,6 +12,8 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.AI;
+using WellTool.AI.OpenAI;
 
 namespace WellTool.AI.Tests
 {
@@ -21,9 +23,33 @@ namespace WellTool.AI.Tests
     public class OpenaiServiceTest
     {
         [Fact]
-        public void Test()
+        public void TestOpenAIServiceCreation()
         {
-            Assert.True(true);
+            // 测试 OpenAI 服务的创建
+            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
+            var service = OpenAIService.Create(apiKey);
+            Assert.NotNull(service);
+        }
+
+        [Fact]
+        public void TestOpenAIServiceWithCustomBaseUrl()
+        {
+            // 测试使用自定义基础 URL 创建 OpenAI 服务
+            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
+            var baseUrl = "https://api.openai.com/v1";
+            var service = OpenAIService.Create(apiKey, baseUrl);
+            Assert.NotNull(service);
+        }
+
+        [Fact]
+        public void TestOpenAIServiceWithOrganization()
+        {
+            // 测试使用组织 ID 创建 OpenAI 服务
+            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
+            var organization = "test-org-id"; // 实际使用时需要替换为真实的组织 ID
+            var service = OpenAIService.Create(apiKey, organization);
+            Assert.NotNull(service);
         }
     }
 }
+

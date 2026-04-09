@@ -169,7 +169,8 @@ namespace WellTool.Crypto.Symmetric
             var keyParam = new KeyParameter(Key);
             ICipherParameters parameters = keyParam;
             
-            if (IV != null && IV.Length > 0)
+            // ECB 模式不需要 IV
+            if (_mode != CipherMode.ECB && IV != null && IV.Length > 0)
             {
                 parameters = new ParametersWithIV(keyParam, IV);
             }

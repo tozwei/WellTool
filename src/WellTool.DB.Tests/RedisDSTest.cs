@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.DB.Nosql;
 
 namespace WellTool.DB.Tests
 {
@@ -21,9 +22,37 @@ namespace WellTool.DB.Tests
     public class RedisDSTest
     {
         [Fact]
-        public void Test()
+        public void TestRedisDSCreation()
         {
-            Assert.True(true);
+            // 测试创建 Redis 数据源
+            var redisDS = RedisDS.Create("localhost", 6379);
+            Assert.NotNull(redisDS);
+        }
+
+        [Fact]
+        public void TestRedisDSWithPassword()
+        {
+            // 测试使用密码创建 Redis 数据源
+            var redisDS = RedisDS.Create("localhost", 6379, "password");
+            Assert.NotNull(redisDS);
+        }
+
+        [Fact]
+        public void TestRedisDSWithDatabase()
+        {
+            // 测试指定数据库创建 Redis 数据源
+            var redisDS = RedisDS.Create("localhost", 6379, "password", 0);
+            Assert.NotNull(redisDS);
+        }
+
+        [Fact]
+        public void TestRedisDSWithConnectionString()
+        {
+            // 测试使用连接字符串创建 Redis 数据源
+            var connectionString = "redis://localhost:6379";
+            var redisDS = RedisDS.Create(connectionString);
+            Assert.NotNull(redisDS);
         }
     }
 }
+

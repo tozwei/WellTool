@@ -12,6 +12,8 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.AI;
+using WellTool.AI.OpenAI;
 
 namespace WellTool.AI.Tests
 {
@@ -21,9 +23,28 @@ namespace WellTool.AI.Tests
     public class OpenaiProxyServiceTest
     {
         [Fact]
-        public void Test()
+        public void TestOpenAIProxyServiceCreation()
         {
-            Assert.True(true);
+            // 测试 OpenAI 代理服务的创建
+            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
+            var proxyUrl = "https://api.openai.com/v1"; // 实际使用时需要替换为真实的代理 URL
+            var service = OpenAIProxyService.Create(apiKey, proxyUrl);
+            Assert.NotNull(service);
+        }
+
+        [Fact]
+        public void TestOpenAIProxyServiceWithHeaders()
+        {
+            // 测试带有自定义头部的 OpenAI 代理服务创建
+            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
+            var proxyUrl = "https://api.openai.com/v1"; // 实际使用时需要替换为真实的代理 URL
+            var headers = new System.Collections.Generic.Dictionary<string, string>
+            {
+                { "X-Custom-Header", "custom-value" }
+            };
+            var service = OpenAIProxyService.Create(apiKey, proxyUrl, headers);
+            Assert.NotNull(service);
         }
     }
 }
+

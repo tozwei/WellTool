@@ -1,10 +1,10 @@
 using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Paddings;
-using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Security;
@@ -59,9 +59,8 @@ namespace WellTool.Crypto.Asymmetric
             var ephPublicKey = (ECPublicKeyParameters)ephKeyPair.Public;
             var ephPrivateKey = (ECPrivateKeyParameters)ephKeyPair.Private;
 
-            var sharedSecret = ecPublicKey.Q.Multiply(ephPrivateKey.D);
-            var derivedKey = new byte[32];
-            sharedSecret.AffineXCoord.GetEncoded().CopyTo(derivedKey, 0);
+            var sharedSecret = ecPublicKey.Q.Multiply(ephPrivateKey.D).Normalize();
+            var derivedKey = DeriveKey(sharedSecret);
 
             var aesEngine = new AesEngine();
             var cbcMode = new CbcBlockCipher(aesEngine);
@@ -76,10 +75,11 @@ namespace WellTool.Crypto.Asymmetric
             var len = cipher.ProcessBytes(data, 0, data.Length, ciphertext, 0);
             cipher.DoFinal(ciphertext, len);
 
-            var result = new byte[ephPublicKey.Q.GetEncoded().Length + iv.Length + ciphertext.Length];
-            ephPublicKey.Q.GetEncoded().CopyTo(result, 0);
-            iv.CopyTo(result, ephPublicKey.Q.GetEncoded().Length);
-            ciphertext.CopyTo(result, ephPublicKey.Q.GetEncoded().Length + iv.Length);
+            var ephPublicKeyEncoded = ephPublicKey.Q.GetEncoded();
+            var result = new byte[ephPublicKeyEncoded.Length + iv.Length + ciphertext.Length];
+            ephPublicKeyEncoded.CopyTo(result, 0);
+            iv.CopyTo(result, ephPublicKeyEncoded.Length);
+            ciphertext.CopyTo(result, ephPublicKeyEncoded.Length + iv.Length);
 
             return result;
         }
@@ -89,14 +89,19 @@ namespace WellTool.Crypto.Asymmetric
             var ecPrivateKey = (ECPrivateKeyParameters)privateKey;
             var ecParams = ecPrivateKey.Parameters;
 
-            var pointLength = ecParams.Curve.FieldSize / 8 + 1;
+            // 确定点的编码长度（未压缩编码）
+            var pointLength = 1 + (ecParams.Curve.FieldSize / 8) * 2;
+            if (data.Length < pointLength + 16)
+            {
+                throw new ArgumentException("Data too short");
+            }
+
             var ephPublicKeyPoint = ecParams.Curve.DecodePoint(data[..pointLength]);
             var iv = data[pointLength..(pointLength + 16)];
             var ciphertext = data[(pointLength + 16)..];
 
-            var sharedSecret = ephPublicKeyPoint.Multiply(ecPrivateKey.D);
-            var derivedKey = new byte[32];
-            sharedSecret.AffineXCoord.GetEncoded().CopyTo(derivedKey, 0);
+            var sharedSecret = ephPublicKeyPoint.Multiply(ecPrivateKey.D).Normalize();
+            var derivedKey = DeriveKey(sharedSecret);
 
             var aesEngine = new AesEngine();
             var cbcMode = new CbcBlockCipher(aesEngine);
@@ -113,6 +118,17 @@ namespace WellTool.Crypto.Asymmetric
             plaintext[..(len + finalLen)].CopyTo(result, 0);
 
             return result;
+        }
+
+        private byte[] DeriveKey(ECPoint point)
+        {
+            // 使用 SHA-256 哈希来生成固定长度的密钥
+            var digest = new Sha256Digest();
+            var encoded = point.AffineXCoord.GetEncoded();
+            digest.BlockUpdate(encoded, 0, encoded.Length);
+            var key = new byte[digest.GetDigestSize()];
+            digest.DoFinal(key, 0);
+            return key;
         }
     }
 }

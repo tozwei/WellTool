@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.DB.Sql;
 
 namespace WellTool.DB.Tests
 {
@@ -21,9 +22,73 @@ namespace WellTool.DB.Tests
     public class SqlBuilderTest
     {
         [Fact]
-        public void Test()
+        public void TestSelectBuilder()
         {
-            Assert.True(true);
+            // 测试 SELECT 语句构建
+            var sql = SqlBuilder
+                .Select("id", "name", "age")
+                .From("users")
+                .Where("age > @age")
+                .OrderBy("id DESC")
+                .Build();
+
+            Assert.NotNull(sql);
+            Assert.NotEmpty(sql);
+            Assert.Contains("SELECT", sql);
+            Assert.Contains("FROM", sql);
+            Assert.Contains("WHERE", sql);
+            Assert.Contains("ORDER BY", sql);
+        }
+
+        [Fact]
+        public void TestInsertBuilder()
+        {
+            // 测试 INSERT 语句构建
+            var sql = SqlBuilder
+                .Insert("users")
+                .Columns("id", "name", "age")
+                .Values("@id", "@name", "@age")
+                .Build();
+
+            Assert.NotNull(sql);
+            Assert.NotEmpty(sql);
+            Assert.Contains("INSERT INTO", sql);
+            Assert.Contains("VALUES", sql);
+        }
+
+        [Fact]
+        public void TestUpdateBuilder()
+        {
+            // 测试 UPDATE 语句构建
+            var sql = SqlBuilder
+                .Update("users")
+                .Set("name = @name", "age = @age")
+                .Where("id = @id")
+                .Build();
+
+            Assert.NotNull(sql);
+            Assert.NotEmpty(sql);
+            Assert.Contains("UPDATE", sql);
+            Assert.Contains("SET", sql);
+            Assert.Contains("WHERE", sql);
+        }
+
+        [Fact]
+        public void TestDeleteBuilder()
+        {
+            // 测试 DELETE 语句构建
+            var sql = SqlBuilder
+                .Delete()
+                .From("users")
+                .Where("id = @id")
+                .Build();
+
+            Assert.NotNull(sql);
+            Assert.NotEmpty(sql);
+            Assert.Contains("DELETE", sql);
+            Assert.Contains("FROM", sql);
+            Assert.Contains("WHERE", sql);
         }
     }
 }
+

@@ -11,7 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Text;
 using Xunit;
+using WellTool.Crypto.Asymmetric;
 
 namespace WellTool.Crypto.Tests
 {
@@ -21,10 +23,43 @@ namespace WellTool.Crypto.Tests
     public class Issue3512Test
     {
         [Fact]
-        public void Test()
+        public void TestRSAKeyGeneration()
         {
-            // Issue 3512 测试
-            Assert.True(true);
+            // 测试 RSA 密钥生成
+            var rsa = new RSA();
+            var keyPair = rsa.GenerateKeyPair();
+
+            Assert.NotNull(keyPair);
+            Assert.NotNull(keyPair.Public);
+            Assert.NotNull(keyPair.Private);
+        }
+
+        [Fact]
+        public void TestRSAEncryptionWithDifferentKeySizes()
+        {
+            // 测试不同密钥大小的 RSA 加密
+            var keySizes = new int[] { 1024, 2048, 4096 };
+
+            foreach (var keySize in keySizes)
+            {
+                var rsa = new RSA(keySize);
+                var keyPair = rsa.GenerateKeyPair();
+
+                var plaintext = "Hello, RSA with key size " + keySize + "!";
+                var plaintextBytes = Encoding.UTF8.GetBytes(plaintext);
+
+                var encrypted = rsa.Encrypt(plaintextBytes, keyPair.Public);
+                Assert.NotNull(encrypted);
+                Assert.NotEmpty(encrypted);
+
+                var decrypted = rsa.Decrypt(encrypted, keyPair.Private);
+                Assert.NotNull(decrypted);
+                Assert.NotEmpty(decrypted);
+
+                var decryptedText = Encoding.UTF8.GetString(decrypted);
+                Assert.Equal(plaintext, decryptedText);
+            }
         }
     }
 }
+

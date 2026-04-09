@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.AI;
 
 namespace WellTool.AI.Tests
 {
@@ -21,9 +22,31 @@ namespace WellTool.AI.Tests
     public class HutoolServiceTest
     {
         [Fact]
-        public void Test()
+        public void TestHutoolServiceCreation()
         {
-            Assert.True(true);
+            // 测试 Hutool AI 服务的创建
+            var service = HutoolService.Create();
+            Assert.NotNull(service);
+        }
+
+        [Fact]
+        public void TestHutoolServiceWithApiKey()
+        {
+            // 测试使用 API 密钥创建 Hutool AI 服务
+            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
+            var service = HutoolService.Create(apiKey);
+            Assert.NotNull(service);
+        }
+
+        [Fact]
+        public void TestHutoolServiceWithCustomBaseUrl()
+        {
+            // 测试使用自定义基础 URL 创建 Hutool AI 服务
+            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
+            var baseUrl = "https://api.hutool.cn/v1";
+            var service = HutoolService.Create(apiKey, baseUrl);
+            Assert.NotNull(service);
         }
     }
 }
+

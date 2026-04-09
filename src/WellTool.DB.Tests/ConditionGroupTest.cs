@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.DB.Sql;
 
 namespace WellTool.DB.Tests
 {
@@ -21,9 +22,44 @@ namespace WellTool.DB.Tests
     public class ConditionGroupTest
     {
         [Fact]
-        public void Test()
+        public void TestConditionGroupCreation()
         {
-            Assert.True(true);
+            // 测试创建条件组
+            var group = new ConditionGroup();
+            Assert.NotNull(group);
+        }
+
+        [Fact]
+        public void TestConditionGroupWithConditions()
+        {
+            // 测试添加条件到条件组
+            var group = new ConditionGroup();
+            group.Add(Condition.Create("age > @age"));
+            group.Add(Condition.Create("name LIKE @name"));
+            Assert.NotNull(group);
+        }
+
+        [Fact]
+        public void TestConditionGroupWithAnd()
+        {
+            // 测试 AND 条件组
+            var group = new ConditionGroup();
+            group.Add(Condition.Create("age > @age"));
+            group.Add(Condition.Create("name LIKE @name"));
+            var condition = group.And();
+            Assert.NotNull(condition);
+        }
+
+        [Fact]
+        public void TestConditionGroupWithOr()
+        {
+            // 测试 OR 条件组
+            var group = new ConditionGroup();
+            group.Add(Condition.Create("age > @age"));
+            group.Add(Condition.Create("age < @minAge"));
+            var condition = group.Or();
+            Assert.NotNull(condition);
         }
     }
 }
+

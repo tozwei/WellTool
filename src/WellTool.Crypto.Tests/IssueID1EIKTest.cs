@@ -11,7 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Text;
 using Xunit;
+using WellTool.Crypto.Asymmetric;
 
 namespace WellTool.Crypto.Tests
 {
@@ -21,10 +23,58 @@ namespace WellTool.Crypto.Tests
     public class IssueID1EIKTest
     {
         [Fact]
-        public void Test()
+        public void TestRSAKeyPairSerialization()
         {
-            // Issue ID1EIK 测试
-            Assert.True(true);
+            // 测试 RSA 密钥对序列化和反序列化
+            var rsa = new RSA();
+            var keyPair = rsa.GenerateKeyPair();
+
+            // 序列化密钥对
+            var publicKeyBytes = rsa.ExportPublicKey(keyPair.Public);
+            var privateKeyBytes = rsa.ExportPrivateKey(keyPair.Private);
+
+            Assert.NotNull(publicKeyBytes);
+            Assert.NotEmpty(publicKeyBytes);
+            Assert.NotNull(privateKeyBytes);
+            Assert.NotEmpty(privateKeyBytes);
+
+            // 反序列化密钥对
+            var publicKey = rsa.ImportPublicKey(publicKeyBytes);
+            var privateKey = rsa.ImportPrivateKey(privateKeyBytes);
+
+            Assert.NotNull(publicKey);
+            Assert.NotNull(privateKey);
+        }
+
+        [Fact]
+        public void TestRSAEncryptionWithSerializedKeys()
+        {
+            // 测试使用序列化后的密钥进行加密和解密
+            var rsa = new RSA();
+            var keyPair = rsa.GenerateKeyPair();
+
+            // 序列化密钥对
+            var publicKeyBytes = rsa.ExportPublicKey(keyPair.Public);
+            var privateKeyBytes = rsa.ExportPrivateKey(keyPair.Private);
+
+            // 反序列化密钥对
+            var publicKey = rsa.ImportPublicKey(publicKeyBytes);
+            var privateKey = rsa.ImportPrivateKey(privateKeyBytes);
+
+            var plaintext = "Hello, RSA with serialized keys!";
+            var plaintextBytes = Encoding.UTF8.GetBytes(plaintext);
+
+            var encrypted = rsa.Encrypt(plaintextBytes, publicKey);
+            Assert.NotNull(encrypted);
+            Assert.NotEmpty(encrypted);
+
+            var decrypted = rsa.Decrypt(encrypted, privateKey);
+            Assert.NotNull(decrypted);
+            Assert.NotEmpty(decrypted);
+
+            var decryptedText = Encoding.UTF8.GetString(decrypted);
+            Assert.Equal(plaintext, decryptedText);
         }
     }
 }
+

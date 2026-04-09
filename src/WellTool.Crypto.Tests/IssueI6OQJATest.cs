@@ -11,7 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Text;
 using Xunit;
+using WellTool.Crypto.Asymmetric;
 
 namespace WellTool.Crypto.Tests
 {
@@ -21,10 +23,44 @@ namespace WellTool.Crypto.Tests
     public class IssueI6OQJATest
     {
         [Fact]
-        public void Test()
+        public void TestRSAEncryption()
         {
-            // Issue I6OQJA 测试
-            Assert.True(true);
+            // 测试 RSA 加密和解密
+            var rsa = new RSA();
+            var keyPair = rsa.GenerateKeyPair();
+
+            var plaintext = "Hello, RSA!";
+            var plaintextBytes = Encoding.UTF8.GetBytes(plaintext);
+
+            var encrypted = rsa.Encrypt(plaintextBytes, keyPair.Public);
+            Assert.NotNull(encrypted);
+            Assert.NotEmpty(encrypted);
+
+            var decrypted = rsa.Decrypt(encrypted, keyPair.Private);
+            Assert.NotNull(decrypted);
+            Assert.NotEmpty(decrypted);
+
+            var decryptedText = Encoding.UTF8.GetString(decrypted);
+            Assert.Equal(plaintext, decryptedText);
+        }
+
+        [Fact]
+        public void TestRSASignature()
+        {
+            // 测试 RSA 签名和验签
+            var rsa = new RSA();
+            var keyPair = rsa.GenerateKeyPair();
+
+            var data = "Hello, RSA Signature!";
+            var dataBytes = Encoding.UTF8.GetBytes(data);
+
+            var signature = rsa.Sign(dataBytes, keyPair.Private);
+            Assert.NotNull(signature);
+            Assert.NotEmpty(signature);
+
+            var verified = rsa.Verify(dataBytes, signature, keyPair.Public);
+            Assert.True(verified);
         }
     }
 }
+

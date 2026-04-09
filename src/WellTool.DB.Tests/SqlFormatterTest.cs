@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.DB.Sql;
 
 namespace WellTool.DB.Tests
 {
@@ -21,9 +22,44 @@ namespace WellTool.DB.Tests
     public class SqlFormatterTest
     {
         [Fact]
-        public void Test()
+        public void TestFormatSelectSql()
         {
-            Assert.True(true);
+            // 测试格式化 SELECT 语句
+            var sql = "SELECT id, name, age FROM users WHERE age > 18 ORDER BY id DESC";
+            var formattedSql = SqlFormatter.Format(sql);
+            Assert.NotNull(formattedSql);
+            Assert.NotEmpty(formattedSql);
+        }
+
+        [Fact]
+        public void TestFormatInsertSql()
+        {
+            // 测试格式化 INSERT 语句
+            var sql = "INSERT INTO users (id, name, age) VALUES (1, 'John', 25)";
+            var formattedSql = SqlFormatter.Format(sql);
+            Assert.NotNull(formattedSql);
+            Assert.NotEmpty(formattedSql);
+        }
+
+        [Fact]
+        public void TestFormatUpdateSql()
+        {
+            // 测试格式化 UPDATE 语句
+            var sql = "UPDATE users SET name = 'Jane', age = 30 WHERE id = 1";
+            var formattedSql = SqlFormatter.Format(sql);
+            Assert.NotNull(formattedSql);
+            Assert.NotEmpty(formattedSql);
+        }
+
+        [Fact]
+        public void TestFormatDeleteSql()
+        {
+            // 测试格式化 DELETE 语句
+            var sql = "DELETE FROM users WHERE id = 1";
+            var formattedSql = SqlFormatter.Format(sql);
+            Assert.NotNull(formattedSql);
+            Assert.NotEmpty(formattedSql);
         }
     }
 }
+

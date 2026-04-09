@@ -12,6 +12,8 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.AI;
+using WellTool.AI.Ollama;
 
 namespace WellTool.AI.Tests
 {
@@ -21,9 +23,40 @@ namespace WellTool.AI.Tests
     public class OllamaServiceTest
     {
         [Fact]
-        public void Test()
+        public void TestOllamaServiceCreation()
         {
-            Assert.True(true);
+            // 测试 Ollama 服务的创建
+            var service = OllamaService.Create();
+            Assert.NotNull(service);
+        }
+
+        [Fact]
+        public void TestOllamaServiceWithCustomBaseUrl()
+        {
+            // 测试使用自定义基础 URL 创建 Ollama 服务
+            var baseUrl = "http://localhost:11434/api";
+            var service = OllamaService.Create(baseUrl);
+            Assert.NotNull(service);
+        }
+
+        [Fact]
+        public void TestOllamaServiceWithModel()
+        {
+            // 测试使用指定模型创建 Ollama 服务
+            var model = "llama3";
+            var service = OllamaService.Create(model);
+            Assert.NotNull(service);
+        }
+
+        [Fact]
+        public void TestOllamaServiceWithCustomBaseUrlAndModel()
+        {
+            // 测试使用自定义基础 URL 和指定模型创建 Ollama 服务
+            var baseUrl = "http://localhost:11434/api";
+            var model = "llama3";
+            var service = OllamaService.Create(baseUrl, model);
+            Assert.NotNull(service);
         }
     }
 }
+

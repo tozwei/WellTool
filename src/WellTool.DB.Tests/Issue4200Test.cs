@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.DB.Sql;
 
 namespace WellTool.DB.Tests
 {
@@ -21,9 +22,44 @@ namespace WellTool.DB.Tests
     public class Issue4200Test
     {
         [Fact]
-        public void Test()
+        public void TestSqlBuilderWithMultipleWhereConditions()
         {
-            Assert.True(true);
+            // 测试 SQL Builder 处理多个 WHERE 条件
+            var sql = SqlBuilder
+                .Select("id", "name", "age")
+                .From("users")
+                .Where("age > @age")
+                .Where("name LIKE @name")
+                .Build();
+
+            Assert.NotNull(sql);
+            Assert.NotEmpty(sql);
+            Assert.Contains("SELECT", sql);
+            Assert.Contains("FROM", sql);
+            Assert.Contains("WHERE", sql);
+            Assert.Contains("age > @age", sql);
+            Assert.Contains("name LIKE @name", sql);
+        }
+
+        [Fact]
+        public void TestSqlBuilderWithMultipleOrderBy()
+        {
+            // 测试 SQL Builder 处理多个 ORDER BY 条件
+            var sql = SqlBuilder
+                .Select("id", "name", "age")
+                .From("users")
+                .OrderBy("age DESC")
+                .OrderBy("name ASC")
+                .Build();
+
+            Assert.NotNull(sql);
+            Assert.NotEmpty(sql);
+            Assert.Contains("SELECT", sql);
+            Assert.Contains("FROM", sql);
+            Assert.Contains("ORDER BY", sql);
+            Assert.Contains("age DESC", sql);
+            Assert.Contains("name ASC", sql);
         }
     }
 }
+

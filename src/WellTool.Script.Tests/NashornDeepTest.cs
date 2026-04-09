@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.Script;
 
 namespace WellTool.Script.Tests
 {
@@ -21,9 +22,56 @@ namespace WellTool.Script.Tests
     public class NashornDeepTest
     {
         [Fact]
-        public void Test()
+        public void TestJavaScriptEngine()
         {
-            Assert.True(true);
+            // 测试 JavaScript 引擎的基本功能
+            var engine = ScriptUtil.CreateEngine("javascript");
+            Assert.NotNull(engine);
+
+            // 测试执行复杂的 JavaScript 表达式
+            var result = engine.Eval("function add(a, b) { return a + b; } add(2, 3);");
+            Assert.NotNull(result);
+            Assert.Equal(5, result);
+        }
+
+        [Fact]
+        public void TestJavaScriptObjects()
+        {
+            // 测试 JavaScript 对象的操作
+            var engine = ScriptUtil.CreateEngine("javascript");
+            Assert.NotNull(engine);
+
+            // 测试创建和操作 JavaScript 对象
+            engine.Eval("var obj = { name: 'WellTool', version: 1.0 };");
+            var name = engine.Eval("obj.name");
+            var version = engine.Eval("obj.version");
+
+            Assert.NotNull(name);
+            Assert.Equal("WellTool", name);
+            Assert.NotNull(version);
+            Assert.Equal(1.0, version);
+        }
+
+        [Fact]
+        public void TestJavaScriptArrays()
+        {
+            // 测试 JavaScript 数组的操作
+            var engine = ScriptUtil.CreateEngine("javascript");
+            Assert.NotNull(engine);
+
+            // 测试创建和操作 JavaScript 数组
+            engine.Eval("var arr = [1, 2, 3, 4, 5];");
+            var length = engine.Eval("arr.length");
+            var firstElement = engine.Eval("arr[0]");
+            var lastElement = engine.Eval("arr[arr.length - 1]");
+
+            Assert.NotNull(length);
+            Assert.Equal(5, length);
+            Assert.NotNull(firstElement);
+            Assert.Equal(1, firstElement);
+            Assert.NotNull(lastElement);
+            Assert.Equal(5, lastElement);
         }
     }
 }
+

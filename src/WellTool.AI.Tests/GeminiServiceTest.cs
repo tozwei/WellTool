@@ -12,6 +12,8 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.AI;
+using WellTool.AI.Gemini;
 
 namespace WellTool.AI.Tests
 {
@@ -21,9 +23,33 @@ namespace WellTool.AI.Tests
     public class GeminiServiceTest
     {
         [Fact]
-        public void Test()
+        public void TestGeminiServiceCreation()
         {
-            Assert.True(true);
+            // 测试 Gemini 服务的创建
+            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
+            var service = GeminiService.Create(apiKey);
+            Assert.NotNull(service);
+        }
+
+        [Fact]
+        public void TestGeminiServiceWithModel()
+        {
+            // 测试使用指定模型创建 Gemini 服务
+            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
+            var model = "gemini-1.5-flash";
+            var service = GeminiService.Create(apiKey, model);
+            Assert.NotNull(service);
+        }
+
+        [Fact]
+        public void TestGeminiServiceWithCustomBaseUrl()
+        {
+            // 测试使用自定义基础 URL 创建 Gemini 服务
+            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
+            var baseUrl = "https://generativelanguage.googleapis.com/v1";
+            var service = GeminiService.Create(apiKey, baseUrl);
+            Assert.NotNull(service);
         }
     }
 }
+

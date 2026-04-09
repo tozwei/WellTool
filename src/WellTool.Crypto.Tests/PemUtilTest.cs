@@ -16,6 +16,9 @@ using System.IO;
 using Xunit;
 using WellTool.Crypto;
 using WellTool.Crypto.Asymmetric;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Security;
 
 namespace WellTool.Crypto.Tests
 {
@@ -28,9 +31,7 @@ namespace WellTool.Crypto.Tests
         public void ReadWritePemTest()
         {
             // 生成 RSA 密钥对
-            var (publicKey, privateKey) = CryptoUtil.GenerateRsaKeyPair();
-            var rsa = new Asymmetric.RSA(publicKey, privateKey);
-            var keyPair = rsa.GetKeyPair();
+            var keyPair = GenerateRsaKeyPair();
 
             // 写入私钥为 PEM 字符串
             var privateKeyPem = PemUtil.WritePem(keyPair.Private);
@@ -55,9 +56,7 @@ namespace WellTool.Crypto.Tests
         public void ReadWritePemFileTest()
         {
             // 生成 RSA 密钥对
-            var (publicKey, privateKey) = CryptoUtil.GenerateRsaKeyPair();
-            var rsa = new Asymmetric.RSA(publicKey, privateKey);
-            var keyPair = rsa.GetKeyPair();
+            var keyPair = GenerateRsaKeyPair();
 
             // 创建临时文件
             var privateKeyPath = Path.GetTempFileName();
@@ -93,6 +92,13 @@ namespace WellTool.Crypto.Tests
                     File.Delete(publicKeyPath);
                 }
             }
+        }
+
+        private AsymmetricCipherKeyPair GenerateRsaKeyPair()
+        {
+            var generator = new RsaKeyPairGenerator();
+            generator.Init(new KeyGenerationParameters(new SecureRandom(), 2048));
+            return generator.GenerateKeyPair();
         }
     }
 }

@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.Script;
 
 namespace WellTool.Script.Tests
 {
@@ -21,9 +22,35 @@ namespace WellTool.Script.Tests
     public class ScriptUtilTest
     {
         [Fact]
-        public void Test()
+        public void TestCreateScriptEngine()
         {
-            Assert.True(true);
+            // 测试创建 JavaScript 脚本引擎
+            var jsEngine = ScriptUtil.CreateEngine("javascript");
+            Assert.NotNull(jsEngine);
+        }
+
+        [Fact]
+        public void TestEvalScript()
+        {
+            // 测试执行简单的 JavaScript 脚本
+            var result = ScriptUtil.Eval("javascript", "1 + 1");
+            Assert.NotNull(result);
+            Assert.Equal(2, result);
+        }
+
+        [Fact]
+        public void TestEvalScriptWithBindings()
+        {
+            // 测试执行带有绑定变量的 JavaScript 脚本
+            var bindings = new System.Collections.Generic.Dictionary<string, object>
+            {
+                { "a", 1 },
+                { "b", 2 }
+            };
+            var result = ScriptUtil.Eval("javascript", "a + b", bindings);
+            Assert.NotNull(result);
+            Assert.Equal(3, result);
         }
     }
 }
+
