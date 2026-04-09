@@ -13,7 +13,7 @@
 
 using Xunit;
 using WellTool.AI;
-using WellTool.AI.Ollama;
+using WellTool.AI.Model.Ollama;
 
 namespace WellTool.AI.Tests
 {

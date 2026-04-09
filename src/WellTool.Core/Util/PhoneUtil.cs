@@ -114,9 +114,68 @@ namespace WellTool.Core.Util
                 return null;
             }
 
-            // 这里可以接入第三方库或API获取归属地
-            // 简化实现返回null
-            return null;
+            // 移除空格和短横线
+            phone = phone.Replace(" ", "").Replace("-", "");
+
+            // 获取手机号前7位
+            var prefix = phone.Substring(0, 7);
+
+            // 这里使用简单的映射表，实际项目中可以接入第三方库或API获取归属地
+            // 以下是一些常见的手机号前缀归属地映射
+            var locationMap = new Dictionary<string, string>
+            {
+                { "1380013", "北京市" },
+                { "1390013", "北京市" },
+                { "1380021", "上海市" },
+                { "1390021", "上海市" },
+                { "1380051", "江苏省南京市" },
+                { "1390051", "江苏省南京市" },
+                { "1380073", "湖南省长沙市" },
+                { "1390073", "湖南省长沙市" },
+                { "1380081", "四川省成都市" },
+                { "1390081", "四川省成都市" },
+                { "1380091", "陕西省西安市" },
+                { "1390091", "陕西省西安市" }
+            };
+
+            // 尝试匹配前7位
+            if (locationMap.TryGetValue(prefix, out var location))
+            {
+                return location;
+            }
+
+            // 尝试匹配前3位
+            var threePrefix = phone.Substring(0, 3);
+            var threePrefixMap = new Dictionary<string, string>
+            {
+                { "134", "中国" },
+                { "135", "中国" },
+                { "136", "中国" },
+                { "137", "中国" },
+                { "138", "中国" },
+                { "139", "中国" },
+                { "147", "中国" },
+                { "150", "中国" },
+                { "151", "中国" },
+                { "152", "中国" },
+                { "157", "中国" },
+                { "158", "中国" },
+                { "159", "中国" },
+                { "178", "中国" },
+                { "182", "中国" },
+                { "183", "中国" },
+                { "184", "中国" },
+                { "187", "中国" },
+                { "188", "中国" },
+                { "198", "中国" }
+            };
+
+            if (threePrefixMap.TryGetValue(threePrefix, out var country))
+            {
+                return country;
+            }
+
+            return "未知归属地";
         }
     }
 }

@@ -31,8 +31,9 @@ public class BeanValidatorUtilTest
     {
         var bean = new TestBean { Name = "" };
         var errors = BeanValidatorUtil.ValidateEntity(bean);
-        // 简化实现返回空列表
-        Assert.Empty(errors);
+        // 验证失败，应该返回错误信息
+        Assert.NotEmpty(errors);
+        Assert.Contains("Name is required", errors);
     }
 
     [Fact]
@@ -46,6 +47,8 @@ public class BeanValidatorUtilTest
 
 internal class TestBean
 {
+    [Required(ErrorMessage = "Name is required")]
+    [MinLength(3, ErrorMessage = "Name must be at least 3 characters")]
     public string Name { get; set; } = "default";
 }
 

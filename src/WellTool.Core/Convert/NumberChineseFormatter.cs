@@ -143,8 +143,68 @@ public static class NumberChineseFormatter
 	/// <returns>中文金额</returns>
 	public static string Format(double value, bool isTraditional, bool useUnit)
 	{
-		// 简化实现，实际可能需要更复杂的处理
-		return Format((long)value, isTraditional);
+		// 实现中文金额格式化
+		if (value == 0)
+			return isTraditional ? "零" : "零";
+
+		var negative = value < 0;
+		if (negative)
+			value = -value;
+
+		// 分离整数部分和小数部分
+		long integerPart = (long)value;
+		double decimalPart = value - integerPart;
+
+		var sb = new StringBuilder();
+
+		// 处理整数部分
+		if (integerPart > 0)
+		{
+			sb.Append(Format(integerPart, isTraditional));
+			if (useUnit)
+			{
+				sb.Append("元");
+			}
+		}
+
+		// 处理小数部分
+		if (decimalPart > 0)
+		{
+			// 转换小数部分为两位
+			int fen = (int)(decimalPart * 100);
+			int jiao = fen / 10;
+			fen = fen % 10;
+
+			if (jiao > 0)
+			{
+				sb.Append(isTraditional ? ToUpper(jiao) : CHINESE_DIGITS[jiao]);
+				if (useUnit)
+				{
+					sb.Append("角");
+				}
+			}
+
+			if (fen > 0)
+			{
+				sb.Append(isTraditional ? ToUpper(fen) : CHINESE_DIGITS[fen]);
+				if (useUnit)
+				{
+					sb.Append("分");
+				}
+			}
+		}
+		else if (useUnit)
+		{
+			// 没有小数部分，添加"整"
+			sb.Append("整");
+		}
+
+		if (negative)
+		{
+			sb.Insert(0, "负");
+		}
+
+		return sb.ToString();
 	}
 
 	/// <summary>
@@ -154,7 +214,101 @@ public static class NumberChineseFormatter
 	/// <returns>转换后的数字</returns>
 	public static decimal? ChineseMoneyToNumber(string chineseMoney)
 	{
-		// 简化实现，实际可能需要更复杂的处理
-		return 0;
+		// 实现中文金额转数字
+		if (string.IsNullOrEmpty(chineseMoney))
+			return null;
+
+		// 去除空格
+		chineseMoney = chineseMoney.Trim();
+
+		// 处理负数
+		bool negative = false;
+		if (chineseMoney.StartsWith("负"))
+		{
+			negative = true;
+			chineseMoney = chineseMoney.Substring(1);
+		}
+
+		// 定义中文数字映射
+		var chineseToNumber = new Dictionary<string, int>
+		{
+			{ "零", 0 },
+			{ "一", 1 }, { "壹", 1 },
+			{ "二", 2 }, { "贰", 2 },
+			{ "三", 3 }, { "叁", 3 },
+			{ "四", 4 }, { "肆", 4 },
+			{ "五", 5 }, { "伍", 5 },
+			{ "六", 6 }, { "陆", 6 },
+			{ "七", 7 }, { "柒", 7 },
+			{ "八", 8 }, { "捌", 8 },
+			{ "九", 9 }, { "玖", 9 },
+			{ "十", 10 }, { "拾", 10 },
+			{ "百", 100 }, { "佰", 100 },
+			{ "千", 1000 }, { "仟", 1000 },
+			{ "万", 10000 },
+			{ "亿", 100000000 }
+		};
+
+		decimal result = 0;
+		decimal currentUnit = 1;
+		decimal temp = 0;
+
+		// 处理中文金额
+		for (int i = chineseMoney.Length - 1; i >= 0; i--)
+		{
+			string charStr = chineseMoney[i].ToString();
+			if (chineseToNumber.TryGetValue(charStr, out int value))
+			{
+				if (value >= 10)
+				{
+					// 单位
+					if (value > currentUnit)
+					{
+						currentUnit = value;
+						temp = 0;
+					}
+					else
+					{
+						currentUnit *= value;
+					}
+				}
+				else
+				{
+					// 数字
+					temp += value * currentUnit;
+				}
+			}
+			else if (charStr == "元")
+			{
+				result += temp;
+				temp = 0;
+				currentUnit = 0.1m; // 角
+			}
+			else if (charStr == "角")
+			{
+				result += temp * 0.1m;
+				temp = 0;
+				currentUnit = 0.01m; // 分
+			}
+			else if (charStr == "分")
+			{
+				result += temp * 0.01m;
+				temp = 0;
+				currentUnit = 1;
+			}
+		}
+
+		// 处理最后剩下的部分
+		if (temp > 0)
+		{
+			result += temp;
+		}
+
+		if (negative)
+		{
+			result = -result;
+		}
+
+		return result;
 	}
 }

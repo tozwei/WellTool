@@ -150,28 +150,53 @@ public static class AviatorUtil
     }
 
     /// <summary>
-    /// 编译表达式
-    /// </summary>
-    /// <param name="expression">表达式字符串</param>
-    /// <returns>编译后的表达式对象</returns>
-    public static object Compile(string expression)
-    {
-        // 简化实现，直接返回表达式字符串
-        return expression;
-    }
+        /// 编译表达式
+        /// </summary>
+        /// <param name="expression">表达式字符串</param>
+        /// <returns>编译后的表达式对象</returns>
+        public static object Compile(string expression)
+        {
+            // 实现表达式编译功能
+            if (string.IsNullOrEmpty(expression))
+            {
+                throw new ArgumentException("表达式不能为空", nameof(expression));
+            }
+
+            // 移除首尾空格
+            expression = expression.Trim();
+
+            // 这里使用简单的实现，返回一个包含表达式的对象
+            // 在实际项目中，应该使用Aviator库进行真正的编译
+            return new CompiledExpression { Expression = expression };
+        }
+
+        /// <summary>
+        /// 编译后的表达式对象
+        /// </summary>
+        private class CompiledExpression
+        {
+            /// <summary>
+            /// 表达式字符串
+            /// </summary>
+            public string Expression { get; set; }
+        }
 
     /// <summary>
-    /// 执行编译后的表达式
-    /// </summary>
-    /// <param name="compiled">编译后的表达式</param>
-    /// <param name="env">环境变量</param>
-    /// <returns>执行结果</returns>
-    public static object Execute(object compiled, IDictionary<string, object> env = null)
-    {
-        if (compiled is string expression)
+        /// 执行编译后的表达式
+        /// </summary>
+        /// <param name="compiled">编译后的表达式</param>
+        /// <param name="env">环境变量</param>
+        /// <returns>执行结果</returns>
+        public static object Execute(object compiled, IDictionary<string, object> env = null)
         {
-            return Exec(expression, env);
+            if (compiled is string expression)
+            {
+                return Exec(expression, env);
+            }
+            else if (compiled is CompiledExpression compiledExpr)
+            {
+                return Exec(compiledExpr.Expression, env);
+            }
+            return null;
         }
-        return null;
-    }
 }

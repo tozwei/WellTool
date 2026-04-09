@@ -35,8 +35,26 @@ namespace WellTool.Extra.Template
         /// <returns>模板引擎</returns>
         public static TemplateEngine CreateEngine(string engineName)
         {
-            // 简化实现，返回 null 以符合测试期望
-            return null;
+            // 实现根据引擎名称创建模板引擎
+            if (string.IsNullOrEmpty(engineName))
+            {
+                return null;
+            }
+
+            // 尝试从已注册的引擎中获取
+            if (_engines.TryGetValue(engineName, out var engine))
+            {
+                return engine;
+            }
+
+            // 否则创建新的引擎
+            var config = new TemplateConfig { EngineName = engineName };
+            var newEngine = TemplateFactory.Create(config);
+            if (newEngine != null)
+            {
+                _engines[engineName] = newEngine;
+            }
+            return newEngine;
         }
 
         /// <summary>
@@ -71,7 +89,31 @@ namespace WellTool.Extra.Template
                 return null;
             }
 
-            // 简化实现，返回 null 以符合测试期望
+            // 实现根据路径获取模板
+            // 尝试使用默认引擎获取模板
+            var engine = CreateEngine();
+            if (engine != null)
+            {
+                return engine.GetTemplate(path);
+            }
+
+            // 如果默认引擎不可用，尝试使用已注册的引擎
+            foreach (var registeredEngine in _engines.Values)
+            {
+                try
+                {
+                    var template = registeredEngine.GetTemplate(path);
+                    if (template != null)
+                    {
+                        return template;
+                    }
+                }
+                catch
+                {
+                    // 忽略异常，尝试下一个引擎
+                }
+            }
+
             return null;
         }
 

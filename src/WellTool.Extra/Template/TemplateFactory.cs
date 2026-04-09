@@ -87,8 +87,9 @@ namespace WellTool.Extra.Template
         /// <param name="writer">输出</param>
         public override void Render(System.Collections.Generic.IDictionary<object, object> bindingMap, System.IO.TextWriter writer)
         {
-            // 简化实现，实际项目中需要根据模板引擎的语法进行渲染
-            writer.Write(_resource);
+            // 实现模板渲染功能，支持变量替换
+            string renderedContent = RenderTemplate(_resource, bindingMap);
+            writer.Write(renderedContent);
         }
 
         /// <summary>
@@ -98,11 +99,42 @@ namespace WellTool.Extra.Template
         /// <param name="output">输出</param>
         public override void Render(System.Collections.Generic.IDictionary<object, object> bindingMap, System.IO.Stream output)
         {
-            // 简化实现，实际项目中需要根据模板引擎的语法进行渲染
+            // 实现模板渲染功能，支持变量替换
+            string renderedContent = RenderTemplate(_resource, bindingMap);
             using (System.IO.StreamWriter writer = new System.IO.StreamWriter(output, System.Text.Encoding.UTF8, bufferSize: 1024, leaveOpen: true))
             {
-                writer.Write(_resource);
+                writer.Write(renderedContent);
             }
+        }
+
+        /// <summary>
+        /// 渲染模板，替换变量
+        /// </summary>
+        /// <param name="template">模板内容</param>
+        /// <param name="bindingMap">绑定的参数</param>
+        /// <returns>渲染后的内容</returns>
+        private string RenderTemplate(string template, System.Collections.Generic.IDictionary<object, object> bindingMap)
+        {
+            if (string.IsNullOrEmpty(template) || bindingMap == null || bindingMap.Count == 0)
+            {
+                return template;
+            }
+
+            string result = template;
+
+            // 简单的变量替换，支持 ${变量名} 格式
+            foreach (var kvp in bindingMap)
+            {
+                string key = kvp.Key?.ToString();
+                if (!string.IsNullOrEmpty(key))
+                {
+                    string placeholder = $"${{{key}}}";
+                    string value = kvp.Value?.ToString() ?? string.Empty;
+                    result = result.Replace(placeholder, value);
+                }
+            }
+
+            return result;
         }
     }
 }

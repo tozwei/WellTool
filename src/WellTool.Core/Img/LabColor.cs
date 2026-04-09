@@ -28,15 +28,45 @@ namespace WellTool.Core.Img
             if (rgb.HasValue)
             {
                 // 从 RGB 转换到 LAB
-                // 简化实现，实际应用中可能需要更复杂的转换
                 int r = (rgb.Value >> 16) & 0xFF;
                 int g = (rgb.Value >> 8) & 0xFF;
                 int b = rgb.Value & 0xFF;
                 
-                // 简化的 LAB 转换
-                _l = 0.299 * r + 0.587 * g + 0.114 * b;
-                _a = (r - g) * 0.707;
-                _b = (r + g - 2 * b) * 0.408;
+                // 1. RGB 到 XYZ 的转换
+                double rLinear = r / 255.0;
+                double gLinear = g / 255.0;
+                double bLinear = b / 255.0;
+
+                // 应用 gamma 校正
+                rLinear = rLinear > 0.04045 ? System.Math.Pow((rLinear + 0.055) / 1.055, 2.4) : rLinear / 12.92;
+                gLinear = gLinear > 0.04045 ? System.Math.Pow((gLinear + 0.055) / 1.055, 2.4) : gLinear / 12.92;
+                bLinear = bLinear > 0.04045 ? System.Math.Pow((bLinear + 0.055) / 1.055, 2.4) : bLinear / 12.92;
+
+                // 转换到 XYZ 颜色空间
+                double x = rLinear * 0.4124 + gLinear * 0.3576 + bLinear * 0.1805;
+                double y = rLinear * 0.2126 + gLinear * 0.7152 + bLinear * 0.0722;
+                double z = rLinear * 0.0193 + gLinear * 0.1192 + bLinear * 0.9505;
+
+                // 2. XYZ 到 LAB 的转换
+                // 参考白点 (D65)
+                double xRef = 0.95047;
+                double yRef = 1.00000;
+                double zRef = 1.08883;
+
+                // 归一化到参考白点
+                x /= xRef;
+                y /= yRef;
+                z /= zRef;
+
+                // 应用 F 函数
+                double fx = F(x);
+                double fy = F(y);
+                double fz = F(z);
+
+                // 计算 LAB 值
+                _l = 116 * fy - 16;
+                _a = 500 * (fx - fy);
+                _b = 200 * (fy - fz);
             }
         }
 
