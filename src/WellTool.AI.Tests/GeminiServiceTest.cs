@@ -13,7 +13,7 @@
 
 using Xunit;
 using WellTool.AI;
-using WellTool.AI.Gemini;
+using WellTool.AI.Model.Gemini;
 
 namespace WellTool.AI.Tests
 {

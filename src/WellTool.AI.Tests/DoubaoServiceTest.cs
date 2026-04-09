@@ -13,7 +13,7 @@
 
 using Xunit;
 using WellTool.AI;
-using WellTool.AI.Doubao;
+using WellTool.AI.Model.Doubao;
 
 namespace WellTool.AI.Tests
 {

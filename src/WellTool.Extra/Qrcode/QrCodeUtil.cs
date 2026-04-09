@@ -71,7 +71,7 @@ namespace WellTool.Extra.Qrcode
             int width = qrConfig.GetWidth();
             int height = qrConfig.GetHeight();
             int cellSize = Math.Min(width, height) / 25; // 25x25 二维码网格
-            int margin = qrConfig.GetMargin();
+            int margin = qrConfig.GetMargin() ?? 2; // 使用默认值 2
 
             // 生成简单的二维码网格（实际项目中应该使用真正的二维码算法）
             bool[,] qrGrid = GenerateQrGrid(content, 25, 25);
@@ -134,7 +134,7 @@ namespace WellTool.Extra.Qrcode
             int width = qrConfig.GetWidth();
             int height = qrConfig.GetHeight();
             int cellSize = Math.Min(width, height) / 25; // 25x25 二维码网格
-            int margin = qrConfig.GetMargin();
+            int margin = qrConfig.GetMargin() ?? 2; // 使用默认值 2
 
             var bitmap = new Bitmap(width, height);
             using (var graphics = Graphics.FromImage(bitmap))

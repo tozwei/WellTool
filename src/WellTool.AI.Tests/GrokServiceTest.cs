@@ -13,7 +13,7 @@
 
 using Xunit;
 using WellTool.AI;
-using WellTool.AI.Grok;
+using WellTool.AI.Model.Grok;
 
 namespace WellTool.AI.Tests
 {

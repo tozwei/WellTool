@@ -83,4 +83,43 @@ public class ScriptUtil
     {
         return new FullSupportScriptEngine(engine);
     }
+
+    /// <summary>
+    /// 创建脚本引擎（静态方法）
+    /// </summary>
+    /// <param name="nameOrExtOrMime">脚本名或者脚本语言扩展名或者MineType</param>
+    /// <returns>脚本引擎</returns>
+    public static object CreateEngine(string nameOrExtOrMime)
+    {
+        return Instance.CreateFullSupportScriptEngine(nameOrExtOrMime);
+    }
+
+    /// <summary>
+    /// 执行脚本（静态方法）
+    /// </summary>
+    /// <param name="nameOrExtOrMime">脚本名或者脚本语言扩展名或者MineType</param>
+    /// <param name="script">脚本代码</param>
+    /// <returns>执行结果</returns>
+    public static object? Eval(string nameOrExtOrMime, string script)
+    {
+        var engine = Instance.CreateFullSupportScriptEngine(nameOrExtOrMime);
+        return engine.Execute(script);
+    }
+
+    /// <summary>
+    /// 执行脚本（静态方法）
+    /// </summary>
+    /// <param name="nameOrExtOrMime">脚本名或者脚本语言扩展名或者MineType</param>
+    /// <param name="script">脚本代码</param>
+    /// <param name="bindings">绑定的变量</param>
+    /// <returns>执行结果</returns>
+    public static object? Eval(string nameOrExtOrMime, string script, System.Collections.Generic.Dictionary<string, object> bindings)
+    {
+        var engine = Instance.CreateFullSupportScriptEngine(nameOrExtOrMime);
+        foreach (var binding in bindings)
+        {
+            engine.SetValue(binding.Key, binding.Value);
+        }
+        return engine.Execute(script);
+    }
 }
