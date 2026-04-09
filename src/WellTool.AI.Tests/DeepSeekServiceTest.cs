@@ -13,7 +13,7 @@
 
 using Xunit;
 using WellTool.AI;
-using WellTool.AI.DeepSeek;
+using WellTool.AI.Model.DeepSeek;
 
 namespace WellTool.AI.Tests
 {

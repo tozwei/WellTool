@@ -12,7 +12,7 @@
 // limitations under the License.
 
 using Xunit;
-using WellTool.DB.Ds;
+using WellTool.DB.DS;
 
 namespace WellTool.DB.Tests
 {

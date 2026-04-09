@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Data;
 using Xunit;
 
 namespace WellTool.DB.Tests;
@@ -26,7 +27,50 @@ public class GlobalDbConfigTest
     [Fact]
     public void TestGlobalDbConfig()
     {
-        // TODO: 实现测试方法
-        Assert.True(true);
+        // 测试全局数据库配置
+        // 保存原始配置值
+        var originalConnectionTimeout = WellTool.DB.GlobalDbConfig.ConnectionTimeout;
+        var originalCommandTimeout = WellTool.DB.GlobalDbConfig.CommandTimeout;
+        var originalTransactionIsolationLevel = WellTool.DB.GlobalDbConfig.DefaultTransactionIsolationLevel;
+        var originalShowSql = WellTool.DB.GlobalDbConfig.ShowSql;
+        var originalDbType = WellTool.DB.GlobalDbConfig.DbType;
+        var originalCaseInsensitive = WellTool.DB.GlobalDbConfig.CaseInsensitive;
+
+        try
+        {
+            // 测试默认值
+            Assert.Equal(30000, WellTool.DB.GlobalDbConfig.ConnectionTimeout);
+            Assert.Equal(30, WellTool.DB.GlobalDbConfig.CommandTimeout);
+            Assert.Equal(System.Data.IsolationLevel.ReadCommitted, WellTool.DB.GlobalDbConfig.DefaultTransactionIsolationLevel);
+            Assert.True(WellTool.DB.GlobalDbConfig.ShowSql);
+            Assert.Equal("mysql", WellTool.DB.GlobalDbConfig.DbType);
+            Assert.True(WellTool.DB.GlobalDbConfig.CaseInsensitive);
+
+            // 测试修改配置
+            WellTool.DB.GlobalDbConfig.ConnectionTimeout = 60000;
+            WellTool.DB.GlobalDbConfig.CommandTimeout = 60;
+            WellTool.DB.GlobalDbConfig.DefaultTransactionIsolationLevel = System.Data.IsolationLevel.Serializable;
+            WellTool.DB.GlobalDbConfig.ShowSql = false;
+            WellTool.DB.GlobalDbConfig.DbType = "sqlserver";
+            WellTool.DB.GlobalDbConfig.CaseInsensitive = false;
+
+            // 验证修改后的配置
+            Assert.Equal(60000, WellTool.DB.GlobalDbConfig.ConnectionTimeout);
+            Assert.Equal(60, WellTool.DB.GlobalDbConfig.CommandTimeout);
+            Assert.Equal(System.Data.IsolationLevel.Serializable, WellTool.DB.GlobalDbConfig.DefaultTransactionIsolationLevel);
+            Assert.False(WellTool.DB.GlobalDbConfig.ShowSql);
+            Assert.Equal("sqlserver", WellTool.DB.GlobalDbConfig.DbType);
+            Assert.False(WellTool.DB.GlobalDbConfig.CaseInsensitive);
+        }
+        finally
+        {
+            // 恢复原始配置
+            WellTool.DB.GlobalDbConfig.ConnectionTimeout = originalConnectionTimeout;
+            WellTool.DB.GlobalDbConfig.CommandTimeout = originalCommandTimeout;
+            WellTool.DB.GlobalDbConfig.DefaultTransactionIsolationLevel = originalTransactionIsolationLevel;
+            WellTool.DB.GlobalDbConfig.ShowSql = originalShowSql;
+            WellTool.DB.GlobalDbConfig.DbType = originalDbType;
+            WellTool.DB.GlobalDbConfig.CaseInsensitive = originalCaseInsensitive;
+        }
     }
 }

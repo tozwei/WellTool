@@ -12,7 +12,7 @@
 // limitations under the License.
 
 using Xunit;
-using WellTool.DB.Nosql;
+using WellTool.DB.NoSql;
 
 namespace WellTool.DB.Tests
 {
