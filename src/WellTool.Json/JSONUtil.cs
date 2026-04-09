@@ -325,7 +325,7 @@ namespace WellTool.Json
             // 处理属性
             foreach (var attribute in element.Attributes())
             {
-                jsonObj.Put(attribute.Name.LocalName, attribute.Value);
+                jsonObj.Set(attribute.Name.LocalName, attribute.Value);
             }
 
             // 处理子元素
@@ -336,7 +336,7 @@ namespace WellTool.Json
                 var text = element.Value.Trim();
                 if (!string.IsNullOrEmpty(text))
                 {
-                    jsonObj.Put("#text", text);
+                    jsonObj.Set("#text", text);
                 }
             }
             else
@@ -350,23 +350,23 @@ namespace WellTool.Json
                     if (jsonObj.ContainsKey(childName))
                     {
                         // 如果已经存在同名元素，转换为数组
-                        var existingValue = jsonObj.Get(childName);
+                        var existingValue = jsonObj[childName];
                         if (existingValue is JSONArray array)
                         {
-                            array.Add(childJson);
+                            array.Set(childJson);
                         }
                         else
                         {
                             var newArray = new JSONArray();
-                            newArray.Add(existingValue);
-                            newArray.Add(childJson);
-                            jsonObj.Put(childName, newArray);
+                            newArray.Set(existingValue);
+                            newArray.Set(childJson);
+                            jsonObj.Set(childName, newArray);
                         }
                     }
                     else
                     {
                         // 不存在同名元素，直接添加
-                        jsonObj.Put(childName, childJson);
+                        jsonObj.Set(childName, childJson);
                     }
                 }
             }
