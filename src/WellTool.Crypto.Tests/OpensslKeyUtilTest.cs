@@ -12,9 +12,13 @@
 // limitations under the License.
 
 using System;
+using System.IO;
+using System.Text;
 using Xunit;
 using WellTool.Crypto;
-using WellTool.Crypto.Asymmetric;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Security;
 
 namespace WellTool.Crypto.Tests
 {
@@ -27,9 +31,7 @@ namespace WellTool.Crypto.Tests
         public void ReadWritePrivateKeyTest()
         {
             // 生成 RSA 密钥对
-            var (publicKey, privateKey) = CryptoUtil.GenerateRsaKeyPair();
-            var rsa = new WellTool.Crypto.Asymmetric.RSA(publicKey, privateKey);
-            var keyPair = rsa.GetKeyPair();
+            var keyPair = GenerateRsaKeyPair();
 
             // 写入私钥为 PEM 格式
             var privateKeyPem = OpensslKeyUtil.WritePrivateKey(keyPair);
@@ -47,9 +49,7 @@ namespace WellTool.Crypto.Tests
         public void ReadWritePublicKeyTest()
         {
             // 生成 RSA 密钥对
-            var (publicKey, privateKey) = CryptoUtil.GenerateRsaKeyPair();
-            var rsa = new WellTool.Crypto.Asymmetric.RSA(publicKey, privateKey);
-            var keyPair = rsa.GetKeyPair();
+            var keyPair = GenerateRsaKeyPair();
 
             // 写入公钥为 PEM 格式
             var publicKeyPem = OpensslKeyUtil.WritePublicKey(keyPair.Public);
@@ -59,6 +59,13 @@ namespace WellTool.Crypto.Tests
             // 读取公钥
             var readPublicKey = OpensslKeyUtil.ReadPublicKey(publicKeyPem);
             Assert.NotNull(readPublicKey);
+        }
+
+        private AsymmetricCipherKeyPair GenerateRsaKeyPair()
+        {
+            var generator = new RsaKeyPairGenerator();
+            generator.Init(new KeyGenerationParameters(new SecureRandom(), 2048));
+            return generator.GenerateKeyPair();
         }
     }
 }

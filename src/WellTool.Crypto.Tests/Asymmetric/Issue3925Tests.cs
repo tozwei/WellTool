@@ -1,6 +1,6 @@
+using System.Text;
 using Xunit;
 using WellTool.Crypto.Asymmetric;
-using System;
 
 namespace WellTool.Crypto.Tests.Asymmetric
 {
@@ -9,9 +9,17 @@ namespace WellTool.Crypto.Tests.Asymmetric
         [Fact]
         public void TestIssue3925()
         {
-            // 测试 Issue3925 相关的功能
-            // 这里只是一个占位符，具体实现需要根据 Java 代码的逻辑来编写
-            Assert.True(true);
+            // 测试基本的 RSA 加密和解密功能
+            var (publicKey, privateKey) = RSA.GenerateKeyPair();
+            var rsa = new RSA(publicKey, privateKey);
+
+            var plaintext = "Hello, Issue3925!";
+            var encrypted = rsa.Encrypt(Encoding.UTF8.GetBytes(plaintext));
+            var decrypted = rsa.Decrypt(encrypted);
+
+            Assert.NotNull(encrypted);
+            Assert.NotNull(decrypted);
+            Assert.Equal(plaintext, Encoding.UTF8.GetString(decrypted));
         }
     }
 }

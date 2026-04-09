@@ -1,16 +1,36 @@
+using System.Text;
 using Xunit;
 using WellTool.Crypto.Asymmetric;
-using System;
 
 namespace WellTool.Crypto.Tests.Asymmetric
 {
     public class RSATests
     {
         [Fact]
-        public void TestRSA()
+        public void GenerateKeyPairTest()
         {
-            // 这里只是一个占位符，具体实现需要根据 RSA 类的实际实现来编写
-            Assert.True(true);
+            // 测试生成 RSA 密钥对
+            var (publicKey, privateKey) = RSA.GenerateKeyPair();
+            Assert.NotNull(publicKey);
+            Assert.NotNull(privateKey);
+            Assert.NotEmpty(publicKey);
+            Assert.NotEmpty(privateKey);
+        }
+
+        [Fact]
+        public void EncryptDecryptTest()
+        {
+            // 测试 RSA 加密和解密
+            var (publicKey, privateKey) = RSA.GenerateKeyPair();
+            var rsa = new RSA(publicKey, privateKey);
+
+            var plaintext = "Hello, RSA!";
+            var encrypted = rsa.Encrypt(Encoding.UTF8.GetBytes(plaintext));
+            var decrypted = rsa.Decrypt(encrypted);
+
+            Assert.NotNull(encrypted);
+            Assert.NotNull(decrypted);
+            Assert.Equal(plaintext, Encoding.UTF8.GetString(decrypted));
         }
     }
 }
