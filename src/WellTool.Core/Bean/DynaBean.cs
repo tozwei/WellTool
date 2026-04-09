@@ -16,6 +16,8 @@ namespace WellTool.Core.Bean
         private readonly Type _beanClass;
         private readonly object _bean;
         private readonly bool _isMap;
+        private readonly bool _isNewInstance;
+        private readonly System.Collections.Generic.HashSet<string> _setProps = new System.Collections.Generic.HashSet<string>();
 
         /// <summary>
         /// 创建DynaBean
@@ -55,6 +57,7 @@ namespace WellTool.Core.Bean
             _bean = ReflectUtil.CreateInstance(beanClass, args);
             _beanClass = _bean.GetType();
             _isMap = typeof(IDictionary).IsAssignableFrom(_beanClass);
+            _isNewInstance = true;
         }
 
         /// <summary>
@@ -76,6 +79,7 @@ namespace WellTool.Core.Bean
             _bean = bean;
             _beanClass = _bean.GetType();
             _isMap = typeof(IDictionary).IsAssignableFrom(_beanClass);
+            _isNewInstance = false;
         }
 
         /// <summary>
@@ -143,6 +147,11 @@ namespace WellTool.Core.Bean
                     throw new BeanException($"No public field or set method for '{fieldName}'");
                 }
                 prop.SetValue(_bean, value);
+                // record that this property has been explicitly set when the bean was created by Type
+                if (_isNewInstance)
+                {
+                    _setProps.Add(fieldName);
+                }
             }
         }
 
@@ -159,6 +168,11 @@ namespace WellTool.Core.Bean
             else
             {
                 var beanDesc = BeanDesc.GetBeanDesc(_beanClass);
+                if (_isNewInstance)
+                {
+                    // for beans created from Type, only consider properties that have been explicitly set
+                    return _setProps.Contains(fieldName);
+                }
                 return beanDesc?.GetPropDesc(fieldName) != null;
             }
         }

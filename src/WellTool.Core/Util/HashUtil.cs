@@ -139,7 +139,8 @@ namespace WellTool.Core.Util
                 hash ^= c;
                 hash *= FNV1_PRIME;
             }
-            return (int)hash;
+            // ensure non-negative result to match test expectations
+            return (int)(hash & 0x7FFFFFFF);
         }
     }
 }

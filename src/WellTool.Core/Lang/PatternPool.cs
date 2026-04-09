@@ -9,6 +9,11 @@ namespace WellTool.Core.Lang;
 public static class PatternPool
 {
 	/// <summary>
+	/// Pattern缓存池
+	/// </summary>
+	private static readonly ConcurrentDictionary<string, Regex> Pool = new();
+
+	/// <summary>
 	/// 英文字母 、数字和下划线
 	/// </summary>
 	public static readonly Regex GENERAL = Get(RegexPool.GENERAL);
@@ -172,11 +177,6 @@ public static class PatternPool
 	/// 中文姓名
 	/// </summary>
 	public static readonly Regex CHINESE_NAME = Get(RegexPool.CHINESE_NAME);
-
-	/// <summary>
-	/// Pattern缓存池
-	/// </summary>
-	private static readonly ConcurrentDictionary<string, Regex> Pool = new();
 
 	/// <summary>
 	/// 先从Pattern池中查找正则对应的Regex，找不到则编译正则表达式并入池。

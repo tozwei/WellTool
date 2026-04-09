@@ -559,7 +559,7 @@ public static class AssertUtil
     /// </summary>
     public static void IsAssignable(Type superType, Type subType)
     {
-        if (subType == null || !superType.IsAssignableFrom(subType))
+        if (subType == null || !IsAssignableFrom(superType, subType))
         {
             throw new ArgumentException($"{subType} is not assignable to {superType}");
         }
@@ -570,7 +570,7 @@ public static class AssertUtil
     /// </summary>
     public static void IsAssignable(Type superType, Type subType, string errorMsgTemplate, params object[] param)
     {
-        if (subType == null || !superType.IsAssignableFrom(subType))
+        if (subType == null || !IsAssignableFrom(superType, subType))
         {
             throw new ArgumentException(string.Format(errorMsgTemplate, param));
         }
@@ -581,10 +581,48 @@ public static class AssertUtil
     /// </summary>
     public static void IsAssignable(Type superType, Type subType, System.Func<System.Exception> errorSupplier)
     {
-        if (subType == null || !superType.IsAssignableFrom(subType))
+        if (subType == null || !IsAssignableFrom(superType, subType))
         {
             throw errorSupplier();
         }
+    }
+
+    /// <summary>
+    /// 检查子类型是否可以赋值给父类型，支持泛型类型
+    /// </summary>
+    private static bool IsAssignableFrom(Type superType, Type subType)
+    {
+        // 首先使用标准的 IsAssignableFrom 检查
+        if (superType.IsAssignableFrom(subType))
+        {
+            return true;
+        }
+
+        // 处理泛型类型的情况
+        if (superType.IsGenericTypeDefinition)
+        {
+            // 检查子类型是否实现了泛型接口或继承了泛型类
+            foreach (var interfaceType in subType.GetInterfaces())
+            {
+                if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == superType)
+                {
+                    return true;
+                }
+            }
+
+            // 检查子类型是否继承自泛型类
+            var baseType = subType.BaseType;
+            while (baseType != null)
+            {
+                if (baseType.IsGenericType && baseType.GetGenericTypeDefinition() == superType)
+                {
+                    return true;
+                }
+                baseType = baseType.BaseType;
+            }
+        }
+
+        return false;
     }
     #endregion
 

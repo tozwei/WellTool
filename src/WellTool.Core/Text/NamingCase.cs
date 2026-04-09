@@ -212,7 +212,11 @@ namespace WellTool.Core.Text
             }
             else
             {
-                // 如果字符串不包含连接符，保留原始字符串（不强制转小写）
+                // 如果字符串不包含连接符，将首字母转换为小写
+                if (name.Length > 0)
+                {
+                    return char.ToLower(name[0]) + name.Substring(1);
+                }
                 return name;
             }
         }
