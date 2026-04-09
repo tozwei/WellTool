@@ -1,5 +1,7 @@
 namespace WellTool.Extra.Tests;
 
+using Xunit;
+using System.IO;
 using WellTool.Extra;
 
 public class QrCodeUtilTest
