@@ -40,10 +40,10 @@ namespace WellTool.Core.Tests
             var testObj = new { Name = "Test", Age = 10 };
             var dict = WellTool.Core.Bean.BeanUtil.BeanToMap(testObj);
             Assert.NotNull(dict);
-            Assert.Contains("Name", dict);
-            Assert.Contains("Age", dict);
-            Assert.Equal("Test", dict["Name"]);
-            Assert.Equal(10, dict["Age"]);
+            Assert.Contains("name", dict);
+            Assert.Contains("age", dict);
+            Assert.Equal("Test", dict["name"]);
+            Assert.Equal(10, dict["age"]);
         }
 
         [Fact]

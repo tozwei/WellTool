@@ -82,8 +82,8 @@ namespace WellTool.Core.Bean.Copier
 				}
 				else if (sFieldName == sDesc.FieldName)
 				{
-					// 对于原始字段，保持原始字段名大小写
-					targetFieldName = sDesc.FieldName;
+					// 对于原始字段，使用小写作为默认字段名
+					targetFieldName = sDesc.FieldName.ToLower();
 				}
 
 				// 对key做转换，转换后为null的跳过
