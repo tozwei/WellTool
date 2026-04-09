@@ -33,72 +33,88 @@ namespace WellTool.DB.Tests
         public void TestConditionBuilderWithEqual()
         {
             // 测试等于条件
-            var builder = new ConditionBuilder();
-            var condition = builder.Equal("id", 1);
-            Assert.NotNull(condition);
+            var condition = Condition.Eq("id", 1);
+            var builder = ConditionBuilder.Of(condition);
+            Assert.NotNull(builder);
+            var sql = builder.Build();
+            Assert.Contains("id =", sql);
         }
 
         [Fact]
         public void TestConditionBuilderWithLike()
         {
             // 测试 LIKE 条件
-            var builder = new ConditionBuilder();
-            var condition = builder.Like("name", "%John%");
-            Assert.NotNull(condition);
+            var condition = Condition.Like("name", "%John%");
+            var builder = ConditionBuilder.Of(condition);
+            Assert.NotNull(builder);
+            var sql = builder.Build();
+            Assert.Contains("name LIKE", sql);
         }
 
         [Fact]
         public void TestConditionBuilderWithGreaterThan()
         {
             // 测试大于条件
-            var builder = new ConditionBuilder();
-            var condition = builder.GreaterThan("age", 18);
-            Assert.NotNull(condition);
+            var condition = Condition.Gt("age", 18);
+            var builder = ConditionBuilder.Of(condition);
+            Assert.NotNull(builder);
+            var sql = builder.Build();
+            Assert.Contains("age >", sql);
         }
 
         [Fact]
         public void TestConditionBuilderWithLessThan()
         {
             // 测试小于条件
-            var builder = new ConditionBuilder();
-            var condition = builder.LessThan("age", 65);
-            Assert.NotNull(condition);
+            var condition = Condition.Lt("age", 65);
+            var builder = ConditionBuilder.Of(condition);
+            Assert.NotNull(builder);
+            var sql = builder.Build();
+            Assert.Contains("age <", sql);
         }
 
         [Fact]
         public void TestConditionBuilderWithBetween()
         {
             // 测试 BETWEEN 条件
-            var builder = new ConditionBuilder();
-            var condition = builder.Between("age", 18, 65);
-            Assert.NotNull(condition);
+            var condition = new Condition("age", "BETWEEN", 18) { SecondValue = 65 };
+            var builder = ConditionBuilder.Of(condition);
+            Assert.NotNull(builder);
+            var sql = builder.Build();
+            Assert.Contains("age BETWEEN", sql);
         }
 
         [Fact]
         public void TestConditionBuilderWithIn()
         {
             // 测试 IN 条件
-            var builder = new ConditionBuilder();
-            var condition = builder.In("id", 1, 2, 3);
-            Assert.NotNull(condition);
+            var condition = Condition.In("id", new[] { 1, 2, 3 });
+            var builder = ConditionBuilder.Of(condition);
+            Assert.NotNull(builder);
+            var sql = builder.Build();
+            Assert.Contains("id IN", sql);
         }
 
         [Fact]
         public void TestConditionBuilderWithIsNull()
         {
             // 测试 IS NULL 条件
-            var builder = new ConditionBuilder();
-            var condition = builder.IsNull("name");
-            Assert.NotNull(condition);
+            var condition = Condition.IsNull("name");
+            var builder = ConditionBuilder.Of(condition);
+            Assert.NotNull(builder);
+            var sql = builder.Build();
+            Assert.Contains("name IS NULL", sql);
         }
 
         [Fact]
         public void TestConditionBuilderWithIsNotNull()
         {
             // 测试 IS NOT NULL 条件
-            var builder = new ConditionBuilder();
-            var condition = builder.IsNotNull("name");
-            Assert.NotNull(condition);
+            var condition = Condition.IsNotNull("name");
+            var builder = ConditionBuilder.Of(condition);
+            Assert.NotNull(builder);
+            var sql = builder.Build();
+            Assert.Contains("name IS NOT NULL", sql);
         }
     }
 }

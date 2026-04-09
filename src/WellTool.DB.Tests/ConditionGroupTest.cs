@@ -34,31 +34,34 @@ namespace WellTool.DB.Tests
         {
             // 测试添加条件到条件组
             var group = new ConditionGroup();
-            group.Add(Condition.Create("age > @age"));
-            group.Add(Condition.Create("name LIKE @name"));
+            group.Add(Condition.Gt("age", 18));
+            group.Add(Condition.Like("name", "%John%"));
             Assert.NotNull(group);
+            Assert.Equal(2, group.Conditions.Count);
         }
 
         [Fact]
         public void TestConditionGroupWithAnd()
         {
             // 测试 AND 条件组
-            var group = new ConditionGroup();
-            group.Add(Condition.Create("age > @age"));
-            group.Add(Condition.Create("name LIKE @name"));
-            var condition = group.And();
-            Assert.NotNull(condition);
+            var group = new ConditionGroup(LogicalOperator.AND);
+            group.Add(Condition.Gt("age", 18));
+            group.Add(Condition.Like("name", "%John%"));
+            Assert.NotNull(group);
+            Assert.Equal(LogicalOperator.AND, group.LogicalOperator);
+            Assert.Equal(2, group.Conditions.Count);
         }
 
         [Fact]
         public void TestConditionGroupWithOr()
         {
             // 测试 OR 条件组
-            var group = new ConditionGroup();
-            group.Add(Condition.Create("age > @age"));
-            group.Add(Condition.Create("age < @minAge"));
-            var condition = group.Or();
-            Assert.NotNull(condition);
+            var group = new ConditionGroup(LogicalOperator.OR);
+            group.Add(Condition.Gt("age", 18));
+            group.Add(Condition.Lt("age", 30));
+            Assert.NotNull(group);
+            Assert.Equal(LogicalOperator.OR, group.LogicalOperator);
+            Assert.Equal(2, group.Conditions.Count);
         }
     }
 }

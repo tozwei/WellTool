@@ -25,32 +25,41 @@ namespace WellTool.DB.Tests
         public void TestConditionCreation()
         {
             // 测试创建条件
-            var condition = Condition.Create("age > @age");
+            var condition = Condition.Parse("age", "> @age");
             Assert.NotNull(condition);
         }
 
         [Fact]
-        public void TestConditionWithAnd()
+        public void TestConditionWithEq()
         {
-            // 测试 AND 条件
-            var condition = Condition.Create("age > @age").And("name LIKE @name");
+            // 测试等于条件
+            var condition = Condition.Eq("age", 18);
             Assert.NotNull(condition);
+            Assert.Equal("age", condition.Field);
+            Assert.Equal("=", condition.Operator);
+            Assert.Equal(18, condition.Value);
         }
 
         [Fact]
-        public void TestConditionWithOr()
+        public void TestConditionWithGt()
         {
-            // 测试 OR 条件
-            var condition = Condition.Create("age > @age").Or("age < @minAge");
+            // 测试大于条件
+            var condition = Condition.Gt("age", 18);
             Assert.NotNull(condition);
+            Assert.Equal("age", condition.Field);
+            Assert.Equal(">", condition.Operator);
+            Assert.Equal(18, condition.Value);
         }
 
         [Fact]
-        public void TestConditionWithNot()
+        public void TestConditionWithLike()
         {
-            // 测试 NOT 条件
-            var condition = Condition.Create("age > @age").Not();
+            // 测试 LIKE 条件
+            var condition = Condition.Like("name", "%John%");
             Assert.NotNull(condition);
+            Assert.Equal("name", condition.Field);
+            Assert.Equal("LIKE", condition.Operator);
+            Assert.Equal("%John%", condition.Value);
         }
     }
 }

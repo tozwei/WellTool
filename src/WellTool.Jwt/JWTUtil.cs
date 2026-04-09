@@ -11,14 +11,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using WellTool.JWT;
 using WellTool.JWT.Signers;
+using System.Collections.Generic;
 
-namespace WellTool.JWT;
+namespace WellTool.Jwt;
 
 /// <summary>
     /// JWT 工具类
     /// </summary>
-    public static class JWTUtil
+    public static class JwtUtil
     {
 
 
@@ -40,6 +42,25 @@ namespace WellTool.JWT;
                 .SetAudience(audience)
                 .SetIssuedAt(DateTime.UtcNow)
                 .SetExpiresAt(DateTime.UtcNow.AddSeconds(expiration));
+
+            return jwt.SetKey(secret).Sign();
+        }
+
+        /// <summary>
+        /// 创建 JWT 令牌
+        /// </summary>
+        /// <param name="claims">声明</param>
+        /// <param name="secret">密钥</param>
+        /// <returns>JWT 令牌</returns>
+        public static string CreateToken(Dictionary<string, object> claims, string secret)
+        {
+            var jwt = new JWT();
+            var payload = jwt.Payload;
+            
+            foreach (var claim in claims)
+            {
+                payload.SetClaim(claim.Key, claim.Value);
+            }
 
             return jwt.SetKey(secret).Sign();
         }
@@ -68,6 +89,22 @@ namespace WellTool.JWT;
                 throw new ArgumentNullException(nameof(token));
             }
             return JWT.Of(token);
+        }
+
+        /// <summary>
+        /// 解析 JWT 令牌
+        /// </summary>
+        /// <param name="token">JWT 令牌</param>
+        /// <param name="secret">密钥</param>
+        /// <returns>声明字典</returns>
+        public static Dictionary<string, object> ParseToken(string token, string secret)
+        {
+            var jwt = JWT.Of(token);
+            if (!jwt.SetKey(secret).Verify())
+            {
+                return new Dictionary<string, object>();
+            }
+            return jwt.Payload.GetClaimsJson();
         }
 
         /// <summary>

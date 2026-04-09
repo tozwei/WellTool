@@ -114,12 +114,12 @@ public class ScriptUtil
     /// <param name="bindings">绑定的变量</param>
     /// <returns>执行结果</returns>
     public static object? Eval(string nameOrExtOrMime, string script, System.Collections.Generic.Dictionary<string, object> bindings)
-    {
-        var engine = Instance.CreateFullSupportScriptEngine(nameOrExtOrMime);
-        foreach (var binding in bindings)
         {
-            engine.SetValue(binding.Key, binding.Value);
+            var engine = Instance.CreateFullSupportScriptEngine(nameOrExtOrMime);
+            foreach (var binding in bindings)
+            {
+                engine.SetVariable(binding.Key, binding.Value);
+            }
+            return engine.Execute(script);
         }
-        return engine.Execute(script);
-    }
 }

@@ -15,6 +15,7 @@ using System.Data;
 using System.Data.Common;
 using Xunit;
 
+
 namespace WellTool.DB.Tests;
 
 /// <summary>
