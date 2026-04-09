@@ -22,8 +22,6 @@ namespace WellTool.Jwt;
     /// </summary>
     public static class JwtUtil
     {
-
-
         /// <summary>
         /// 创建 JWT 令牌
         /// </summary>

@@ -12,7 +12,7 @@
 // limitations under the License.
 
 using Xunit;
-using WellTool.DB.NoSql;
+using WellTool.DB.NoSql.Mongo;
 
 namespace WellTool.DB.Tests
 {
@@ -24,30 +24,22 @@ namespace WellTool.DB.Tests
         [Fact]
         public void TestMongoDBCreation()
         {
-            // 测试创建 MongoDB 客户端
-            var connectionString = "mongodb://localhost:27017";
-            var mongoDB = MongoDB.Create(connectionString);
-            Assert.NotNull(mongoDB);
-        }
-
-        [Fact]
-        public void TestMongoDBWithDatabase()
-        {
-            // 测试指定数据库创建 MongoDB 客户端
+            // 测试创建 MongoDB 数据源
             var connectionString = "mongodb://localhost:27017";
             var databaseName = "testdb";
-            var mongoDB = MongoDB.Create(connectionString, databaseName);
-            Assert.NotNull(mongoDB);
+            var mongoDS = new MongoDS(connectionString, databaseName);
+            Assert.NotNull(mongoDS);
         }
 
         [Fact]
-        public void TestMongoDBWithOptions()
+        public void TestMongoDBTestConnection()
         {
-            // 测试使用选项创建 MongoDB 客户端
+            // 测试 MongoDB 连接
             var connectionString = "mongodb://localhost:27017";
-            var options = new MongoDBOptions();
-            var mongoDB = MongoDB.Create(connectionString, options);
-            Assert.NotNull(mongoDB);
+            var databaseName = "testdb";
+            var mongoDS = new MongoDS(connectionString, databaseName);
+            var result = mongoDS.TestConnection();
+            Assert.True(result);
         }
     }
 }

@@ -13,7 +13,6 @@
 
 using Xunit;
 using WellTool.AI;
-using WellTool.AI.OpenAI;
 
 namespace WellTool.AI.Tests
 {

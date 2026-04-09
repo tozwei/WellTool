@@ -23,19 +23,10 @@ namespace WellTool.DB.Tests
     public class DialectFactoryTest
     {
         [Fact]
-        public void TestDialectFactoryCreation()
-        {
-            // 测试创建 DialectFactory 实例
-            var factory = DialectFactory.Create();
-            Assert.NotNull(factory);
-        }
-
-        [Fact]
         public void TestDialectFactoryGetDialect()
         {
             // 测试获取数据库方言
-            var factory = DialectFactory.Create();
-            var dialect = factory.GetDialect("sqlserver");
+            var dialect = DialectFactory.GetDialect("System.Data.SqlClient");
             Assert.NotNull(dialect);
         }
 
@@ -43,8 +34,7 @@ namespace WellTool.DB.Tests
         public void TestDialectFactoryGetDefaultDialect()
         {
             // 测试获取默认数据库方言
-            var factory = DialectFactory.Create();
-            var dialect = factory.GetDefaultDialect();
+            var dialect = DialectFactory.GetDialect("");
             Assert.NotNull(dialect);
         }
 
@@ -52,9 +42,8 @@ namespace WellTool.DB.Tests
         public void TestDialectFactoryRegisterDialect()
         {
             // 测试注册数据库方言
-            var factory = DialectFactory.Create();
             var dialect = new SqlServerDialect();
-            factory.RegisterDialect("sqlserver", dialect);
+            DialectFactory.RegisterDialect("test", dialect);
             // 验证注册操作没有抛出异常
             Assert.True(true);
         }

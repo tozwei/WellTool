@@ -12,7 +12,6 @@
 // limitations under the License.
 
 using Xunit;
-using WellTool.DB.DS;
 using WellTool.DB.Dialect;
 
 namespace WellTool.DB.Tests
@@ -23,41 +22,20 @@ namespace WellTool.DB.Tests
     public class DriverUtilTest
     {
         [Fact]
-        public void TestDriverUtilCreation()
+        public void TestDriverUtilIdentifyDriver()
         {
-            // 测试创建 DriverUtil 实例
-            var driverUtil = DriverUtil.Create();
-            Assert.NotNull(driverUtil);
+            // 测试识别数据库驱动
+            var dialectName = DriverUtil.IdentifyDriver("Server=localhost;Database=test;User Id=sa;Password=password;");
+            Assert.NotNull(dialectName);
         }
 
         [Fact]
-        public void TestDriverUtilLoadDriver()
+        public void TestDriverUtilIdentifyFromConnection()
         {
-            // 测试加载数据库驱动
-            var driverUtil = DriverUtil.Create();
-            // 这里使用常见的 SQL Server 驱动作为示例
-            var driverLoaded = driverUtil.LoadDriver("Microsoft.Data.SqlClient");
-            // 验证驱动加载操作没有抛出异常
-            Assert.True(true);
-        }
-
-        [Fact]
-        public void TestDriverUtilGetDriver()
-        {
-            // 测试获取数据库驱动
-            var driverUtil = DriverUtil.Create();
-            var driver = driverUtil.GetDriver("Microsoft.Data.SqlClient");
-            // 验证获取驱动操作没有抛出异常
-            Assert.True(true);
-        }
-
-        [Fact]
-        public void TestDriverUtilGetDriverNames()
-        {
-            // 测试获取驱动名称列表
-            var driverUtil = DriverUtil.Create();
-            var driverNames = driverUtil.GetDriverNames();
-            Assert.NotNull(driverNames);
+            // 测试从连接识别数据库驱动
+            using var connection = new System.Data.SqlClient.SqlConnection();
+            var dialectName = DriverUtil.IdentifyFromConnection(connection);
+            Assert.NotNull(dialectName);
         }
     }
 }

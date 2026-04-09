@@ -22,43 +22,21 @@ namespace WellTool.DB.Tests
     public class DataSourceWrapperTest
     {
         [Fact]
-        public void TestDataSourceWrapperCreation()
+        public void TestDataSourceCreation()
         {
-            // 测试创建数据源包装器
+            // 测试创建数据源
             var connectionString = "Server=localhost;Database=test;User Id=sa;Password=password;";
-            var wrapper = DataSourceWrapper.Create(connectionString);
-            Assert.NotNull(wrapper);
-        }
-
-        [Fact]
-        public void TestDataSourceWrapperGetConnection()
-        {
-            // 测试获取数据库连接
-            var connectionString = "Server=localhost;Database=test;User Id=sa;Password=password;";
-            var wrapper = DataSourceWrapper.Create(connectionString);
-            var connection = wrapper.GetConnection();
+            var connection = GlobalDSFactory.CreateDataSource(connectionString, "sa", "password");
             Assert.NotNull(connection);
         }
 
         [Fact]
-        public void TestDataSourceWrapperWithOptions()
+        public void TestDataSourceWithType()
         {
-            // 测试使用选项创建数据源包装器
+            // 测试指定类型创建数据源
             var connectionString = "Server=localhost;Database=test;User Id=sa;Password=password;";
-            var options = new DataSourceOptions();
-            var wrapper = DataSourceWrapper.Create(connectionString, options);
-            Assert.NotNull(wrapper);
-        }
-
-        [Fact]
-        public void TestDataSourceWrapperClose()
-        {
-            // 测试关闭数据源包装器
-            var connectionString = "Server=localhost;Database=test;User Id=sa;Password=password;";
-            var wrapper = DataSourceWrapper.Create(connectionString);
-            wrapper.Close();
-            // 验证关闭操作没有抛出异常
-            Assert.True(true);
+            var connection = GlobalDSFactory.CreateDataSource("simple", connectionString, "sa", "password");
+            Assert.NotNull(connection);
         }
     }
 }

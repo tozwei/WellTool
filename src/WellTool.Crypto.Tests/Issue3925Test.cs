@@ -14,6 +14,7 @@
 using System.Text;
 using Xunit;
 using WellTool.Crypto.Asymmetric;
+using System.Security.Cryptography;
 
 namespace WellTool.Crypto.Tests
 {
