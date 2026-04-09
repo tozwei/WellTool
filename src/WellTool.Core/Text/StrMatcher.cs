@@ -78,7 +78,11 @@ public abstract class StrMatcher
                 return -1;
             }
 
-            return text.IndexOf(_matcher, startIndex, StringComparison.Ordinal);
+            if (text.Substring(startIndex, Length).Equals(_matcher, StringComparison.Ordinal))
+            {
+                return startIndex;
+            }
+            return -1;
         }
 
         public override int Length => _matcher.Length;

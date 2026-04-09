@@ -9,8 +9,18 @@ public class FileUtilTest
     [Fact]
     public void ExistsTest()
     {
-        Assert.True(FileUtil.Exists("README.md"));
-        Assert.False(FileUtil.Exists("not_exist_file.txt"));
+        // 创建临时文件进行测试
+        var tempFile = Path.Combine(Path.GetTempPath(), "test_exists.txt");
+        File.WriteAllText(tempFile, "test");
+        try
+        {
+            Assert.True(FileUtil.Exists(tempFile));
+            Assert.False(FileUtil.Exists("not_exist_file.txt"));
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
     }
 
     [Fact]
@@ -32,7 +42,7 @@ public class FileUtilTest
     public void GetExtensionTest()
     {
         Assert.Equal(".txt", FileUtil.GetExtension("test.txt"));
-        Assert.Equal(".log", FileUtil.GetExtension("test.log.bak"));
+        Assert.Equal(".bak", FileUtil.GetExtension("test.log.bak"));
         Assert.Equal("", FileUtil.GetExtension("test"));
     }
 

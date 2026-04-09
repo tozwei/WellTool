@@ -20,7 +20,7 @@ namespace WellTool.Core.Net
                 throw new ArgumentException("Invalid IP address");
             }
             var bytes = ipAddress.GetAddressBytes();
-            return (long)(bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
+            return (long)((uint)bytes[0] << 24) | (long)((uint)bytes[1] << 16) | (long)((uint)bytes[2] << 8) | (long)bytes[3];
         }
 
         /// <summary>
@@ -187,10 +187,16 @@ namespace WellTool.Core.Net
         {
             var maskLong = IpToLong(subnetMask);
             int bits = 0;
-            while (maskLong > 0)
+            for (int i = 0; i < 32; i++)
             {
-                bits++;
-                maskLong <<= 1;
+                if ((maskLong & (1L << (31 - i))) != 0)
+                {
+                    bits++;
+                }
+                else
+                {
+                    break;
+                }
             }
             return bits;
         }
@@ -239,7 +245,8 @@ namespace WellTool.Core.Net
             var startLong = IpToLong(startIp);
             var endLong = IpToLong(endIp);
 
-            for (long i = startLong; i <= endLong; i++)
+            // 跳过网络地址和广播地址
+            for (long i = startLong + 1; i < endLong; i++)
             {
                 result.Add(LongToIp(i));
             }

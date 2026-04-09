@@ -4,7 +4,7 @@ using WellTool.Extra;
 
 public class SftpUtilTest
 {
-    [Fact(Skip = "Requires SFTP server")]
+     [Fact(Skip = "Requires SFTP server")]
     public void ConnectTest()
     {
         // 实际使用时，需要替换为真实的服务器信息

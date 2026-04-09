@@ -173,7 +173,7 @@ namespace WellTool.Core.IO
             {
                 throw new IOException($"File not exist: {file.FullName}");
             }
-            if (!file.Attributes.HasFlag(FileAttributes.Normal))
+            if (file.Attributes.HasFlag(FileAttributes.Directory))
             {
                 throw new IOException($"Not a file: {file.FullName}");
             }
