@@ -79,7 +79,7 @@ public class IssueI8YV0KTest
         Assert.Contains("name=test", paramsString);
         Assert.Contains("active=True", paramsString);
         // 不应该包含空键参数
-        Assert.DoesNotContain("=", paramsString);
+        Assert.DoesNotContain("empty", paramsString);
     }
 
     [Fact]

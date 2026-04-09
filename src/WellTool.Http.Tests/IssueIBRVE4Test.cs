@@ -44,7 +44,7 @@ public class IssueIBRVE4Test
             { "active", true }
         };
         var paramsString = HttpUtil.ToParams(paramMap);
-        Assert.Contains("name=test%20name", paramsString);
+        Assert.Contains("name=test+name", paramsString);
         Assert.Contains("age=18", paramsString);
         Assert.Contains("active=True", paramsString);
     }

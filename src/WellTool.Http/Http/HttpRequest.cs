@@ -259,7 +259,7 @@ public class HttpRequest : HttpBase<HttpRequest>
         {
             // 在用户未自定义情况下自动根据内容判断
             contentType = GetContentTypeByRequestBody(body);
-            if (!string.IsNullOrEmpty(contentType) && ContentType.IsDefault(GetHeader(Header.CONTENT_TYPE)))
+            if (!string.IsNullOrEmpty(contentType))
             {
                 if (Charset != null)
                 {
@@ -289,7 +289,7 @@ public class HttpRequest : HttpBase<HttpRequest>
     /// <returns>this</returns>
     public HttpRequest Body(byte[] bodyBytes)
     {
-        if (bodyBytes != null && bodyBytes.Length > 0)
+        if (bodyBytes != null)
         {
             BodyContent = Encoding.UTF8.GetString(bodyBytes);
         }
@@ -468,10 +468,7 @@ public class HttpRequest : HttpBase<HttpRequest>
     /// <returns>HttpRequest</returns>
     public HttpRequest Auth(string content)
     {
-        if (!string.IsNullOrEmpty(content))
-        {
-            Headers["Authorization"] = new List<string> { content };
-        }
+        Headers["Authorization"] = new List<string> { content };
         return this;
     }
 

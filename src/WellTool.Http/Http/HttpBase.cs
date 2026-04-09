@@ -95,10 +95,6 @@ public abstract class HttpBase<T> where T : HttpBase<T>
     /// <returns>Header �?/returns>
     public string? GetHeader(Header name)
     {
-        if (name == default)
-        {
-            return null;
-        }
         return GetHeader(name.GetValue());
     }
 
@@ -116,13 +112,23 @@ public abstract class HttpBase<T> where T : HttpBase<T>
             var trimmedName = name.Trim();
             var trimmedValue = value.Trim();
 
-            if (isOverride || !Headers.ContainsKey(trimmedName))
+            // 不区分大小写查找已存在的头信息
+            var existingKey = Headers.Keys.FirstOrDefault(key => key.Equals(trimmedName, StringComparison.OrdinalIgnoreCase));
+
+            if (isOverride || existingKey == null)
             {
+                if (existingKey != null)
+                {
+                    // 如果存在，先移除旧键
+                    Headers.Remove(existingKey);
+                }
+                // 添加新键值对
                 Headers[trimmedName] = new List<string> { trimmedValue };
             }
             else
             {
-                Headers[trimmedName].Add(trimmedValue);
+                // 添加到现有头信息列表
+                Headers[existingKey].Add(trimmedValue);
             }
         }
         return (T)this;

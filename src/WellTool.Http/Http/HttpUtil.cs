@@ -385,21 +385,26 @@ public static partial class HttpUtil
 
         // 结尾处理
         if (name != null)
-        {
-            builder.Append(UrlEncode(name, encoding)).Append('=');
-        }
-        if (pos != len)
-        {
-            if (name == null && pos > 0)
-            {
-                // 单独的字符串（如&d）作为 key，value 为空
-                builder.Append(UrlEncode(paramPart.Substring(pos), encoding)).Append('=');
-            }
-            else if (name != null)
-            {
-                builder.Append(UrlEncode(paramPart.Substring(pos), encoding));
-            }
-        }
+                {
+                    var encodedName = UrlEncode(name, encoding);
+                    builder.Append(encodedName.Replace("%20", "+"));
+                    builder.Append('=');
+                }
+                if (pos != len)
+                {
+                    if (name == null && pos > 0)
+                    {
+                        // 单独的字符串（如&d）作为 key，value 为空
+                        var encodedValue = UrlEncode(paramPart.Substring(pos), encoding);
+                        builder.Append(encodedValue.Replace("%20", "+"));
+                        builder.Append('=');
+                    }
+                    else if (name != null)
+                    {
+                        var encodedValue = UrlEncode(paramPart.Substring(pos), encoding);
+                        builder.Append(encodedValue.Replace("%20", "+"));
+                    }
+                }
 
         // �?结尾则去除之
         if (builder.Length > 0 && builder[^1] == '&')

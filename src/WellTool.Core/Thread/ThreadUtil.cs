@@ -478,9 +478,9 @@ namespace WellTool.Core.Threading
         /// <param name="executor">线程池</param>
         public static void WaitForFinish(TaskFactory executor)
         {
-            // 这里只是一个占位符，实际项目中可能需要更复杂的实现
-            // 由于 TaskFactory 没有直接的方法来等待所有任务完成，我们可以简单地等待一段时间
-            Thread.Sleep(100);
+            // 注意：在 C# 中，TaskFactory 本身不提供等待所有任务完成的方法
+            // 它只是一个创建任务的工厂，而不是一个任务管理容器
+            // 实际项目中，如果需要等待所有任务完成，建议使用自定义的任务跟踪机制
         }
     }
 

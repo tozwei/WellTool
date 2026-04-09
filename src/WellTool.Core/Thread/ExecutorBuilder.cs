@@ -141,7 +141,8 @@ namespace WellTool.Core.Threading
         /// <returns>当前实例</returns>
         public ExecutorBuilder SetWorkQueue(ConcurrentQueue<Action> workQueue)
         {
-            // 这里只是一个占位符，实际项目中可能需要更复杂的实现
+            // 在 C# 中，我们使用 ConcurrentQueue 作为工作队列
+            // 实际项目中可能需要更复杂的实现，例如使用 BlockingCollection
             return this;
         }
 
