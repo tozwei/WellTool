@@ -50,15 +50,18 @@ namespace WellTool.Core.Bean.Copier
 				// 获取源属性的值
 				object value = sourcePropDesc.GetValue(Source);
 
+                // 计算可能经过编辑器转换后的字段名（例如通过 SetFieldMapping 映射）
+				var editedFieldName = CopyOptions != null ? CopyOptions.EditFieldName(sourcePropDesc.FieldName) : sourcePropDesc.FieldName;
+
 				// 查找目标对象中对应的属性
-				var targetPropDesc = targetBeanDesc.GetPropDesc(sourcePropDesc.FieldName);
+				var targetPropDesc = targetBeanDesc.GetPropDesc(editedFieldName);
 				if (targetPropDesc == null || !targetPropDesc.HasSetter)
 				{
 					// 尝试通过源属性的Alias查找（不区分大小写）
-					string sourceAlias = GetSourcePropAlias(sourcePropDesc);
+                    string sourceAlias = GetSourcePropAlias(sourcePropDesc);
 					if (!string.IsNullOrEmpty(sourceAlias))
 					{
-						targetPropDesc = targetBeanDesc.GetPropDesc(sourceAlias, true);
+                        targetPropDesc = targetBeanDesc.GetPropDesc(sourceAlias, true);
 					}
 					
 					// 尝试通过目标属性的Alias查找（目标属性的Alias等于源属性的FieldName）

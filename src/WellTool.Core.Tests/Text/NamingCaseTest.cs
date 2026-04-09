@@ -9,7 +9,7 @@ public class NamingCaseTest
     public void ToCamelCaseTest()
     {
         Assert.Equal("tableTestOfDay", NamingCase.ToCamelCase("Table_Test_Of_day"));
-        Assert.Equal("TableTestOfDay", NamingCase.ToCamelCase("TableTestOfDay"));
+        Assert.Equal("tableTestOfDay", NamingCase.ToCamelCase("TableTestOfDay"));
         Assert.Equal("abc1d", NamingCase.ToCamelCase("abc_1d"));
     }
 

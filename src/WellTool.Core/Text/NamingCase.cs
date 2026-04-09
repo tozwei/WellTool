@@ -212,8 +212,10 @@ namespace WellTool.Core.Text
             }
             else
             {
-                // 如果字符串不包含连接符，将首字母转换为小写
-                if (name.Length > 0)
+                // 如果字符串不包含连接符，检查它是否已经是驼峰式命名
+                // 如果首字母小写，保持不变
+                // 如果首字母大写，将其转换为小写
+                if (name.Length > 0 && char.IsUpper(name[0]))
                 {
                     return char.ToLower(name[0]) + name.Substring(1);
                 }
