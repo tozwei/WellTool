@@ -1,5 +1,6 @@
 namespace WellTool.Extra.Tests;
 
+using System.ComponentModel.DataAnnotations;
 using WellTool.Extra.Validation;
 
 public class BeanValidatorUtilTest

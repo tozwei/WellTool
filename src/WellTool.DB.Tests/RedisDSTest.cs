@@ -13,6 +13,7 @@
 
 using Xunit;
 using WellTool.DB.NoSql;
+using WellTool.DB.NoSql.Redis;
 
 namespace WellTool.DB.Tests
 {
