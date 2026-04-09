@@ -7,11 +7,16 @@ namespace WellTool.Crypto.Tests
     public class BCUtilTests
     {
         [Fact]
-        public void TestBCUtil()
+        public void CreateSecureRandomTest()
         {
-            // 测试 BCUtil 相关的功能
-            // 这里只是一个占位符，具体实现需要根据 Java 代码的逻辑来编写
-            Assert.True(true);
+            // 测试创建安全随机数生成器
+            var random = BCUtil.CreateSecureRandom();
+            Assert.NotNull(random);
+            
+            // 测试生成随机数
+            var randomBytes = new byte[16];
+            random.NextBytes(randomBytes);
+            Assert.NotEmpty(randomBytes);
         }
     }
 }
