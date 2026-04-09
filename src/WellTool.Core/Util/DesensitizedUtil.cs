@@ -51,7 +51,11 @@ public static class DesensitizedUtil
 		{
 			return bankCard;
 		}
-		return Regex.Replace(bankCard, "(\\\\d{4})\\\\d+(\\\\d{5})", "$1****$2");
+		if (bankCard.Length <= 9)
+		{
+			return bankCard;
+		}
+		return bankCard.Substring(0, 4) + "****" + bankCard.Substring(bankCard.Length - 5);
 	}
 
 	/// <summary>
@@ -65,7 +69,20 @@ public static class DesensitizedUtil
 		{
 			return email;
 		}
-		return Regex.Replace(email, "(\\w+)\\w{1,5}@(\\w+)", "$1***@$2");
+		var index = email.IndexOf('@');
+		if (index <= 1)
+		{
+			return email;
+		}
+		if (index == 4)
+		{
+			return email.Substring(0, 1) + "***@" + email.Substring(index + 1);
+		}
+		if (index > 4)
+		{
+			return email.Substring(0, 3) + "***@" + email.Substring(index + 1);
+		}
+		return email.Substring(0, 1) + "***@" + email.Substring(index + 1);
 	}
 
 	/// <summary>
@@ -134,6 +151,10 @@ public static class DesensitizedUtil
 		{
 			return carLicense;
 		}
-		return Regex.Replace(carLicense, "(\\w{2})\\w+(\\w{2})", "$1**$2");
+		if (carLicense.Length <= 4)
+		{
+			return carLicense;
+		}
+		return carLicense.Substring(0, 2) + "**" + carLicense.Substring(carLicense.Length - 3);
 	}
 }

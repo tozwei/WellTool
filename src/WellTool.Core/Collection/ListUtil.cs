@@ -55,16 +55,20 @@ namespace WellTool.Core.Collection
         }
 
         /// <summary>
-        /// 截取列表的一部分
+        /// 截取列表的一部分（startIndex 包含，endIndex 为排他索引）
         /// </summary>
         /// <typeparam name="T">元素类型</typeparam>
         /// <param name="list">列表</param>
-        /// <param name="startIndex">开始索引</param>
-        /// <param name="count">截取数量</param>
+        /// <param name="startIndex">开始索引（包含）</param>
+        /// <param name="endIndex">结束索引（排他）</param>
         /// <returns>截取后的列表</returns>
-        public static List<T> Sub<T>(List<T> list, int startIndex, int count)
+        public static List<T> Sub<T>(List<T> list, int startIndex, int endIndex)
         {
-            return list.GetRange(startIndex, count);
+            if (list == null) return new List<T>();
+            if (startIndex < 0) startIndex = 0;
+            if (endIndex > list.Count) endIndex = list.Count;
+            var length = System.Math.Max(0, endIndex - startIndex);
+            return list.GetRange(startIndex, length);
         }
 
         /// <summary>

@@ -90,9 +90,9 @@ namespace WellTool.Core.Bean.Copier
 						targetFieldName = sDesc.FieldName;
 					}
 					else
-					{
-						targetFieldName = sDesc.FieldName.ToLower();
-					}
+						{
+							targetFieldName = sDesc.FieldName;
+						}
 				}
 
 				// 对key做转换，转换后为null的跳过

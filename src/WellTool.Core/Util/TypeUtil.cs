@@ -196,13 +196,17 @@ public static class TypeUtil
 			return genericSuper.GetGenericArguments();
 		}
 
-		// 检查接口 - 返回第一个泛型接口的参数
+		// 检查接口 - 只处理非系统内置的泛型接口
 		var interfaces = type.GetInterfaces();
 		foreach (var iface in interfaces)
 		{
-			if (iface.IsGenericType)
+			if (iface.IsGenericType && !iface.Namespace.StartsWith("System."))
 			{
-				return iface.GetGenericArguments();
+				var args = iface.GetGenericArguments();
+				if (args.Length > 0)
+				{
+					return new[] { args[0] };
+				}
 			}
 		}
 

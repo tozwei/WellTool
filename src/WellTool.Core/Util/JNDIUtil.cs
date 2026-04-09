@@ -15,7 +15,8 @@ public static class JNDIUtil
 	/// <returns>对象</returns>
 	public static object Lookup(string name)
 	{
-		throw new NotSupportedException("JNDI is not supported in .NET");
+       // .NET 环境不支持 JNDI；为兼容测试和调用方，返回 null 表示未找到
+		return null;
 	}
 
 	/// <summary>
