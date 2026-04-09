@@ -16,7 +16,8 @@ public static class CreditCodeUtil
 	/// <summary>
 	/// 统一社会信用代码校验字符集
 	/// </summary>
-	private const string CHARS = "0123456789ABCDEFGHJKLMOPQWRUWXY";
+    // charset for check code (31 characters)
+	private const string CHARS = "0123456789ABCDEFGHJKLMNPQRTUWXY";
 
 	/// <summary>
 	/// 验证统一社会信用代码
@@ -51,22 +52,24 @@ public static class CreditCodeUtil
 	private static char GetCheckCode(string code)
 	{
 		int sum = 0;
-		for (int i = 0; i < 17; i++)
+        for (int i = 0; i < 17; i++)
 		{
-			char c = code[i];
+			char ch = code[i];
 			int value;
-			if (char.IsDigit(c))
+			if (char.IsDigit(ch))
 			{
-				value = c - '0';
+				value = ch - '0';
 			}
 			else
 			{
-				value = CHARS.IndexOf(c);
+				value = CHARS.IndexOf(ch);
 			}
 			sum += value * WEIGHTS[i];
 		}
 		int index = sum % 31;
-		return CHARS[31 - index];
+		// c = 31 - index; if c == 31 then use 0
+		int checkPos = (31 - index) % 31;
+		return CHARS[checkPos];
 	}
 
 	/// <summary>
@@ -81,8 +84,13 @@ public static class CreditCodeUtil
 			throw new ArgumentException("组织机构代码必须为8位");
 		}
 
-		string codeWithoutCheck = "91" + "000000" + orgCode.ToUpperInvariant();
-		char checkCode = GetCheckCode(codeWithoutCheck + "00000000000".Substring(0, 17 - codeWithoutCheck.Length));
+        string codeWithoutCheck = "91" + "000000" + orgCode.ToUpperInvariant();
+		// ensure length 17 by padding with '0' if needed
+		if (codeWithoutCheck.Length != 17)
+		{
+			codeWithoutCheck = codeWithoutCheck.PadRight(17, '0');
+		}
+		char checkCode = GetCheckCode(codeWithoutCheck);
 		return codeWithoutCheck + checkCode;
 	}
 }

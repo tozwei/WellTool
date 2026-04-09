@@ -144,7 +144,8 @@ public static class XmlUtil
 				}
 				else
 				{
-					newValue = childElement.Value;
+					// 对于空的子节点，返回空字典而不是空字符串
+					newValue = new Dictionary<string, object>();
 				}
 			}
 			else

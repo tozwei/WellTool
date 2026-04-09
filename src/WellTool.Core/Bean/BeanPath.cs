@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using WellTool.Core.Collection;
 using WellTool.Core.Convert;
@@ -199,21 +200,67 @@ public class BeanPath
     }
 
     private void Set(object bean, List<string> patternParts, bool nextNumberPart, object value)
-    {
-        object? subBean = Get(patternParts, bean, true);
-        if (subBean == null)
-        {
-            var parentParts = patternParts.Take(patternParts.Count - 1).ToList();
-            object newValue = nextNumberPart ? (object)new List<object>() : (object)new Dictionary<string, object>();
-            Set(bean, parentParts, lastIsNumber(parentParts), newValue);
-            subBean = Get(patternParts, bean, true);
-        }
+{
+	object? subBean = Get(patternParts, bean, true);
+	if (subBean == null)
+	{
+		var parentParts = patternParts.Take(patternParts.Count - 1).ToList();
+		object newValue;
+		
+		// 尝试获取目标类型，创建正确的对象
+		var targetType = GetTargetType(bean, parentParts);
+		if (targetType != null && !targetType.IsInterface && !targetType.IsAbstract)
+		{
+			// 如果能获取到目标类型，创建该类型的实例
+			newValue = Activator.CreateInstance(targetType);
+		}
+		else
+		{
+			// 否则创建默认的集合或字典
+			newValue = nextNumberPart ? (object)new List<object>() : (object)new Dictionary<string, object>();
+		}
+		
+		Set(bean, parentParts, lastIsNumber(parentParts), newValue);
+		subBean = Get(patternParts, bean, true);
+	}
 
-        if (subBean != null)
-        {
-            BeanUtil.SetFieldValue(subBean, patternParts[^1], value);
-        }
-    }
+	if (subBean != null)
+	{
+		BeanUtil.SetFieldValue(subBean, patternParts[^1], value);
+	}
+}
+
+private Type? GetTargetType(object bean, List<string> patternParts)
+{
+	if (patternParts.Count == 0)
+	{
+		return bean.GetType();
+	}
+	
+	var type = bean.GetType();
+	foreach (var part in patternParts)
+	{
+		// 尝试获取属性类型
+		var property = type.GetProperty(part, BindingFlags.Public | BindingFlags.Instance);
+		if (property != null)
+		{
+			type = property.PropertyType;
+			
+			// 如果是可空类型，获取其底层类型
+			if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+			{
+				type = type.GetGenericArguments()[0];
+			}
+		}
+		else
+		{
+			// 如果属性不存在，返回null
+			return null;
+		}
+	}
+	
+	return type;
+}
 
     private static bool lastIsNumber(List<string> patternParts)
     {

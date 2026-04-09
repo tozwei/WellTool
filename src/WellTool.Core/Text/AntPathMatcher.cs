@@ -240,8 +240,34 @@ namespace WellTool.Core.Text
                         if (i + 1 < length && pattern[i + 1] == '*')
                         {
                             // ** 通配符
-                            regexBuilder.Append($"(?:{separator}.*)*");
-                            i += 2;
+                            if (i == 0 && i + 2 == length)
+                            {
+                                // 特殊情况：只有 **
+                                regexBuilder.Append(".*");
+                            }
+                            else if (i == 0)
+                            {
+                                // 以 ** 开头
+                                regexBuilder.Append(".*");
+                                i += 2;
+                                // 跳过后面的分隔符
+                                if (i < length && pattern[i] == _pathSeparator[0])
+                                {
+                                    i++;
+                                }
+                            }
+                            else if (i + 2 == length)
+                            {
+                                // 以 ** 结尾
+                                regexBuilder.Append($"(?:{separator}.*)*");
+                                i += 2;
+                            }
+                            else
+                            {
+                                // 中间的 **
+                                regexBuilder.Append($"(?:{separator}.*)*{separator}");
+                                i += 2;
+                            }
                         }
                         else
                         {

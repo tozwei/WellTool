@@ -22,25 +22,31 @@ public static class CallerUtil
 	/// </summary>
 	/// <returns>调用者的类</returns>
 	public static System.Type GetCaller()
+{
+	var trace = new System.Diagnostics.StackTrace(true);
+	var frames = trace.GetFrames();
+	if (frames != null)
 	{
-		var trace = new System.Diagnostics.StackTrace(true);
-		var frames = trace.GetFrames();
-		if (frames != null)
+		// 跳过前两个帧：GetCaller() 方法和调用它的方法
+		for (int i = 2; i < frames.Length; i++)
 		{
-			// 跳过前两个帧：GetCaller() 方法和调用它的方法
-			for (int i = 2; i < frames.Length; i++)
+			var method = frames[i].GetMethod();
+			if (method != null)
 			{
-				var method = frames[i].GetMethod();
-				var declaringType = method?.DeclaringType;
-				// 找到第一个不是 CallerUtil 类的类型
-				if (declaringType != null && declaringType != typeof(CallerUtil))
+				var declaringType = method.DeclaringType;
+				// 找到第一个不是 CallerUtil 类、不是系统运行时类、不是xunit类的类型
+				if (declaringType != null && 
+					declaringType != typeof(CallerUtil) && 
+					!declaringType.FullName.StartsWith("System.") &&
+					!declaringType.FullName.StartsWith("Xunit."))
 				{
 					return declaringType;
 				}
 			}
 		}
-		return null;
 	}
+	return null;
+}
 
 	/// <summary>
 	/// 获取调用者的类
@@ -48,21 +54,36 @@ public static class CallerUtil
 	/// <param name="depth">深度</param>
 	/// <returns>调用者的类</returns>
 	public static System.Type GetCaller(int depth)
+{
+	var trace = new System.Diagnostics.StackTrace(true);
+	var frames = trace.GetFrames();
+	if (frames != null)
 	{
-		var trace = new System.Diagnostics.StackTrace(true);
-		var frames = trace.GetFrames();
-		if (frames != null)
+		// 跳过前两个帧：GetCaller() 方法和调用它的方法
+		int startIndex = 2;
+		for (int i = startIndex; i < frames.Length; i++)
 		{
-			// 跳过前两个帧：GetCaller() 方法和调用它的方法
-			int startIndex = 2;
-			if (startIndex + depth < frames.Length)
+			var method = frames[i].GetMethod();
+			if (method != null)
 			{
-				var method = frames[startIndex + depth].GetMethod();
-				return method?.DeclaringType;
+				var declaringType = method.DeclaringType;
+				// 找到第一个不是 CallerUtil 类、不是系统运行时类、不是xunit类的类型
+				if (declaringType != null && 
+					declaringType != typeof(CallerUtil) && 
+					!declaringType.FullName.StartsWith("System.") &&
+					!declaringType.FullName.StartsWith("Xunit."))
+				{
+					if (depth <= 0)
+					{
+						return declaringType;
+					}
+					depth--;
+				}
 			}
 		}
-		return null;
 	}
+	return null;
+}
 }
 
 /// <summary>
@@ -83,7 +104,7 @@ public abstract class Caller : ICaller
 public class StackTraceCaller : Caller
 {
 	public override System.Type GetCaller()
-	{
-		return CallerUtil.GetCaller(3);
-	}
+{
+	return CallerUtil.GetCaller(0);
+}
 }
