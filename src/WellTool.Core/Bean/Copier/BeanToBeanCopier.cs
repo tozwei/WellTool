@@ -53,8 +53,8 @@ namespace WellTool.Core.Bean.Copier
                 // 计算可能经过编辑器转换后的字段名（例如通过 SetFieldMapping 映射）
 				var editedFieldName = CopyOptions != null ? CopyOptions.EditFieldName(sourcePropDesc.FieldName) : sourcePropDesc.FieldName;
 
-				// 查找目标对象中对应的属性
-				var targetPropDesc = targetBeanDesc.GetPropDesc(editedFieldName);
+                // 查找目标对象中对应的属性（先精确查找，若未找到则忽略大小写再查找）
+				var targetPropDesc = targetBeanDesc.GetPropDesc(editedFieldName) ?? targetBeanDesc.GetPropDesc(editedFieldName, true);
 				if (targetPropDesc == null || !targetPropDesc.HasSetter)
 				{
 					// 尝试通过源属性的Alias查找（不区分大小写）

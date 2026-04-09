@@ -113,40 +113,53 @@ namespace WellTool.Core.Bean.Copier
 		{
 			// 默认转换器
 Converter = (type, value) => {
-				if (value == null)
-				{
-					return null;
-				}
-
-				if (type is Type targetType)
-				{
-					// 处理空字符串到可空类型的转换
-					if (value is string strValue && string.IsNullOrEmpty(strValue))
-					{
-						// 如果目标类型是可空类型，返回null
-						if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+						if (value == null)
 						{
 							return null;
 						}
-					}
 
-					// 快速处理简单值类型的转换
-					if (IsSimpleValueType(targetType) && targetType.IsAssignableFrom(value.GetType()))
-					{
+						if (type is Type targetType)
+						{
+							// 处理空字符串到可空类型的转换
+							if (value is string strValue && string.IsNullOrEmpty(strValue))
+							{
+								// 如果目标类型是可空类型，返回null
+								if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+								{
+									return null;
+								}
+								// 如果目标类型是对象类型，创建一个新的实例
+								else if (!IsSimpleValueType(targetType) && targetType.IsClass)
+								{
+									try
+									{
+										return Activator.CreateInstance(targetType);
+									}
+									catch
+									{
+										// 如果创建实例失败，返回null
+										return null;
+									}
+								}
+							}
+
+							// 快速处理简单值类型的转换
+							if (IsSimpleValueType(targetType) && targetType.IsAssignableFrom(value.GetType()))
+							{
+								return value;
+							}
+
+							// 处理字符串到布尔值的转换
+							if (targetType == typeof(bool) && value is string boolStr)
+							{
+								boolStr = boolStr.Trim().ToLower();
+								return boolStr == "true" || boolStr == "1" || boolStr == "yes" || boolStr == "y";
+							}
+						}
+
+						// 这里可以添加更多的转换逻辑
 						return value;
-					}
-
-					// 处理字符串到布尔值的转换
-					if (targetType == typeof(bool) && value is string boolStr)
-					{
-						boolStr = boolStr.Trim().ToLower();
-						return boolStr == "true" || boolStr == "1" || boolStr == "yes" || boolStr == "y";
-					}
-				}
-
-				// 这里可以添加更多的转换逻辑
-				return value;
-			};
+					};
 		}
 
 		/// <summary>
@@ -164,40 +177,53 @@ Converter = (type, value) => {
 
 			// 默认转换器
 Converter = (type, value) => {
-				if (value == null)
-				{
-					return null;
-				}
-
-				if (type is Type targetType)
-				{
-					// 处理空字符串到可空类型的转换
-					if (value is string strValue && string.IsNullOrEmpty(strValue))
-					{
-						// 如果目标类型是可空类型，返回null
-						if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+						if (value == null)
 						{
 							return null;
 						}
-					}
 
-					// 快速处理简单值类型的转换
-					if (IsSimpleValueType(targetType) && targetType.IsAssignableFrom(value.GetType()))
-					{
+						if (type is Type targetType)
+						{
+							// 处理空字符串到可空类型的转换
+							if (value is string strValue && string.IsNullOrEmpty(strValue))
+							{
+								// 如果目标类型是可空类型，返回null
+								if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+								{
+									return null;
+								}
+								// 如果目标类型是对象类型，创建一个新的实例
+								else if (!IsSimpleValueType(targetType) && targetType.IsClass)
+								{
+									try
+									{
+										return Activator.CreateInstance(targetType);
+									}
+									catch
+									{
+										// 如果创建实例失败，返回null
+										return null;
+									}
+								}
+							}
+
+							// 快速处理简单值类型的转换
+							if (IsSimpleValueType(targetType) && targetType.IsAssignableFrom(value.GetType()))
+							{
+								return value;
+							}
+
+							// 处理字符串到布尔值的转换
+							if (targetType == typeof(bool) && value is string boolStr)
+							{
+								boolStr = boolStr.Trim().ToLower();
+								return boolStr == "true" || boolStr == "1" || boolStr == "yes" || boolStr == "y";
+							}
+						}
+
+						// 这里可以添加更多的转换逻辑
 						return value;
-					}
-
-					// 处理字符串到布尔值的转换
-					if (targetType == typeof(bool) && value is string boolStr)
-					{
-						boolStr = boolStr.Trim().ToLower();
-						return boolStr == "true" || boolStr == "1" || boolStr == "yes" || boolStr == "y";
-					}
-				}
-
-				// 这里可以添加更多的转换逻辑
-				return value;
-			};
+					};
 		}
 
 		/// <summary>
@@ -302,7 +328,17 @@ Converter = (type, value) => {
 		/// <returns>CopyOptions</returns>
 		public CopyOptions SetFieldMapping(Dictionary<string, string> fieldMapping)
 		{
-			return SetFieldNameEditor(key => fieldMapping.ContainsKey(key) ? fieldMapping[key] : key);
+      // Support case-insensitive lookup for mappings provided by tests/users
+		return SetFieldNameEditor(key => {
+			if (key == null) return null;
+			if (fieldMapping == null) return key;
+			if (fieldMapping.TryGetValue(key, out var v)) return v;
+			var lower = key.ToLower();
+			if (fieldMapping.TryGetValue(lower, out v)) return v;
+			var upperFirst = char.ToUpper(key[0]) + key.Substring(1);
+			if (fieldMapping.TryGetValue(upperFirst, out v)) return v;
+			return key;
+		});
 		}
 
 		/// <summary>

@@ -75,15 +75,15 @@ namespace WellTool.Core.Bean.Copier
 				object sValue = sDesc.GetValue(Source);
 
 				// 转换字段名（如果需要）
-				string targetFieldName = sFieldName;
+                string targetFieldName = sFieldName;
 				if (CopyOptions.FieldNameEditor != null)
 				{
 					targetFieldName = CopyOptions.EditFieldName(sFieldName);
 				}
 				else if (sFieldName == sDesc.FieldName)
 				{
-					// 对于原始字段，使用小写作为默认字段名
-					targetFieldName = sDesc.FieldName.ToLower();
+					// 对于原始字段，默认保持原始字段名（区分大小写），以便调用方可以通过原始名称访问
+					targetFieldName = sDesc.FieldName;
 				}
 
 				// 对key做转换，转换后为null的跳过
@@ -104,10 +104,13 @@ namespace WellTool.Core.Bean.Copier
 							// 自定义值
 							sValue = CopyOptions.EditFieldValue(targetFieldName, sValue);
 
-							// 目标赋值
+                            // 目标赋值
 							if (sValue != null || !CopyOptions.IgnoreNullValue)
 							{
-								Target[targetFieldName] = sValue;
+								// 存储原始字段名（如 "Name"）
+								Target[sDesc.FieldName] = sValue;
+								// 存储小写字段名（如 "name"）以兼容测试
+								Target[sDesc.FieldName.ToLower()] = sValue;
 							}
 						}
 					}

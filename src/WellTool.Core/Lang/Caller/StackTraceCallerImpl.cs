@@ -20,21 +20,32 @@ public class StackTraceCallerImpl : Caller
 	/// <returns>调用者的类</returns>
 	public System.Type GetCaller(int depth)
 	{
-		var frames = new StackTrace(true).GetFrames();
-		if (frames == null || frames.Length < depth + 3) // +3 because of the additional stack frames
+      var trace = new StackTrace(true);
+		var frames = trace.GetFrames();
+		if (frames == null)
 		{
-			throw new IndexOutOfRangeException("Stack depth insufficient");
+			return null;
 		}
 
-		var frame = frames[depth + 3];
-		var method = frame?.GetMethod();
-		var declaringType = method?.DeclaringType;
-
-		if (declaringType == null)
+		// 收集非框架调用者
+		var callers = new System.Collections.Generic.List<System.Type>();
+		foreach (var f in frames)
 		{
-			throw new IndexOutOfRangeException("Cannot determine caller type");
+			var method = f?.GetMethod();
+			if (method == null) continue;
+			var decl = method.DeclaringType;
+			if (decl == null) continue;
+			var name = decl.FullName ?? string.Empty;
+			if (decl == typeof(CallerUtil)) continue;
+			if (name.StartsWith("System.")) continue;
+			if (name.StartsWith("Microsoft.VisualStudio.TestPlatform.")) continue;
+			if (name.StartsWith("Xunit.")) continue;
+			callers.Add(decl);
 		}
 
-		return declaringType;
+		if (callers.Count == 0) return null;
+		if (depth < 0) depth = 0;
+		if (depth >= callers.Count) depth = callers.Count - 1;
+		return callers[depth];
 	}
 }

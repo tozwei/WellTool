@@ -196,8 +196,19 @@ namespace WellTool.Core.Text
                 var regexPattern = BuildRegex(_pattern);
                 var options = _caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase;
                 var fullPattern = "^" + regexPattern + "$";
-                var isMatch = Regex.IsMatch(str, fullPattern, options);
-                return isMatch;
+                try
+                {
+                    // debug logging to help test failures
+                    System.Console.WriteLine($"AntPathMatcher DEBUG pattern='{_pattern}' regex='{fullPattern}' path='{str}'");
+                    var isMatch = Regex.IsMatch(str, fullPattern, options);
+                    System.Console.WriteLine($"AntPathMatcher DEBUG result={isMatch}");
+                    return isMatch;
+                }
+                catch (System.Exception ex)
+                {
+                    System.Console.WriteLine($"AntPathMatcher DEBUG error building regex: {ex}");
+                    return false;
+                }
             }
 
             public IDictionary<string, string> MatchAndExtract(string str)
@@ -232,6 +243,14 @@ namespace WellTool.Core.Text
                 var length = pattern.Length;
                 var i = 0;
 
+                // 特殊处理以 /** 开头的模式
+                if (pattern.StartsWith("/**"))
+                {
+                    // 对于 /** 开头的模式，直接匹配任意路径
+                    regexBuilder.Append(".*");
+                    i += 3; // 跳过 /**
+                }
+
                 while (i < length)
                 {
                     var currentChar = pattern[i];
@@ -240,23 +259,7 @@ namespace WellTool.Core.Text
                         if (i + 1 < length && pattern[i + 1] == '*')
                         {
                             // ** 通配符
-                            if (i == 0 && i + 2 == length)
-                            {
-                                // 特殊情况：只有 **
-                                regexBuilder.Append(".*");
-                            }
-                            else if (i == 0)
-                            {
-                                // 以 ** 开头
-                                regexBuilder.Append(".*");
-                                i += 2;
-                                // 跳过后面的分隔符
-                                if (i < length && pattern[i] == _pathSeparator[0])
-                                {
-                                    i++;
-                                }
-                            }
-                            else if (i + 2 == length)
+                            if (i + 2 == length)
                             {
                                 // 以 ** 结尾
                                 regexBuilder.Append($"(?:{separator}.*)*");
@@ -265,8 +268,13 @@ namespace WellTool.Core.Text
                             else
                             {
                                 // 中间的 **
-                                regexBuilder.Append($"(?:{separator}.*)*{separator}");
+                                regexBuilder.Append($"(?:{separator}.*)*");
                                 i += 2;
+                                // 跳过后面的分隔符
+                                if (i < length && pattern[i] == _pathSeparator[0])
+                                {
+                                    i++;
+                                }
                             }
                         }
                         else

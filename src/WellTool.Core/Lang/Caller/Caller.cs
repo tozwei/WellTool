@@ -27,24 +27,25 @@ public static class CallerUtil
 	var frames = trace.GetFrames();
 	if (frames != null)
 	{
-		// 跳过前两个帧：GetCaller() 方法和调用它的方法
-		for (int i = 2; i < frames.Length; i++)
+		// 遍历所有帧，找到第一个不是当前类且不是系统类的类型
+		for (int i = 0; i < frames.Length; i++)
 		{
 			var method = frames[i].GetMethod();
 			if (method != null)
 			{
 				var declaringType = method.DeclaringType;
-				// 找到第一个不是 CallerUtil 类、不是系统运行时类、不是xunit类的类型
 				if (declaringType != null && 
-					declaringType != typeof(CallerUtil) && 
-					!declaringType.FullName.StartsWith("System.") &&
-					!declaringType.FullName.StartsWith("Xunit."))
+				    declaringType != typeof(CallerUtil) &&
+				    !declaringType.FullName.StartsWith("System.") &&
+				    !declaringType.FullName.StartsWith("Microsoft.VisualStudio.TestPlatform.") &&
+				    !declaringType.FullName.StartsWith("Xunit."))
 				{
 					return declaringType;
 				}
 			}
 		}
 	}
+	// 如果没有找到合适的调用者，返回 null
 	return null;
 }
 
@@ -59,29 +60,33 @@ public static class CallerUtil
 	var frames = trace.GetFrames();
 	if (frames != null)
 	{
-		// 跳过前两个帧：GetCaller() 方法和调用它的方法
-		int startIndex = 2;
-		for (int i = startIndex; i < frames.Length; i++)
-		{
-			var method = frames[i].GetMethod();
-			if (method != null)
+            // 收集所有非框架的调用者类型
+			var callers = new System.Collections.Generic.List<System.Type>();
+			for (int i = 0; i < frames.Length; i++)
 			{
+				var method = frames[i].GetMethod();
+				if (method == null) continue;
 				var declaringType = method.DeclaringType;
-				// 找到第一个不是 CallerUtil 类、不是系统运行时类、不是xunit类的类型
-				if (declaringType != null && 
-					declaringType != typeof(CallerUtil) && 
-					!declaringType.FullName.StartsWith("System.") &&
-					!declaringType.FullName.StartsWith("Xunit."))
-				{
-					if (depth <= 0)
-					{
-						return declaringType;
-					}
-					depth--;
-				}
+				if (declaringType == null) continue;
+				var fullName = declaringType.FullName ?? string.Empty;
+				if (declaringType == typeof(CallerUtil)) continue;
+				if (fullName.StartsWith("System.")) continue;
+				if (fullName.StartsWith("Microsoft.VisualStudio.TestPlatform.")) continue;
+				if (fullName.StartsWith("Xunit.")) continue;
+				callers.Add(declaringType);
 			}
-		}
+
+			if (callers.Count == 0)
+			{
+				return null;
+			}
+
+			// 如果指定的深度超出范围，返回最近的（最接近调用点的）可用调用者
+			if (depth < 0) depth = 0;
+			if (depth >= callers.Count) depth = callers.Count - 1;
+			return callers[depth];
 	}
+	// 如果没有找到合适的调用者，返回 null
 	return null;
 }
 }

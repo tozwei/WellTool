@@ -103,7 +103,7 @@ public class ObjectId : IComparable<ObjectId>
 	/// <returns>机器ID</returns>
 	public int GetMachineId()
 	{
-		return (_bytes[4] << 24) | (_bytes[5] << 16) | (_bytes[6] << 8) | _bytes[7];
+		return ((_bytes[4] & 0x7F) << 24) | ((_bytes[5] & 0xFF) << 16) | ((_bytes[6] & 0xFF) << 8) | (_bytes[7] & 0xFF);
 	}
 
 	/// <summary>
