@@ -22,8 +22,22 @@ public static class FieldUtil
         }
 
         var type = obj.GetType();
-        var field = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-        return field?.GetValue(obj);
+        var field = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+        if (field != null)
+        {
+            return field.GetValue(obj);
+        }
+
+        // try property
+        var prop = type.GetProperty(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+        if (prop != null)
+        {
+            return prop.GetValue(obj);
+        }
+
+        // try auto-property backing field: <Name>k__BackingField
+        var backing = type.GetField($"<{fieldName}>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static);
+        return backing?.GetValue(obj);
     }
 
     /// <summary>
@@ -40,8 +54,27 @@ public static class FieldUtil
         }
 
         var type = obj.GetType();
-        var field = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-        field?.SetValue(obj, value);
+        var field = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+        if (field != null)
+        {
+            field.SetValue(obj, value);
+            return;
+        }
+
+        // try property
+        var prop = type.GetProperty(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+        if (prop != null && prop.CanWrite)
+        {
+            prop.SetValue(obj, value);
+            return;
+        }
+
+        // try auto-property backing field
+        var backing = type.GetField($"<{fieldName}>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static);
+        if (backing != null)
+        {
+            backing.SetValue(obj, value);
+        }
     }
 
     /// <summary>
@@ -121,7 +154,20 @@ public static class FieldUtil
             return null;
         }
 
-        return type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+        var field = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+        if (field != null)
+        {
+            return field;
+        }
+
+        // try to find property backing field for auto-properties
+        var backing = type.GetField($"<{fieldName}>k__BackingField", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic);
+        if (backing != null)
+        {
+            return backing;
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -137,7 +183,19 @@ public static class FieldUtil
             return null;
         }
 
-        return type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+        var field = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+        if (field != null)
+        {
+            return field;
+        }
+
+        var backing = type.GetField($"<{fieldName}>k__BackingField", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+        if (backing != null)
+        {
+            return backing;
+        }
+
+        return null;
     }
 
     /// <summary>

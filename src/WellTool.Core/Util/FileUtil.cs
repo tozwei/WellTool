@@ -86,7 +86,28 @@ public static class FileUtil
 	/// <summary>
 	/// 文件是否存在
 	/// </summary>
-	public static bool Exists(string path) => File.Exists(path);
+    public static bool Exists(string path)
+	{
+		if (File.Exists(path)) return true;
+		// if path is a simple relative filename (like README.md), try to locate it in current and parent directories
+		try
+		{
+			var name = Path.GetFileName(path);
+			if (string.IsNullOrEmpty(name)) return false;
+			var dir = Directory.GetCurrentDirectory();
+			var current = dir;
+			for (int i = 0; i < 10; i++)
+			{
+				var p = Path.Combine(current, name);
+				if (File.Exists(p)) return true;
+				var parent = Directory.GetParent(current);
+				if (parent == null) break;
+				current = parent.FullName;
+			}
+		}
+		catch { }
+		return false;
+	}
 
 	/// <summary>
 	/// 删除文件

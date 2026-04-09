@@ -85,7 +85,11 @@ namespace WellTool.Core.IO
 
         public string ReadString()
         {
-            return charset.GetString(ReadBytes());
+            // Use StreamReader with BOM detection so returned string won't contain a leading BOM char
+            using (var reader = new StreamReader(file.FullName, charset, detectEncodingFromByteOrderMarks: true))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public T ReadLines<T>(T collection) where T : ICollection<string>
@@ -120,7 +124,7 @@ namespace WellTool.Core.IO
 
         public T Read<T>(Func<StreamReader, T> readerHandler)
         {
-            using (var reader = new StreamReader(file.FullName, charset))
+            using (var reader = GetReader())
             {
                 return readerHandler(reader);
             }
@@ -128,7 +132,8 @@ namespace WellTool.Core.IO
 
         public StreamReader GetReader()
         {
-            return new StreamReader(GetInputStream(), charset);
+            // Enable BOM detection when creating StreamReader from stream
+            return new StreamReader(GetInputStream(), charset, detectEncodingFromByteOrderMarks: true);
         }
 
         public FileStream GetInputStream()

@@ -91,7 +91,7 @@ namespace WellTool.Core.Bean.Copier
 					}
 					else
 						{
-							targetFieldName = sDesc.FieldName;
+							targetFieldName = sDesc.FieldName.ToLower();
 						}
 				}
 

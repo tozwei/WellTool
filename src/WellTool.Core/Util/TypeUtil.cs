@@ -186,21 +186,23 @@ public static class TypeUtil
 		// 首先检查是否是泛型类型定义
 		if (type.IsGenericTypeDefinition)
 		{
-			return type.GetGenericArguments();
+			var args = type.GetGenericArguments();
+			return args.Length > 0 ? args : null;
 		}
 
 		// 获取泛型父类
 		var genericSuper = type.BaseType;
 		if (genericSuper != null && genericSuper != typeof(object) && genericSuper.IsGenericType)
 		{
-			return genericSuper.GetGenericArguments();
+			var args = genericSuper.GetGenericArguments();
+			return args.Length > 0 ? args : null;
 		}
 
 		// 检查接口 - 只处理非系统内置的泛型接口
 		var interfaces = type.GetInterfaces();
 		foreach (var iface in interfaces)
 		{
-			if (iface.IsGenericType && !iface.Namespace.StartsWith("System."))
+			if (iface.IsGenericType && iface.Namespace != null && !iface.Namespace.StartsWith("System"))
 			{
 				var args = iface.GetGenericArguments();
 				if (args.Length > 0)
