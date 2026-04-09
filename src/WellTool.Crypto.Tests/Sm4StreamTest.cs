@@ -11,7 +11,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Text;
 using Xunit;
+using WellTool.Crypto.Symmetric;
 
 namespace WellTool.Crypto.Tests
 {
@@ -21,11 +24,44 @@ namespace WellTool.Crypto.Tests
     public class Sm4StreamTest
     {
         [Fact]
-        public void Test()
+        public void Sm4EncryptDecryptTest()
         {
-            // 测试SM4流加密
-            // 这里只是一个占位符测试
-            Assert.True(true);
+            // 创建 SM4 实例，使用 ECB 模式和 PKCS5Padding
+            var key = Encoding.UTF8.GetBytes("1234567890123456"); // 16 字节密钥
+            var sm4 = new SM4(key);
+            var data = "测试SM4加密解密";
+
+            // 加密
+            var encryptedHex = sm4.EncryptHex(data);
+            Assert.NotNull(encryptedHex);
+            Assert.NotEmpty(encryptedHex);
+
+            // 解密
+            var decrypted = sm4.DecryptStr(encryptedHex);
+            Assert.NotNull(decrypted);
+            Assert.NotEmpty(decrypted);
+            Assert.Equal(data, decrypted);
+        }
+
+        [Fact]
+        public void Sm4WithDifferentModeTest()
+        {
+            // 创建 SM4 实例，使用 CBC 模式和 PKCS5Padding
+            var key = Encoding.UTF8.GetBytes("1234567890123456"); // 16 字节密钥
+            var iv = Encoding.UTF8.GetBytes("1234567890123456"); // 16 字节 IV
+            var sm4 = new SM4(CipherMode.CBC, Padding.PKCS5Padding, key, iv);
+            var data = "测试SM4不同模式";
+
+            // 加密
+            var encryptedHex = sm4.EncryptHex(data);
+            Assert.NotNull(encryptedHex);
+            Assert.NotEmpty(encryptedHex);
+
+            // 解密
+            var decrypted = sm4.DecryptStr(encryptedHex);
+            Assert.NotNull(decrypted);
+            Assert.NotEmpty(decrypted);
+            Assert.Equal(data, decrypted);
         }
     }
 }

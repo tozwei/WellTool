@@ -14,6 +14,7 @@
 using System;
 using Xunit;
 using WellTool.Crypto;
+using WellTool.Crypto.Asymmetric;
 
 namespace WellTool.Crypto.Tests
 {
@@ -23,19 +24,41 @@ namespace WellTool.Crypto.Tests
     public class OpensslKeyUtilTest
     {
         [Fact]
-        public void ReadPrivateKeyTest()
+        public void ReadWritePrivateKeyTest()
         {
-            // 测试读取OpenSSL格式私钥
-            // 这里只是一个占位符测试
-            Assert.True(true);
+            // 生成 RSA 密钥对
+            var (publicKey, privateKey) = CryptoUtil.GenerateRsaKeyPair();
+            var rsa = new WellTool.Crypto.Asymmetric.RSA(publicKey, privateKey);
+            var keyPair = rsa.GetKeyPair();
+
+            // 写入私钥为 PEM 格式
+            var privateKeyPem = OpensslKeyUtil.WritePrivateKey(keyPair);
+            Assert.NotNull(privateKeyPem);
+            Assert.NotEmpty(privateKeyPem);
+
+            // 读取私钥
+            var readKeyPair = OpensslKeyUtil.ReadPrivateKey(privateKeyPem);
+            Assert.NotNull(readKeyPair);
+            Assert.NotNull(readKeyPair.Private);
+            Assert.NotNull(readKeyPair.Public);
         }
 
         [Fact]
-        public void ReadPublicKeyTest()
+        public void ReadWritePublicKeyTest()
         {
-            // 测试读取OpenSSL格式公钥
-            // 这里只是一个占位符测试
-            Assert.True(true);
+            // 生成 RSA 密钥对
+            var (publicKey, privateKey) = CryptoUtil.GenerateRsaKeyPair();
+            var rsa = new WellTool.Crypto.Asymmetric.RSA(publicKey, privateKey);
+            var keyPair = rsa.GetKeyPair();
+
+            // 写入公钥为 PEM 格式
+            var publicKeyPem = OpensslKeyUtil.WritePublicKey(keyPair.Public);
+            Assert.NotNull(publicKeyPem);
+            Assert.NotEmpty(publicKeyPem);
+
+            // 读取公钥
+            var readPublicKey = OpensslKeyUtil.ReadPublicKey(publicKeyPem);
+            Assert.NotNull(readPublicKey);
         }
     }
 }

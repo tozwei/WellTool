@@ -11,7 +11,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Text;
 using Xunit;
+using WellTool.Crypto.Digest.Mac;
 
 namespace WellTool.Crypto.Tests
 {
@@ -21,11 +23,53 @@ namespace WellTool.Crypto.Tests
     public class CBCBlockCipherMacEngineTest
     {
         [Fact]
-        public void Test()
+        public void HmacMd5Test()
         {
-            // 测试CBC块加密MAC引擎
-            // 这里只是一个占位符测试
-            Assert.True(true);
+            var key = Encoding.UTF8.GetBytes("testKey");
+            var data = Encoding.UTF8.GetBytes("test中文");
+            var result = Mac.HmacMd5(key, data);
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        [Fact]
+        public void HmacSha1Test()
+        {
+            var key = Encoding.UTF8.GetBytes("testKey");
+            var data = Encoding.UTF8.GetBytes("test中文");
+            var result = Mac.HmacSha1(key, data);
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        [Fact]
+        public void HmacSha256Test()
+        {
+            var key = Encoding.UTF8.GetBytes("testKey");
+            var data = Encoding.UTF8.GetBytes("test中文");
+            var result = Mac.HmacSha256(key, data);
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        [Fact]
+        public void HmacSha384Test()
+        {
+            var key = Encoding.UTF8.GetBytes("testKey");
+            var data = Encoding.UTF8.GetBytes("test中文");
+            var result = Mac.HmacSha384(key, data);
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+        }
+
+        [Fact]
+        public void HmacSha512Test()
+        {
+            var key = Encoding.UTF8.GetBytes("testKey");
+            var data = Encoding.UTF8.GetBytes("test中文");
+            var result = Mac.HmacSha512(key, data);
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
         }
     }
 }

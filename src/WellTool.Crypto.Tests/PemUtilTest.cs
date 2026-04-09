@@ -12,8 +12,10 @@
 // limitations under the License.
 
 using System;
+using System.IO;
 using Xunit;
 using WellTool.Crypto;
+using WellTool.Crypto.Asymmetric;
 
 namespace WellTool.Crypto.Tests
 {
@@ -23,19 +25,74 @@ namespace WellTool.Crypto.Tests
     public class PemUtilTest
     {
         [Fact]
-        public void ReadPrivateKeyTest()
+        public void ReadWritePemTest()
         {
-            // 测试读取PEM格式私钥
-            // 这里只是一个占位符测试
-            Assert.True(true);
+            // 生成 RSA 密钥对
+            var (publicKey, privateKey) = CryptoUtil.GenerateRsaKeyPair();
+            var rsa = new Asymmetric.RSA(publicKey, privateKey);
+            var keyPair = rsa.GetKeyPair();
+
+            // 写入私钥为 PEM 字符串
+            var privateKeyPem = PemUtil.WritePem(keyPair.Private);
+            Assert.NotNull(privateKeyPem);
+            Assert.NotEmpty(privateKeyPem);
+
+            // 读取私钥
+            var readPrivateKey = PemUtil.ReadPem(privateKeyPem);
+            Assert.NotNull(readPrivateKey);
+
+            // 写入公钥为 PEM 字符串
+            var publicKeyPem = PemUtil.WritePem(keyPair.Public);
+            Assert.NotNull(publicKeyPem);
+            Assert.NotEmpty(publicKeyPem);
+
+            // 读取公钥
+            var readPublicKey = PemUtil.ReadPem(publicKeyPem);
+            Assert.NotNull(readPublicKey);
         }
 
         [Fact]
-        public void ReadPublicKeyTest()
+        public void ReadWritePemFileTest()
         {
-            // 测试读取PEM格式公钥
-            // 这里只是一个占位符测试
-            Assert.True(true);
+            // 生成 RSA 密钥对
+            var (publicKey, privateKey) = CryptoUtil.GenerateRsaKeyPair();
+            var rsa = new Asymmetric.RSA(publicKey, privateKey);
+            var keyPair = rsa.GetKeyPair();
+
+            // 创建临时文件
+            var privateKeyPath = Path.GetTempFileName();
+            var publicKeyPath = Path.GetTempFileName();
+
+            try
+            {
+                // 写入私钥为 PEM 文件
+                PemUtil.WritePemFile(keyPair.Private, privateKeyPath);
+                Assert.True(File.Exists(privateKeyPath));
+
+                // 读取私钥
+                var readPrivateKey = PemUtil.ReadPemFile(privateKeyPath);
+                Assert.NotNull(readPrivateKey);
+
+                // 写入公钥为 PEM 文件
+                PemUtil.WritePemFile(keyPair.Public, publicKeyPath);
+                Assert.True(File.Exists(publicKeyPath));
+
+                // 读取公钥
+                var readPublicKey = PemUtil.ReadPemFile(publicKeyPath);
+                Assert.NotNull(readPublicKey);
+            }
+            finally
+            {
+                // 清理临时文件
+                if (File.Exists(privateKeyPath))
+                {
+                    File.Delete(privateKeyPath);
+                }
+                if (File.Exists(publicKeyPath))
+                {
+                    File.Delete(publicKeyPath);
+                }
+            }
         }
     }
 }

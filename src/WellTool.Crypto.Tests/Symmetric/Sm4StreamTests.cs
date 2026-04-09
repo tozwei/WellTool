@@ -1,3 +1,4 @@
+using System.Text;
 using WellTool.Crypto.Symmetric;
 using Xunit;
 
@@ -9,10 +10,58 @@ namespace WellTool.Crypto.Tests.Symmetric
     public class Sm4StreamTests
     {
         [Fact]
-        public void TestSM4Stream()
+        public void SM4CBCModeTest()
         {
-            // 这里只是一个占位符，具体实现需要根据 SM4 类的实际实现来编写
-            Assert.True(true);
+            var key = Encoding.UTF8.GetBytes("1234567890123456");
+            var iv = Encoding.UTF8.GetBytes("1234567890123456");
+            var sm4 = new SM4(CipherMode.CBC, Padding.PKCS5Padding, key, iv);
+
+            var plaintext = "Hello, SM4 CBC Mode!";
+            var encrypted = sm4.EncryptHex(plaintext);
+            var decrypted = sm4.DecryptStr(encrypted);
+
+            Assert.Equal(plaintext, decrypted);
+        }
+
+        [Fact]
+        public void SM4CFBModeTest()
+        {
+            var key = Encoding.UTF8.GetBytes("1234567890123456");
+            var iv = Encoding.UTF8.GetBytes("1234567890123456");
+            var sm4 = new SM4(CipherMode.CFB, Padding.PKCS5Padding, key, iv);
+
+            var plaintext = "Hello, SM4 CFB Mode!";
+            var encrypted = sm4.EncryptHex(plaintext);
+            var decrypted = sm4.DecryptStr(encrypted);
+
+            Assert.Equal(plaintext, decrypted);
+        }
+
+        [Fact]
+        public void SM4OFBModeTest()
+        {
+            var key = Encoding.UTF8.GetBytes("1234567890123456");
+            var iv = Encoding.UTF8.GetBytes("1234567890123456");
+            var sm4 = new SM4(CipherMode.OFB, Padding.PKCS5Padding, key, iv);
+
+            var plaintext = "Hello, SM4 OFB Mode!";
+            var encrypted = sm4.EncryptHex(plaintext);
+            var decrypted = sm4.DecryptStr(encrypted);
+
+            Assert.Equal(plaintext, decrypted);
+        }
+
+        [Fact]
+        public void SM4ECBModeTest()
+        {
+            var key = Encoding.UTF8.GetBytes("1234567890123456");
+            var sm4 = new SM4(CipherMode.ECB, Padding.PKCS5Padding, key);
+
+            var plaintext = "Hello, SM4 ECB Mode!";
+            var encrypted = sm4.EncryptHex(plaintext);
+            var decrypted = sm4.DecryptStr(encrypted);
+
+            Assert.Equal(plaintext, decrypted);
         }
     }
 }
