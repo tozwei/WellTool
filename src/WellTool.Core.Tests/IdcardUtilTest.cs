@@ -9,7 +9,7 @@ namespace WellTool.Core.Tests
     public class IdcardUtilTest
     {
         // 有效身份证号码
-        private const string ValidIdCard18 = "110101199003078888";
+        private const string ValidIdCard18 = "110101199003078881";
         private const string ValidIdCard15 = "110101900307888";
 
         [Fact]

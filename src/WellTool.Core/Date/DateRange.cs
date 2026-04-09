@@ -68,13 +68,12 @@ namespace WellTool.Core.Date
                 yield break;
             }
 
+            var current = _start;
             if (_includeStart)
             {
-                yield return _start;
+                yield return current;
             }
 
-            var current = _start;
-            var index = 1;
             while (true)
             {
                 var next = current.Add((TimeSpan)_unit.ToTimeSpan() * _step);
@@ -84,16 +83,6 @@ namespace WellTool.Core.Date
                 }
                 yield return next;
                 current = next;
-                index++;
-            }
-
-            if (_includeEnd && _step > 0)
-            {
-                var last = _start.Add((TimeSpan)_unit.ToTimeSpan() * _step * (GetCount() - 1));
-                if (last < _end)
-                {
-                    yield return _end;
-                }
             }
         }
 

@@ -245,7 +245,7 @@ namespace WellTool.Core.Util
         /// <returns>方法信息</returns>
         public static MethodInfo GetMethod(Type type, string methodName)
         {
-            return type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            return type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
         }
 
         /// <summary>

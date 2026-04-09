@@ -67,7 +67,9 @@ public static class ModifierUtil
 	/// <returns>是否为公共的</returns>
 	public static bool IsPublic(Type type)
 	{
-		return type?.IsPublic ?? false;
+     if (type == null) return false;
+		// For nested types, use IsNestedPublic; for top-level types, use IsPublic
+		return type.IsNested ? type.IsNestedPublic : type.IsPublic;
 	}
 
 	/// <summary>
@@ -77,7 +79,13 @@ public static class ModifierUtil
 	/// <returns>是否为私有的</returns>
 	public static bool IsPrivate(Type type)
 	{
-		return type?.IsNotPublic ?? false;
+      if (type == null) return false;
+		// nested types: check IsNestedPrivate; top-level types: IsNotPublic
+		if (type.IsNested)
+		{
+			return type.IsNestedPrivate;
+		}
+		return type.IsNotPublic;
 	}
 
 	/// <summary>

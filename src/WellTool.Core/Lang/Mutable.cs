@@ -70,4 +70,27 @@ public class Mutable<T>
 	/// 隐式转换
 	/// </summary>
 	public static implicit operator Mutable<T>(T value) => new Mutable<T>(value);
+
+	/// <inheritdoc />
+	public override bool Equals(object? obj)
+	{
+		if (ReferenceEquals(this, obj)) return true;
+		if (obj is Mutable<T> other)
+		{
+			return Equals(_value, other._value);
+		}
+		return false;
+	}
+
+	/// <inheritdoc />
+	public override int GetHashCode()
+	{
+		return _value?.GetHashCode() ?? 0;
+	}
+
+	/// <inheritdoc />
+	public override string ToString()
+	{
+		return _value?.ToString() ?? "null";
+	}
 }

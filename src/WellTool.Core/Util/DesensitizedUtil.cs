@@ -51,7 +51,7 @@ public static class DesensitizedUtil
 		{
 			return bankCard;
 		}
-		return Regex.Replace(bankCard, "(\\d{4})\\d+(\\d{4})", "$1****$2");
+		return Regex.Replace(bankCard, "(\\\\d{4})\\\\d+(\\\\d{5})", "$1****$2");
 	}
 
 	/// <summary>
@@ -120,7 +120,7 @@ public static class DesensitizedUtil
 		{
 			return address;
 		}
-		return address.Substring(0, keepLength) + new string('*', address.Length - keepLength);
+		return address.Substring(0, keepLength) + "****";
 	}
 
 	/// <summary>
