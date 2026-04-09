@@ -1,56 +1,79 @@
 namespace WellTool.Http.Cookie;
 
 /// <summary>
-/// Cookie 管理器（简化版本 - 暂未实现完整功能）
+/// Cookie 管理器
 /// </summary>
 public static class GlobalCookieManager
 {
+    // 线程本地的 Cookie 存储
+    private static readonly ThreadLocal<ThreadLocalCookieStore> _cookieStore = new ThreadLocal<ThreadLocalCookieStore>(() => new ThreadLocalCookieStore());
+
     /// <summary>
-    /// 自定义 Cookie 管理器（暂未实现）
+    /// 自定义 Cookie 管理器
     /// </summary>
     public static void SetCookieManager(object? customCookieManager)
     {
-        // TODO: 未来实现完整的 Cookie 管理功能
-        // 目前仅作为占位方法，避免编译错误
+        // 目前使用默认的 ThreadLocalCookieStore，未来可以支持自定义 Cookie 管理器
     }
 
     /// <summary>
-    /// 获取 Cookie 管理器（暂未实现）
+    /// 获取 Cookie 管理器
     /// </summary>
     public static object? GetCookieManager()
     {
-        return null;
+        return _cookieStore.Value;
     }
 
     /// <summary>
-    /// 获取指定域名下的 Cookie（暂未实现）
+    /// 获取指定域名下的 Cookie
     /// </summary>
     public static List<object> GetCookies(Uri uri)
     {
-        return new List<object>();
+        return _cookieStore.Value.Get(uri);
     }
 
     /// <summary>
-    /// 添加 Cookie 到请求（暂未实现）
+    /// 添加 Cookie 到请求
     /// </summary>
     public static void Add(IDictionary<string, List<string>> headers, Uri uri)
     {
-        // TODO: 未来实现
+        var cookies = GetCookies(uri);
+        if (cookies.Count > 0)
+        {
+            var cookieHeader = string.Join("; ", cookies.Select(c => c.ToString()));
+            if (!headers.TryGetValue("Cookie", out var cookieValues))
+            {
+                cookieValues = new List<string>();
+                headers["Cookie"] = cookieValues;
+            }
+            cookieValues.Add(cookieHeader);
+        }
     }
 
     /// <summary>
-    /// 存储响应的 Cookie（暂未实现）
+    /// 存储响应的 Cookie
     /// </summary>
     public static void Store(Uri uri, IDictionary<string, List<string>> headers)
     {
-        // TODO: 未来实现
+        if (headers.TryGetValue("Set-Cookie", out var setCookieValues))
+        {
+            foreach (var setCookieValue in setCookieValues)
+            {
+                var cookie = Cookie.Parse(setCookieValue);
+                if (cookie != null)
+                {
+                    _cookieStore.Value.Add(uri, cookie);
+                }
+            }
+        }
     }
 
     /// <summary>
-    /// 关闭 Cookie 管理（暂未实现）
+    /// 关闭 Cookie 管理
     /// </summary>
     public static void CloseCookie()
     {
+        _cookieStore.Value.Clear();
         SetCookieManager(null);
     }
 }

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace WellTool.Json
 {
@@ -295,8 +297,81 @@ namespace WellTool.Json
         /// <returns>JSONObject</returns>
         public static JSONObject ParseFromXml(string xmlStr)
         {
-            // XML 功能暂未实现
-            return null;
+            if (string.IsNullOrWhiteSpace(xmlStr))
+            {
+                return null;
+            }
+
+            try
+            {
+                XDocument doc = XDocument.Parse(xmlStr);
+                return ParseFromXml(doc.Root);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// XML 元素转为 JSONObject
+        /// </summary>
+        /// <param name="element">XML 元素</param>
+        /// <returns>JSONObject</returns>
+        private static JSONObject ParseFromXml(XElement element)
+        {
+            var jsonObj = new JSONObject();
+
+            // 处理属性
+            foreach (var attribute in element.Attributes())
+            {
+                jsonObj.Put(attribute.Name.LocalName, attribute.Value);
+            }
+
+            // 处理子元素
+            var childElements = element.Elements().ToList();
+            if (childElements.Count == 0)
+            {
+                // 没有子元素，处理文本内容
+                var text = element.Value.Trim();
+                if (!string.IsNullOrEmpty(text))
+                {
+                    jsonObj.Put("#text", text);
+                }
+            }
+            else
+            {
+                // 有子元素，处理子元素
+                foreach (var childElement in childElements)
+                {
+                    var childName = childElement.Name.LocalName;
+                    var childJson = ParseFromXml(childElement);
+
+                    if (jsonObj.ContainsKey(childName))
+                    {
+                        // 如果已经存在同名元素，转换为数组
+                        var existingValue = jsonObj.Get(childName);
+                        if (existingValue is JSONArray array)
+                        {
+                            array.Add(childJson);
+                        }
+                        else
+                        {
+                            var newArray = new JSONArray();
+                            newArray.Add(existingValue);
+                            newArray.Add(childJson);
+                            jsonObj.Put(childName, newArray);
+                        }
+                    }
+                    else
+                    {
+                        // 不存在同名元素，直接添加
+                        jsonObj.Put(childName, childJson);
+                    }
+                }
+            }
+
+            return jsonObj;
         }
 
         #endregion
@@ -454,8 +529,96 @@ namespace WellTool.Json
         /// <returns>XML 字符串</returns>
         public static string ToXmlStr(JSONBase json)
         {
-            // XML 功能暂未实现
-            return null;
+            if (json == null)
+            {
+                return null;
+            }
+
+            try
+            {
+                XElement root = ToXmlElement("root", json);
+                XDocument doc = new XDocument(root);
+                return doc.ToString();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 将 JSON 转换为 XML 元素
+        /// </summary>
+        /// <param name="elementName">元素名称</param>
+        /// <param name="json">JSON</param>
+        /// <returns>XML 元素</returns>
+        private static XElement ToXmlElement(string elementName, JSONBase json)
+        {
+            XElement element = new XElement(elementName);
+
+            if (json is JSONObject jsonObj)
+            {
+                // 处理 JSONObject
+                foreach (var entry in jsonObj)
+                {
+                    var key = entry.Key;
+                    var value = entry.Value;
+
+                    if (key == "#text")
+                    {
+                        // 处理文本内容
+                        if (value is string textValue)
+                        {
+                            element.Value = textValue;
+                        }
+                    }
+                    else if (value is JSONArray jsonArray)
+                    {
+                        // 处理 JSONArray
+                        foreach (var arrayItem in jsonArray)
+                        {
+                            if (arrayItem is JSONBase arrayItemJson)
+                            {
+                                var childElement = ToXmlElement(key, arrayItemJson);
+                                element.Add(childElement);
+                            }
+                        }
+                    }
+                    else if (value is JSONObject nestedJsonObj)
+                    {
+                        // 处理嵌套的 JSONObject
+                        var childElement = ToXmlElement(key, nestedJsonObj);
+                        element.Add(childElement);
+                    }
+                    else if (value != null)
+                    {
+                        // 处理基本类型
+                        var childElement = new XElement(key);
+                        childElement.Value = value.ToString();
+                        element.Add(childElement);
+                    }
+                }
+            }
+            else if (json is JSONArray jsonArray)
+            {
+                // 处理 JSONArray
+                foreach (var item in jsonArray)
+                {
+                    if (item is JSONBase itemJson)
+                    {
+                        var childElement = ToXmlElement("item", itemJson);
+                        element.Add(childElement);
+                    }
+                    else if (item != null)
+                    {
+                        var childElement = new XElement("item");
+                        childElement.Value = item.ToString();
+                        element.Add(childElement);
+                    }
+                }
+            }
+
+            return element;
         }
 
         #endregion
@@ -996,8 +1159,8 @@ namespace WellTool.Json
         /// <returns>JSONObject</returns>
         public static JSONObject XmlToJson(string xml)
         {
-            // XML 功能暂未实现
-            return null;
+            // 调用已实现的 ParseFromXml 方法
+            return ParseFromXml(xml);
         }
 
         /// <summary>
