@@ -1,6 +1,7 @@
+using System.Text;
 using Xunit;
 using WellTool.Crypto;
-using System;
+using WellTool.Crypto.Symmetric;
 
 namespace WellTool.Crypto.Tests
 {
@@ -9,9 +10,16 @@ namespace WellTool.Crypto.Tests
         [Fact]
         public void TestIssue3512()
         {
-            // 测试 Issue3512 相关的功能
-            // 这里只是一个占位符，具体实现需要根据 Java 代码的逻辑来编写
-            Assert.True(true);
+            // 测试基本的加密功能
+            var key = Encoding.UTF8.GetBytes("1234567890123456");
+            var iv = Encoding.UTF8.GetBytes("1234567890123456");
+            var aes = new AES(key, iv);
+
+            var plaintext = "Hello, Issue3512!";
+            var encrypted = aes.EncryptHex(plaintext);
+            var decrypted = aes.DecryptStr(encrypted);
+
+            Assert.Equal(plaintext, decrypted);
         }
     }
 }
