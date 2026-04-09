@@ -1,4 +1,7 @@
+using System.Text;
 using WellTool.Crypto;
+using WellTool.Crypto.Digest;
+using WellTool.Crypto.Symmetric;
 using Xunit;
 
 namespace WellTool.Crypto.Tests
@@ -9,10 +12,40 @@ namespace WellTool.Crypto.Tests
     public class SmTests
     {
         [Fact]
-        public void TestSM()
+        public void SM3Test()
         {
-            // 这里只是一个占位符，具体实现需要根据 SM2、SM3 和 SM4 类的实际实现来编写
-            Assert.True(true);
+            var sm3 = new SM3();
+            var data = "Hello, SM3!";
+            var digest = sm3.DigestHex(data);
+            Assert.NotNull(digest);
+            Assert.NotEmpty(digest);
+            Assert.Equal(64, digest.Length); // SM3 摘要长度为 32 字节，64 个十六进制字符
+        }
+
+        [Fact]
+        public void SM3WithSaltTest()
+        {
+            var salt = Encoding.UTF8.GetBytes("salt");
+            var sm3 = new SM3(salt);
+            var data = "Hello, SM3 with salt!";
+            var digest = sm3.DigestHex(data);
+            Assert.NotNull(digest);
+            Assert.NotEmpty(digest);
+            Assert.Equal(64, digest.Length); // SM3 摘要长度为 32 字节，64 个十六进制字符
+        }
+
+        [Fact]
+        public void SM4Test()
+        {
+            var key = Encoding.UTF8.GetBytes("1234567890123456");
+            var iv = Encoding.UTF8.GetBytes("1234567890123456");
+            var sm4 = new SM4(key, iv);
+
+            var plaintext = "Hello, SM4!";
+            var encrypted = sm4.EncryptHex(plaintext);
+            var decrypted = sm4.DecryptStr(encrypted);
+
+            Assert.Equal(plaintext, decrypted);
         }
     }
 }

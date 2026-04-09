@@ -1,3 +1,4 @@
+using System.Text;
 using WellTool.Crypto.Symmetric;
 using Xunit;
 
@@ -9,10 +10,18 @@ namespace WellTool.Crypto.Tests.Symmetric
     public class ChaCha20Tests
     {
         [Fact]
-        public void TestChaCha20()
+        public void EncryptDecryptTest()
         {
-            // 这里只是一个占位符，具体实现需要根据 ChaCha20 类的实际实现来编写
-            Assert.True(true);
+            var key = Encoding.UTF8.GetBytes("12345678901234567890123456789012"); // 32 bytes key
+            var nonce = Encoding.UTF8.GetBytes("123456789012"); // 12 bytes nonce
+            var plaintext = Encoding.UTF8.GetBytes("Hello, ChaCha20!");
+
+            var encrypted = ChaCha20.Encrypt(plaintext, key, nonce);
+            var decrypted = ChaCha20.Decrypt(encrypted, key, nonce);
+
+            Assert.NotNull(encrypted);
+            Assert.NotNull(decrypted);
+            Assert.Equal(plaintext, decrypted);
         }
     }
 }
