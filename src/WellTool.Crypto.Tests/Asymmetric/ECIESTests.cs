@@ -1,4 +1,3 @@
-using WellTool.Crypto.Asymmetric;
 using Xunit;
 
 namespace WellTool.Crypto.Tests.Asymmetric
@@ -11,7 +10,8 @@ namespace WellTool.Crypto.Tests.Asymmetric
         [Fact]
         public void TestECIES()
         {
-            // 这里只是一个占位符，具体实现需要根据 ECIES 类的实际实现来编写
+            // 测试 ECIES 相关功能
+            // 由于 ECIES 类尚未实现，这里暂时使用占位符
             Assert.True(true);
         }
     }

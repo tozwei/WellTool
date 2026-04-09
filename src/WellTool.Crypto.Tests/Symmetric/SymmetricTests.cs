@@ -83,13 +83,17 @@ namespace WellTool.Crypto.Tests.Symmetric
         {
             var key = Encoding.UTF8.GetBytes("12345678901234567890123456789012");
             var nonce = Encoding.UTF8.GetBytes("123456789012");
-            var chacha20 = new ChaCha20(key, nonce);
-
             var plaintext = "Hello, ChaCha20!";
-            var encrypted = chacha20.EncryptHex(plaintext);
-            var decrypted = chacha20.DecryptStr(encrypted);
 
-            Assert.Equal(plaintext, decrypted);
+            // 加密
+            var plaintextBytes = Encoding.UTF8.GetBytes(plaintext);
+            var encrypted = ChaCha20.Encrypt(plaintextBytes, key, nonce);
+
+            // 解密
+            var decrypted = ChaCha20.Decrypt(encrypted, key, nonce);
+            var decryptedText = Encoding.UTF8.GetString(decrypted);
+
+            Assert.Equal(plaintext, decryptedText);
         }
 
         [Fact]
