@@ -1,5 +1,6 @@
 using System.IO;
 using Xunit;
+using WellTool.Poi.Ofd;
 
 namespace WellTool.Poi.Tests
 {
@@ -14,9 +15,14 @@ namespace WellTool.Poi.Tests
             var tempFile = Path.GetTempFileName() + ".ofd";
             try
             {
-                // Note: OFD writing support depends on implementation
-                // This test verifies basic functionality
-                Assert.True(true);
+                using (var writer = new OfdWriter(tempFile))
+                {
+                    writer.AddText("Hello, OFD!")
+                          .AddText("This is a test OFD file")
+                          .Close();
+                }
+                Assert.True(File.Exists(tempFile));
+                Assert.True(new FileInfo(tempFile).Length > 0);
             }
             finally
             {
@@ -31,7 +37,12 @@ namespace WellTool.Poi.Tests
             var tempFile = Path.GetTempFileName() + ".ofd";
             try
             {
-                Assert.True(true);
+                using (var writer = new OfdWriter(tempFile))
+                {
+                    writer.AddText("Test OFD creation")
+                          .Close();
+                }
+                Assert.True(File.Exists(tempFile));
             }
             finally
             {
