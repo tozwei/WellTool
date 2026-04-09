@@ -1,11 +1,50 @@
-using WellTool.Core.IO;
-using Xunit;
 using System.IO;
+using WellTool.Core.IO;
+using WellTool.Core.IO.File;
+using Xunit;
 
 namespace WellTool.Core.Tests;
 
 public class FileUtilTest
 {
+    /// <summary>
+    /// 测试路径规范化的基本逻辑 (使用 [Fact])
+    /// </summary>
+    [Fact]
+    public void Normalize_PathWithParentDirectory_ShouldResolveCorrectly()
+    {
+        // 1. Arrange (准备数据)
+        string input = "/foo/../bar";
+        string expected = "/bar";
+
+        // 2. Act (执行动作)
+        string actual = FileUtil.Normalize(input);
+
+        // 3. Assert (断言结果)
+        Assert.Equal(expected, actual);
+    }
+
+    /// <summary>
+    /// 测试多种路径场景 (使用 [Theory] 和 [InlineData])
+    /// 这是测试路径工具更推荐的方式
+    /// </summary>
+    [Theory]
+    [InlineData("/foo//", "/foo/")]                // 去除多余斜杠
+    [InlineData("/foo/./", "/foo/")]               // 处理当前目录点
+    [InlineData("/foo/../bar", "/bar")]            // 处理上级目录
+    [InlineData("/../", "/")]                      // 根目录无法再向上
+    [InlineData("foo/bar/..", "foo")]              // 相对路径处理
+    [InlineData("C:\\foo\\..\\bar", "C:/bar")]     // Windows 盘符和反斜杠转换
+    [InlineData(null, null)]                       // 空值处理
+    public void Normalize_VariousPaths_ShouldReturnExpected(string input, string expected)
+    {
+        // Act
+        var result = FileUtil.Normalize(input);
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+
     [Fact]
     public void ExistsTest()
     {

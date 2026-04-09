@@ -1,7 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace WellTool.Core.IO
 {
@@ -279,20 +280,197 @@ namespace WellTool.Core.IO
             return file1.FullName.Equals(file2.FullName, StringComparison.OrdinalIgnoreCase);
         }
 
+
+        /**
+         * 修复路径<br>
+         * 如果原路径尾部有分隔符，则保留为标准分隔符（/），否则不保留
+         * <ol>
+         * <li>1. 统一用 /</li>
+         * <li>2. 多个 / 转换为一个 /</li>
+         * <li>3. 去除左边空格</li>
+         * <li>4. .. 和 . 转换为绝对路径，当..多于已有路径时，直接返回根路径</li>
+         * </ol>
+         * <p>
+         * 栗子：
+         *
+         * <pre>
+         * "/foo//" =》 "/foo/"
+         * "/foo/./" =》 "/foo/"
+         * "/foo/../bar" =》 "/bar"
+         * "/foo/../bar/" =》 "/bar/"
+         * "/foo/../bar/../baz" =》 "/baz"
+         * "/../" =》 "/"
+         * "foo/bar/.." =》 "foo"
+         * "foo/../bar" =》 "bar"
+         * "foo/../../bar" =》 "bar"
+         * "//server/foo/../bar" =》 "/server/bar"
+         * "//server/../bar" =》 "/bar"
+         * "C:\\foo\\..\\bar" =》 "C:/bar"
+         * "C:\\..\\bar" =》 "C:/bar"
+         * "~/foo/../bar/" =》 "~/bar/"
+         * "~/../bar" =》 普通用户运行是'bar的home目录'，ROOT用户运行是'/bar'
+         * </pre>
+         *
+         * @param path 原路径
+         * @return 修复后的路径
+         */
         /// <summary>
         /// 规范化路径
         /// </summary>
         /// <param name="path">路径</param>
         /// <returns>规范化后的路径</returns>
+        private const string SMB_PATH_PREFIX = "//";
+
+        /// <summary>
+        /// 修复路径
+        /// 1. 统一用 /
+        /// 2. 多个 / 转换为一个 /
+        /// 3. 去除左边空格
+        /// 4. .. 和 . 转换为绝对路径，当..多于已有路径时，直接返回根路径（针对绝对路径）
+        /// 5. 保留原始路径尾部的 /
+        /// </summary>
+        /// <param name="path">原路径</param>
+        /// <returns>修复后的路径</returns>
         public static string Normalize(string path)
         {
-            if (string.IsNullOrEmpty(path))
+            if (path == null)
+            {
+                return null;
+            }
+
+            // 1. 兼容 Windows 共享目录路径（原始路径如果以 // 开头，则保留这种路径）
+            if (path.StartsWith(SMB_PATH_PREFIX, StringComparison.Ordinal))
             {
                 return path;
             }
-            // 简化实现，实际可能需要更复杂的处理
-            return Path.GetFullPath(path).Replace('\\', '/');
+
+            // 2. 兼容 Spring 风格的 ClassPath 路径，去除前缀
+            string pathToUse = RemovePrefixIgnoreCase(path, "classpath:");
+            pathToUse = RemovePrefixIgnoreCase(pathToUse, "file:");
+
+            // 3. 识别 home 目录形式 (~)，并转换为绝对路径
+            if (pathToUse.StartsWith("~"))
+            {
+                string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                pathToUse = home + pathToUse.Substring(1);
+            }
+
+            // 4. 统一使用斜杠 (/)，将 \ 替换为 /
+            pathToUse = Regex.Replace(pathToUse, @"[/\\]+", "/");
+
+            // 5. 去除开头空白符
+            pathToUse = pathToUse.TrimStart();
+            // 去除尾部的换行符
+            pathToUse = pathToUse.TrimEnd('\n', '\r');
+
+            // 6. 处理 Windows 盘符前缀 (如 C:)
+            string prefix = string.Empty;
+            int prefixIndex = pathToUse.IndexOf(':');
+
+            if (prefixIndex > -1)
+            {
+                // 可能 Windows 风格路径
+                prefix = pathToUse.Substring(0, prefixIndex + 1);
+
+                // 去除类似于 /C: 这类路径开头的斜杠
+                if (prefix.StartsWith("/"))
+                {
+                    prefix = prefix.Substring(1);
+                }
+
+                // 如果前缀中包含 /，说明非 Windows 风格 path (例如 http://)
+                if (!prefix.Contains("/"))
+                {
+                    pathToUse = pathToUse.Substring(prefixIndex + 1);
+                }
+                else
+                {
+                    // 如果前缀包含 /，说明不是盘符，重置前缀
+                    prefix = string.Empty;
+                }
+            }
+
+            // 7. 处理根路径前缀 (/)
+            if (pathToUse.StartsWith("/"))
+            {
+                prefix += "/";
+                pathToUse = pathToUse.Substring(1);
+            }
+
+            // 8. 分割路径并处理 . 和 ..
+            string[] pathList = pathToUse.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+            List<string> pathElements = new List<string>();
+            int tops = 0; // 记录 .. 的数量
+
+            // 倒序遍历
+            for (int i = pathList.Length - 1; i >= 0; i--)
+            {
+                string element = pathList[i];
+
+                // 只处理非 . 的目录
+                if (element != ".")
+                {
+                    if (element == "..")
+                    {
+                        tops++;
+                    }
+                    else
+                    {
+                        if (tops > 0)
+                        {
+                            // 有上级目录标记时按照个数依次跳过 (抵消)
+                            tops--;
+                        }
+                        else
+                        {
+                            // 普通路径元素，添加到列表头部
+                            pathElements.Insert(0, element);
+                        }
+                    }
+                }
+            }
+
+            // 9. 处理剩余的 .. (即 .. 比路径层级多的情况)
+            if (tops > 0 && string.IsNullOrEmpty(prefix))
+            {
+                while (tops-- > 0)
+                {
+                    pathElements.Insert(0, "..");
+                }
+            }
+
+            // 10. 拼接结果
+            string result = prefix + string.Join("/", pathElements);
+
+            // 11. 【关键修复】如果原始路径以 / 结尾，且结果不为空，则补上 /
+            // 注意：这里检查的是 pathToUse (去除前缀后的路径)，因为前缀处理不影响尾部斜杠逻辑
+            if (pathToUse.EndsWith("/") && !result.EndsWith("/"))
+            {
+                result += "/";
+            }
+
+            return result;
         }
+
+
+        /// <summary>
+        /// 辅助方法：忽略大小写去除前缀
+        /// </summary>
+        private static string RemovePrefixIgnoreCase(string str, string prefix)
+        {
+            if (string.IsNullOrEmpty(str) || string.IsNullOrEmpty(prefix))
+            {
+                return str;
+            }
+
+            if (str.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return str.Substring(prefix.Length);
+            }
+            return str;
+        }
+
 
         /// <summary>
         /// 获取子路径
@@ -328,10 +506,10 @@ namespace WellTool.Core.IO
             {
                 return file;
             }
-            
+
             // 构建完整的路径
             var fullPath = file.FullName;
-            
+
             // 对于层级为0的情况，返回文件所在的目录
             if (level == 0)
             {
@@ -343,7 +521,7 @@ namespace WellTool.Core.IO
                 }
                 return new FileInfo(directory);
             }
-            
+
             // 对于层级大于0的情况，逐级向上查找
             var currentPath = fullPath;
             for (int i = 0; i < level; i++)
@@ -356,7 +534,7 @@ namespace WellTool.Core.IO
                 }
                 currentPath = parentPath;
             }
-            
+
             // 返回找到的父目录
             return new FileInfo(currentPath);
         }
@@ -488,10 +666,10 @@ namespace WellTool.Core.IO
             }
             var parentFullPath = Path.GetFullPath(parent.FullName).TrimEnd(Path.DirectorySeparatorChar);
             var subFullPath = Path.GetFullPath(sub.FullName).TrimEnd(Path.DirectorySeparatorChar);
-            
+
             // 确保父路径是子路径的真正前缀，需要考虑路径分隔符
             var parentWithSeparator = parentFullPath + Path.DirectorySeparatorChar;
-            return subFullPath.Equals(parentFullPath, StringComparison.OrdinalIgnoreCase) || 
+            return subFullPath.Equals(parentFullPath, StringComparison.OrdinalIgnoreCase) ||
                    subFullPath.StartsWith(parentWithSeparator, StringComparison.OrdinalIgnoreCase);
         }
 
