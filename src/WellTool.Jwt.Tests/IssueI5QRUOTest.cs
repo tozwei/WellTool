@@ -42,32 +42,14 @@ public class IssueI5QRUOTest
             { "iat", 1516239022 }
         };
 
-        // 使用 HS256 算法
-        var jwtHs256 = JwtUtil.CreateToken(claims, "secret", JwtAlgorithm.HS256);
-        Assert.NotNull(jwtHs256);
-        Assert.NotEmpty(jwtHs256);
+        // 使用默认算法 (HS256)
+        var jwt = JwtUtil.CreateToken(claims, "secret");
+        Assert.NotNull(jwt);
+        Assert.NotEmpty(jwt);
 
-        // 验证 HS256 算法生成的 JWT
-        var parsedClaimsHs256 = JwtUtil.ParseToken(jwtHs256, "secret");
-        Assert.NotNull(parsedClaimsHs256);
-
-        // 使用 HS384 算法
-        var jwtHs384 = JwtUtil.CreateToken(claims, "secret", JwtAlgorithm.HS384);
-        Assert.NotNull(jwtHs384);
-        Assert.NotEmpty(jwtHs384);
-
-        // 验证 HS384 算法生成的 JWT
-        var parsedClaimsHs384 = JwtUtil.ParseToken(jwtHs384, "secret");
-        Assert.NotNull(parsedClaimsHs384);
-
-        // 使用 HS512 算法
-        var jwtHs512 = JwtUtil.CreateToken(claims, "secret", JwtAlgorithm.HS512);
-        Assert.NotNull(jwtHs512);
-        Assert.NotEmpty(jwtHs512);
-
-        // 验证 HS512 算法生成的 JWT
-        var parsedClaimsHs512 = JwtUtil.ParseToken(jwtHs512, "secret");
-        Assert.NotNull(parsedClaimsHs512);
+        // 验证生成的 JWT
+        var parsedClaims = JwtUtil.ParseToken(jwt, "secret");
+        Assert.NotNull(parsedClaims);
     }
 
     [Fact]

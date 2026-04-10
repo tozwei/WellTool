@@ -13,6 +13,7 @@
 
 using Xunit;
 using WellTool.AI;
+using WellTool.AI.Model.Hutool;
 
 namespace WellTool.AI.Tests
 {
@@ -25,7 +26,8 @@ namespace WellTool.AI.Tests
         public void TestHutoolServiceCreation()
         {
             // 测试 Hutool AI 服务的创建
-            var service = HutoolService.Create();
+            var config = new WellTool.AI.Model.Hutool.HutoolConfig();
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Hutool.HutoolService>(config, typeof(WellTool.AI.Model.Hutool.HutoolService));
             Assert.NotNull(service);
         }
 
@@ -33,8 +35,9 @@ namespace WellTool.AI.Tests
         public void TestHutoolServiceWithApiKey()
         {
             // 测试使用 API 密钥创建 Hutool AI 服务
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var service = HutoolService.Create(apiKey);
+            var config = new WellTool.AI.Model.Hutool.HutoolConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Hutool.HutoolService>(config, typeof(WellTool.AI.Model.Hutool.HutoolService));
             Assert.NotNull(service);
         }
 
@@ -42,9 +45,10 @@ namespace WellTool.AI.Tests
         public void TestHutoolServiceWithCustomBaseUrl()
         {
             // 测试使用自定义基础 URL 创建 Hutool AI 服务
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var baseUrl = "https://api.hutool.cn/v1";
-            var service = HutoolService.Create(apiKey, baseUrl);
+            var config = new WellTool.AI.Model.Hutool.HutoolConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            config.SetApiUrl("https://api.hutool.cn/v1");
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Hutool.HutoolService>(config, typeof(WellTool.AI.Model.Hutool.HutoolService));
             Assert.NotNull(service);
         }
     }

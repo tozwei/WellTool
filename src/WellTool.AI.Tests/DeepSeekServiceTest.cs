@@ -26,8 +26,9 @@ namespace WellTool.AI.Tests
         public void TestDeepSeekServiceCreation()
         {
             // 测试 DeepSeek 服务的创建
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var service = DeepSeekService.Create(apiKey);
+            var config = new WellTool.AI.Model.DeepSeek.DeepSeekConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.DeepSeek.DeepSeekService>(config, typeof(WellTool.AI.Model.DeepSeek.DeepSeekService));
             Assert.NotNull(service);
         }
 
@@ -35,9 +36,10 @@ namespace WellTool.AI.Tests
         public void TestDeepSeekServiceWithModel()
         {
             // 测试使用指定模型创建 DeepSeek 服务
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var model = "deepseek-chat";
-            var service = DeepSeekService.Create(apiKey, model);
+            var config = new WellTool.AI.Model.DeepSeek.DeepSeekConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            config.SetModel("deepseek-chat");
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.DeepSeek.DeepSeekService>(config, typeof(WellTool.AI.Model.DeepSeek.DeepSeekService));
             Assert.NotNull(service);
         }
 
@@ -45,9 +47,10 @@ namespace WellTool.AI.Tests
         public void TestDeepSeekServiceWithCustomBaseUrl()
         {
             // 测试使用自定义基础 URL 创建 DeepSeek 服务
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var baseUrl = "https://api.deepseek.com/v1";
-            var service = DeepSeekService.Create(apiKey, baseUrl);
+            var config = new WellTool.AI.Model.DeepSeek.DeepSeekConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            config.SetApiUrl("https://api.deepseek.com/v1");
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.DeepSeek.DeepSeekService>(config, typeof(WellTool.AI.Model.DeepSeek.DeepSeekService));
             Assert.NotNull(service);
         }
     }

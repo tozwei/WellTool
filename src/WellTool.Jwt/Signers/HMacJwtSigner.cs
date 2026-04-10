@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace WellTool.JWT.Signers;
+namespace WellTool.Jwt.Signers;
 
 /// <summary>
 /// HMAC JWT签名器

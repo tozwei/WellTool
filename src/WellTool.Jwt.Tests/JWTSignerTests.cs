@@ -21,7 +21,7 @@ public class JWTSignerTests
     public void TestHMacSigning()
     {
         // 测试 HMAC 签名
-        var jwt = new WellTool.JWT.JWT();
+        var jwt = new WellTool.Jwt.JWT();
         jwt.Payload
             .SetIssuer("WellTool")
             .SetSubject("test")
@@ -35,7 +35,7 @@ public class JWTSignerTests
         Assert.NotEmpty(token);
 
         // 验证签名
-        var parsedJwt = WellTool.JWT.JWT.Of(token);
+        var parsedJwt = WellTool.Jwt.JWT.Of(token);
         parsedJwt.SetKey(secret);
         var isValid = parsedJwt.Verify();
         Assert.True(isValid);
@@ -45,7 +45,7 @@ public class JWTSignerTests
     public void TestDifferentSecrets()
     {
         // 测试不同密钥的签名和验证
-        var jwt = new WellTool.JWT.JWT();
+        var jwt = new WellTool.Jwt.JWT();
         jwt.Payload
             .SetIssuer("WellTool")
             .SetSubject("test")
@@ -59,13 +59,13 @@ public class JWTSignerTests
         var token = jwt.Sign();
         
         // 使用正确的密钥验证
-        var parsedJwt1 = WellTool.JWT.JWT.Of(token);
+        var parsedJwt1 = WellTool.Jwt.JWT.Of(token);
         parsedJwt1.SetKey(secret1);
         var isValidWithCorrectSecret = parsedJwt1.Verify();
         Assert.True(isValidWithCorrectSecret);
 
         // 使用错误的密钥验证
-        var parsedJwt2 = WellTool.JWT.JWT.Of(token);
+        var parsedJwt2 = WellTool.Jwt.JWT.Of(token);
         parsedJwt2.SetKey(secret2);
         var isValidWithWrongSecret = parsedJwt2.Verify();
         Assert.False(isValidWithWrongSecret);

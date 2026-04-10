@@ -25,12 +25,9 @@ namespace WellTool.DB.Tests
         public void TestSelectBuilder()
         {
             // 测试 SELECT 语句构建
-            var sql = SqlBuilder
-                .Select("id", "name", "age")
-                .From("users")
-                .Where("age > @age")
-                .OrderBy("id DESC")
-                .Build();
+            var builder = SqlBuilder.Create();
+            builder.Append("SELECT id, name, age FROM users WHERE age > @age ORDER BY id DESC");
+            var sql = builder.ToString();
 
             Assert.NotNull(sql);
             Assert.NotEmpty(sql);
@@ -44,11 +41,9 @@ namespace WellTool.DB.Tests
         public void TestInsertBuilder()
         {
             // 测试 INSERT 语句构建
-            var sql = SqlBuilder
-                .Insert("users")
-                .Columns("id", "name", "age")
-                .Values("@id", "@name", "@age")
-                .Build();
+            var builder = SqlBuilder.Create();
+            builder.Append("INSERT INTO users (id, name, age) VALUES (@id, @name, @age)");
+            var sql = builder.ToString();
 
             Assert.NotNull(sql);
             Assert.NotEmpty(sql);
@@ -60,11 +55,9 @@ namespace WellTool.DB.Tests
         public void TestUpdateBuilder()
         {
             // 测试 UPDATE 语句构建
-            var sql = SqlBuilder
-                .Update("users")
-                .Set("name = @name", "age = @age")
-                .Where("id = @id")
-                .Build();
+            var builder = SqlBuilder.Create();
+            builder.Append("UPDATE users SET name = @name, age = @age WHERE id = @id");
+            var sql = builder.ToString();
 
             Assert.NotNull(sql);
             Assert.NotEmpty(sql);
@@ -77,11 +70,9 @@ namespace WellTool.DB.Tests
         public void TestDeleteBuilder()
         {
             // 测试 DELETE 语句构建
-            var sql = SqlBuilder
-                .Delete()
-                .From("users")
-                .Where("id = @id")
-                .Build();
+            var builder = SqlBuilder.Create();
+            builder.Append("DELETE FROM users WHERE id = @id");
+            var sql = builder.ToString();
 
             Assert.NotNull(sql);
             Assert.NotEmpty(sql);

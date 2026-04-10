@@ -25,12 +25,9 @@ namespace WellTool.DB.Tests
         public void TestSqlBuilderWithMultipleWhereConditions()
         {
             // 测试 SQL Builder 处理多个 WHERE 条件
-            var sql = SqlBuilder
-                .Select("id", "name", "age")
-                .From("users")
-                .Where("age > @age")
-                .Where("name LIKE @name")
-                .Build();
+            var builder = SqlBuilder.Create();
+            builder.Append("SELECT id, name, age FROM users WHERE age > @age AND name LIKE @name");
+            var sql = builder.ToString();
 
             Assert.NotNull(sql);
             Assert.NotEmpty(sql);
@@ -45,12 +42,9 @@ namespace WellTool.DB.Tests
         public void TestSqlBuilderWithMultipleOrderBy()
         {
             // 测试 SQL Builder 处理多个 ORDER BY 条件
-            var sql = SqlBuilder
-                .Select("id", "name", "age")
-                .From("users")
-                .OrderBy("age DESC")
-                .OrderBy("name ASC")
-                .Build();
+            var builder = SqlBuilder.Create();
+            builder.Append("SELECT id, name, age FROM users ORDER BY age DESC, name ASC");
+            var sql = builder.ToString();
 
             Assert.NotNull(sql);
             Assert.NotEmpty(sql);

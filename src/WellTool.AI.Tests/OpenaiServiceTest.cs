@@ -26,8 +26,9 @@ namespace WellTool.AI.Tests
         public void TestOpenAIServiceCreation()
         {
             // 测试 OpenAI 服务的创建
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var service = OpenAIService.Create(apiKey);
+            var config = new WellTool.AI.Model.OpenAI.OpenAIConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.OpenAI.OpenAIService>(config, typeof(WellTool.AI.Model.OpenAI.OpenAIService));
             Assert.NotNull(service);
         }
 
@@ -35,9 +36,10 @@ namespace WellTool.AI.Tests
         public void TestOpenAIServiceWithCustomBaseUrl()
         {
             // 测试使用自定义基础 URL 创建 OpenAI 服务
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var baseUrl = "https://api.openai.com/v1";
-            var service = OpenAIService.Create(apiKey, baseUrl);
+            var config = new WellTool.AI.Model.OpenAI.OpenAIConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            config.SetApiUrl("https://api.openai.com/v1");
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.OpenAI.OpenAIService>(config, typeof(WellTool.AI.Model.OpenAI.OpenAIService));
             Assert.NotNull(service);
         }
 
@@ -45,9 +47,10 @@ namespace WellTool.AI.Tests
         public void TestOpenAIServiceWithOrganization()
         {
             // 测试使用组织 ID 创建 OpenAI 服务
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var organization = "test-org-id"; // 实际使用时需要替换为真实的组织 ID
-            var service = OpenAIService.Create(apiKey, organization);
+            var config = new WellTool.AI.Model.OpenAI.OpenAIConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            config.PutAdditionalConfigByKey("organization", "test-org-id"); // 实际使用时需要替换为真实的组织 ID
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.OpenAI.OpenAIService>(config, typeof(WellTool.AI.Model.OpenAI.OpenAIService));
             Assert.NotNull(service);
         }
     }

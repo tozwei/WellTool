@@ -1,4 +1,4 @@
-namespace WellTool.JWT.Signers;
+namespace WellTool.Jwt.Signers;
 
 /// <summary>
 /// 无签名JWT签名器

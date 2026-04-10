@@ -1,15 +1,15 @@
 namespace WellTool.Jwt.Tests;
 
 using Xunit;
-using WellTool.JWT;
-using WellTool.JWT.Signers;
+using WellTool.Jwt;
+using WellTool.Jwt.Signers;
 
 public class JWTSignerTest
 {
     [Fact]
     public void HS256Test()
     {
-        var signer = WellTool.JWT.Signers.JwtSignerUtil.HS256("123456"u8.ToArray());
+        var signer = WellTool.Jwt.Signers.JwtSignerUtil.HS256("123456"u8.ToArray());
         Assert.NotNull(signer);
         Assert.Equal("HS256", signer.GetAlgorithm());
     }

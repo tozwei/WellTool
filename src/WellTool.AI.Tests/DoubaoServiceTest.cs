@@ -26,8 +26,9 @@ namespace WellTool.AI.Tests
         public void TestDoubaoServiceCreation()
         {
             // 测试 Doubao 服务的创建
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var service = DoubaoService.Create(apiKey);
+            var config = new WellTool.AI.Model.Doubao.DoubaoConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Doubao.DoubaoService>(config, typeof(WellTool.AI.Model.Doubao.DoubaoService));
             Assert.NotNull(service);
         }
 
@@ -35,9 +36,10 @@ namespace WellTool.AI.Tests
         public void TestDoubaoServiceWithModel()
         {
             // 测试使用指定模型创建 Doubao 服务
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var model = "ep-20250409140935-662ww";
-            var service = DoubaoService.Create(apiKey, model);
+            var config = new WellTool.AI.Model.Doubao.DoubaoConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            config.SetModel("ep-20250409140935-662ww");
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Doubao.DoubaoService>(config, typeof(WellTool.AI.Model.Doubao.DoubaoService));
             Assert.NotNull(service);
         }
 
@@ -45,9 +47,10 @@ namespace WellTool.AI.Tests
         public void TestDoubaoServiceWithCustomBaseUrl()
         {
             // 测试使用自定义基础 URL 创建 Doubao 服务
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var baseUrl = "https://ark.cn-beijing.volces.com/api/v3";
-            var service = DoubaoService.Create(apiKey, baseUrl);
+            var config = new WellTool.AI.Model.Doubao.DoubaoConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            config.SetApiUrl("https://ark.cn-beijing.volces.com/api/v3");
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Doubao.DoubaoService>(config, typeof(WellTool.AI.Model.Doubao.DoubaoService));
             Assert.NotNull(service);
         }
     }

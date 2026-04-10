@@ -1,4 +1,4 @@
-namespace WellTool.JWT.Signers;
+namespace WellTool.Jwt.Signers;
 
 /// <summary>
 /// JWT签名器接口

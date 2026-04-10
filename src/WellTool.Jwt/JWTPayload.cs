@@ -14,12 +14,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace WellTool.JWT;
+namespace WellTool.Jwt;
 
 /// <summary>
 /// JWT 负载
 /// </summary>
-public class JWTPayload : Claims, RegisteredPayload<JWTPayload>
+public class JWTPayload : Claims
 {
     /// <summary>
     /// jwt签发者

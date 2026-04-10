@@ -1,6 +1,6 @@
 using System;
 
-namespace WellTool.JWT.Exceptions
+namespace WellTool.Jwt.Exceptions
 {
     /// <summary>
     /// JWT异常

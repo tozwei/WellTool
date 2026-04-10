@@ -21,7 +21,7 @@ public class JWTTests
     public void TestJWTConstruction()
     {
         // 测试 JWT 构造函数
-        var jwt = new WellTool.JWT.JWT();
+        var jwt = new WellTool.Jwt.JWT();
         Assert.NotNull(jwt);
         Assert.NotNull(jwt.Header);
         Assert.NotNull(jwt.Payload);
@@ -31,7 +31,7 @@ public class JWTTests
     public void TestSign()
     {
         // 测试 JWT 签名
-        var jwt = new WellTool.JWT.JWT();
+        var jwt = new WellTool.Jwt.JWT();
         jwt.Payload
             .SetIssuer("WellTool")
             .SetSubject("test")
@@ -49,7 +49,7 @@ public class JWTTests
     public void TestParse()
     {
         // 测试 JWT 解析
-        var jwt = new WellTool.JWT.JWT();
+        var jwt = new WellTool.Jwt.JWT();
         jwt.Payload
             .SetIssuer("WellTool")
             .SetSubject("test")
@@ -59,7 +59,7 @@ public class JWTTests
         var secret = "secretkey";
         jwt.SetKey(secret);
         var token = jwt.Sign();
-        var parsedJwt = WellTool.JWT.JWT.Of(token);
+        var parsedJwt = WellTool.Jwt.JWT.Of(token);
         Assert.NotNull(parsedJwt);
         Assert.NotNull(parsedJwt.Header);
         Assert.NotNull(parsedJwt.Payload);
@@ -69,7 +69,7 @@ public class JWTTests
     public void TestVerify()
     {
         // 测试 JWT 验证
-        var jwt = new WellTool.JWT.JWT();
+        var jwt = new WellTool.Jwt.JWT();
         jwt.Payload
             .SetIssuer("WellTool")
             .SetSubject("test")
@@ -79,7 +79,7 @@ public class JWTTests
         var secret = "secretkey";
         jwt.SetKey(secret);
         var token = jwt.Sign();
-        var parsedJwt = WellTool.JWT.JWT.Of(token);
+        var parsedJwt = WellTool.Jwt.JWT.Of(token);
         parsedJwt.SetKey(secret);
         var isValid = parsedJwt.Verify();
         Assert.True(isValid);

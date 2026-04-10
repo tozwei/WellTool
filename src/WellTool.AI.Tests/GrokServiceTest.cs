@@ -26,8 +26,9 @@ namespace WellTool.AI.Tests
         public void TestGrokServiceCreation()
         {
             // 测试 Grok 服务的创建
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var service = GrokService.Create(apiKey);
+            var config = new WellTool.AI.Model.Grok.GrokConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Grok.GrokService>(config, typeof(WellTool.AI.Model.Grok.GrokService));
             Assert.NotNull(service);
         }
 
@@ -35,9 +36,10 @@ namespace WellTool.AI.Tests
         public void TestGrokServiceWithCustomBaseUrl()
         {
             // 测试使用自定义基础 URL 创建 Grok 服务
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var baseUrl = "https://api.grok.com/v1";
-            var service = GrokService.Create(apiKey, baseUrl);
+            var config = new WellTool.AI.Model.Grok.GrokConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            config.SetApiUrl("https://api.grok.com/v1");
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Grok.GrokService>(config, typeof(WellTool.AI.Model.Grok.GrokService));
             Assert.NotNull(service);
         }
     }

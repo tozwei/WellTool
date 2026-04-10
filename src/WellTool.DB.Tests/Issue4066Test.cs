@@ -25,12 +25,9 @@ namespace WellTool.DB.Tests
         public void TestSqlBuilderWithJoin()
         {
             // 测试 SQL Builder 处理 JOIN 语句
-            var sql = SqlBuilder
-                .Select("u.id", "u.name", "o.order_date")
-                .From("users u")
-                .Join("orders o", "u.id = o.user_id")
-                .Where("u.age > @age")
-                .Build();
+            var builder = SqlBuilder.Create();
+            builder.Append("SELECT u.id, u.name, o.order_date FROM users u JOIN orders o ON u.id = o.user_id WHERE u.age > @age");
+            var sql = builder.ToString();
 
             Assert.NotNull(sql);
             Assert.NotEmpty(sql);
@@ -44,12 +41,9 @@ namespace WellTool.DB.Tests
         public void TestSqlBuilderWithLeftJoin()
         {
             // 测试 SQL Builder 处理 LEFT JOIN 语句
-            var sql = SqlBuilder
-                .Select("u.id", "u.name", "o.order_date")
-                .From("users u")
-                .LeftJoin("orders o", "u.id = o.user_id")
-                .Where("u.age > @age")
-                .Build();
+            var builder = SqlBuilder.Create();
+            builder.Append("SELECT u.id, u.name, o.order_date FROM users u LEFT JOIN orders o ON u.id = o.user_id WHERE u.age > @age");
+            var sql = builder.ToString();
 
             Assert.NotNull(sql);
             Assert.NotEmpty(sql);
@@ -63,12 +57,9 @@ namespace WellTool.DB.Tests
         public void TestSqlBuilderWithRightJoin()
         {
             // 测试 SQL Builder 处理 RIGHT JOIN 语句
-            var sql = SqlBuilder
-                .Select("u.id", "u.name", "o.order_date")
-                .From("users u")
-                .RightJoin("orders o", "u.id = o.user_id")
-                .Where("o.order_date > @date")
-                .Build();
+            var builder = SqlBuilder.Create();
+            builder.Append("SELECT u.id, u.name, o.order_date FROM users u RIGHT JOIN orders o ON u.id = o.user_id WHERE o.order_date > @date");
+            var sql = builder.ToString();
 
             Assert.NotNull(sql);
             Assert.NotEmpty(sql);

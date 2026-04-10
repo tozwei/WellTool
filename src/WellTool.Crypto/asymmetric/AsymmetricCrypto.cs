@@ -29,12 +29,12 @@ namespace WellTool.Crypto.Asymmetric
         /// <summary>
         /// 公钥
         /// </summary>
-        protected readonly byte[] PublicKey;
+        protected byte[] PublicKey;
 
         /// <summary>
         /// 私钥
         /// </summary>
-        protected readonly byte[]? PrivateKey;
+        protected byte[]? PrivateKey;
 
         /// <summary>
         /// 构造函数

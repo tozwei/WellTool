@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace WellTool.JWT;
+namespace WellTool.Jwt;
 
 /// <summary>
 /// JWT 头部

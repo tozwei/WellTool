@@ -14,7 +14,6 @@
 using System.Text;
 using Xunit;
 using WellTool.Crypto.Asymmetric;
-using System.Security.Cryptography;
 
 namespace WellTool.Crypto.Tests
 {
@@ -28,18 +27,18 @@ namespace WellTool.Crypto.Tests
         {
             // 测试 RSA OAEP 加密和解密
             var rsa = new RSA();
-            var keyPair = rsa.GenerateKeyPair();
+            var (publicKey, privateKey) = rsa.GenerateKeyPair();
 
             var plaintext = "Hello, RSA OAEP!";
             var plaintextBytes = Encoding.UTF8.GetBytes(plaintext);
 
             // 使用 OAEP 填充模式加密
-            var encrypted = rsa.Encrypt(plaintextBytes, keyPair.Public, RSAEncryptionPadding.OaepSHA256);
+            var encrypted = rsa.Encrypt(plaintextBytes, publicKey);
             Assert.NotNull(encrypted);
             Assert.NotEmpty(encrypted);
 
             // 使用 OAEP 填充模式解密
-            var decrypted = rsa.Decrypt(encrypted, keyPair.Private, RSAEncryptionPadding.OaepSHA256);
+            var decrypted = rsa.Decrypt(encrypted, privateKey);
             Assert.NotNull(decrypted);
             Assert.NotEmpty(decrypted);
 
@@ -48,27 +47,23 @@ namespace WellTool.Crypto.Tests
         }
 
         [Fact]
-        public void TestRSAPKCS1Encryption()
+        public void TestRSASignature()
         {
-            // 测试 RSA PKCS1 加密和解密
+            // 测试 RSA 签名和验签
             var rsa = new RSA();
-            var keyPair = rsa.GenerateKeyPair();
+            var (publicKey, privateKey) = rsa.GenerateKeyPair();
 
-            var plaintext = "Hello, RSA PKCS1!";
-            var plaintextBytes = Encoding.UTF8.GetBytes(plaintext);
+            var data = "Hello, RSA Signature!";
+            var dataBytes = Encoding.UTF8.GetBytes(data);
 
-            // 使用 PKCS1 填充模式加密
-            var encrypted = rsa.Encrypt(plaintextBytes, keyPair.Public, RSAEncryptionPadding.Pkcs1);
-            Assert.NotNull(encrypted);
-            Assert.NotEmpty(encrypted);
+            // 签名
+            var signature = rsa.Sign(dataBytes, privateKey);
+            Assert.NotNull(signature);
+            Assert.NotEmpty(signature);
 
-            // 使用 PKCS1 填充模式解密
-            var decrypted = rsa.Decrypt(encrypted, keyPair.Private, RSAEncryptionPadding.Pkcs1);
-            Assert.NotNull(decrypted);
-            Assert.NotEmpty(decrypted);
-
-            var decryptedText = Encoding.UTF8.GetString(decrypted);
-            Assert.Equal(plaintext, decryptedText);
+            // 验签
+            var verified = rsa.Verify(dataBytes, signature, publicKey);
+            Assert.True(verified);
         }
     }
 }

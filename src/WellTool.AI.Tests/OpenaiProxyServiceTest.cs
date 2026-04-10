@@ -13,6 +13,7 @@
 
 using Xunit;
 using WellTool.AI;
+using WellTool.AI.Model.OpenAI;
 
 namespace WellTool.AI.Tests
 {
@@ -25,9 +26,10 @@ namespace WellTool.AI.Tests
         public void TestOpenAIProxyServiceCreation()
         {
             // 测试 OpenAI 代理服务的创建
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var proxyUrl = "https://api.openai.com/v1"; // 实际使用时需要替换为真实的代理 URL
-            var service = OpenAIProxyService.Create(apiKey, proxyUrl);
+            var config = new WellTool.AI.Model.OpenAI.OpenAIConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            config.SetApiUrl("https://api.openai.com/v1"); // 实际使用时需要替换为真实的代理 URL
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.OpenAI.OpenAIService>(config, typeof(WellTool.AI.Model.OpenAI.OpenAIService));
             Assert.NotNull(service);
         }
 
@@ -35,13 +37,14 @@ namespace WellTool.AI.Tests
         public void TestOpenAIProxyServiceWithHeaders()
         {
             // 测试带有自定义头部的 OpenAI 代理服务创建
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var proxyUrl = "https://api.openai.com/v1"; // 实际使用时需要替换为真实的代理 URL
-            var headers = new System.Collections.Generic.Dictionary<string, string>
+            var config = new WellTool.AI.Model.OpenAI.OpenAIConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            config.SetApiUrl("https://api.openai.com/v1"); // 实际使用时需要替换为真实的代理 URL
+            config.PutAdditionalConfigByKey("headers", new System.Collections.Generic.Dictionary<string, string>
             {
                 { "X-Custom-Header", "custom-value" }
-            };
-            var service = OpenAIProxyService.Create(apiKey, proxyUrl, headers);
+            });
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.OpenAI.OpenAIService>(config, typeof(WellTool.AI.Model.OpenAI.OpenAIService));
             Assert.NotNull(service);
         }
     }

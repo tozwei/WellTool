@@ -1,8 +1,8 @@
 using System;
-using WellTool.JWT.Signers;
-using WellTool.JWT.Exceptions;
+using WellTool.Jwt.Signers;
+using WellTool.Jwt.Exceptions;
 
-namespace WellTool.JWT
+namespace WellTool.Jwt
 {
     /// <summary>
     /// JWT数据校验器，用于校验包括：

@@ -275,8 +275,8 @@ namespace WellTool.Extra.Servlet
                         var indexer = queryString.GetType().GetProperty("Item", new[] { typeof(string) });
                         if (indexer != null)
                         {
-                            var value = indexer.GetValue(queryString, new object[] { name });
-                            return value as string;
+                            var paramValue = indexer.GetValue(queryString, new object[] { name });
+                            return paramValue as string;
                         }
                     }
                 }
@@ -291,8 +291,8 @@ namespace WellTool.Extra.Servlet
                         var indexer = queryString.GetType().GetProperty("Item", new[] { typeof(string) });
                         if (indexer != null)
                         {
-                            var value = indexer.GetValue(queryString, new object[] { name });
-                            return value as string;
+                            var paramValue = indexer.GetValue(queryString, new object[] { name });
+                            return paramValue as string;
                         }
                     }
                 }

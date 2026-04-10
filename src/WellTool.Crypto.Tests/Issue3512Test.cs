@@ -27,11 +27,12 @@ namespace WellTool.Crypto.Tests
         {
             // 测试 RSA 密钥生成
             var rsa = new RSA();
-            var keyPair = rsa.GenerateKeyPair();
+            var (publicKey, privateKey) = rsa.GenerateKeyPair();
 
-            Assert.NotNull(keyPair);
-            Assert.NotNull(keyPair.Public);
-            Assert.NotNull(keyPair.Private);
+            Assert.NotNull(publicKey);
+            Assert.NotEmpty(publicKey);
+            Assert.NotNull(privateKey);
+            Assert.NotEmpty(privateKey);
         }
 
         [Fact]
@@ -42,17 +43,17 @@ namespace WellTool.Crypto.Tests
 
             foreach (var keySize in keySizes)
             {
-                var rsa = new RSA(keySize);
-                var keyPair = rsa.GenerateKeyPair();
+                var (publicKey, privateKey) = RSA.GenerateKeyPair(keySize);
+                var rsa = new RSA(publicKey, privateKey);
 
                 var plaintext = "Hello, RSA with key size " + keySize + "!";
                 var plaintextBytes = Encoding.UTF8.GetBytes(plaintext);
 
-                var encrypted = rsa.Encrypt(plaintextBytes, keyPair.Public);
+                var encrypted = rsa.Encrypt(plaintextBytes);
                 Assert.NotNull(encrypted);
                 Assert.NotEmpty(encrypted);
 
-                var decrypted = rsa.Decrypt(encrypted, keyPair.Private);
+                var decrypted = rsa.Decrypt(encrypted);
                 Assert.NotNull(decrypted);
                 Assert.NotEmpty(decrypted);
 

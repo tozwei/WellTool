@@ -26,8 +26,9 @@ namespace WellTool.AI.Tests
         public void TestGeminiServiceCreation()
         {
             // 测试 Gemini 服务的创建
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var service = GeminiService.Create(apiKey);
+            var config = new WellTool.AI.Model.Gemini.GeminiConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Gemini.GeminiService>(config, typeof(WellTool.AI.Model.Gemini.GeminiService));
             Assert.NotNull(service);
         }
 
@@ -35,9 +36,10 @@ namespace WellTool.AI.Tests
         public void TestGeminiServiceWithModel()
         {
             // 测试使用指定模型创建 Gemini 服务
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var model = "gemini-1.5-flash";
-            var service = GeminiService.Create(apiKey, model);
+            var config = new WellTool.AI.Model.Gemini.GeminiConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            config.SetModel("gemini-1.5-flash");
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Gemini.GeminiService>(config, typeof(WellTool.AI.Model.Gemini.GeminiService));
             Assert.NotNull(service);
         }
 
@@ -45,9 +47,10 @@ namespace WellTool.AI.Tests
         public void TestGeminiServiceWithCustomBaseUrl()
         {
             // 测试使用自定义基础 URL 创建 Gemini 服务
-            var apiKey = "test-api-key"; // 实际使用时需要替换为真实的 API 密钥
-            var baseUrl = "https://generativelanguage.googleapis.com/v1";
-            var service = GeminiService.Create(apiKey, baseUrl);
+            var config = new WellTool.AI.Model.Gemini.GeminiConfig();
+            config.SetApiKey("test-api-key"); // 实际使用时需要替换为真实的 API 密钥
+            config.SetApiUrl("https://generativelanguage.googleapis.com/v1");
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Gemini.GeminiService>(config, typeof(WellTool.AI.Model.Gemini.GeminiService));
             Assert.NotNull(service);
         }
     }

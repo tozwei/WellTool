@@ -1,6 +1,6 @@
 using System;
 
-namespace WellTool.JWT.Exceptions
+namespace WellTool.Jwt.Exceptions
 {
     /// <summary>
     /// 验证异常

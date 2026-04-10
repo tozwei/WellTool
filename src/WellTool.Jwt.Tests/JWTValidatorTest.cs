@@ -1,7 +1,6 @@
 namespace WellTool.Jwt.Tests;
 
 using WellTool.Jwt;
-using WellTool.JWT;
 
 public class JWTValidatorTest
 {
@@ -17,7 +16,7 @@ public class JWTValidatorTest
             .SetKey(key);
 
         var token = jwt.Sign();
-        var parsedJwt = JWTUtil.ParseToken(token);
+        var parsedJwt = JwtUtil.ParseToken(token);
         var validator = new JWTValidator(parsedJwt, key);
         Assert.True(validator.Validate());
     }
@@ -32,7 +31,7 @@ public class JWTValidatorTest
             .SetKey("secret"u8.ToArray());
 
         var token = jwt.Sign();
-        var parsedJwt = JWTUtil.ParseToken(token);
+        var parsedJwt = JwtUtil.ParseToken(token);
         var validator = new JWTValidator(parsedJwt, "secret"u8.ToArray());
         Assert.False(validator.Validate());
     }
@@ -47,7 +46,7 @@ public class JWTValidatorTest
             .SetKey("secret"u8.ToArray());
 
         var token = jwt.Sign();
-        var parsedJwt = JWTUtil.ParseToken(token);
+        var parsedJwt = JwtUtil.ParseToken(token);
         var validator = new JWTValidator(parsedJwt, "secret"u8.ToArray());
         Assert.False(validator.Validate());
     }
@@ -59,7 +58,7 @@ public class JWTValidatorTest
                 "eyJzdWIiOiIxMjM0NTY3ODkwIiwiYWRtaW4iOnRydWUsIm5hbWUiOiJsb29seSJ9." +
                 "U2aQkC2THYV9L0fTN-yBBI7gmo5xhmvMhATtu8v0zEA";
 
-        var jwt = JWTUtil.ParseToken(token);
+        var jwt = JwtUtil.ParseToken(token);
         var validator = new JWTValidator(jwt, "wrongkey"u8.ToArray());
         Assert.False(validator.Validate());
     }
@@ -74,7 +73,7 @@ public class JWTValidatorTest
             .SetKey(key);  
 
         var token = jwt.Sign();
-        var parsedJwt = JWTUtil.ParseToken(token);
+        var parsedJwt = JwtUtil.ParseToken(token);
         var validator = new JWTValidator(parsedJwt, key);
         Assert.True(validator.Validate());
     }

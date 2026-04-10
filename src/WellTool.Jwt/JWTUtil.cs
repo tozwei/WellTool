@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using WellTool.JWT;
-using WellTool.JWT.Signers;
+using WellTool.Jwt;
+using WellTool.Jwt.Signers;
 using System.Collections.Generic;
 
 namespace WellTool.Jwt;
@@ -22,6 +22,8 @@ namespace WellTool.Jwt;
     /// </summary>
     public static class JwtUtil
     {
+
+
         /// <summary>
         /// 创建 JWT 令牌
         /// </summary>
@@ -57,7 +59,7 @@ namespace WellTool.Jwt;
             
             foreach (var claim in claims)
             {
-                payload.SetClaim(claim.Key, claim.Value);
+                payload.SetValue(claim.Key, claim.Value);
             }
 
             return jwt.SetKey(secret).Sign();

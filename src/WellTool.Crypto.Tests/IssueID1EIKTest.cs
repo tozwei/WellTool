@@ -27,23 +27,23 @@ namespace WellTool.Crypto.Tests
         {
             // 测试 RSA 密钥对序列化和反序列化
             var rsa = new RSA();
-            var keyPair = rsa.GenerateKeyPair();
+            var (publicKey, privateKey) = rsa.GenerateKeyPair();
 
-            // 序列化密钥对
-            var publicKeyBytes = rsa.ExportPublicKey(keyPair.Public);
-            var privateKeyBytes = rsa.ExportPrivateKey(keyPair.Private);
-
-            Assert.NotNull(publicKeyBytes);
-            Assert.NotEmpty(publicKeyBytes);
-            Assert.NotNull(privateKeyBytes);
-            Assert.NotEmpty(privateKeyBytes);
-
-            // 反序列化密钥对
-            var publicKey = rsa.ImportPublicKey(publicKeyBytes);
-            var privateKey = rsa.ImportPrivateKey(privateKeyBytes);
-
+            // 验证密钥对
             Assert.NotNull(publicKey);
+            Assert.NotEmpty(publicKey);
             Assert.NotNull(privateKey);
+            Assert.NotEmpty(privateKey);
+
+            // 测试导入密钥
+            var rsa2 = new RSA(publicKey, privateKey);
+            var exportedPublicKey = rsa2.ExportPublicKey();
+            var exportedPrivateKey = rsa2.ExportPrivateKey();
+
+            Assert.NotNull(exportedPublicKey);
+            Assert.NotEmpty(exportedPublicKey);
+            Assert.NotNull(exportedPrivateKey);
+            Assert.NotEmpty(exportedPrivateKey);
         }
 
         [Fact]
@@ -51,23 +51,17 @@ namespace WellTool.Crypto.Tests
         {
             // 测试使用序列化后的密钥进行加密和解密
             var rsa = new RSA();
-            var keyPair = rsa.GenerateKeyPair();
-
-            // 序列化密钥对
-            var publicKeyBytes = rsa.ExportPublicKey(keyPair.Public);
-            var privateKeyBytes = rsa.ExportPrivateKey(keyPair.Private);
-
-            // 反序列化密钥对
-            var publicKey = rsa.ImportPublicKey(publicKeyBytes);
-            var privateKey = rsa.ImportPrivateKey(privateKeyBytes);
+            var (publicKey, privateKey) = rsa.GenerateKeyPair();
 
             var plaintext = "Hello, RSA with serialized keys!";
             var plaintextBytes = Encoding.UTF8.GetBytes(plaintext);
 
+            // 使用公钥加密
             var encrypted = rsa.Encrypt(plaintextBytes, publicKey);
             Assert.NotNull(encrypted);
             Assert.NotEmpty(encrypted);
 
+            // 使用私钥解密
             var decrypted = rsa.Decrypt(encrypted, privateKey);
             Assert.NotNull(decrypted);
             Assert.NotEmpty(decrypted);

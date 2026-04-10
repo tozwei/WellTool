@@ -27,16 +27,16 @@ namespace WellTool.Crypto.Tests
         {
             // 测试 RSA 加密和解密
             var rsa = new RSA();
-            var keyPair = rsa.GenerateKeyPair();
+            var (publicKey, privateKey) = rsa.GenerateKeyPair();
 
             var plaintext = "Hello, RSA!";
             var plaintextBytes = Encoding.UTF8.GetBytes(plaintext);
 
-            var encrypted = rsa.Encrypt(plaintextBytes, keyPair.Public);
+            var encrypted = rsa.Encrypt(plaintextBytes, publicKey);
             Assert.NotNull(encrypted);
             Assert.NotEmpty(encrypted);
 
-            var decrypted = rsa.Decrypt(encrypted, keyPair.Private);
+            var decrypted = rsa.Decrypt(encrypted, privateKey);
             Assert.NotNull(decrypted);
             Assert.NotEmpty(decrypted);
 
@@ -49,16 +49,16 @@ namespace WellTool.Crypto.Tests
         {
             // 测试 RSA 签名和验签
             var rsa = new RSA();
-            var keyPair = rsa.GenerateKeyPair();
+            var (publicKey, privateKey) = rsa.GenerateKeyPair();
 
             var data = "Hello, RSA Signature!";
             var dataBytes = Encoding.UTF8.GetBytes(data);
 
-            var signature = rsa.Sign(dataBytes, keyPair.Private);
+            var signature = rsa.Sign(dataBytes, privateKey);
             Assert.NotNull(signature);
             Assert.NotEmpty(signature);
 
-            var verified = rsa.Verify(dataBytes, signature, keyPair.Public);
+            var verified = rsa.Verify(dataBytes, signature, publicKey);
             Assert.True(verified);
         }
     }

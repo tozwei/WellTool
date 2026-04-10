@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
-namespace WellTool.JWT
+namespace WellTool.Jwt
 {
     /// <summary>
     /// Claims 认证，简单的JsonDocument包装

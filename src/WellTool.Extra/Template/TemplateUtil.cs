@@ -48,7 +48,7 @@ namespace WellTool.Extra.Template
             }
 
             // 否则创建新的引擎
-            var config = new TemplateConfig { EngineName = engineName };
+            var config = new TemplateConfig();
             var newEngine = TemplateFactory.Create(config);
             if (newEngine != null)
             {

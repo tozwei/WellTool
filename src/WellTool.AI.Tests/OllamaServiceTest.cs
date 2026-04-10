@@ -26,7 +26,8 @@ namespace WellTool.AI.Tests
         public void TestOllamaServiceCreation()
         {
             // 测试 Ollama 服务的创建
-            var service = OllamaService.Create();
+            var config = new WellTool.AI.Model.Ollama.OllamaConfig();
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Ollama.OllamaService>(config, typeof(WellTool.AI.Model.Ollama.OllamaService));
             Assert.NotNull(service);
         }
 
@@ -34,8 +35,9 @@ namespace WellTool.AI.Tests
         public void TestOllamaServiceWithCustomBaseUrl()
         {
             // 测试使用自定义基础 URL 创建 Ollama 服务
-            var baseUrl = "http://localhost:11434/api";
-            var service = OllamaService.Create(baseUrl);
+            var config = new WellTool.AI.Model.Ollama.OllamaConfig();
+            config.SetApiUrl("http://localhost:11434/api");
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Ollama.OllamaService>(config, typeof(WellTool.AI.Model.Ollama.OllamaService));
             Assert.NotNull(service);
         }
 
@@ -43,8 +45,9 @@ namespace WellTool.AI.Tests
         public void TestOllamaServiceWithModel()
         {
             // 测试使用指定模型创建 Ollama 服务
-            var model = "llama3";
-            var service = OllamaService.Create(model);
+            var config = new WellTool.AI.Model.Ollama.OllamaConfig();
+            config.SetModel("llama3");
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Ollama.OllamaService>(config, typeof(WellTool.AI.Model.Ollama.OllamaService));
             Assert.NotNull(service);
         }
 
@@ -52,9 +55,10 @@ namespace WellTool.AI.Tests
         public void TestOllamaServiceWithCustomBaseUrlAndModel()
         {
             // 测试使用自定义基础 URL 和指定模型创建 Ollama 服务
-            var baseUrl = "http://localhost:11434/api";
-            var model = "llama3";
-            var service = OllamaService.Create(baseUrl, model);
+            var config = new WellTool.AI.Model.Ollama.OllamaConfig();
+            config.SetApiUrl("http://localhost:11434/api");
+            config.SetModel("llama3");
+            var service = WellTool.AI.AIServiceFactory.GetAIService<WellTool.AI.Model.Ollama.OllamaService>(config, typeof(WellTool.AI.Model.Ollama.OllamaService));
             Assert.NotNull(service);
         }
     }

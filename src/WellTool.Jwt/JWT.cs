@@ -12,10 +12,10 @@
 // limitations under the License.
 
 using System.Text;
-using WellTool.JWT.Signers;
-using WellTool.JWT.Exceptions;
+using WellTool.Jwt.Signers;
+using WellTool.Jwt.Exceptions;
 
-namespace WellTool.JWT;
+namespace WellTool.Jwt;
 
 /// <summary>
 /// JWT 类

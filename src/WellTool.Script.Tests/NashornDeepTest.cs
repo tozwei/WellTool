@@ -25,11 +25,11 @@ namespace WellTool.Script.Tests
         public void TestJavaScriptEngine()
         {
             // 测试 JavaScript 引擎的基本功能
-            var engine = ScriptUtil.CreateEngine("javascript");
+            var engine = (WellTool.Script.FullSupportScriptEngine)ScriptUtil.CreateEngine("javascript");
             Assert.NotNull(engine);
 
             // 测试执行复杂的 JavaScript 表达式
-            var result = engine.Eval("function add(a, b) { return a + b; } add(2, 3);");
+            var result = engine.Execute("function add(a, b) { return a + b; } add(2, 3);");
             Assert.NotNull(result);
             Assert.Equal(5, result);
         }
@@ -38,13 +38,13 @@ namespace WellTool.Script.Tests
         public void TestJavaScriptObjects()
         {
             // 测试 JavaScript 对象的操作
-            var engine = ScriptUtil.CreateEngine("javascript");
+            var engine = (WellTool.Script.FullSupportScriptEngine)ScriptUtil.CreateEngine("javascript");
             Assert.NotNull(engine);
 
             // 测试创建和操作 JavaScript 对象
-            engine.Eval("var obj = { name: 'WellTool', version: 1.0 };");
-            var name = engine.Eval("obj.name");
-            var version = engine.Eval("obj.version");
+            engine.Execute("var obj = { name: 'WellTool', version: 1.0 };");
+            var name = engine.Execute("obj.name");
+            var version = engine.Execute("obj.version");
 
             Assert.NotNull(name);
             Assert.Equal("WellTool", name);
@@ -56,14 +56,14 @@ namespace WellTool.Script.Tests
         public void TestJavaScriptArrays()
         {
             // 测试 JavaScript 数组的操作
-            var engine = ScriptUtil.CreateEngine("javascript");
+            var engine = (WellTool.Script.FullSupportScriptEngine)ScriptUtil.CreateEngine("javascript");
             Assert.NotNull(engine);
 
             // 测试创建和操作 JavaScript 数组
-            engine.Eval("var arr = [1, 2, 3, 4, 5];");
-            var length = engine.Eval("arr.length");
-            var firstElement = engine.Eval("arr[0]");
-            var lastElement = engine.Eval("arr[arr.length - 1]");
+            engine.Execute("var arr = [1, 2, 3, 4, 5];");
+            var length = engine.Execute("arr.length");
+            var firstElement = engine.Execute("arr[0]");
+            var lastElement = engine.Execute("arr[arr.length - 1]");
 
             Assert.NotNull(length);
             Assert.Equal(5, length);
