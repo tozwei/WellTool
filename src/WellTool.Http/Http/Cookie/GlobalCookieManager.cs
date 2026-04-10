@@ -21,7 +21,7 @@ public static class GlobalCookieManager
     /// </summary>
     public static object? GetCookieManager()
     {
-        return _cookieStore.Value;
+        return null;
     }
 
     /// <summary>
