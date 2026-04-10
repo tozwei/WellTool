@@ -22,12 +22,12 @@ namespace WellTool.Socket.Tests
             {
                 // 连接失败，但对象可能已创建（取决于实现）
                 // 验证通过即可
-                Assert.True(true);
+                Assert.True(true);//
             }
             catch (TimeoutException)
             {
                 // 连接超时，也视为预期行为
-                Assert.True(true);
+                Assert.True(true);//
             }
         }
 

@@ -37,7 +37,7 @@ public class SftpUtilTest
         sshUtil.UploadFile(host, port, username, password, localFilePath, remoteFilePath);
         
         // 验证上传操作没有抛出异常
-        Assert.True(true);
+        Assert.True(true);//
     }
 
     [Fact(Skip = "Requires SFTP server")]
@@ -56,7 +56,7 @@ public class SftpUtilTest
         sshUtil.DownloadFile(host, port, username, password, remoteFilePath, localFilePath);
         
         // 验证下载操作没有抛出异常
-        Assert.True(true);
+        Assert.True(true);//
     }
 
     [Fact(Skip = "Requires SFTP server")]

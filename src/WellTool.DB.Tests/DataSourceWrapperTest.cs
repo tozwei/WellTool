@@ -95,7 +95,7 @@ namespace WellTool.DB.Tests
             wrapper.Dispose();
             
             // 验证测试通过（没有异常抛出）
-            Assert.True(true);
+            Assert.True(true);//
         }
 
         [Fact]
@@ -109,7 +109,7 @@ namespace WellTool.DB.Tests
             wrapper.Close();
             
             // 验证测试通过（没有异常抛出）
-            Assert.True(true);
+            Assert.True(true);//
         }
     }
 }

@@ -19,7 +19,7 @@ namespace WellTool.Socket.Tests
             catch (System.Net.Sockets.SocketException)
             {
                 // 没有服务器监听是预期行为，测试通过
-                Assert.True(true);
+                Assert.True(true);//
             }
         }
 

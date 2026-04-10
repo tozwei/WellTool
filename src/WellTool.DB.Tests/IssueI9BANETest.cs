@@ -38,7 +38,7 @@ public class IssueI9BANETest
         var result = db.Find(entity);
         
         // 验证方法调用没有异常（即使返回null也视为成功，因为这是模拟实现）
-        Assert.True(true);
+        Assert.True(true);//
 
         // 测试使用带引号的表名执行SQL
         var sql = "SELECT * FROM \"1234\"";

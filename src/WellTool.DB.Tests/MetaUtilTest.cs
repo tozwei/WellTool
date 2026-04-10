@@ -63,7 +63,7 @@ namespace WellTool.DB.Tests
             catch
             {
                 // 模拟连接可能会抛出异常，这是预期的，测试仍然通过
-                Assert.True(true);
+                Assert.True(true);//
             }
         }
 
@@ -86,7 +86,7 @@ namespace WellTool.DB.Tests
             catch
             {
                 // 模拟连接可能会抛出异常，这是预期的，测试仍然通过
-                Assert.True(true);
+                Assert.True(true);//
             }
         }
 

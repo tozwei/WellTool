@@ -35,7 +35,7 @@ public class FtpUtilTest
         ftpUtil.Upload(ftpUrl, localFilePath, remoteFilePath, username, password);
         
         // 验证上传操作没有抛出异常
-        Assert.True(true);
+        Assert.True(true);//
     }
 
     [Fact(Skip = "Requires FTP server")]
@@ -53,7 +53,7 @@ public class FtpUtilTest
         ftpUtil.Download(ftpUrl, remoteFilePath, localFilePath, username, password);
         
         // 验证下载操作没有抛出异常
-        Assert.True(true);
+        Assert.True(true);//
     }
 
     [Fact(Skip = "Requires FTP server")]
@@ -70,6 +70,6 @@ public class FtpUtilTest
         ftpUtil.Delete(ftpUrl, remoteFilePath, username, password);
         
         // 验证删除操作没有抛出异常
-        Assert.True(true);
+        Assert.True(true);//
     }
 }

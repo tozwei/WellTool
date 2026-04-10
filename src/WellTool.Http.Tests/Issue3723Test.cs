@@ -107,11 +107,11 @@ public class Issue3723Test
             // 注意：由于 HttpGlobalConfig.SetTimeout 是静态方法，
             // 这里我们只能测试方法是否能正常调用，而不能验证具体的值
             HttpRequest.SetGlobalTimeout(5000);
-            Assert.True(true);
+            Assert.True(true);//
             
             // 再次设置全局超时
             HttpRequest.SetGlobalTimeout(10000);
-            Assert.True(true);
+            Assert.True(true);//
         }
         finally
         {

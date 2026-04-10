@@ -30,12 +30,12 @@ public class SocketUtilTest
         catch (System.Net.Sockets.SocketException)
         {
             // 预期失败（没有服务器监听），但对象可能已创建
-            Assert.True(true);
+            Assert.True(true);//
         }
         catch (TimeoutException)
         {
             // 连接超时，也视为预期行为
-            Assert.True(true);
+            Assert.True(true);//
         }
     }
 
@@ -49,11 +49,11 @@ public class SocketUtilTest
         }
         catch (System.Net.Sockets.SocketException)
         {
-            Assert.True(true);
+            Assert.True(true);//
         }
         catch (TimeoutException)
         {
-            Assert.True(true);
+            Assert.True(true);//
         }
     }
 

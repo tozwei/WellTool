@@ -32,6 +32,6 @@ public class Issue2658Test
         // 测试关闭 Cookie 管理
         // 此方法目前只是设置 Cookie 管理器为 null，不会抛出异常
         GlobalCookieManager.CloseCookie();
-        Assert.True(true);
+        Assert.True(true);//
     }
 }

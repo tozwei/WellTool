@@ -45,7 +45,7 @@ namespace WellTool.DB.Tests
             var dialect = new SqlServerDialect();
             DialectFactory.RegisterDialect("test", dialect);
             // 验证注册操作没有抛出异常
-            Assert.True(true);
+            Assert.True(true);//
         }
     }
 }
