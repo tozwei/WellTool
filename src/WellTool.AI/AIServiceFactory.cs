@@ -91,10 +91,16 @@ namespace WellTool.AI
         /// <typeparam name="T">AI服务类</typeparam>
         public static T GetAIService<T>(AIConfig config, Type clazz) where T : AIService
         {
-            var provider = providers.GetValueOrDefault(config.GetModelName().ToLower());
+            var modelName = config.GetModelName();
+            // 去掉Config后缀，以便正确匹配服务提供者
+            if (modelName.EndsWith("Config"))
+            {
+                modelName = modelName.Substring(0, modelName.Length - 6);
+            }
+            var provider = providers.GetValueOrDefault(modelName.ToLower());
             if (provider == null)
             {
-                throw new ArgumentException("Unsupported model: " + config.GetModelName());
+                throw new ArgumentException("Unsupported model: " + modelName);
             }
 
             var service = provider.Create(config);

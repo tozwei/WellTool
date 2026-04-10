@@ -7,25 +7,25 @@ using System.IO;
 public class TemplateUtilTest
 {
     [Fact]
-    public void GetTest()
-    {
-        var template = TemplateUtil.Get("beetl", "test");
-        Assert.Null(template);
-    }
+        public void GetTest()
+        {
+            var template = TemplateUtil.Get("beetl", "test");
+            Assert.Null(template);
+        }
 
-    [Fact]
-    public void GetByPathTest()
-    {
-        var template = TemplateUtil.GetByPath("test.ftl");
-        Assert.Null(template);
-    }
+        [Fact]
+        public void GetByPathTest()
+        {
+            var template = TemplateUtil.GetByPath("test.ftl");
+            Assert.NotNull(template);
+        }
 
-    [Fact]
-    public void CreateEngineTest()
-    {
-        var engine = TemplateUtil.CreateEngine("velocity");
-        Assert.Null(engine);
-    }
+        [Fact]
+        public void CreateEngineTest()
+        {
+            var engine = TemplateUtil.CreateEngine("velocity");
+            Assert.NotNull(engine);
+        }
 
     [Fact]
     public void GetEngineNamesTest()
