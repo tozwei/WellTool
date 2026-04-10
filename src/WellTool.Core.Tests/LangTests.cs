@@ -10,11 +10,19 @@ namespace WellTool.Core.Tests
         [Fact]
         public void TestSingleton()
         {
-            // Singleton.Get 需要 key + supplier 方式
-            // 使用公共类来测试
-            var instance1 = WellTool.Core.Lang.Singleton.Get<string>("singleton_test_key", () => "test");
-            var instance2 = WellTool.Core.Lang.Singleton.Get<string>("singleton_test_key", () => "test");
-            XAssert.Equal(instance1, instance2);
+            // 测试Singleton类的单例特性
+            // 与Java版本的getTest()方法对应
+            var instance1 = WellTool.Core.Lang.Singleton.Get<TestBean>();
+            var instance2 = WellTool.Core.Lang.Singleton.Get<TestBean>();
+            
+            // 验证两个实例是同一个对象
+            XAssert.Same(instance1, instance2);
+            
+            // 测试带key的单例
+            var instance3 = WellTool.Core.Lang.Singleton.Get<string>("test_key", () => "test_value");
+            var instance4 = WellTool.Core.Lang.Singleton.Get<string>("test_key", () => "test_value");
+            XAssert.Same(instance3, instance4);
+            XAssert.Equal("test_value", instance3);
         }
 
         [Fact]
@@ -64,6 +72,12 @@ namespace WellTool.Core.Tests
             public int Age { get; set; }
             
             private TestObject() { }
+        }
+
+        private class TestBean
+        {
+            public string Name { get; set; } = string.Empty;
+            public string Age { get; set; } = string.Empty;
         }
 
         [Fact]

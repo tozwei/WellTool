@@ -214,10 +214,18 @@ namespace WellTool.Core.Tests
         [Fact]
         public void TestSingleton()
         {
-            // 简化测试，移除对Singleton.Get方法的引用
-            var instance1 = new TestObject();
-            var instance2 = instance1;
-            Xunit.Assert.Same(instance1, instance2);
+            // 测试Singleton类的单例特性
+            var instance1 = WellTool.Core.Lang.Singleton.Get<TestObject>();
+            var instance2 = WellTool.Core.Lang.Singleton.Get<TestObject>();
+            
+            // 验证两个实例是同一个对象
+            Assert.Same(instance1, instance2);
+            
+            // 测试带key的单例
+            var instance3 = WellTool.Core.Lang.Singleton.Get<string>("test_key", () => "test_value");
+            var instance4 = WellTool.Core.Lang.Singleton.Get<string>("test_key", () => "test_value");
+            Assert.Same(instance3, instance4);
+            Assert.Equal("test_value", instance3);
         }
 
         [Fact]
