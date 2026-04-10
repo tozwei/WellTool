@@ -1,5 +1,6 @@
 using Xunit;
 using WellTool.Core;
+using WellTool.Core.IO.File;
 
 namespace WellTool.Core.Tests
 {
@@ -9,11 +10,15 @@ namespace WellTool.Core.Tests
     public class IssueI9IDAGTest
     {
         [Fact]
-        public void TestIssue()
+        [Trait("Category", "Disabled")]
+        public void LoopFilesTest()
         {
-            // Issue I9IDAG: 测试特定场景
-            var result = true;
-            Assert.True(result);
+            // Issue I9IDAG: 测试循环文件
+            var files = PathUtil.LoopFiles("d:/m2_repo");
+            foreach (var file in files)
+            {
+                Console.WriteLine(file.FullName);
+            }
         }
     }
 }

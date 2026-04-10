@@ -90,5 +90,19 @@ namespace WellTool.Core.Util
             var decompressedData = Decompress(data);
             return System.Text.Encoding.UTF8.GetString(decompressedData);
         }
+
+        /// <summary>
+        /// 解压缩
+        /// </summary>
+        /// <param name="inputStream">zip文件流</param>
+        /// <param name="targetDir">解压到的目录</param>
+        /// <param name="encoding">编码</param>
+        /// <returns>解压的目录</returns>
+        public static string Unzip(Stream inputStream, string targetDir, System.Text.Encoding encoding)
+        {
+            using var zipArchive = new System.IO.Compression.ZipArchive(inputStream, System.IO.Compression.ZipArchiveMode.Read);
+            zipArchive.ExtractToDirectory(targetDir);
+            return targetDir;
+        }
     }
 }

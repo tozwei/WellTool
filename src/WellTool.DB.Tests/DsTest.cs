@@ -13,6 +13,7 @@
 
 using System.Data;
 using Xunit;
+using WellTool.DB;
 
 namespace WellTool.DB.Tests;
 
@@ -22,13 +23,65 @@ namespace WellTool.DB.Tests;
 public class DsTest
 {
     /// <summary>
-    /// 测试数据源操作
+    /// 测试简单数据源的基本功能
     /// </summary>
     [Fact]
-        public void TestDataSource()
-        {
-            // 测试数据源操作
-            // 简化测试，验证功能概念
-            Assert.True(true);
-        }
+    public void TestDataSource()
+    {
+        // 创建模拟的数据源
+        var connectionString = "Server=localhost;Database=test;User Id=sa;Password=password;";
+        var driverClass = typeof(MockDbConnection).AssemblyQualifiedName;
+        
+        var dataSource = new TestDataSource(connectionString, driverClass);
+        
+        // 测试获取连接
+        using var connection = dataSource.GetConnection();
+        
+        // 验证连接不为空
+        Assert.NotNull(connection);
+        Assert.IsType<MockDbConnection>(connection);
+        Assert.Equal(connectionString, connection.ConnectionString);
+    }
+
+    /// <summary>
+    /// 测试使用连接字符串获取连接
+    /// </summary>
+    [Fact]
+    public void TestGetConnectionWithConnectionString()
+    {
+        // 创建模拟的数据源
+        var defaultConnectionString = "Server=localhost;Database=test;User Id=sa;Password=password;";
+        var driverClass = typeof(MockDbConnection).AssemblyQualifiedName;
+        
+        var dataSource = new TestDataSource(defaultConnectionString, driverClass);
+        
+        // 使用不同的连接字符串获取连接
+        var customConnectionString = "Server=localhost;Database=custom;User Id=sa;Password=password;";
+        using var connection = dataSource.GetConnection(customConnectionString);
+        
+        // 验证连接不为空且使用了指定的连接字符串
+        Assert.NotNull(connection);
+        Assert.IsType<MockDbConnection>(connection);
+        Assert.Equal(customConnectionString, connection.ConnectionString);
+    }
+
+    /// <summary>
+    /// 测试数据源接口的实现
+    /// </summary>
+    [Fact]
+    public void TestIDbDataSourceInterface()
+    {
+        // 创建模拟的数据源
+        var connectionString = "Server=localhost;Database=test;User Id=sa;Password=password;";
+        var driverClass = typeof(MockDbConnection).AssemblyQualifiedName;
+        
+        IDbDataSource dataSource = new TestDataSource(connectionString, driverClass);
+        
+        // 测试接口方法
+        using var connection1 = dataSource.GetConnection();
+        using var connection2 = dataSource.GetConnection(connectionString);
+        
+        Assert.NotNull(connection1);
+        Assert.NotNull(connection2);
+    }
 }
