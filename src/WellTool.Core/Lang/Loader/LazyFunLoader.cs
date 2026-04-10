@@ -25,15 +25,15 @@ public class LazyFunLoader<T> : LazyLoader<T>
     /// 静态工厂方法，提供语义性与编码便利性
     /// </summary>
     /// <param name="supplier">用于生成对象的函数</param>
-    /// <typeparam name="T">对象类型</typeparam>
+    /// <typeparam name="TResult">对象类型</typeparam>
     /// <returns>函数式懒加载加载器对象</returns>
-    public static LazyFunLoader<T> On(Func<T> supplier)
+    public static LazyFunLoader<TResult> On<TResult>(Func<TResult> supplier)
     {
         if (supplier == null)
         {
             throw new ArgumentNullException(nameof(supplier));
         }
-        return new LazyFunLoader<T>(supplier);
+        return new LazyFunLoader<TResult>(supplier);
     }
 
     /// <summary>
@@ -55,7 +55,7 @@ public class LazyFunLoader<T> : LazyLoader<T>
     /// <returns>被加载的对象</returns>
     protected override T Init()
     {
-        var t = _supplier();
+        var t = _supplier.Invoke();
         _supplier = null;
         return t;
     }

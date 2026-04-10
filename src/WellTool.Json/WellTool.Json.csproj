@@ -16,4 +16,8 @@
 		<PackageTags>json;util</PackageTags>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
+	</ItemGroup>
+
 </Project>

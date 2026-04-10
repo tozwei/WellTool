@@ -20,25 +20,22 @@ public abstract class AtomicLoader<T> : Loader<T>
     /// 被加载对象的引用
     /// </summary>
     private T _reference;
+    /// <summary>
+    /// 是否已初始化
+    /// </summary>
+    private int _initialized;
 
     /// <summary>
     /// 获取一个对象，第一次调用此方法时初始化对象然后返回，之后调用此方法直接返回原对象
     /// </summary>
     public T Get()
     {
-        var result = _reference;
-
-        if (result == null)
+        if (Interlocked.CompareExchange(ref _initialized, 1, 0) == 0)
         {
-            result = Init();
-            if (Interlocked.CompareExchange(ref _reference, result, null) != null)
-            {
-                // 其它线程已经创建好此对象
-                result = _reference;
-            }
+            _reference = Init();
         }
 
-        return result;
+        return _reference;
     }
 
     /// <summary>
