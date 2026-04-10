@@ -48,20 +48,13 @@ public class WrapperTest
     [Fact]
     public void FormatTest()
     {
-        // issue#I3XS44@Gitee
-        // 由于SqlFormatter的复杂性，这里简单验证不会崩溃
-        try
-        {
-            var sql = "SELECT * FROM user WHERE id = 1";
-            // 这里不实际调用SqlFormatter，因为它有无限循环问题
-            // 只是验证测试结构
-            Assert.True(true);
-        }
-        catch
-        {
-            // 如果有异常，测试仍然通过，因为我们只是验证不会崩溃
-            Assert.True(true);
-        }
+        // 测试SqlFormatter格式化功能
+        var sql = "SELECT * FROM user WHERE id = 1";
+        var formatted = SqlFormatter.Format(sql);
+        
+        // 验证格式化结果
+        Assert.NotNull(formatted);
+        Assert.NotEmpty(formatted);
     }
 
     /// <summary>
@@ -70,11 +63,10 @@ public class WrapperTest
     [Fact]
     public void FormatSelectTest()
     {
-        // 简单测试
+        // 测试执行简单的SELECT语句
         var dataSource = new TestDataSource("Server=localhost;Database=test;", "MockDriver");
         var db = new TestDb(dataSource);
         
-        // 测试执行简单的SELECT语句
         var sql = "SELECT * FROM user WHERE id = ?";
         var result = db.Query(sql, 1);
         
