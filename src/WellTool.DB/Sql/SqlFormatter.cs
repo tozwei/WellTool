@@ -76,11 +76,35 @@ namespace WellTool.DB.Sql
 
             public FormatProcess(string sql)
             {
-                // 使用正则表达式分割SQL
-                var pattern = @"[\+\*\/\-\=\<\>\'\`\"",\(\)\[\]\,\s]+";
-                var tokens = System.Text.RegularExpressions.Regex.Split(sql, pattern)
-                    .Where(t => !string.IsNullOrWhiteSpace(t))
-                    .ToList();
+                // 使用简单的方法分割SQL，避免正则表达式转义问题
+                var tokens = new List<string>();
+                var currentToken = new StringBuilder();
+                
+                foreach (var c in sql)
+                {
+                    if (char.IsWhiteSpace(c) || ",()[]+-*/=<>!&|;:'\"`.\r\n".Contains(c))
+                    {
+                        if (currentToken.Length > 0)
+                        {
+                            tokens.Add(currentToken.ToString());
+                            currentToken.Clear();
+                        }
+                        if (!char.IsWhiteSpace(c))
+                        {
+                            tokens.Add(c.ToString());
+                        }
+                    }
+                    else
+                    {
+                        currentToken.Append(c);
+                    }
+                }
+                
+                if (currentToken.Length > 0)
+                {
+                    tokens.Add(currentToken.ToString());
+                }
+                
                 Tokens = tokens;
             }
 
@@ -112,7 +136,7 @@ namespace WellTool.DB.Sql
                         }
                         _token = sb.ToString();
                     }
-                    else if ("\"".Equals(_token))
+                    else if ("\"+".Equals(_token))
                     {
                         var sb = new StringBuilder();
                         sb.Append(_token);
@@ -121,7 +145,7 @@ namespace WellTool.DB.Sql
                             TokenIndex++;
                             var t = Tokens[TokenIndex];
                             sb.Append(t);
-                            if ("\"".Equals(t))
+                            if ("\"+".Equals(t))
                                 break;
                         }
                         _token = sb.ToString();
@@ -203,6 +227,9 @@ namespace WellTool.DB.Sql
                     {
                         _lastToken = _lcToken;
                     }
+
+                    // 增加TokenIndex，避免无限循环
+                    TokenIndex++;
                 }
 
                 return _result.ToString();
