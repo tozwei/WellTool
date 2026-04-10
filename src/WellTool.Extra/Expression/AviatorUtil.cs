@@ -16,7 +16,6 @@ public static class AviatorUtil
     /// <returns>执行结果</returns>
     public static object Exec(string expression, IDictionary<string, object> env = null)
     {
-        // 简化实现
         if (string.IsNullOrEmpty(expression))
         {
             return null;

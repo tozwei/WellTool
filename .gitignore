@@ -121,3 +121,4 @@
 .fake
 /build_crypto.txt
 /CryptoDebug
+/nupkg
