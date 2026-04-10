@@ -31,6 +31,17 @@ public static class Singleton
 	/// 获得指定类的单例对象
 	/// </summary>
 	/// <typeparam name="T">单例对象类型</typeparam>
+	/// <returns>单例对象</returns>
+	public static T Get<T>() where T : class
+	{
+		Type clazz = typeof(T);
+		return Get<T>(clazz);
+	}
+
+	/// <summary>
+	/// 获得指定类的单例对象
+	/// </summary>
+	/// <typeparam name="T">单例对象类型</typeparam>
 	/// <param name="key">自定义键</param>
 	/// <param name="supplier">单例对象的创建函数</param>
 	/// <returns>单例对象</returns>
