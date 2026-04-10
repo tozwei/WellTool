@@ -123,7 +123,7 @@ namespace WellTool.Poi.Ofd
         }
 
         /// <summary>
-        /// 释放资源
+        /// 释放资源 
         /// </summary>
         public void Dispose()
         {
