@@ -3,6 +3,7 @@ using System.Text;
 using Xunit;
 using WellTool.Core.Util;
 using WellTool.Core.Lang;
+using WellTool.Core.Text;
 
 // 使用别名避免Assert引用歧义
 using XAssert = Xunit.Assert;
@@ -93,11 +94,12 @@ namespace WellTool.Core.Tests
         public void FormatTest()
         {
             var template = "你好，我是{name}，我的电话是：{phone}";
-            // 简化测试，使用匿名对象替代Dict
-            var result = "你好，我是张三，我的电话是：13888881111";
+            // 使用StrFormatter.FormatWithObject测试命名参数格式化
+            var result = StrFormatter.FormatWithObject(template, new { name = "张三", phone = "13888881111" });
             XAssert.Equal("你好，我是张三，我的电话是：13888881111", result);
 
-            var result2 = "你好，我是张三，我的电话是：{phone}";
+            // 测试缺少参数的情况
+            var result2 = StrFormatter.FormatWithObject(template, new { name = "张三" });
             XAssert.Equal("你好，我是张三，我的电话是：{phone}", result2);
         }
 
