@@ -16,22 +16,23 @@ namespace WellTool.Core.Tests
         public void UnzipTest()
         {
             // 创建临时zip文件
-            var tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            var zipPath = Path.Combine(tempDir, "test.zip");
-            var extractPath = Path.Combine(tempDir, "extract");
+            var tempRoot = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            var sourceDir = Path.Combine(tempRoot, "source");
+            var zipPath = Path.Combine(tempRoot, "test.zip");
+            var extractPath = Path.Combine(tempRoot, "extract");
 
             try
             {
                 // 创建临时目录
-                Directory.CreateDirectory(tempDir);
+                Directory.CreateDirectory(sourceDir);
                 Directory.CreateDirectory(extractPath);
 
                 // 创建测试文件
-                var testFilePath = Path.Combine(tempDir, "test.txt");
+                var testFilePath = Path.Combine(sourceDir, "test.txt");
                 File.WriteAllText(testFilePath, "Test content for zip file");
 
-                // 创建zip文件
-                ZipFile.CreateFromDirectory(tempDir, zipPath);
+                // 创建zip文件（zip文件在源目录外）
+                ZipFile.CreateFromDirectory(sourceDir, zipPath);
 
                 // 测试Unzip方法
                 using var zipStream = File.OpenRead(zipPath);
@@ -46,9 +47,9 @@ namespace WellTool.Core.Tests
             finally
             {
                 // 清理临时文件
-                if (Directory.Exists(tempDir))
+                if (Directory.Exists(tempRoot))
                 {
-                    Directory.Delete(tempDir, true);
+                    Directory.Delete(tempRoot, true);
                 }
             }
         }
@@ -57,25 +58,26 @@ namespace WellTool.Core.Tests
         public void UnzipTest2()
         {
             // 创建临时zip文件
-            var tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            var zipPath = Path.Combine(tempDir, "test2.zip");
-            var extractPath = Path.Combine(tempDir, "extract2");
+            var tempRoot = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            var sourceDir = Path.Combine(tempRoot, "source");
+            var zipPath = Path.Combine(tempRoot, "test2.zip");
+            var extractPath = Path.Combine(tempRoot, "extract2");
 
             try
             {
                 // 创建临时目录
-                Directory.CreateDirectory(tempDir);
+                Directory.CreateDirectory(sourceDir);
                 Directory.CreateDirectory(extractPath);
 
                 // 创建多个测试文件
                 for (int i = 1; i <= 3; i++)
                 {
-                    var testFilePath = Path.Combine(tempDir, $"test{i}.txt");
+                    var testFilePath = Path.Combine(sourceDir, $"test{i}.txt");
                     File.WriteAllText(testFilePath, $"Test content {i} for zip file");
                 }
 
-                // 创建zip文件
-                ZipFile.CreateFromDirectory(tempDir, zipPath);
+                // 创建zip文件（zip文件在源目录外）
+                ZipFile.CreateFromDirectory(sourceDir, zipPath);
 
                 // 测试Unzip方法
                 using var zipStream = File.OpenRead(zipPath);
@@ -93,9 +95,9 @@ namespace WellTool.Core.Tests
             finally
             {
                 // 清理临时文件
-                if (Directory.Exists(tempDir))
+                if (Directory.Exists(tempRoot))
                 {
-                    Directory.Delete(tempDir, true);
+                    Directory.Delete(tempRoot, true);
                 }
             }
         }

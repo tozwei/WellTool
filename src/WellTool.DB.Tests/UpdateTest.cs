@@ -12,6 +12,7 @@
 // limitations under the License.
 
 using Xunit;
+using WellTool.DB;
 
 namespace WellTool.DB.Tests;
 
@@ -24,10 +25,72 @@ public class UpdateTest
     /// 测试更新操作
     /// </summary>
     [Fact]
-        public void TestUpdate()
-        {
-            // 测试数据库更新操作
-            // 简化测试，验证功能概念
-            Assert.True(true);
-        }
+    public void TestUpdate()
+    {
+        // 测试数据库更新操作
+        var dataSource = new TestDataSource("Server=localhost;Database=test;", "MockDriver");
+        var db = new TestDb(dataSource);
+
+        // 创建测试实体
+        var entity = new Entity("user");
+        entity.Set("id", 1);
+        entity.Set("name", "updated_name");
+        entity.Set("age", 30);
+
+        // 创建条件实体
+        var where = new Entity("user");
+        where.Set("id", 1);
+
+        // 测试更新方法
+        var result = db.Update(entity, where);
+
+        // 由于使用的是模拟连接，这里会返回0，但测试可以验证方法调用是否正常
+        Assert.Equal(0, result);
+    }
+
+    /// <summary>
+    /// 测试批量更新操作
+    /// </summary>
+    [Fact]
+    public void TestBatchUpdate()
+    {
+        // 测试批量更新操作
+        var dataSource = new TestDataSource("Server=localhost;Database=test;", "MockDriver");
+        var db = new TestDb(dataSource);
+
+        // 创建多个测试实体
+        var entity1 = new Entity("user");
+        entity1.Set("id", 1);
+        entity1.Set("status", "active");
+
+        var entity2 = new Entity("user");
+        entity2.Set("id", 2);
+        entity2.Set("status", "active");
+
+        // 测试批量更新（这里只是验证方法调用，实际执行需要真实数据库）
+        // 使用Execute方法执行批量更新
+        var sql = "UPDATE user SET status = 'active' WHERE id IN (1, 2)";
+        var result = db.Execute(sql);
+
+        // 由于使用的是模拟连接，这里会返回0
+        Assert.Equal(0, result);
+    }
+
+    /// <summary>
+    /// 测试更新操作的参数绑定
+    /// </summary>
+    [Fact]
+    public void TestUpdateWithParameters()
+    {
+        // 测试带参数的更新操作
+        var dataSource = new TestDataSource("Server=localhost;Database=test;", "MockDriver");
+        var db = new TestDb(dataSource);
+
+        // 使用参数化查询
+        var sql = "UPDATE user SET name = ?, age = ? WHERE id = ?";
+        var result = db.Execute(sql, "test", 25, 1);
+
+        // 由于使用的是模拟连接，这里会返回0
+        Assert.Equal(0, result);
+    }
 }

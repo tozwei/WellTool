@@ -13,6 +13,7 @@
 
 using System.Data;
 using Xunit;
+using WellTool.DB.DS;
 
 namespace WellTool.DB.Tests.DS;
 
@@ -22,13 +23,81 @@ namespace WellTool.DB.Tests.DS;
 public class DataSourceWrapperTest
 {
     /// <summary>
-    /// 测试数据源包装
+    /// 测试数据源包装功能
     /// </summary>
     [Fact]
-        public void TestDataSourceWrapper()
-        {
-            // 测试数据源包装功能
-            // 简化测试，验证功能概念
-            Assert.True(true);
-        }
+    public void TestDataSourceWrapper()
+    {
+        // 测试数据源包装功能
+        var dataSource = new TestDataSource("Server=localhost;Database=test;", "MockDriver");
+        var wrapper = DataSourceWrapper.Wrap(dataSource, "MockDriver");
+        
+        // 验证包装器创建成功
+        Assert.NotNull(wrapper);
+        Assert.Equal("MockDriver", wrapper.GetDriver());
+        Assert.Equal(dataSource, wrapper.GetRaw());
+
+        // 测试获取连接
+        using var connection = wrapper.GetConnection();
+        Assert.NotNull(connection);
+        Assert.Equal("Server=localhost;Database=test;", connection.ConnectionString);
+
+        // 测试使用指定连接字符串获取连接
+        var customConnectionString = "Server=remote;Database=other;";
+        using var customConnection = wrapper.GetConnection(customConnectionString);
+        Assert.NotNull(customConnection);
+        Assert.Equal(customConnectionString, customConnection.ConnectionString);
+    }
+
+    /// <summary>
+    /// 测试数据源包装器的释放
+    /// </summary>
+    [Fact]
+    public void TestDataSourceWrapperDispose()
+    {
+        // 测试数据源包装器的释放
+        var dataSource = new TestDataSource("Server=localhost;Database=test;", "MockDriver");
+        var wrapper = DataSourceWrapper.Wrap(dataSource, "MockDriver");
+        
+        // 测试释放资源
+        wrapper.Dispose();
+        
+        // 验证测试通过（没有异常抛出）
+        Assert.True(true);
+    }
+
+    /// <summary>
+    /// 测试数据源包装器的关闭
+    /// </summary>
+    [Fact]
+    public void TestDataSourceWrapperClose()
+    {
+        // 测试数据源包装器的关闭
+        var dataSource = new TestDataSource("Server=localhost;Database=test;", "MockDriver");
+        var wrapper = DataSourceWrapper.Wrap(dataSource, "MockDriver");
+        
+        // 测试关闭
+        wrapper.Close();
+        
+        // 验证测试通过（没有异常抛出）
+        Assert.True(true);
+    }
+
+    /// <summary>
+    /// 测试不同类型的驱动
+    /// </summary>
+    [Fact]
+    public void TestDataSourceWrapperWithDifferentDrivers()
+    {
+        // 测试不同类型的驱动
+        var dataSource = new TestDataSource("Server=localhost;Database=test;", "SqlClientDriver");
+        var wrapper = DataSourceWrapper.Wrap(dataSource, "SqlClientDriver");
+        
+        // 验证驱动名称正确
+        Assert.Equal("SqlClientDriver", wrapper.GetDriver());
+        
+        // 测试获取连接
+        using var connection = wrapper.GetConnection();
+        Assert.NotNull(connection);
+    }
 }
