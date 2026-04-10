@@ -73,7 +73,22 @@ public class FullSupportScriptEngine
         try
         {
             var result = _engine.Evaluate(script);
-            return result.ToObject();
+            if (result.IsNumber())
+            {
+                return result.AsNumber();
+            }
+            else if (result.IsBoolean())
+            {
+                return result.AsBoolean();
+            }
+            else if (result.IsString())
+            {
+                return result.AsString();
+            }
+            else
+            {
+                return result.ToObject();
+            }
         }
         catch (System.Exception ex)
         {

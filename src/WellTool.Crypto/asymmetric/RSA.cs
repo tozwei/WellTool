@@ -25,7 +25,7 @@ namespace WellTool.Crypto.Asymmetric
         /// <summary>
         /// 构造函数
         /// </summary>
-        public RSA() : base(AsymmetricAlgorithm.RSA, null, null) { }
+        public RSA() : base(AsymmetricAlgorithm.RSA, GenerateKeyPair().publicKey, GenerateKeyPair().privateKey) { }
 
         /// <summary>
         /// 构造函数

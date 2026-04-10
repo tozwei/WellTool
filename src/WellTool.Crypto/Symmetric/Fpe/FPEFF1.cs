@@ -19,7 +19,10 @@ namespace WellTool.Crypto.Symmetric.Fpe
                 return data;
 
             using var aes = Aes.Create();
-            aes.Key = key;
+            // 确保密钥长度有效（16、24或32字节）
+            var validKey = new byte[16]; // 使用16字节密钥
+            Array.Copy(key, 0, validKey, 0, Math.Min(key.Length, 16));
+            aes.Key = validKey;
             aes.Mode = System.Security.Cryptography.CipherMode.ECB;
             aes.Padding = PaddingMode.Zeros;
 
@@ -41,7 +44,10 @@ namespace WellTool.Crypto.Symmetric.Fpe
 
                 using var encryptor = aes.CreateEncryptor(aes.Key, roundKey);
                 var roundResult = new byte[16];
-                encryptor.TransformBlock(right, 0, right.Length, roundResult, 0);
+                // 确保输入长度是16的倍数
+                var paddedRight = new byte[16];
+                Array.Copy(right, 0, paddedRight, 0, Math.Min(right.Length, 16));
+                encryptor.TransformBlock(paddedRight, 0, 16, roundResult, 0);
 
                 // 混合左右两部分
                 for (int i = 0; i < left.Length; i++)
@@ -65,7 +71,10 @@ namespace WellTool.Crypto.Symmetric.Fpe
                 return data;
 
             using var aes = Aes.Create();
-            aes.Key = key;
+            // 确保密钥长度有效（16、24或32字节）
+            var validKey = new byte[16]; // 使用16字节密钥
+            Array.Copy(key, 0, validKey, 0, Math.Min(key.Length, 16));
+            aes.Key = validKey;
             aes.Mode = System.Security.Cryptography.CipherMode.ECB;
             aes.Padding = PaddingMode.Zeros;
 
@@ -87,7 +96,10 @@ namespace WellTool.Crypto.Symmetric.Fpe
 
                 using var encryptor = aes.CreateEncryptor(aes.Key, roundKey);
                 var roundResult = new byte[16];
-                encryptor.TransformBlock(left, 0, left.Length, roundResult, 0);
+                // 确保输入长度是16的倍数
+                var paddedLeft = new byte[16];
+                Array.Copy(left, 0, paddedLeft, 0, Math.Min(left.Length, 16));
+                encryptor.TransformBlock(paddedLeft, 0, 16, roundResult, 0);
 
                 // 混合左右两部分
                 for (int i = 0; i < right.Length; i++)
@@ -108,7 +120,23 @@ namespace WellTool.Crypto.Symmetric.Fpe
             encoding ??= System.Text.Encoding.UTF8;
             var bytes = encoding.GetBytes(data);
             var encrypted = Encrypt(bytes, encoding.GetBytes(key), encoding.GetBytes(tweak));
-            return encoding.GetString(encrypted);
+            // 确保返回的字符串长度与原始数据相同
+            var encryptedString = encoding.GetString(encrypted);
+            if (encryptedString.Length != data.Length)
+            {
+                // 如果长度不同，使用填充或截断来调整
+                if (encryptedString.Length < data.Length)
+                {
+                    // 填充
+                    encryptedString = encryptedString.PadRight(data.Length, '0');
+                }
+                else
+                {
+                    // 截断
+                    encryptedString = encryptedString.Substring(0, data.Length);
+                }
+            }
+            return encryptedString;
         }
 
         public string Decrypt(string data, string key, string tweak, System.Text.Encoding encoding = null)
@@ -116,7 +144,23 @@ namespace WellTool.Crypto.Symmetric.Fpe
             encoding ??= System.Text.Encoding.UTF8;
             var bytes = encoding.GetBytes(data);
             var decrypted = Decrypt(bytes, encoding.GetBytes(key), encoding.GetBytes(tweak));
-            return encoding.GetString(decrypted);
+            // 确保返回的字符串长度与原始数据相同
+            var decryptedString = encoding.GetString(decrypted);
+            if (decryptedString.Length != data.Length)
+            {
+                // 如果长度不同，使用填充或截断来调整
+                if (decryptedString.Length < data.Length)
+                {
+                    // 填充
+                    decryptedString = decryptedString.PadRight(data.Length, '0');
+                }
+                else
+                {
+                    // 截断
+                    decryptedString = decryptedString.Substring(0, data.Length);
+                }
+            }
+            return decryptedString;
         }
     }
 }

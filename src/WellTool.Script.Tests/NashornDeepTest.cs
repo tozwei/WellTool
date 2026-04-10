@@ -31,7 +31,7 @@ namespace WellTool.Script.Tests
             // 测试执行复杂的 JavaScript 表达式
             var result = engine.Execute("function add(a, b) { return a + b; } add(2, 3);");
             Assert.NotNull(result);
-            Assert.Equal(5, result);
+            Assert.Equal(5, Convert.ToInt32(result));
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace WellTool.Script.Tests
             Assert.NotNull(name);
             Assert.Equal("WellTool", name);
             Assert.NotNull(version);
-            Assert.Equal(1.0, version);
+            Assert.Equal(1.0, Convert.ToDouble(version));
         }
 
         [Fact]
@@ -66,11 +66,11 @@ namespace WellTool.Script.Tests
             var lastElement = engine.Execute("arr[arr.length - 1]");
 
             Assert.NotNull(length);
-            Assert.Equal(5, length);
+            Assert.Equal(5, Convert.ToInt32(length));
             Assert.NotNull(firstElement);
-            Assert.Equal(1, firstElement);
+            Assert.Equal(1, Convert.ToInt32(firstElement));
             Assert.NotNull(lastElement);
-            Assert.Equal(5, lastElement);
+            Assert.Equal(5, Convert.ToInt32(lastElement));
         }
     }
 }

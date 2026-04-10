@@ -13,7 +13,7 @@ namespace WellTool.Jwt
         private Dictionary<string, object> _claims;
 
         /// <summary>
-        /// 增加Claims属性，如果属性值为{@code null}，则移除这个属性
+        /// 增加Claims属性，保留null值
         /// </summary>
         /// <param name="name">属性名</param>
         /// <param name="value">属性值</param>
@@ -23,11 +23,6 @@ namespace WellTool.Jwt
             if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentNullException(nameof(name), "Name must be not null!");
-            }
-            if (value == null)
-            {
-                _claims.Remove(name);
-                return;
             }
             _claims[name] = value;
         }
@@ -143,7 +138,13 @@ namespace WellTool.Jwt
         public Dictionary<string, object> GetClaimsJson()
         {
             Init();
-            return _claims;
+            // 处理 JsonElement 类型的值，确保它们被转换为基本类型
+            var claims = new Dictionary<string, object>();
+            foreach (var kvp in _claims)
+            {
+                claims[kvp.Key] = GetClaim(kvp.Key);
+            }
+            return claims;
         }
 
         /// <summary>

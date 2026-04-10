@@ -35,7 +35,7 @@ namespace WellTool.Script.Tests
             // 测试执行简单的 JavaScript 脚本
             var result = ScriptUtil.Eval("javascript", "1 + 1");
             Assert.NotNull(result);
-            Assert.Equal(2, result);
+            Assert.Equal(2, Convert.ToInt32(result));
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace WellTool.Script.Tests
             };
             var result = ScriptUtil.Eval("javascript", "a + b", bindings);
             Assert.NotNull(result);
-            Assert.Equal(3, result);
+            Assert.Equal(3, Convert.ToInt32(result));
         }
     }
 }
