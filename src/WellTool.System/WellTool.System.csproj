@@ -14,6 +14,7 @@
 		<Company>WellTool</Company>
 		<Copyright>© 2026 WellTool</Copyright>
 		<PackageTags>system;info</PackageTags>
+		<ProjectUrl>https://github.com/tozwei/WellTool</ProjectUrl>
 	</PropertyGroup>
 
 	<ItemGroup>
