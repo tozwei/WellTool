@@ -14,7 +14,7 @@
 		<Company>WellTool</Company>
 		<Copyright>© 2026 WellTool</Copyright>
 		<PackageTags>crypto;encryption</PackageTags>
-		<ProjectUrl>https://github.com/tozwei/WellTool</ProjectUrl>
+		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 

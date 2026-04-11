@@ -122,3 +122,5 @@
 /build_crypto.txt
 /CryptoDebug
 /nupkg
+/src/WellTool.Core/temp
+/src/temp

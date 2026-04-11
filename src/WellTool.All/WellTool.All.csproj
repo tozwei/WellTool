@@ -14,7 +14,7 @@
 		<Company>WellTool</Company>
 		<Copyright>© 2026 WellTool</Copyright>
 		<PackageTags>utility;tools;helpers</PackageTags>
-		<ProjectUrl>https://github.com/tozwei/WellTool</ProjectUrl>
+		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<IncludeContentInPack>true</IncludeContentInPack>
 		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>

@@ -14,7 +14,7 @@
 		<Company>WellTool</Company>
 		<Copyright>© 2026 WellTool</Copyright>
 		<PackageTags>setting;configuration</PackageTags>
-		<ProjectUrl>https://github.com/tozwei/WellTool</ProjectUrl>
+		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
 	</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
