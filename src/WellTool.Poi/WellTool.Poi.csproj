@@ -15,11 +15,18 @@
 		<Copyright>© 2026 WellTool</Copyright>
 		<PackageTags>poi;excel;word</PackageTags>
 		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/tozwei/WellTool</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<DebugType>portable</DebugType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<Deterministic>true</Deterministic>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="MiniExcel" Version="1.41.3" />
 		<PackageReference Include="NPOI" Version="2.6.2" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>

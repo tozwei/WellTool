@@ -15,6 +15,8 @@
 		<Copyright>© 2026 WellTool</Copyright>
 		<PackageTags>system;info</PackageTags>
 		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/tozwei/WellTool</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
 
 	<ItemGroup>

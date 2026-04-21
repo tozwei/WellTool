@@ -15,6 +15,16 @@
 		<Copyright>© 2026 WellTool</Copyright>
 		<PackageTags>bloom-filter;hash</PackageTags>
 		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/tozwei/WellTool</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<DebugType>portable</DebugType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<Deterministic>true</Deterministic>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+	</ItemGroup>
 
 </Project>

@@ -15,12 +15,19 @@
 		<Copyright>© 2026 WellTool</Copyright>
 		<PackageTags>core;util</PackageTags>
 		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/tozwei/WellTool</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<DebugType>portable</DebugType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<Deterministic>true</Deterministic>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<!-- System.Drawing.Common is only supported on Windows in .NET 6.0+ -->
 		<PackageReference Include="System.Drawing.Common" Version="8.0.0" Condition="$(TargetFramework.Contains('net8.0')) OR $(TargetFramework.Contains('net6.0'))" />
 		<PackageReference Include="System.CodeDom" Version="8.0.0" Condition="$(TargetFramework.Contains('net8.0')) OR $(TargetFramework.Contains('net6.0'))" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework.Contains('netstandard2.1'))">

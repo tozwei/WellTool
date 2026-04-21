@@ -15,6 +15,12 @@
     <Copyright>© 2026 WellTool</Copyright>
     <PackageTags>extra;utilities</PackageTags>
     <PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/tozwei/WellTool</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <DebugType>portable</DebugType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +32,7 @@
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="QRCoder" Version="1.4.3" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

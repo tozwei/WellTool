@@ -15,10 +15,16 @@
 		<Copyright>© 2026 WellTool</Copyright>
 		<PackageTags>utility;tools;helpers</PackageTags>
 		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/tozwei/WellTool</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
 		<IncludeBuildOutput>true</IncludeBuildOutput>
 		<IncludeContentInPack>true</IncludeContentInPack>
 		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
 		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+		<DebugType>portable</DebugType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<Deterministic>true</Deterministic>
 	</PropertyGroup>
 
 
@@ -44,6 +50,10 @@
 		<ProjectReference Include="..\WellTool.Setting\WellTool.Setting.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\WellTool.Socket\WellTool.Socket.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\WellTool.System\WellTool.System.csproj" PrivateAssets="all" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 	</ItemGroup>
 
   <PropertyGroup>
