@@ -28,27 +28,39 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\WellTool.AI\WellTool.AI.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Aop\WellTool.Aop.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.BloomFilter\WellTool.BloomFilter.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Bom\WellTool.Bom.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Cache\WellTool.Cache.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Captcha\WellTool.Captcha.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Cron\WellTool.Cron.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Crypto\WellTool.Crypto.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.DB\WellTool.DB.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Dfa\WellTool.Dfa.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Extra\WellTool.Extra.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Http\WellTool.Http.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Json\WellTool.Json.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Jwt\WellTool.Jwt.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Log\WellTool.Log.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Poi\WellTool.Poi.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Script\WellTool.Script.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Setting\WellTool.Setting.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.Socket\WellTool.Socket.csproj" PrivateAssets="none" />
-		<ProjectReference Include="..\WellTool.System\WellTool.System.csproj" PrivateAssets="none" />
+		<ProjectReference Include="..\WellTool.AI\WellTool.AI.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Aop\WellTool.Aop.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.BloomFilter\WellTool.BloomFilter.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Bom\WellTool.Bom.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Cache\WellTool.Cache.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Captcha\WellTool.Captcha.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Cron\WellTool.Cron.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Crypto\WellTool.Crypto.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.DB\WellTool.DB.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Dfa\WellTool.Dfa.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Extra\WellTool.Extra.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Http\WellTool.Http.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Json\WellTool.Json.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Jwt\WellTool.Jwt.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Log\WellTool.Log.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Poi\WellTool.Poi.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Script\WellTool.Script.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Setting\WellTool.Setting.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.Socket\WellTool.Socket.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\WellTool.System\WellTool.System.csproj" PrivateAssets="All" />
 	</ItemGroup>
+
+	<Target Name="CopyReferencedDlls" AfterTargets="Build">
+		<ItemGroup>
+			<ReferencedDlls Include="$(OutputPath)\WellTool.*.dll" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="IncludeReferencedDllsInPackage" BeforeTargets="GenerateNuspec">
+		<ItemGroup>
+			<TargetPathForPackage Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll' AND $([System.String]::StartsWith('%(Filename)', 'WellTool'))" PackagePath="lib/$(TargetFramework)" Pack="true" />
+		</ItemGroup>
+	</Target>
 
 </Project>
