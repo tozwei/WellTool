@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using SystemDynamic = System.Dynamic;
 using System.Reflection;
@@ -6,15 +6,15 @@ using System.Reflection;
 namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
-/// Record转换器
+/// Record杞崲鍣?
 /// </summary>
 public class RecordConverter : AbstractConverter<SystemDynamic.ExpandoObject>
 {
 	/// <summary>
-	/// 内部转换
+	/// 鍐呴儴杞崲
 	/// </summary>
-	/// <param name="value">值</param>
-	/// <returns>结果</returns>
+	/// <param name="value">鍊?/param>
+	/// <returns>缁撴灉</returns>
 	protected override SystemDynamic.ExpandoObject ConvertInternal(object value)
 	{
 		if (value is SystemDynamic.ExpandoObject expando)
@@ -39,3 +39,4 @@ public class RecordConverter : AbstractConverter<SystemDynamic.ExpandoObject>
 		return result;
 	}
 }
+

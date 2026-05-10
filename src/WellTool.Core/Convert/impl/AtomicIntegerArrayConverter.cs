@@ -1,17 +1,17 @@
-using System;
+﻿using System;
 
-namespace WellTool.Core.Convert.impl;
+namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
-/// AtomicIntegerArray转换器
+/// AtomicIntegerArray杞崲鍣?
 /// </summary>
 public class AtomicIntegerArrayConverter : AbstractConverter<AtomicIntegerArray>
 {
 	/// <summary>
-	/// 内部转换
+	/// 鍐呴儴杞崲
 	/// </summary>
-	/// <param name="value">值</param>
-	/// <returns>结果</returns>
+	/// <param name="value">鍊?/param>
+	/// <returns>缁撴灉</returns>
 	protected override AtomicIntegerArray ConvertInternal(object value)
 	{
 		if (value is int[] intArray)
@@ -23,49 +23,50 @@ public class AtomicIntegerArrayConverter : AbstractConverter<AtomicIntegerArray>
 }
 
 /// <summary>
-/// AtomicIntegerArray封装类
+/// AtomicIntegerArray灏佽绫?
 /// </summary>
 public class AtomicIntegerArray
 {
 	private readonly int[] _array;
 
 	/// <summary>
-	/// 构造
+	/// 鏋勯€?
 	/// </summary>
-	/// <param name="length">长度</param>
+	/// <param name="length">闀垮害</param>
 	public AtomicIntegerArray(int length)
 	{
 		_array = new int[length];
 	}
 
 	/// <summary>
-	/// 构造
+	/// 鏋勯€?
 	/// </summary>
-	/// <param name="array">数组</param>
+	/// <param name="array">鏁扮粍</param>
 	public AtomicIntegerArray(int[] array)
 	{
 		_array = (int[])array.Clone();
 	}
 
 	/// <summary>
-	/// 获取长度
+	/// 鑾峰彇闀垮害
 	/// </summary>
 	public int Length => _array.Length;
 
 	/// <summary>
-	/// 获取值
+	/// 鑾峰彇鍊?
 	/// </summary>
-	/// <param name="index">索引</param>
-	/// <returns>值</returns>
+	/// <param name="index">绱㈠紩</param>
+	/// <returns>鍊?/returns>
 	public int Get(int index) => _array[index];
 
 	/// <summary>
-	/// 设置值
+	/// 璁剧疆鍊?
 	/// </summary>
-	/// <param name="index">索引</param>
-	/// <param name="newValue">新值</param>
+	/// <param name="index">绱㈠紩</param>
+	/// <param name="newValue">鏂板€?/param>
 	public void Set(int index, int newValue)
 	{
 		_array[index] = newValue;
 	}
 }
+

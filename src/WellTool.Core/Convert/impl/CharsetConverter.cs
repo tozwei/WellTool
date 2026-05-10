@@ -1,9 +1,9 @@
-using System.Text;
+﻿using System.Text;
 
-namespace WellTool.Core.Convert.impl;
+namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
-/// 编码对象转换器
+/// 缂栫爜瀵硅薄杞崲鍣?
 /// </summary>
 public class CharsetConverter : AbstractConverter<Encoding>
 {
@@ -13,3 +13,4 @@ public class CharsetConverter : AbstractConverter<Encoding>
         return Encoding.GetEncoding(charsetName);
     }
 }
+

@@ -1,19 +1,17 @@
-using System;
+﻿using System;
 using WellTool.Core.Convert;
 
-namespace WellTool.Core.Convert.impl
+namespace WellTool.Core.Convert.Impl
 {
     /// <summary>
-    /// UUID转换器
-    /// </summary>
+    /// UUID杞崲鍣?    /// </summary>
     public class UUIDConverter : IConverter
     {
         /// <summary>
-        /// 转换值
-        /// </summary>
-        /// <param name="value">要转换的值</param>
-        /// <param name="targetType">目标类型</param>
-        /// <returns>转换后的值</returns>
+        /// 杞崲鍊?        /// </summary>
+        /// <param name="value">瑕佽浆鎹㈢殑鍊?/param>
+        /// <param name="targetType">鐩爣绫诲瀷</param>
+        /// <returns>杞崲鍚庣殑鍊?/returns>
         public object Convert(object value, Type targetType)
         {
             if (value == null)
@@ -33,18 +31,17 @@ namespace WellTool.Core.Convert.impl
         }
 
         /// <summary>
-        /// 获取支持的源类型
+        /// 鑾峰彇鏀寔鐨勬簮绫诲瀷
         /// </summary>
-        /// <returns>支持的源类型数组</returns>
+        /// <returns>鏀寔鐨勬簮绫诲瀷鏁扮粍</returns>
         public Type[] GetSupportedSourceTypes()
         {
             return new[] { typeof(string), typeof(Guid) };
         }
 
         /// <summary>
-        /// 获取支持的目标类型
-        /// </summary>
-        /// <returns>支持的目标类型数组</returns>
+        /// 鑾峰彇鏀寔鐨勭洰鏍囩被鍨?        /// </summary>
+        /// <returns>鏀寔鐨勭洰鏍囩被鍨嬫暟缁?/returns>
         public Type[] GetSupportedTargetTypes()
         {
             return new[] { typeof(Guid) };

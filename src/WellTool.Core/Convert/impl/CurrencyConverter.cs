@@ -1,9 +1,9 @@
-using System.Globalization;
+﻿using System.Globalization;
 
-namespace WellTool.Core.Convert.impl;
+namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
-/// 货币转换器
+/// 璐у竵杞崲鍣?
 /// </summary>
 public class CurrencyConverter : AbstractConverter<decimal>
 {
@@ -13,3 +13,4 @@ public class CurrencyConverter : AbstractConverter<decimal>
         return decimal.Parse(valueStr, NumberStyles.Currency, CultureInfo.InvariantCulture);
     }
 }
+

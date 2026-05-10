@@ -25,28 +25,28 @@ namespace WellTool.BloomFilter.Tests
         public void TestInitWhenMaxValueLessThanMachineNum()
         {
             // 测试 maxValue=1 且 machineNum=32 时 add 应无异常
-            Assert.Throws<ArgumentException>(() => {
-                var filter = new DefaultFilter(1, 32);
-                filter.Add("init");
-            });
+            var filter1 = new DefaultFilter(1, 32);
+            var result1 = filter1.Add("init");
+            Assert.True(result1);
+            Assert.True(filter1.Contains("init"));
 
             // 测试 maxValue=31 且 machineNum=32 时 add 应无异常
-            Assert.Throws<ArgumentException>(() => {
-                var filter = new DefaultFilter(31, 32);
-                filter.Add("init");
-            });
+            var filter2 = new DefaultFilter(31, 32);
+            var result2 = filter2.Add("init");
+            Assert.True(result2);
+            Assert.True(filter2.Contains("init"));
 
             // 测试 maxValue=1 且 machineNum=64 时 add 应无异常
-            Assert.Throws<ArgumentException>(() => {
-                var filter = new DefaultFilter(1, 64);
-                filter.Add("init");
-            });
+            var filter3 = new DefaultFilter(1, 64);
+            var result3 = filter3.Add("init");
+            Assert.True(result3);
+            Assert.True(filter3.Contains("init"));
 
             // 测试 maxValue=63 且 machineNum=64 时 add 应无异常
-            Assert.Throws<ArgumentException>(() => {
-                var filter = new DefaultFilter(63, 64);
-                filter.Add("init");
-            });
+            var filter4 = new DefaultFilter(63, 64);
+            var result4 = filter4.Add("init");
+            Assert.True(result4);
+            Assert.True(filter4.Contains("init"));
         }
 
         [Fact]
@@ -99,14 +99,28 @@ namespace WellTool.BloomFilter.Tests
         [Fact]
         public void TestBitSetBloomFilterConstructorWithInvalidParameters()
         {
-            // 注意：.NET 版本的 BitSetBloomFilter 构造函数参数与 Java 版本不同
-            // 这里测试 .NET 版本的构造函数
             Assert.Throws<ArgumentOutOfRangeException>(() => {
-                var filter = new BitSetBloomFilter(0);
+                var filter = new BitSetBloomFilter(0, 10, 3);
             });
 
             Assert.Throws<ArgumentOutOfRangeException>(() => {
-                var filter = new BitSetBloomFilter(-5);
+                var filter = new BitSetBloomFilter(-5, 10, 3);
+            });
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => {
+                var filter = new BitSetBloomFilter(10, 0, 3);
+            });
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => {
+                var filter = new BitSetBloomFilter(10, -5, 3);
+            });
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => {
+                var filter = new BitSetBloomFilter(10, 10, 0);
+            });
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => {
+                var filter = new BitSetBloomFilter(10, 10, 9);
             });
         }
     }

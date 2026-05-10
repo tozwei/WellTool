@@ -5,9 +5,9 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<PackageId>WellTool.Crypto</PackageId>
-		<PackageVersion>1.0.1</PackageVersion>
+		<PackageVersion>1.0.2</PackageVersion>
 		<Title>WellTool Crypto</Title>
 		<Description>Encryption and decryption module, providing symmetric, asymmetric and digest algorithm encapsulation</Description>
 		<Authors>WellTool Team</Authors>

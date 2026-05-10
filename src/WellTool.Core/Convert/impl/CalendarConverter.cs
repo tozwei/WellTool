@@ -1,14 +1,14 @@
-using System.Globalization;
+﻿using System.Globalization;
 
-namespace WellTool.Core.Convert.impl;
+namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
-/// 日期转换器
+/// 鏃ユ湡杞崲鍣?
 /// </summary>
 public class CalendarConverter : AbstractConverter<DateTime>
 {
     /// <summary>
-    /// 日期格式
+    /// 鏃ユ湡鏍煎紡
     /// </summary>
     public string? Format { get; set; }
 
@@ -35,3 +35,4 @@ public class CalendarConverter : AbstractConverter<DateTime>
         return DateTime.ParseExact(valueStr, Format, CultureInfo.InvariantCulture);
     }
 }
+

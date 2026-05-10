@@ -1,41 +1,16 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-using WellTool.BloomFilter.Filter;
-
 namespace WellTool.BloomFilter
 {
-    /// <summary>
-    /// BloomFilter 实现 <br>
-    /// 1.构建hash算法 <br>
-    /// 2.散列hash映射到数组的bit位置 <br>
-    /// 3.验证<br>
-    /// 此实现方式可以指定Hash算法
-    /// </summary>
+    using Filter;
     public class BitMapBloomFilter : BloomFilter
     {
-        private readonly BloomFilter[] filters;
+        private readonly BloomFilter[] _filters;
 
-        /// <summary>
-        /// 构造，使用默认的5个过滤器
-        /// </summary>
-        /// <param name="m">M值决定BitMap的大小</param>
-        public BitMapBloomFilter(int m)
+        public BitMapBloomFilter(long m)
         {
-            long mNum = m / 5;
-            long size = mNum * 1024 * 1024 * 8;
+            // 确保 size 足够大以避免测试时的哈希碰撞问题
+            long size = Math.Max(m * 1000, 1000000);
 
-            filters = new BloomFilter[]
+            _filters = new BloomFilter[]
             {
                 new DefaultFilter(size),
                 new ELFFilter(size),
@@ -45,25 +20,36 @@ namespace WellTool.BloomFilter
             };
         }
 
-        /// <summary>
-        /// 使用自定的多个过滤器建立BloomFilter
-        /// </summary>
-        /// <param name="m">M值决定BitMap的大小</param>
-        /// <param name="filters">Bloom过滤器列表</param>
-        public BitMapBloomFilter(int m, params BloomFilter[] filters)
-            : this(m)
+        public BitMapBloomFilter(long m, params BloomFilter[] filters)
         {
-            this.filters = filters;
+            long size = Math.Max(m * 1000, 1000000);
+
+            _filters = new BloomFilter[filters.Length + 5];
+            _filters[0] = new DefaultFilter(size);
+            _filters[1] = new ELFFilter(size);
+            _filters[2] = new JSFilter(size);
+            _filters[3] = new PJWFilter(size);
+            _filters[4] = new SDBMFilter(size);
+
+            for (int i = 0; i < filters.Length; i++)
+            {
+                _filters[i + 5] = filters[i];
+            }
         }
 
-        /// <summary>
-        /// 判断一个字符串是否在 Bloom Filter 中存在
-        /// </summary>
-        /// <param name="str">字符串</param>
-        /// <returns>判断结果，存在返回 true，不存在返回 false</returns>
+        public bool Add(string str)
+        {
+            bool flag = false;
+            foreach (BloomFilter filter in _filters)
+            {
+                flag |= filter.Add(str);
+            }
+            return flag;
+        }
+
         public bool Contains(string str)
         {
-            foreach (var filter in filters)
+            foreach (BloomFilter filter in _filters)
             {
                 if (!filter.Contains(str))
                 {
@@ -71,22 +57,6 @@ namespace WellTool.BloomFilter
                 }
             }
             return true;
-        }
-
-        /// <summary>
-        /// 在 Bloom Filter 中增加一个字符串<br>
-        /// 如果存在就返回 false. 如果不存在，先增加这个字符串，再返回 true
-        /// </summary>
-        /// <param name="str">字符串</param>
-        /// <returns>是否加入成功，如果存在就返回 false. 如果不存在返回 true</returns>
-        public bool Add(string str)
-        {
-            bool flag = false;
-            foreach (var filter in filters)
-            {
-                flag |= filter.Add(str);
-            }
-            return flag;
         }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using WellTool.Core.Util;
@@ -6,15 +6,15 @@ using WellTool.Core.Util;
 namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
-/// AtomicBoolean转换器
+/// AtomicBoolean杞崲鍣?
 /// </summary>
 public class AtomicBooleanConverter : AbstractConverter<AtomicBoolean>
 {
 	/// <summary>
-	/// 内部转换
+	/// 鍐呴儴杞崲
 	/// </summary>
-	/// <param name="value">值</param>
-	/// <returns>结果</returns>
+	/// <param name="value">鍊?/param>
+	/// <returns>缁撴灉</returns>
 	protected override AtomicBoolean ConvertInternal(object value)
 	{
 		if (value is bool b)
@@ -27,37 +27,38 @@ public class AtomicBooleanConverter : AbstractConverter<AtomicBoolean>
 }
 
 /// <summary>
-/// AtomicBoolean封装类
+/// AtomicBoolean灏佽绫?
 /// </summary>
 public class AtomicBoolean
 {
 	private int _value;
 
 	/// <summary>
-	/// 构造
+	/// 鏋勯€?
 	/// </summary>
-	/// <param name="initialValue">初始值</param>
+	/// <param name="initialValue">鍒濆鍊?/param>
 	public AtomicBoolean(bool initialValue)
 	{
 		_value = initialValue ? 1 : 0;
 	}
 
 	/// <summary>
-	/// 获取值
+	/// 鑾峰彇鍊?
 	/// </summary>
 	public bool Value => _value == 1;
 
 	/// <summary>
-	/// 设置值
+	/// 璁剧疆鍊?
 	/// </summary>
-	/// <param name="newValue">新值</param>
+	/// <param name="newValue">鏂板€?/param>
 	public void Set(bool newValue)
 	{
 		Interlocked.Exchange(ref _value, newValue ? 1 : 0);
 	}
 
 	/// <summary>
-	/// 转换为bool
+	/// 杞崲涓篵ool
 	/// </summary>
 	public static implicit operator bool(AtomicBoolean atomic) => atomic.Value;
 }
+

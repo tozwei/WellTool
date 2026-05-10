@@ -74,6 +74,21 @@ public static class RandomUtil
 		return new string(result);
 	}
 
+	public static string RandomString(string baseStr, int length)
+	{
+		var result = new char[length];
+		for (int i = 0; i < length; i++)
+		{
+			result[i] = baseStr[_random.Next(baseStr.Length)];
+		}
+		return new string(result);
+	}
+
+	public static char RandomChar(char[] chars)
+	{
+		return chars[_random.Next(chars.Length)];
+	}
+
 	/// <summary>
 	/// 随机数字
 	/// </summary>

@@ -1,10 +1,10 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 
-namespace WellTool.Core.Convert.impl;
+namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
-/// StackTraceElement转换器
+/// StackTraceElement杞崲鍣?
 /// </summary>
 public class StackTraceElementConverter : AbstractConverter<StackFrame>
 {
@@ -29,3 +29,4 @@ public class StackTraceElementConverter : AbstractConverter<StackFrame>
         return new StackFrame();
     }
 }
+

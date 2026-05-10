@@ -5,11 +5,11 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<PackageId>WellTool.Aop</PackageId>
-		<PackageVersion>1.0.1</PackageVersion>
+		<PackageVersion>1.0.2</PackageVersion>
 		<Title>WellTool Aop</Title>
-		<Description>Dynamic proxy encapsulation, providing aspect support</Description>
+		<Description>AOP (Aspect Oriented Programming) implementation</Description>
 		<Authors>WellTool Team</Authors>
 		<Company>WellTool</Company>
 		<Copyright>© 2026 WellTool</Copyright>
@@ -24,7 +24,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Castle.Core" Version="5.1.1" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
 	</ItemGroup>
 
 </Project>

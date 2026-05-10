@@ -42,6 +42,25 @@ namespace WellTool.Core.Img
             // 跨平台实现
         }
 
+        public static void DrawStringColourful(System.Drawing.Graphics g, string text, System.Drawing.Font font, int width, int height)
+        {
+            var random = new Random();
+            var chars = text.ToCharArray();
+            var x = (width - text.Length * font.Size) / 2;
+            var y = (height - font.Height) / 2;
+
+            foreach (var c in chars)
+            {
+                var color = System.Drawing.Color.FromArgb(
+                    random.Next(50, 200),
+                    random.Next(50, 200),
+                    random.Next(50, 200));
+
+                g.DrawString(c.ToString(), font, new System.Drawing.SolidBrush(color), x, y);
+                x += font.Size;
+            }
+        }
+
         /// <summary>
         /// 绘制直线
         /// </summary>

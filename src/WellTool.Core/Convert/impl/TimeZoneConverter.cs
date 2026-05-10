@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 
-namespace WellTool.Core.Convert.impl;
+namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
-/// TimeZone转换器
+/// TimeZone杞崲鍣?
 /// </summary>
 public class TimeZoneConverter : AbstractConverter<TimeZoneInfo>
 {
@@ -20,3 +20,4 @@ public class TimeZoneConverter : AbstractConverter<TimeZoneInfo>
         }
     }
 }
+

@@ -1,69 +1,37 @@
+namespace WellTool.Core.Annotation;
+
 using System;
-using System.Reflection;
 
-namespace WellTool.Core.Annotation
+public class CacheableAnnotationAttribute : IAnnotationAttribute
 {
-    /// <summary>
-    /// 缓存的注解属性实现
-    /// </summary>
-    public class CacheableAnnotationAttribute : IAnnotationAttribute
-    {
-        private volatile bool _valueInvoked;
-        private volatile object _value;
-        private bool _defaultValueInvoked;
-        private object _defaultValue;
-        private readonly Annotation _annotation;
-        private readonly MethodInfo _attribute;
+	private readonly IAnnotationAttribute _annotationAttribute;
+	private object? _value;
+	private bool _valueCached;
 
-        public CacheableAnnotationAttribute(Annotation annotation, MethodInfo attribute)
-        {
-            if (annotation == null)
-                throw new ArgumentNullException(nameof(annotation));
-            if (attribute == null)
-                throw new ArgumentNullException(nameof(attribute));
-            
-            _annotation = annotation;
-            _attribute = attribute;
-            _valueInvoked = false;
-            _defaultValueInvoked = false;
-        }
+	public CacheableAnnotationAttribute(IAnnotationAttribute annotationAttribute)
+	{
+		_annotationAttribute = annotationAttribute ?? throw new ArgumentNullException(nameof(annotationAttribute));
+	}
 
-        public Annotation GetAnnotation() => _annotation;
+	public Type GetAnnotationType() => _annotationAttribute.GetAnnotationType();
 
-        public MethodInfo GetAttribute() => _attribute;
+	public string GetAttributeName() => _annotationAttribute.GetAttributeName();
 
-        public Type GetAnnotationType() => GetAttribute().DeclaringType;
+	public Type GetAttributeType() => _annotationAttribute.GetAttributeType();
 
-        public string GetAttributeName() => GetAttribute().Name;
+	public object? GetValue()
+	{
+		if (!_valueCached)
+		{
+			_value = _annotationAttribute.GetValue();
+			_valueCached = true;
+		}
+		return _value;
+	}
 
-        public object GetValue()
-        {
-            if (!_valueInvoked)
-            {
-                lock (this)
-                {
-                    if (!_valueInvoked)
-                    {
-                        _valueInvoked = true;
-                        _value = GetAttribute().Invoke(_annotation, null);
-                    }
-                }
-            }
-            return _value;
-        }
+	public T? GetAnnotation<T>() where T : Attribute => _annotationAttribute.GetAnnotation<T>();
 
-        public bool IsValueEquivalentToDefaultValue()
-        {
-            if (!_defaultValueInvoked)
-            {
-                _defaultValue = GetAttribute().GetDefaultValue();
-                _defaultValueInvoked = true;
-            }
-            return Equals(GetValue(), _defaultValue);
-        }
+	public bool IsValueEquivalentToDefaultValue() => _annotationAttribute.IsValueEquivalentToDefaultValue();
 
-        public Type GetAttributeType() => GetAttribute().ReturnType;
-
-        public bool IsWrapped() => false;
-    }
+	public bool IsWrapped() => _annotationAttribute.IsWrapped();
 }

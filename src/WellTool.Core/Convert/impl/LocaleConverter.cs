@@ -1,9 +1,9 @@
-using System.Globalization;
+﻿using System.Globalization;
 
-namespace WellTool.Core.Convert.impl;
+namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
-/// Locale对象转换器
+/// Locale瀵硅薄杞崲鍣?
 /// </summary>
 public class LocaleConverter : AbstractConverter<CultureInfo>
 {
@@ -38,3 +38,4 @@ public class LocaleConverter : AbstractConverter<CultureInfo>
         }
     }
 }
+

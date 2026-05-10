@@ -1,26 +1,26 @@
-using System;
+﻿using System;
 using WellTool.Core.Convert;
 
-namespace WellTool.Core.Convert.impl
+namespace WellTool.Core.Convert.Impl
 {
     /// <summary>
-    /// 日期转换�?
+    /// 鏃ユ湡杞崲锟?
     /// </summary>
     public class DateConverter : IConverter
     {
         private readonly string _format;
 
         /// <summary>
-        /// 构造函�?
+        /// 鏋勯€犲嚱锟?
         /// </summary>
-        /// <param name="format">日期格式</param>
+        /// <param name="format">鏃ユ湡鏍煎紡</param>
         public DateConverter(string format = null)
         {
             _format = format;
         }
 
         /// <summary>
-        /// 转换�?
+        /// 杞崲锟?
         /// </summary>
         public object Convert(object value, Type targetType)
         {
@@ -29,7 +29,7 @@ namespace WellTool.Core.Convert.impl
                 return null;
             }
 
-            // 处理 DateTime
+            // 澶勭悊 DateTime
             if (value is DateTime dt)
             {
                 return dt;
@@ -37,19 +37,19 @@ namespace WellTool.Core.Convert.impl
 
 
 
-            // 处理数字（毫秒时间戳�?
+            // 澶勭悊鏁板瓧锛堟绉掓椂闂存埑锟?
             if (value is long longValue)
             {
-                // 毫秒时间�?
+                // 姣鏃堕棿锟?
                 if (longValue > 1e12)
                 {
                     return DateTimeOffset.FromUnixTimeMilliseconds(longValue).DateTime;
                 }
-                // 秒时间戳
+                // 绉掓椂闂存埑
                 return DateTimeOffset.FromUnixTimeSeconds(longValue).DateTime;
             }
 
-            // 处理字符�?
+            // 澶勭悊瀛楃锟?
             var str = value.ToString();
             if (string.IsNullOrWhiteSpace(str))
             {
@@ -64,7 +64,7 @@ namespace WellTool.Core.Convert.impl
                 }
             }
 
-            // 尝试多种格式解析
+            // 灏濊瘯澶氱鏍煎紡瑙ｆ瀽
             string[] formats = {
                 "yyyy-MM-dd HH:mm:ss",
                 "yyyy-MM-dd",
@@ -82,7 +82,7 @@ namespace WellTool.Core.Convert.impl
                 }
             }
 
-            // 最后尝试通用解析
+            // 鏈€鍚庡皾璇曢€氱敤瑙ｆ瀽
             if (DateTime.TryParse(str, out DateTime dtResult))
             {
                 return dtResult;
@@ -92,7 +92,7 @@ namespace WellTool.Core.Convert.impl
         }
 
         /// <summary>
-        /// 获取支持的源类型
+        /// 鑾峰彇鏀寔鐨勬簮绫诲瀷
         /// </summary>
         public Type[] GetSupportedSourceTypes()
         {
@@ -100,7 +100,7 @@ namespace WellTool.Core.Convert.impl
         }
 
         /// <summary>
-        /// 获取支持的目标类�?
+        /// 鑾峰彇鏀寔鐨勭洰鏍囩被锟?
         /// </summary>
         public Type[] GetSupportedTargetTypes()
         {
@@ -108,3 +108,4 @@ namespace WellTool.Core.Convert.impl
         }
     }
 }
+

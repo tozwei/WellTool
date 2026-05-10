@@ -119,5 +119,13 @@ namespace WellTool.Core.Img
             Vertical = 2,
             Both = 3
         }
+
+        public static System.Drawing.Color RandomColor(Random random)
+        {
+            return System.Drawing.Color.FromArgb(
+                random.Next(256),
+                random.Next(256),
+                random.Next(256));
+        }
     }
 }

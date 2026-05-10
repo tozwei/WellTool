@@ -5,15 +5,15 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<PackageId>WellTool.Poi</PackageId>
-		<PackageVersion>1.0.1</PackageVersion>
+		<PackageVersion>1.0.2</PackageVersion>
 		<Title>WellTool Poi</Title>
-		<Description>Encapsulation for Excel and Word</Description>
+		<Description>Excel and Word processing utilities based on Apache POI</Description>
 		<Authors>WellTool Team</Authors>
 		<Company>WellTool</Company>
 		<Copyright>© 2026 WellTool</Copyright>
-		<PackageTags>poi;excel;word</PackageTags>
+		<PackageTags>excel;word;poi</PackageTags>
 		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/tozwei/WellTool</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -24,8 +24,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MiniExcel" Version="1.41.3" />
-		<PackageReference Include="NPOI" Version="2.6.2" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 	</ItemGroup>
 

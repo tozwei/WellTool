@@ -5,15 +5,15 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<PackageId>WellTool.Cron</PackageId>
-		<PackageVersion>1.0.1</PackageVersion>
+		<PackageVersion>1.0.2</PackageVersion>
 		<Title>WellTool Cron</Title>
-		<Description>Scheduled task module, providing Crontab-like expression scheduled tasks</Description>
+		<Description>Cron expression parser and scheduler</Description>
 		<Authors>WellTool Team</Authors>
 		<Company>WellTool</Company>
 		<Copyright>© 2026 WellTool</Copyright>
-		<PackageTags>cron;scheduled-tasks</PackageTags>
+		<PackageTags>cron;scheduler</PackageTags>
 		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/tozwei/WellTool</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -25,6 +25,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
 	</ItemGroup>
 
 </Project>

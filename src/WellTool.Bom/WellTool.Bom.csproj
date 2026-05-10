@@ -1,43 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+	<PropertyGroup>
 		<TargetFrameworks>net8.0;net6.0;netstandard2.1</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<PackageId>WellTool.Bom</PackageId>
-		<PackageVersion>1.0.1</PackageVersion>
+		<PackageVersion>1.0.2</PackageVersion>
 		<Title>WellTool Bom</Title>
-		<Description>Bom dependency manager for WellTool</Description>
+		<Description>BOM (Bill of Materials) package for WellTool</Description>
 		<Authors>WellTool Team</Authors>
 		<Company>WellTool</Company>
 		<Copyright>© 2026 WellTool</Copyright>
-		<PackageTags>bom;dependency</PackageTags>
-		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+		<PackageTags>bom;metapackage</PackageTags>
+		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/tozwei/WellTool</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<DebugType>portable</DebugType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<Deterministic>true</Deterministic>
 	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="../WellTool.Core/WellTool.Core.csproj" />
-    <ProjectReference Include="../WellTool.Aop/WellTool.Aop.csproj" />
-    <ProjectReference Include="../WellTool.BloomFilter/WellTool.BloomFilter.csproj" />
-    <ProjectReference Include="../WellTool.Cache/WellTool.Cache.csproj" />
-    <ProjectReference Include="../WellTool.Captcha/WellTool.Captcha.csproj" />
-    <ProjectReference Include="../WellTool.Crypto/WellTool.Crypto.csproj" />
-    <ProjectReference Include="../WellTool.DB/WellTool.DB.csproj" />
-    <ProjectReference Include="../WellTool.Dfa/WellTool.Dfa.csproj" />
-    <ProjectReference Include="../WellTool.Extra/WellTool.Extra.csproj" />
-    <ProjectReference Include="../WellTool.Http/WellTool.Http.csproj" />
-    <ProjectReference Include="../WellTool.Json/WellTool.Json.csproj" />
-    <ProjectReference Include="../WellTool.Jwt/WellTool.Jwt.csproj" />
-    <ProjectReference Include="../WellTool.Log/WellTool.Log.csproj" />
-    <ProjectReference Include="../WellTool.Poi/WellTool.Poi.csproj" />
-    <ProjectReference Include="../WellTool.Script/WellTool.Script.csproj" />
-    <ProjectReference Include="../WellTool.Setting/WellTool.Setting.csproj" />
-    <ProjectReference Include="../WellTool.Socket/WellTool.Socket.csproj" />
-    <ProjectReference Include="../WellTool.System/WellTool.System.csproj" />
-    <ProjectReference Include="../WellTool.Cron/WellTool.Cron.csproj" />
-    <ProjectReference Include="../WellTool.AI/WellTool.AI.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+	</ItemGroup>
 
 </Project>

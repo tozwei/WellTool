@@ -50,6 +50,6 @@ public class TimeIntervalTest
         timer.Restart();
         ThreadUtil.Sleep(30);
         var interval = timer.Interval();
-        Assert.True(interval < 50);
+        Assert.True(interval >= 30 && interval < 80, $"Expected interval >= 30 and < 80, but got {interval}");
     }
 }

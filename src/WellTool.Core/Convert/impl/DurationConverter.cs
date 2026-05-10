@@ -1,9 +1,9 @@
-using System.Globalization;
+﻿using System.Globalization;
 
-namespace WellTool.Core.Convert.impl;
+namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
-/// 时间段转换器
+/// 鏃堕棿娈佃浆鎹㈠櫒
 /// </summary>
 public class DurationConverter : AbstractConverter<TimeSpan>
 {
@@ -20,3 +20,4 @@ public class DurationConverter : AbstractConverter<TimeSpan>
         return TimeSpan.Parse(ConvertToStr(value), CultureInfo.InvariantCulture);
     }
 }
+

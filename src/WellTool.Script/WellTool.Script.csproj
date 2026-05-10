@@ -5,15 +5,15 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<PackageId>WellTool.Script</PackageId>
-		<PackageVersion>1.0.1</PackageVersion>
+		<PackageVersion>1.0.2</PackageVersion>
 		<Title>WellTool Script</Title>
-		<Description>Script execution encapsulation, such as JavaScript</Description>
+		<Description>Script execution utilities</Description>
 		<Authors>WellTool Team</Authors>
 		<Company>WellTool</Company>
 		<Copyright>© 2026 WellTool</Copyright>
-		<PackageTags>script;javascript</PackageTags>
+		<PackageTags>script;eval</PackageTags>
 		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/tozwei/WellTool</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -23,9 +23,12 @@
 		<Deterministic>true</Deterministic>
 	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Jint" Version="4.0.0" />
-    <PackageReference Include="System.Text.Json" Version="8.0.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
+	</ItemGroup>
+
 </Project>

@@ -1,9 +1,9 @@
-using System.IO;
+﻿using System.IO;
 
-namespace WellTool.Core.Convert.impl;
+namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
-/// Path转换器
+/// Path杞崲鍣?
 /// </summary>
 public class PathConverter : AbstractConverter<FileInfo>
 {
@@ -31,3 +31,4 @@ public class PathConverter : AbstractConverter<FileInfo>
         }
     }
 }
+

@@ -1,30 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>net8.0;net6.0;netstandard2.1</TargetFrameworks>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<LangVersion>latest</LangVersion>
-		<Version>1.0.1</Version>
-		<PackageId>WellTool.BloomFilter</PackageId>
-		<PackageVersion>1.0.1</PackageVersion>
-		<Title>WellTool BloomFilter</Title>
-		<Description>Bloom filter, providing Bloom filters for some Hash algorithms</Description>
-		<Authors>WellTool Team</Authors>
-		<Company>WellTool</Company>
-		<Copyright>© 2026 WellTool</Copyright>
-		<PackageTags>bloom-filter;hash</PackageTags>
-		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/tozwei/WellTool</RepositoryUrl>
-		<RepositoryType>git</RepositoryType>
-		<DebugType>portable</DebugType>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<Deterministic>true</Deterministic>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net6.0;netstandard2.1</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <Version>1.0.2</Version>
+    <PackageId>WellTool.BloomFilter</PackageId>
+    <PackageVersion>1.0.2</PackageVersion>
+    <Title>WellTool BloomFilter</Title>
+    <Description>BloomFilter implementation for WellTool</Description>
+    <Authors>WellTool Team</Authors>
+    <Company>WellTool</Company>
+    <Copyright>© 2026 WellTool</Copyright>
+    <PackageTags>bloomfilter;filter</PackageTags>
+    <PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/tozwei/WellTool</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <DebugType>portable</DebugType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
 
 </Project>

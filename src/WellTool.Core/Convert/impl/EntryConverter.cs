@@ -1,15 +1,15 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Linq;
 using WellTool.Core.Convert;
 using WellTool.Core.Map;
 
-namespace WellTool.Core.Convert.impl;
+namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
-/// 键值对转换器
+/// 閿€煎杞崲鍣?
 /// </summary>
-/// <typeparam name="TKey">键类型</typeparam>
-/// <typeparam name="TValue">值类型</typeparam>
+/// <typeparam name="TKey">閿被鍨?/typeparam>
+/// <typeparam name="TValue">鍊肩被鍨?/typeparam>
 public class EntryConverter<TKey, TValue> : AbstractConverter<KeyValuePair<TKey, TValue>>
 {
     protected override KeyValuePair<TKey, TValue> ConvertInternal(object value)
@@ -54,3 +54,4 @@ public class EntryConverter<TKey, TValue> : AbstractConverter<KeyValuePair<TKey,
         return new KeyValuePair<TKey, TValue>(key, val);
     }
 }
+

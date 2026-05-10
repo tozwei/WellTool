@@ -66,6 +66,12 @@ public class AnimatedGifEncoder
         }
     }
 
+    public void SetQuality(int quality)
+    {
+        if (quality < 1) quality = 1;
+        _sample = quality;
+    }
+
     /// <summary>
     /// 设置透明色
     /// </summary>

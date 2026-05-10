@@ -12,7 +12,6 @@
 // limitations under the License.
 
 using WellTool.BloomFilter;
-
 namespace WellTool.BloomFilter.Tests
 {
     public class BloomFilterTests

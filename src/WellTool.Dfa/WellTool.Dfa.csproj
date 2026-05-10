@@ -5,15 +5,15 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<PackageId>WellTool.Dfa</PackageId>
-		<PackageVersion>1.0.1</PackageVersion>
+		<PackageVersion>1.0.2</PackageVersion>
 		<Title>WellTool Dfa</Title>
-		<Description>Multi-keyword search based on DFA model</Description>
+		<Description>DFA (Deterministic Finite Automaton) for sensitive word detection</Description>
 		<Authors>WellTool Team</Authors>
 		<Company>WellTool</Company>
 		<Copyright>© 2026 WellTool</Copyright>
-		<PackageTags>dfa;search</PackageTags>
+		<PackageTags>dfa;sensitive</PackageTags>
 		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/tozwei/WellTool</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -25,6 +25,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
 	</ItemGroup>
 
 </Project>

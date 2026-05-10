@@ -1,17 +1,17 @@
-using System;
+﻿using System;
 
 namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
-/// TemporalAccessorConverter转换器
+/// TemporalAccessorConverter杞崲鍣?
 /// </summary>
 public class TemporalAccessorConverter : AbstractConverter<DateTime>
 {
 	/// <summary>
-	/// 内部转换
+	/// 鍐呴儴杞崲
 	/// </summary>
-	/// <param name="value">值</param>
-	/// <returns>结果</returns>
+	/// <param name="value">鍊?/param>
+	/// <returns>缁撴灉</returns>
 	protected override DateTime ConvertInternal(object value)
 	{
 		if (value is DateTime dt)
@@ -29,3 +29,4 @@ public class TemporalAccessorConverter : AbstractConverter<DateTime>
 		throw new NotSupportedException($"Cannot convert {value?.GetType()} to DateTime");
 	}
 }
+

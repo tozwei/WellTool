@@ -1,15 +1,14 @@
-using System;
+﻿using System;
 using WellTool.Core.Convert;
 
-namespace WellTool.Core.Convert.impl
+namespace WellTool.Core.Convert.Impl
 {
     /// <summary>
-    /// 布尔转换器
-    /// </summary>
+    /// 甯冨皵杞崲鍣?    /// </summary>
     public class BooleanConverter : IConverter
     {
         /// <summary>
-        /// 转换值
+        /// 杞崲
         /// </summary>
         public object Convert(object value, Type targetType)
         {
@@ -18,21 +17,16 @@ namespace WellTool.Core.Convert.impl
                 return false;
             }
 
-
-
-            // 处理布尔类型
             if (value is bool b)
             {
                 return b;
             }
 
-            // 处理字符串
             if (value is string str)
             {
                 return ToBoolean(str);
             }
 
-            // 处理数字类型
             if (value is IConvertible convertible)
             {
                 return convertible.ToBoolean(null);
@@ -41,9 +35,6 @@ namespace WellTool.Core.Convert.impl
             return ToBoolean(value.ToString());
         }
 
-        /// <summary>
-        /// 将字符串转换为布尔值
-        /// </summary>
         private static bool ToBoolean(string str)
         {
             if (string.IsNullOrWhiteSpace(str))
@@ -53,15 +44,12 @@ namespace WellTool.Core.Convert.impl
 
             str = str.Trim().ToLower();
 
-            // true/false
             if (str == "true" || str == "false")
             {
                 return bool.Parse(str);
             }
 
-            // yes/no, y/n, on/off, 1/0
-            if (str == "yes" || str == "y" || str == "t" || str == "ok" || str == "1" || str == "on" ||
-                str == "是" || str == "对" || str == "真" || str == "對" || str == "√")
+            if (str == "yes" || str == "y" || str == "t" || str == "ok" || str == "1" || str == "on")
             {
                 return true;
             }
@@ -69,17 +57,11 @@ namespace WellTool.Core.Convert.impl
             return false;
         }
 
-        /// <summary>
-        /// 获取支持的源类型
-        /// </summary>
         public Type[] GetSupportedSourceTypes()
         {
             return new Type[] { typeof(string), typeof(bool), typeof(int), typeof(long), typeof(double) };
         }
 
-        /// <summary>
-        /// 获取支持的目标类型
-        /// </summary>
         public Type[] GetSupportedTargetTypes()
         {
             return new Type[] { typeof(bool) };

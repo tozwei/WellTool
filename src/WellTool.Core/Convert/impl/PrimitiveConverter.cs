@@ -1,16 +1,16 @@
-using System;
+﻿using System;
 using WellTool.Core.Convert;
 using System.Globalization;
 
-namespace WellTool.Core.Convert.impl
+namespace WellTool.Core.Convert.Impl
 {
     /// <summary>
-    /// 基础类型转换�?
+    /// 鍩虹绫诲瀷杞崲锟?
     /// </summary>
     public class PrimitiveConverter : IConverter
     {
         /// <summary>
-        /// 转换�?        /// </summary>
+        /// 杞崲锟?        /// </summary>
         public object Convert(object value, Type targetType)
         {
             if (value == null)
@@ -56,7 +56,7 @@ namespace WellTool.Core.Convert.impl
         }
 
         /// <summary>
-        /// 获取默认�?
+        /// 鑾峰彇榛樿锟?
         /// </summary>
         private static object GetDefaultValue(Type type)
         {
@@ -68,7 +68,7 @@ namespace WellTool.Core.Convert.impl
         }
 
         /// <summary>
-        /// 获取支持的源类型
+        /// 鑾峰彇鏀寔鐨勬簮绫诲瀷
         /// </summary>
         public Type[] GetSupportedSourceTypes()
         {
@@ -81,7 +81,7 @@ namespace WellTool.Core.Convert.impl
         }
 
         /// <summary>
-        /// 获取支持的目标类�?
+        /// 鑾峰彇鏀寔鐨勭洰鏍囩被锟?
         /// </summary>
         public Type[] GetSupportedTargetTypes()
         {
@@ -94,3 +94,4 @@ namespace WellTool.Core.Convert.impl
         }
     }
 }
+

@@ -5,15 +5,15 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<PackageId>WellTool.AI</PackageId>
-		<PackageVersion>1.0.1</PackageVersion>
+		<PackageVersion>1.0.2</PackageVersion>
 		<Title>WellTool AI</Title>
-		<Description>AI large model encapsulation implementation</Description>
+		<Description>AI service integration utilities</Description>
 		<Authors>WellTool Team</Authors>
 		<Company>WellTool</Company>
 		<Copyright>© 2026 WellTool</Copyright>
-		<PackageTags>ai;machine-learning</PackageTags>
+		<PackageTags>ai;llm</PackageTags>
 		<PackageProjectUrl>https://github.com/tozwei/WellTool</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/tozwei/WellTool</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -22,10 +22,13 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<Deterministic>true</Deterministic>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
-		<!--<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />-->
-		<PackageReference Include="System.Text.Json" Version="8.0.3" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
+	</ItemGroup>
+
 </Project>

@@ -90,6 +90,20 @@ public class Setting : AbsSetting, IDisposable
         Load(path);
     }
 
+    /// <summary>
+    /// 构造
+    /// </summary>
+    /// <param name="path">相对路径或绝对路径</param>
+    /// <param name="charset">字符集</param>
+    /// <param name="isUseVariable">是否使用变量</param>
+    public Setting(string path, Encoding charset, bool isUseVariable)
+    {
+        _charset = charset;
+        _isUseVariable = isUseVariable;
+        _filePath = path;
+        Load(path);
+    }
+
     // ------------------------------------------------------------------------------------- Constructor end
 
     // ------------------------------------------------------------------------------------- Get method start

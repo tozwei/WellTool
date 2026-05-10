@@ -1,66 +1,36 @@
-// Copyright (c) 2025 WellTool Team
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 namespace WellTool.BloomFilter.BitMap
 {
-    /// <summary>
-    /// 32位位图实现
-    /// </summary>
-    public class IntMap : BitMap
+    public class IntMap : IBitMap
     {
-        private readonly int[] bits;
+        private readonly int[] _data;
+        private readonly int _capacity;
 
-        /// <summary>
-        /// 构造
-        /// </summary>
-        /// <param name="size">容量</param>
-        public IntMap(int size)
+        public IntMap(int capacity)
         {
-            bits = new int[size];
+            _capacity = capacity;
+            _data = new int[capacity];
         }
 
-        /// <summary>
-        /// 加入值
-        /// </summary>
-        /// <param name="i">值</param>
         public void Add(long i)
         {
-            int index = (int)(i / BitMap.MACHINE32);
-            int position = (int)(i % BitMap.MACHINE32);
-            bits[index] |= 1 << position;
+            int pos = (int)(i >> 5);
+            if (pos >= _capacity) return;
+            _data[pos] |= (int)(1 << (int)(i & 31));
         }
 
-        /// <summary>
-        /// 检查是否包含值
-        /// </summary>
-        /// <param name="i">值</param>
-        /// <returns>是否包含</returns>
         public bool Contains(long i)
         {
-            int index = (int)(i / BitMap.MACHINE32);
-            int position = (int)(i % BitMap.MACHINE32);
-            return (bits[index] & (1 << position)) != 0;
+            int pos = (int)(i >> 5);
+            if (pos >= _capacity) return false;
+            return (_data[pos] & (int)(1 << (int)(i & 31))) != 0;
         }
 
-        /// <summary>
-        /// 移除值
-        /// </summary>
-        /// <param name="i">值</param>
         public void Remove(long i)
         {
-            int index = (int)(i / BitMap.MACHINE32);
-            int position = (int)(i % BitMap.MACHINE32);
-            bits[index] &= ~(1 << position);
+            int pos = (int)(i >> 5);
+            if (pos >= _capacity) return;
+            _data[pos] &= ~(int)(1 << (int)(i & 31));
         }
     }
 }
+

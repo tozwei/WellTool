@@ -1,9 +1,9 @@
-namespace WellTool.Core.Convert.impl;
+﻿namespace WellTool.Core.Convert.Impl;
 
 /// <summary>
-/// Cast转换器，用于类型转换
+/// Cast杞崲鍣紝鐢ㄤ簬绫诲瀷杞崲
 /// </summary>
-/// <typeparam name="T">目标类型</typeparam>
+/// <typeparam name="T">鐩爣绫诲瀷</typeparam>
 public class CastConverter<T> : AbstractConverter<T>
 {
     protected override T ConvertInternal(object value)
@@ -15,3 +15,4 @@ public class CastConverter<T> : AbstractConverter<T>
         return (T)System.Convert.ChangeType(value, typeof(T));
     }
 }
+
