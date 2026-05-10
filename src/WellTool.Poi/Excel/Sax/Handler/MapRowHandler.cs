@@ -1,5 +1,6 @@
-using System;using System.Collections.Generic;
-using WellTool.Core.Util;
+using System;
+using System.Collections.Generic;
+using WellTool.Poi.Util;
 
 namespace WellTool.Poi.Excel.Sax.Handler
 {
@@ -29,7 +30,7 @@ namespace WellTool.Poi.Excel.Sax.Handler
             : base(startRowIndex, endRowIndex)
         {
             _headerRowIndex = headerRowIndex;
-            ConvertFunc = (rowList) => IterUtil.ToDictionary(HeaderList, rowList, true);
+            ConvertFunc = (rowList) => PoiUtil.ToDictionary(HeaderList, rowList, true);
         }
 
         /// <summary>

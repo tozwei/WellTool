@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using WellTool.Log.Level;
-using WellTool.Core;
 
 namespace WellTool.Log.Dialect.Jdk
 {

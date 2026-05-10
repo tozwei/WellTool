@@ -1,7 +1,7 @@
 using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
-using WellTool.Core.Util;
+using WellTool.Poi.Util;
 
 namespace WellTool.Poi.Excel.Reader
 {
@@ -68,7 +68,7 @@ namespace WellTool.Poi.Excel.Reader
                     rowList = ReadRow(sheet, i);
                     if (rowList.Count > 0 || !IgnoreEmptyRow)
                     {
-                        result.Add(IterUtil.ToDictionary(headerList, rowList, true));
+                        result.Add(PoiUtil.ToDictionary(headerList, rowList, true));
                     }
                 }
             }

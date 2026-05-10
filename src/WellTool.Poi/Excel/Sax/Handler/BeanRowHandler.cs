@@ -1,5 +1,6 @@
-using System;using System.Collections.Generic;
-using WellTool.Core.Util;
+using System;
+using System.Collections.Generic;
+using WellTool.Poi.Util;
 
 namespace WellTool.Poi.Excel.Sax.Handler
 {
@@ -35,7 +36,7 @@ namespace WellTool.Poi.Excel.Sax.Handler
                 throw new ArgumentException("Header row must before the start row!");
             }
             _headerRowIndex = headerRowIndex;
-            ConvertFunc = (rowList) => MapToBean(IterUtil.ToDictionary(HeaderList, rowList, true), beanType);
+            ConvertFunc = (rowList) => MapToBean(PoiUtil.ToDictionary(HeaderList, rowList, true), beanType);
         }
 
         /// <summary>

@@ -2,7 +2,6 @@ using NPOI.Util;
 using NPOI.XWPF.UserModel;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using WellTool.Poi.Exceptions;
 
@@ -107,21 +106,10 @@ namespace WellTool.Poi.Word
         /// 增加一个段落
         /// </summary>
         /// <param name="font">字体信息</param>
+        /// <param name="color">字体颜色 (RGB格式，如 0xRRGGBB)</param>
         /// <param name="texts">段落中的文本，支持多个文本作为一个段落</param>
         /// <returns>this</returns>
-        public Word07Writer AddText(Font font, params string[] texts)
-        {
-            return AddText(null, font, null, texts);
-        }
-
-        /// <summary>
-        /// 增加一个段落
-        /// </summary>
-        /// <param name="font">字体信息</param>
-        /// <param name="color">字体颜色</param>
-        /// <param name="texts">段落中的文本，支持多个文本作为一个段落</param>
-        /// <returns>this</returns>
-        public Word07Writer AddText(Font font, Color color, params string[] texts)
+        public Word07Writer AddText(FontInfo font, int? color, params string[] texts)
         {
             return AddText(null, font, color, texts);
         }
@@ -133,7 +121,7 @@ namespace WellTool.Poi.Word
         /// <param name="font">字体信息</param>
         /// <param name="texts">段落中的文本，支持多个文本作为一个段落</param>
         /// <returns>this</returns>
-        public Word07Writer AddText(ParagraphAlignment align, Font font, params string[] texts)
+        public Word07Writer AddText(ParagraphAlignment align, FontInfo font, params string[] texts)
         {
             return AddText(align, font, null, texts);
         }
@@ -143,10 +131,10 @@ namespace WellTool.Poi.Word
         /// </summary>
         /// <param name="align">段落对齐方式</param>
         /// <param name="font">字体信息</param>
-        /// <param name="color">字体颜色</param>
+        /// <param name="color">字体颜色 (RGB格式，如 0xRRGGBB)</param>
         /// <param name="texts">段落中的文本，支持多个文本作为一个段落</param>
         /// <returns>this</returns>
-        public Word07Writer AddText(ParagraphAlignment? align, Font font, Color? color, params string[] texts)
+        public Word07Writer AddText(ParagraphAlignment? align, FontInfo font, int? color, params string[] texts)
         {
             var p = this.doc.CreateParagraph();
             if (align.HasValue)
@@ -161,15 +149,18 @@ namespace WellTool.Poi.Word
                     run.SetText(text);
                     if (font != null)
                     {
-                        run.SetFontFamily(font.FontFamily.Name, NPOI.XWPF.UserModel.FontCharRange.None);
+                        run.SetFontFamily(font.FontFamilyName ?? "宋体", NPOI.XWPF.UserModel.FontCharRange.None);
                         run.FontSize = (int)font.Size;
                         run.IsBold = font.Bold;
                         run.IsItalic = font.Italic;
                     }
                     if (color.HasValue)
                     {
-                        // setColor expects a pure RGB hex string (no alpha channel)
-                        var hexColor = $"{color.Value.R:X2}{color.Value.G:X2}{color.Value.B:X2}";
+                        var hexColor = $"{color.Value:X6}";
+                        if (hexColor.Length < 6)
+                        {
+                            hexColor = hexColor.PadLeft(6, '0');
+                        }
                         run.SetColor(hexColor);
                     }
                 }

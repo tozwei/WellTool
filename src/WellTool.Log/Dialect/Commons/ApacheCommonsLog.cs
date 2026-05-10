@@ -1,6 +1,5 @@
 using System;
 using WellTool.Log.Level;
-using WellTool.Core;
 
 namespace WellTool.Log.Dialect.Commons
 {
