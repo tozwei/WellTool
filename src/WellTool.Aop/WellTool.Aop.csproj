@@ -24,12 +24,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Castle.Core" Version="5.1.1" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
 	</ItemGroup>
 
 </Project>

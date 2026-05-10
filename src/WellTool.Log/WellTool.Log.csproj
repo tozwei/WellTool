@@ -1,9 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<ItemGroup>
-	  <ProjectReference Include="..\WellTool.Core\WellTool.Core.csproj" />
-	</ItemGroup>
-
 	<PropertyGroup>
 		<TargetFrameworks>net8.0;net6.0;netstandard2.1</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
